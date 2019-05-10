@@ -1,0 +1,1200 @@
+<?php
+  include_once("db.php");
+
+  /**
+  * Build search query off of $_GET data
+  *
+  * @return string the SQL query used for the search, minus pagination parameters
+  */
+  function buildQuery() {
+    global $conn;
+
+    $getters = array(); // Contains all search parameters
+    $queries = array(); // Contains all 'WHERE' parameters
+    $orders = array(); // Contains SORT BY parameters
+    $ptypes = array(); // List of ptypes from $_GET['ptype']
+    $keywrd = array();
+    $sortBy = (!empty($_GET['sortBy']) && $_GET['sortBy'] === 'relevance') ? 'relevance' : 'date';
+    $volume = (isset($_GET['vol'])) ? $_GET['vol'] : '1, 2, 3, 4, 5';
+
+    foreach($_GET as $key => $value) {
+      $temp = is_array($value) ? $value : trim($value);
+      if (!empty($temp)) {
+        // Create ptype array to later implode to string
+        if ($key === 'ptype') {
+          foreach ($_GET['ptype'] as $type) {
+            array_push($ptypes, "'".$type."'");
+          }
+        }
+        // If it's a keyword, add to keyword array, otherwise add to $getters
+        if ($key === 'keyword') {
+          $keywrd[$key] = cleanStr($value);
+        } elseif (!in_array($key, $getters)) {
+          if ($key === 'performance' || $key === 'actor' || $key === 'role' || $key === 'keyword') {
+            $getters[$key] = cleanStr($value);
+          } else {
+            $getters[$key] = $value;
+          }
+        }
+      }
+    }
+
+    // Then add the keyword search last to minimize query time a bit
+    if (!empty($keywrd)) {
+      $getters['keyword'] = $keywrd['keyword'];
+    }
+
+    // Create ptypes string to be used in 'WHERE IN()' later
+    $ptype_qry = '';
+    if (!empty($ptypes)) {
+      $ptype_qry = implode(",", $ptypes);
+    }
+
+    // Start our base query
+    $sql = "SELECT Events.EventId, Events.EventDate, Events.Season, Events.Hathi, Events.CommentC, Events.TheatreId,
+            Performances.PerformanceId, Performances.PerformanceOrder, Performances.PType, Performances.PerformanceTitle, Performances.CommentP, Performances.CastAsListed, Performances.DetailedComment,
+            Cast.CastId, Cast.Role, Cast.Performer,
+            Theatre.Volume, Theatre.TheatreName ";
+
+    // Tack on Performance related parameters for relevance sorting
+    if (!empty($_GET['performance'])) {
+      $perfTemp = mysqli_real_escape_string($conn, $getters['performance']);  // Retains double quotes
+      $perfClean = mysqli_real_escape_string($conn, cleanQuotes($getters['performance'])); // No double quotes for 'LIKE' search
+      $sql .= ", (MATCH(PerfTitleClean) AGAINST ('$perfTemp' IN BOOLEAN MODE) + ";
+      $sql .= " case when PerfTitleClean LIKE '$perfClean' then 50 "; // Exact match gets higher rating
+
+      if (str_word_count(preg_replace("/[^A-Za-z0-9 ]/", ' ', $getters['performance'])) > 1) {
+        $sql .= "when PerfTitleClean LIKE '%$perfClean%' then 10 "; // Partial match gets lower rating
+      }
+      $sql .= "end) as PerfScore ";
+
+      // TODO case when MATCH(PerformanceTitle) AGAINST ('+love a la +mode' IN BOOLEAN MODE) then 100 end as PerfBetterScore";
+    }
+
+    $sql .= " FROM Events
+              LEFT JOIN Performances ON Performances.EventId = Events.EventId
+              LEFT JOIN Cast ON Cast.PerformanceId = Performances.PerformanceId
+              LEFT JOIN Theatre ON Theatre.TheatreId = Events.TheatreId";
+
+    // If author or keyword search, need diff SELECT values
+    if (!empty($_GET['author']) || !empty($_GET['keyword'])) {
+      $sql = "SELECT Events.EventId, Events.EventDate, Events.Season, Events.Hathi, Events.CommentC, Events.TheatreId,
+              Performances.PerformanceId, Performances.PerformanceOrder, Performances.PType, Performances.PerformanceTitle, Performances.CommentP, Performances.CastAsListed, Performances.DetailedComment,
+              Cast.CastId, Cast.Role, Cast.Performer,
+              Theatre.Volume, Theatre.TheatreName,
+              Works.WorkId,
+              Author.AuthId, Author.AuthName";
+
+      // Tack on Keyword related parameters for relevance sorting
+      if (!empty($_GET['keyword'])) {
+        $keyTemp = mysqli_real_escape_string($conn, $keywrd['keyword']);
+        $sql .=", MATCH(PerfTitleClean) AGAINST ('$keyTemp' IN NATURAL LANGUAGE MODE) as pTScore,
+                MATCH(CommentPClean) AGAINST ('$keyTemp' IN NATURAL LANGUAGE MODE) as pCScore,
+                MATCH(Events.CommentCClean) AGAINST ('$keyTemp' IN NATURAL LANGUAGE MODE) as eScore,
+                MATCH(RoleClean, PerformerClean) AGAINST ('$keyTemp' IN NATURAL LANGUAGE MODE) as cScore,
+                MATCH(AuthNameClean) AGAINST ('$keyTemp' IN NATURAL LANGUAGE MODE) as aScore ";
+      }
+
+      // Tack on Performance related parameters for relevance sorting
+      if (!empty($_GET['performance'])) {
+        $perfTemp = mysqli_real_escape_string($conn, $getters['performance']);  // Retains double quotes
+        $perfClean = mysqli_real_escape_string($conn, cleanQuotes($getters['performance']));  // No double quotes for 'LIKE' search
+        $sql .= ", (MATCH(PerfTitleClean) AGAINST ('$perfTemp' IN BOOLEAN MODE) + ";
+        $sql .= " case when PerfTitleClean LIKE '$perfClean' then 50 "; // Exact match gets higher rating
+
+        if (str_word_count(preg_replace("/[^A-Za-z0-9 ]/", ' ', $getters['performance'])) > 1) {
+          $sql .= "when PerfTitleClean LIKE '%$perfClean%' then 10 "; // Partial match gets lower rating
+        }
+        $sql .= "end) as PerfScore ";
+
+        // TODO case when MATCH(PerformanceTitle) AGAINST ('+love a la +mode' IN BOOLEAN MODE) then 100 end as PerfBetterScore";
+      }
+
+      $sql .= " FROM Events
+                LEFT JOIN Performances ON Performances.EventId = Events.EventId
+                LEFT JOIN Cast ON Cast.PerformanceId = Performances.PerformanceId
+                LEFT JOIN Theatre ON Theatre.TheatreId = Events.TheatreId
+                LEFT JOIN Works ON Works.WorkId = Performances.WorkId
+                LEFT JOIN WorkAuthMaster on WorkAuthMaster.WorkId = Works.WorkId
+                LEFT JOIN Author on Author.AuthId = WorkAuthMaster.AuthId";
+      }
+
+      // Get our WHERE parameter for any selected date and add to $queries
+      $dateQuery = getDateQuery();
+      if ($dateQuery !== '') {
+        array_push($queries, $dateQuery);
+      }
+
+      // Add $queries entry for each value in $getters
+      if (!empty($getters)) {
+        foreach ($getters as $key => $value) {
+          ${$key} = $value;
+          switch($key) {
+            case 'theatre':
+              if ($theatre !== 'all') {
+                $theatre = mysqli_real_escape_string($conn, $theatre);
+                array_push($queries, "Theatre.TheatreName = '$theatre'");
+              }
+            break;
+            case 'volume':
+              $volume = mysqli_real_escape_string($conn, $volume);
+              if ($volume !== 'all') {
+                array_push($queries, "Theatre.Volume = '$volume'");
+              }
+            break;
+            case 'actor':
+              $actorClean = mysqli_real_escape_string($conn, cleanQuotes($actor));
+              $actor = mysqli_real_escape_string($conn, $actor);
+              array_push($queries, "(MATCH(Cast.PerformerClean) AGAINST ('\"$actor\" @4' IN BOOLEAN MODE) OR Cast.PerformerClean LIKE '%$actorClean%')");
+            break;
+            case 'role':
+              $roleClean = mysqli_real_escape_string($conn, cleanQuotes($role));
+              $role = mysqli_real_escape_string($conn, $role);
+              array_push($queries, "(MATCH(Cast.RoleClean) AGAINST ('\"$role\" @4' IN BOOLEAN MODE) OR Cast.RoleClean LIKE '%$roleClean%')");
+            break;
+            case 'performance':
+              // Include ptype parameter if exists
+              $typeStr = '';
+              if (!empty($ptypes)) $typeStr = " AND Performances.PType IN ($ptype_qry)";
+              $performanceClean = mysqli_real_escape_string($conn, cleanQuotes($performance));
+              $performance = mysqli_real_escape_string($conn, $performance);
+              array_push($queries, "((MATCH(PerfTitleClean) AGAINST ('\"$performance\" @4' IN BOOLEAN MODE) OR PerfTitleClean LIKE '%$performanceClean%') $typeStr)");
+              array_push($orders, "PerfScore DESC");
+            break;
+            case 'ptype':
+              // If 'performance title' or 'author' search, ptype parameter will be included in those queries, so exclude here
+              if ((!array_key_exists('performance', $getters) || $getters['performance'] === '') && (!array_key_exists('author', $getters) || $getters['author'] === '')) {
+                array_push($queries, "Events.EventId IN (SELECT Events.EventId from Events JOIN Performances on Performances.EventId = Events.EventId WHERE Performances.PType IN ($ptype_qry))");
+              }
+            break;
+            case 'author':
+              array_push($queries, getAuthorQuery($author, $ptype_qry));
+            break;
+            case 'keyword':
+              $keyword = mysqli_real_escape_string($conn, $keyword);
+              array_push($queries, " (MATCH(Events.CommentCClean) AGAINST ('$keyword' IN NATURAL LANGUAGE MODE) OR Events.CommentCClean LIKE '%$keyword%'
+                  OR MATCH(PerfTitleClean) AGAINST ('$keyword' IN NATURAL LANGUAGE MODE) OR PerfTitleClean LIKE '%$keyword%'
+                  OR MATCH(CommentPClean) AGAINST ('$keyword' IN NATURAL LANGUAGE MODE) OR CommentPClean LIKE '%$keyword%'
+                  OR MATCH(RoleClean, PerformerClean) AGAINST ('$keyword' IN NATURAL LANGUAGE MODE) OR RoleClean LIKE '%$keyword%' OR PerformerClean LIKE '%$keyword%'
+                  OR MATCH(AuthNameClean) AGAINST ('$keyword' IN NATURAL LANGUAGE MODE) OR AuthNameClean LIKE '%$keyword%') ");
+
+              // Promote matches on Performance Titles and demote matches on Performance or Event Comments
+              array_push($orders, "((pTScore * 2) + (pCScore / 3) + (eScore / 3) + cScore + aScore) DESC");
+            break;
+          }
+        }
+      }
+
+      // Add our WHERE statements to $sql
+      if (!empty($queries)) {
+      $sql .= " WHERE ";
+      $i = 1;
+      foreach($queries as $query) {
+        if ($i < count($queries)) {
+          $sql .= $query . ' AND ';
+        } else {
+          $sql .= $query;
+        }
+        $i++;
+      }
+    }
+
+    // The results need to be grouped by Event to avoid redundancy
+    $sql .= " GROUP BY Events.EventId ORDER BY ";
+
+    // If sort by 'relevance', add SORT BYs for each $orders. Tack on Events.EventDate as secondary/default sort
+    if ($sortBy === 'relevance') {
+      if (!empty($orders)) {
+        $cnt = 1;
+        foreach($orders as $order) {
+          if ($cnt < count($orders)) {
+            $sql .= $order . ', ';
+          } else {
+            $sql .= $order . ', Events.EventDate';
+          }
+          $cnt++;
+        }
+      } else {
+        $sql .= " Events.EventDate";
+      }
+    } else {
+      $sql .= " Events.EventDate";
+    }
+
+    return $sql;
+  }
+
+
+  /**
+  * Cleans string of all special chars except semicolons, spaces, and double quotes
+  *
+  * Replaces '-' and '_' with a space, then removes all chars not alphanumeric,
+  *  space, double quotes, or semicolon
+  *
+  * @param string $str Unsanitized string from $_GET
+  *
+  * @return string The cleaned string.
+  */
+  function cleanStr($str) {
+    $string = str_replace('-', ' ', $str);
+    $string = str_replace('_', ' ', $string);
+
+    return preg_replace('/[^A-Za-z0-9 ;"]/', '', $string);
+  }
+
+
+  /**
+  * Removes all double quotes from string
+  *
+  * @param string $str Cleaned string containing double quotes
+  *
+  * @return string The cleaned string with double quotes removed
+  */
+  function cleanQuotes($str) {
+    $string = str_replace('"', '', $str);
+    return $string;
+  }
+
+
+  /**
+  * Retrieves theatres from database and generates HTML for Theatre Select options
+  */
+  function getTheatres() {
+    global $conn;
+
+    $sql = 'SELECT * from Theatre GROUP BY TheatreName ORDER BY TheatreName';
+    $result = $conn->query($sql);
+    $output = [];
+    while ($row = $result->fetch_assoc()) {
+      echo '<option value="' . $row['TheatreName'] . '"';
+      getSticky(2, 'theatre', $row['TheatreName']);
+      echo '>' . $row['TheatreName'] . '</option>';
+    }
+
+  }
+
+
+  /**
+  * Generates HTML for Year Select options
+  */
+  function getYears($yearType = 'start') {
+    $start = 1659;
+
+    for ($i=$start; $i <= 1800; $i++) {
+      echo '<option value="' . $i . '"';
+      getSticky(2, $yearType . '-year', $i);
+      echo '>' . $i . '</option>';
+    }
+  }
+
+
+  /**
+  * Generates HTML for Months Select options
+  */
+  function getMonths($monthType = 'start') {
+    for ($i=0; $i <= 12; $i++) {
+      // substr('0' . $i, -2)
+      echo '<option value="' . $i . '"';
+      getSticky(2, $monthType . '-month', $i);
+      echo '>' . $i . '</option>';
+    }
+  }
+
+
+  /**
+  * Generates HTML for Day Select options
+  */
+  function getDays($dayType = 'start') {
+    for ($i=0; $i <= 31; $i++) {
+      echo '<option value="' . $i . '"';
+      getSticky(2, $dayType . '-day', $i);
+      echo '>' . $i . '</option>';
+    }
+  }
+
+
+  /**
+  * Returns Theatre Name given an ID
+  *
+  * @param int $theatreId Theatre ID
+  *
+  * @return string Theatre Name
+  */
+  function getTheatreName($theatreId = '') {
+    global $conn;
+    if ($theatreId === '') return 'None';
+
+    $sql = 'SELECT * FROM Theatre
+            WHERE TheatreId = ' . $theatreId;
+
+    $result = $conn->query($sql);
+    $theatres = [];
+    while ($row = mysqli_fetch_assoc($result)) {
+      $theatres[] = $row;
+    }
+    return $theatres[0]['TheatreName'];
+  }
+
+
+  /**
+  * Retrieves performances related to a given event
+  *
+  * Returns array of performances for a given event, including cast lists and author info
+  *
+  * @param int $eventId Event ID
+  *
+  * @return array Event Performances
+  */
+  function getPerformances($eventId = '') {
+    global $conn;
+
+    if ($eventId !== '') {
+      $sql = 'SELECT * FROM Performances
+              WHERE Performances.EventId = '. $eventId
+              . ' ORDER BY Performances.PerformanceOrder';
+
+      $result = $conn->query($sql);
+      $perfs = [];
+      while ($row = mysqli_fetch_assoc($result)) {
+        $row['cast'] = getShortCastList($row['PerformanceId']);
+        $row['author'] = getAuthorInfo($row['WorkId']);
+        $perfs[] = $row;
+      }
+      return $perfs;
+    }
+
+    return array();
+  }
+
+
+  /**
+  * Returns array of works related to a given performance title
+  *
+  * Takes a given performance title [PerfTitleClean], splits it by semicolon,
+  *  and performs wildcard searches for similar titles in Performances, Works,
+  *  and WorksVariant tables
+  *
+  * @param string $perfTitle Cleaned performance title from [PerfTitleClean] column
+  *
+  * @return array Related Works
+  */
+  function getRelatedWorks($perfTitle = '') {
+    global $conn;
+    if ($perfTitle !== '') {
+      $titles = array_map('trim', explode(';', $perfTitle));
+      $sql = 'SELECT Works.*, WorksVariant.VariantName, WorkAuthMaster.Title as TheTitle, Performances.PerformanceTitle
+        FROM Works LEFT JOIN WorksVariant ON WorksVariant.WorkId = Works.WorkId JOIN WorkAuthMaster ON WorkAuthMaster.WorkId = Works.WorkId LEFT JOIN Performances ON Performances.WorkId = Works.WorkId WHERE';
+
+      $i = 1;
+      foreach($titles as $perf) {
+        if ($i < count($titles)) {
+          $sql .= ' Works.TitleClean LIKE "%' . $perf . '%" OR Performances.PerfTitleClean LIKE "%' . $perf . '%" OR WorksVariant.NameClean LIKE "%' . $perf . '%" OR ';
+        } else {
+          $sql .= ' Works.TitleClean LIKE "%' . $perf . '%" OR Performances.PerfTitleClean LIKE "%' . $perf . '%" OR WorksVariant.NameClean LIKE "%' . $perf . '%" ';
+        }
+        $i++;
+      }
+
+      // Only want to show unique works, not all iterations of a given work title
+      $sql .= ' GROUP BY Works.WorkId';
+
+      $result = $conn->query($sql);
+      $works = [];
+      while ($row = mysqli_fetch_assoc($result)) {
+        $row['author'] = getAuthorInfo($row['WorkId']);
+        $works[] = $row;
+      }
+      return $works;
+    }
+  }
+
+
+  /**
+  * Returns author information for a given work
+  *
+  * @param int $workId Work ID
+  *
+  * @return array Array of author info
+  */
+  function getAuthorInfo($workId = '') {
+    global $conn;
+
+    if ($workId !== '') {
+      $sql = 'SELECT * FROM Author
+              WHERE Author.AuthId In
+                (SELECT AuthId FROM WorkAuthMaster
+                WHERE WorkAuthMaster.WorkId = ' . $workId . ')';
+
+      $result = $conn->query($sql);
+      $auths = [];
+      while ($row = mysqli_fetch_assoc($result)) {
+        $auths[] = $row;
+      }
+
+      return $auths;
+    }
+    return array();
+  }
+
+
+  /**
+  * Determines type of date for a given author date
+  *
+  * @param string $type Author date type
+  *
+  * @return string
+  */
+  function authDateType($type = '') {
+    $dateType = '';
+    if ($type !== '') {
+      switch($type) {
+        case 'birth':
+          $dateType = 'Birth:';
+          break;
+        case 'baptism':
+          $dateType = 'Baptism:';
+          break;
+        case 'flourish':
+          $dateType = 'Flourish:';
+          break;
+        case 'death':
+          $dateType = 'Death:';
+          break;
+        default:
+          $dateType = '';
+      }
+      return $dateType;
+    }
+    return '';
+  }
+
+
+  /**
+  * Returns cast list for a given performance
+  *
+  * @param int $perfId Performance ID
+  *
+  * @return array Array of cast entries
+  */
+  function getShortCastList($perfId = '') {
+    global $conn;
+
+    if ($perfId !== '') {
+      $sql = 'SELECT * FROM Cast
+              WHERE Cast.PerformanceId = '. $perfId;
+
+      $result = $conn->query($sql);
+      $cast = [];
+      while ($row = mysqli_fetch_assoc($result)) {
+        $cast[] = $row;
+      }
+      return $cast;
+    }
+    return array();
+  }
+
+
+  /**
+  * Generates sticky form values
+  *
+  * A sticky form is one that remembers how you filled it out. This function
+  *  uses $_GET values to fill in the form so the user doesn't have to refill everything
+  *
+  * @param int $case Field type. 1 = text, 2 = select, 3 = checkbox, 4 = radio buttons.
+  * @param string $par The $_GET parameter.
+  * @param string $value Specific value for multi-option fields like checkboxes, etc.
+  * @param string $initial Used to check an initial radio button.
+  */
+  function getSticky($case, $par, $value="", $initial="") {
+    switch($case) {
+      case 1: //text
+        if (isset($_GET[$par]) && $_GET[$par] !="") {
+          echo htmlentities(stripslashes($_GET[$par]));
+        }
+      break;
+      case 2: //select
+        if (isset($_GET[$par]) && $_GET[$par] == $value) {
+          echo ' selected="selected"';
+        }
+      break;
+      case 3: //checkboxes
+        if (isset($_GET[$par]) && $_GET[$par] !== '' && in_array($value, $_GET[$par])) {
+          echo ' checked="checked"';
+        }
+      break;
+      case 4: //radio buttons
+        if (isset($_GET[$par]) && $_GET[$par] == $value) {
+          echo ' checked="checked"';
+        } else {
+          if ($initial !="") {
+            echo ' checked="checked"';
+          }
+        }
+      break;
+    }
+  }
+
+
+  /**
+  * Takes a date and formats into human-readable 'd F Y' or 'F Y' if no day given
+  *
+  * @param int $theDate Date from Events table.
+  *
+  * @return string Formatted date and surrounding HTML
+  */
+  function formatDate($theDate = '') {
+    if ($theDate !== '') {
+      $formatted_date = preg_replace("/^(\d{4})(\d{2})(\d{2})$/", "$1-$2-$3", $theDate);
+
+      // If is a 'zero-date', only return month and year
+      if (substr($formatted_date, -2) === '00') {
+        $formatted_date = substr($formatted_date, 0, -2) . '01';
+        $newTime = strtotime($formatted_date);
+        $newDate = date('F Y', $newTime);
+        $newFormatted = '<span class="evt-date">' . substr($newDate, 0, -4) . ' ' . substr($newDate, -4) . '</span>';
+        return $newFormatted;
+      } else {
+        $newTime = strtotime($formatted_date);
+        $newDate = date('d F Y', $newTime);
+        $newFormatted = '<span class="evt-date">' . substr($newDate, 0, -4) . ' ' . substr($newDate, -4) . '</span>';
+        return $newFormatted;
+      }
+    }
+    return '';
+  }
+
+
+  /**
+  * Generates date WHERE statement.
+  *
+  * @return string Date WHERE query.
+  */
+  function getDateQuery() {
+    global $conn;
+    $sql = "";
+    $monSet = true;
+    $daySet = true;
+    $dateTp = filter_input(INPUT_GET, 'date-type', FILTER_SANITIZE_NUMBER_INT);
+    $startYr = filter_input(INPUT_GET, 'start-year', FILTER_SANITIZE_NUMBER_INT);
+    $startMon = filter_input(INPUT_GET, 'start-month', FILTER_SANITIZE_NUMBER_INT);
+    $startDay = filter_input(INPUT_GET, 'start-day', FILTER_SANITIZE_NUMBER_INT);
+    $endYr = filter_input(INPUT_GET, 'end-year', FILTER_SANITIZE_NUMBER_INT);
+    $endMon = filter_input(INPUT_GET, 'end-month', FILTER_SANITIZE_NUMBER_INT);
+    $endDay = filter_input(INPUT_GET, 'end-day', FILTER_SANITIZE_NUMBER_INT);
+
+    // 1=Between, 2=Before, 3=On, 4=After
+    if (!isset($dateTp) || !in_array($dateTp, [1,2,3,4])) {
+      $dateTp = 1;
+    }
+
+    // If no date defined, don't return a query
+    if (in_array($dateTp, [2,3,4]) && !isset($startYr)) return '';
+    if (!isset($startYr) && !isset($endYr)) {
+      return '';
+    }
+
+    // Set defaults if not in $_GET info or outside limits
+    if (!isset($startYr) || $startYr < 1659 || $startYr > 1800) $startYr = 1659;
+    if (!isset($endYr) || $endYr < 1659 || $endYr > 1800) $endYr = 1800;
+    if (!isset($startMon) || ($startMon < 0 || $startMon > 12)) {$startMon = 0; $monSet = false;}
+    if (!isset($startDay) || ($startDay < 0 || $startDay > 31)) {$startDay = 0; $daySet = false;}
+    if (!isset($endMon) || ($endMon < 0 || $endMon > 12)) $endMon = 12;
+    if (!isset($endDay) || ($endDay < 0 || $endDay > 31)) $endDay = 31;
+
+    $startStr = $startYr . substr('0' . $startMon, -2) . substr('0' . $startDay, -2);
+    $endStr = $endYr . substr('0' . $endMon, -2) . substr('0' . $endDay, -2);
+
+    switch($dateTp) {
+      case 1: // Between
+        $sql = "Events.EventDate BETWEEN $startStr AND $endStr";
+        break;
+      case 2: // Before
+        $sql = "Events.EventDate <= $startStr";
+        break;
+      case 3: // On
+        // If zero date (e.g. 17161100), run LIKE '171611%'
+        if ($daySet === false) {
+          // If zero month (e.g. 17160000), run LIKE '1716%'
+          if ($monSet === false) {
+            $sql = "Events.EventDate LIKE '" . $startYr . "%'";
+          } else {
+            $sql = "Events.EventDate LIKE '" . $startYr . substr('0' . $startMon, -2) . "%'";
+          }
+        } else { // Else exact match
+          $sql = "Events.EventDate = $startStr";
+        }
+        break;
+      case 4: // After
+        $sql = "Events.EventDate >= $startStr";
+        break;
+    }
+
+    return $sql;
+  }
+
+
+  /**
+  * Takes an author's name and generates WHERE statement from all related titles.
+  *
+  * Takes an author's name and performes two preliminary queries to get all work
+  *  titles associated with that author, as well as any other work title that
+  *  is similar or has a variant title that is similar. The list of found titles
+  *  is then returned as a bunch of WHERE LIKE '%<title>%' statements to get any
+  *  performance with a similar title. The idea is to introduce ambiguity and
+  *  cast as wide a net as possible because we don't know for sure who authored
+  *  the version of the play that was performed on any given night.
+  *
+  * @param string $author Cleaned author name from $_GET.
+  * @param string $ptype_qry List of selected ptypes to be used in WHERE IN ().
+  *
+  * @return string Author WHERE statement.
+  */
+  function getAuthorQuery($author, $ptype_qry = '') {
+    global $conn;
+
+    if ($author === '') return '';
+
+    $author = cleanStr($author);
+    $authorClean = mysqli_real_escape_string($conn, cleanQuotes($author));
+    $author = mysqli_real_escape_string($conn, $author);
+
+    // If there are ptypes, generate statement
+    $typeStr = '';
+    if ($ptype_qry !== '') $typeStr = " Performances.PType IN ($ptype_qry) AND ";
+
+    // Look for related titles in the Works table
+    $workIdSql = "SELECT Works.TitleClean FROM Works WHERE Works.WorkId IN (
+          SELECT WorkAuthMaster.WorkId FROM WorkAuthMaster
+          JOIN Works ON Works.WorkId = WorkAuthMaster.WorkId
+          LEFT JOIN WorksVariant ON WorksVariant.WorkId = Works.WorkId
+          WHERE WorkAuthMaster.TitleClean IN (
+            SELECT WorkAuthMaster.TitleClean FROM WorkAuthMaster
+            LEFT JOIN Author ON Author.AuthId = WorkAuthMaster.AuthId
+            WHERE (Author.AuthNameClean LIKE '%$authorClean%') )
+            OR (Works.SourceAuthor LIKE '%$authorClean%' OR REPLACE(Works.SourceAuthor, \"'\", \"\") LIKE '%$authorClean%')
+            OR WorksVariant.NameClean IN (
+              SELECT WorkAuthMaster.TitleClean FROM WorkAuthMaster
+              LEFT JOIN Author ON Author.AuthId = WorkAuthMaster.AuthId
+              WHERE (Author.AuthNameClean LIKE '%$authorClean%')
+            )
+          )";
+
+    // look for related titles in the WorksVariant table
+    $varIdSql = "SELECT WorksVariant.NameClean FROM WorksVariant WHERE WorksVariant.WorkId IN (
+          SELECT WorkAuthMaster.WorkId FROM WorkAuthMaster
+          JOIN Works ON Works.WorkId = WorkAuthMaster.WorkId
+          LEFT JOIN WorksVariant ON WorksVariant.WorkId = Works.WorkId
+          WHERE WorkAuthMaster.TitleClean IN (
+            SELECT WorkAuthMaster.TitleClean FROM WorkAuthMaster
+            LEFT JOIN Author ON Author.AuthId = WorkAuthMaster.AuthId
+            WHERE (Author.AuthNameClean LIKE '%$authorClean%') )
+            OR (Works.SourceAuthor LIKE '%$authorClean%' OR REPLACE(Works.SourceAuthor, \"'\", \"\") LIKE '%$authorClean%')
+            OR WorksVariant.NameClean IN (
+              SELECT WorkAuthMaster.TitleClean FROM WorkAuthMaster
+              LEFT JOIN Author ON Author.AuthId = WorkAuthMaster.AuthId
+              WHERE (Author.AuthNameClean LIKE '%$authorClean%')
+            )
+          )";
+
+    $workIdResult = $conn->query($workIdSql);
+
+    $workIds = [];
+    while ($row = mysqli_fetch_assoc($workIdResult)) {
+      $workIds[] = $row['TitleClean'];
+    }
+
+    $varIdResult = $conn->query($varIdSql);
+    while ($row = mysqli_fetch_assoc($varIdResult)) {
+      $workIds[] = $row['NameClean'];
+    }
+
+    // Unique list of titles from both queries
+    $titles = array_unique($workIds);
+
+    if (empty($workIds)) return '0';
+
+    $sql = " ";
+
+    // Include ptype statement
+    $sql .= "$typeStr (";
+
+    // Some titles actually contain multiple titles, separated by a semicolon or
+    //  '; or '. We'll trim and explode out the title on the semicolon, and $prefix is used
+    //  to strip out the 'or '
+    $prefix = "or ";
+
+    $i = 1;
+    foreach ($titles as $title) {
+      $titleArr = array_map('trim', explode(';', $title));
+      if ($i < count($titles)) {
+        foreach ($titleArr as $titl) {
+          // Check for 'or ' prefix and strip it
+          if (strtolower(substr($titl, 0, strlen($prefix))) == $prefix) {
+            $titl = substr($titl, strlen($prefix));
+          }
+          $sql .= " Performances.PerfTitleClean LIKE \"%$titl%\" OR ";
+        }
+      } else {
+        $j = 1;
+        foreach ($titleArr as $titl) {
+          // Check for 'or ' prefix and strip it
+          if (strtolower(substr($titl, 0, strlen($prefix))) == $prefix) {
+            $titl = substr($titl, strlen($prefix));
+          }
+          if ($j < count($titleArr)) {
+            $sql .= " Performances.PerfTitleClean LIKE \"%$titl%\" OR ";
+          } else {
+            $sql .= " Performances.PerfTitleClean LIKE \"%$titl%\" ";
+          }
+          $j++;
+        }
+      }
+      $i++;
+    }
+
+    $sql .= ") ";
+
+    return $sql;
+  }
+
+
+  /**
+  * Takes a ptype code and returns the full type string.
+  *
+  * @param string $ptype Ptype code.
+  *
+  * @return string Full ptype string.
+  */
+  function getPType($ptype = '') {
+    if ($ptype !== '') {
+      switch($ptype) {
+        case 'p':
+          return 'Mainpiece';
+        break;
+        case 'a':
+          return 'Afterpiece';
+        break;
+        case 'm':
+          return 'Music';
+        break;
+        case 'd':
+          return 'Dance';
+        break;
+        case 'e':
+          return 'Entertainment';
+        break;
+        case 's':
+          return 'Song';
+        break;
+        case 'b':
+          return 'Ballet';
+        break;
+        case 'i':
+          return 'Instrumental';
+        break;
+        case 'o':
+          return 'Opera';
+        break;
+        case 'u':
+          return 'Monologue';
+        break;
+        case 't':
+          return 'Trick';
+        break;
+      }
+    }
+    return 'Performance';
+  }
+
+
+  /**
+  * Takes an eventId and returns an Event
+  *
+  * @param int $eventId Event ID.
+  *
+  * @return object Event.
+  */
+  function getEvent($eventId = 1) {
+    global $conn;
+
+    $sql = "SELECT * FROM Events WHERE EventId=" . $eventId;
+    $result = $conn->query($sql);
+    $event = [];
+
+    while ($row = mysqli_fetch_assoc($result)) {
+      $event[] = $row;
+    }
+    if (count($event) > 0) {
+      return $event[0];
+    } else {
+      return $event;
+    }
+
+  }
+
+
+  /**
+  * Takes some HTML text and some words, highlights the words in the text
+  *
+  * Searches through a block of HTML text for a set of words and surrounds those words
+  *  with HTML that causes them to be highlighted on the page. A text block could
+  *  be anything from a performance title to cast name to event comment. The words
+  *  are a pipe-delimited string of terms the user searched for.
+  *
+  * @param string $text Text block that may contains words that need highlighting.
+  * @param string $words Pipe delimited string of words that need highlighting.
+  *  Words have quotes removed.
+  *
+  * @return string Text block with highlighted words.
+  */
+  function highlight($text, $words) {
+    $words = trim($words);
+    if ($words === '') return $text;
+
+    preg_match_all('~[^|]+~', $words, $m);
+    if(!$m || count($m[0]) === 0) {
+        return $text;
+    }
+
+    // Only match outside of angle brackets <>. Don't want HTML in our hrefs!
+    $re = '/<[^>]*>(*SKIP)(*F)|' . implode('|', $m[0]) . '/i';
+    return preg_replace($re, '<span class="highlight">$0</span>', $text);
+  }
+
+
+  /**
+  * Takes some text and some words, determines if words are found in text
+  *
+  * @param string $text Text block that may contains words.
+  * @param string $words Pipe delimited string of words to search for.
+  *  Words have quotes removed.
+  *
+  * @return string
+  */
+  function isFoundIn($text, $words) {
+    $words = trim($words);
+    if ($words === '' || $text === '') { return false; }
+
+    preg_match_all('~[^|]+~', $words, $m);
+    if(!$m || count($m[0]) === 0) {
+        return false;
+    }
+
+    $re = '/\\w*?' . implode('|', $m[0]) . '\\w*/i';
+    if(!preg_match($re, $text)) {
+      return false;
+    }
+    else {
+      return true;
+    }
+  }
+
+
+  /**
+  * Determines if any of the related search terms are found in cast list.
+  *
+  * On the results page, we only want to show the cast members that match the
+  *  keyword, actor, or role search terms. This function finds the matches and
+  *  returns a cast list array to output.
+  *
+  * @param string $actorSearch Pipe-delimited string containing keyword and actor
+  *  search terms. Words have quotes removed.
+  * @param string $roleSearch Pipe-delimited string containing keyword and role
+  *  search terms. Words have quotes removed.
+  * @param array $cast Array of all cast members associated with an event.
+  *
+  * @return array Array of cast members that match either they keyword, actor, or
+  *  role search terms.
+  */
+  function isInCast($actorSearch, $roleSearch, $cast) {
+    $castMatch = [];
+    $actorSearch = trim($actorSearch);
+    $roleSearch = trim($roleSearch);
+    if (($actorSearch === '' || $actorSearch === '|') && ($roleSearch === '' || $roleSearch === '|')) { return false; }
+    if (count($cast) <= 0) { return false; }
+
+    preg_match_all('~[^|]+~', $actorSearch, $am); // Actor search terms array
+    preg_match_all('~[^|]+~', $roleSearch, $rm); // Role search terms array
+    if(!$am && !$rm) {
+        return false;
+    }
+
+    $re_a = '/\\w*?' . implode('|', $am[0]) . '\\w*/i'; // Actor regex
+    $re_r = '/\\w*?' . implode('|', $rm[0]) . '\\w*/i'; // Role regex
+
+    foreach ($cast as $mem) {
+      if (($actorSearch !== '' && $actorSearch !== '|' && preg_match($re_a, $mem['Performer'])) || ($roleSearch !== '' && $roleSearch !== '|' && preg_match($re_r, $mem['Role']))) {
+        $castMatch[] = $mem;
+      }
+    }
+    if (count($castMatch) > 0) {
+      return $castMatch;
+    }
+    return false;
+  }
+
+
+  /**
+  * Takes some text and creates links for any instances of $name=
+  *
+  * In the 1970s database, they wrapped many names in $=. We want to find these and
+  *  create links that take the user to a keyword search for that person.
+  *
+  * @param string $text Text block that may contains named entities ($name=)
+  *
+  * @return string HTML Text block with named entities linked out to keyword searches
+  */
+  function namedEntityLinks($text) {
+    $text = trim($text);
+    if ($text === "") return '';
+
+    $re = '/(\$)([\s\S]+)(=)([^\"]*)/U'; // Matches $name=
+
+    return preg_replace($re, '<a href="/results.php?keyword=$2">$2$4</a>', $text);
+  }
+
+
+  /**
+  * Creates a link out to a new search for a given key.
+  *
+  * Creates crosslinks for a given key out to a search for that key. So, a key of
+  *  'actor' will take the value and link to a search for ?actor=value.
+  *
+  * @param string $key The key for which we will create a search link.
+  * @param string $value The value for which to be searched.
+  *
+  * @return string HTML Text block with values linked out to relevant searches.
+  */
+  function linkedSearches($key, $value) {
+    $value = trim($value);
+    if ($value === '') return '';
+
+    // Clean the value string up a bit. Remove '$, |, =, *'. Change brackets to HTML entities.
+    $value = preg_replace('/[\[\]]/', '&rbrack;', strip_tags(preg_replace('/[\$|=\*]/', '', $value)));
+    preg_match_all('~[^,]+~', $value, $m);
+
+    foreach($m[0] as $k => $val) {
+      $m[0][$k] = trim($val);
+    }
+
+    $re = '/' . implode('|', $m[0]) . '/i';
+    return preg_replace($re, '<a href="results.php?'.preg_replace('/[\[\]]/', '&rbrack;', $key).'=$0">$0</a>', $value);
+  }
+
+
+  /**
+  * Generates href for performance title link
+  *
+  * @param string $value The title to be linked.
+  *
+  * @return string href value.
+  */
+  function linkedTitles($value) {
+    $value = trim($value);
+    if ($value === '') return '';
+
+    $value = strip_tags(htmlentities($value));
+
+    return '/results.php?performance=' . $value;
+  }
+
+
+  /**
+  * Takes text block and repairs any faulty HTML
+  *
+  * In the data, there are many opening italics HTML tags that didn't have a
+  *  closing tag. This fixes that.
+  *
+  * @param string $title Title HTML to be fixed.
+  *
+  * @return string
+  */
+  function cleanItalics($title) {
+    if ($title === '') return '';
+
+    $tidy = new tidy();
+    $clean = $tidy->repairString($title);
+    return $clean;
+  }
+
+
+  /**
+  * Creates XML download for a single event
+  *
+  * @param int $id ID of Event to be XML'ed.
+  */
+  function getXML($id) {
+    $event = getEvent($id);
+    if (empty($event)) {
+      $event['error'] = 'No such event.';
+      $filename = 'error';
+    } else {
+      $filename = $id;
+      $event['Performances'] = getPerformances($event['EventId']);
+    }
+
+    $xml_data = new SimpleXMLElement('<?xml version="1.0"?><data></data>');
+
+    function array_to_xml( $data, &$xml_data, $pkey = '' ) {
+      foreach ( $data as $key => $value ) {
+          if( is_numeric($key) ){
+              if ($pkey === 'performances') $key = 'performance-'.$key;
+              else if ($pkey === 'cast') $key = 'cast-'.$key;
+              else
+                $key = 'item-'.$key; //dealing with <0/>..<n/> issues
+          }
+          $key = strtolower($key);
+          if( is_array($value) ) {
+              $subnode = $xml_data->addChild($key);
+              array_to_xml($value, $subnode, $key);
+          } else {
+              $xml_data->addChild("$key",htmlspecialchars("$value"));
+          }
+       }
+     }
+
+    array_to_xml($event,$xml_data);
+    $xml = $xml_data->asXML();
+
+    // Set headers so file automatically downloads
+    header('Content-disposition: attachment; filename=' . $filename . '.xml');
+    header('Content-type: text/xml');
+    echo $xml;
+  }
+
+
+  /**
+  * Creates XML download for all search results
+  *
+  * @param array $ids Array of IDs of Events to be XML'ed.
+  */
+  function getResultsXML($ids = []) {
+    global $conn;
+    $results = [];
+    $events = [];
+    $filename = 'results_XML';
+
+    // Get Event info
+    foreach ($ids as $id) {
+      $event = getEvent($id);
+      $event['Performances'] = getPerformances($id);
+      $events[] = $event;
+    }
+
+    $xml_data = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><data></data>');
+
+    function array_to_xml( $data, &$xml_data, $pkey = '' ) {
+      foreach ( $data as $key => $value ) {
+          if( is_numeric($key) ){
+              if ($pkey === 'performances') $key = 'performance-'.$key;
+              else if ($pkey === 'cast') $key = 'cast-'.$key;
+              else
+                $key = 'item-'.$key; //dealing with <0/>..<n/> issues
+          }
+          $key = strtolower($key);
+          if( is_array($value) ) {
+              $subnode = $xml_data->addChild($key);
+              array_to_xml($value, $subnode, $key);
+          } else {
+              $xml_data->addChild("$key",htmlspecialchars("$value"));
+          }
+       }
+     }
+
+    array_to_xml($events, $xml_data);
+    $xml = $xml_data->asXML();
+
+    // Set headers so file automatically downloads
+    header('Content-disposition: attachment; filename=' . $filename . '.xml');
+    header('Content-type: text/xml');
+    echo $xml;
+  }
+
+
+  /**
+  * Creates JSON download for a single event
+  *
+  * @param int $id ID of Event to be JSON'ed.
+  */
+  function getJSON($id) {
+    $event = getEvent($id);
+    if (empty($event)) {
+      $event['error'] = 'No such event.';
+      $filename = 'error';
+    } else {
+      $filename = $id;
+      $event['Performances'] = getPerformances($event['EventId']);
+    }
+
+    $json = json_encode($event);
+
+    // Set headers so file automatically downloads
+    header('Content-disposition: attachment; filename=' . $filename . '.json');
+    header('Content-type: application/json');
+    echo $json;
+  }
+
+
+  /**
+  * Creates JSON download for all search results
+  *
+  * @param array $ids Array of IDs of Events to be JSON'ed.
+  */
+  function getResultsJSON($ids = []) {
+    global $conn;
+    $results = [];
+    $events = [];
+    $filename = 'results_JSON';
+
+    foreach ($ids as $id) {
+      $event = getEvent($id);
+      $event['Performances'] = getPerformances($id);
+      $events[] = $event;
+    }
+
+    if (count($ids) < 5000) {
+      $json = json_encode($events);
+    } else {
+      $json = encodeLargeArray($events);
+    }
+
+    // Set headers so file automatically downloads
+    header('Content-disposition: attachment; filename=' . $filename . '.json');
+    header('Content-type: application/json');
+    echo $json;
+
+  }
+
+
+  /**
+  * JSON encodes Event arrays larger than 5000.
+  *
+  * Kept hitting memory limits with larger arrays. This splits the array up and
+  *  encodes it in chunks.
+  *
+  * @param array $events Full array of events to be encoded.
+  * @param int $threshold Splits up array into chunks of this size.
+  *
+  * @return string JSON encoded events.
+  */
+  function encodeLargeArray($events, $threshold = 5000) {
+    $json = array();
+    while (count($events) > 0) {
+        $partial_array = array_slice($events, 0, $threshold);
+        $json[] = ltrim(rtrim(json_encode($partial_array), "]"), "[");
+        $events = array_slice($events, $threshold);
+    }
+
+    $jsonStr = "";
+    for ($i = 0; $i < sizeof($json); $i++) {
+      $jsonStr .= $json[$i];
+      if ($i != sizeof($json) - 1) {
+        $jsonStr .= ", ";
+      }
+    }
+    $jsonStr2 = '[' . $jsonStr . ']';
+    return $jsonStr2;
+  }
+
+
+?>

@@ -1,0 +1,24 @@
+@font-face {
+    font-family: 'junicoderxregular';
+    src: url('fonts/JunicodeRX.svg') format('svg'),
+         url('fonts/JunicodeRX.woff2') format('woff2'),
+         url('fonts/JunicodeRX.woff') format('woff'),
+         url('fonts/JunicodeRX.eot') format('embedded-opentype'),
+         url('fonts/JunicodeRX.otf') format('otf'),
+         url('fonts/JunicodeRX.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'junicoderxregular';
+    src: url('fonts/JunicodeRX-Bold.ttf') format('truetype');
+    font-weight: bold;
+}
+
+@font-face {
+    font-family: 'aquilinetworegular';
+    src: url('fonts/AquilineTwo-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+
+}
