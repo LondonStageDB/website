@@ -172,11 +172,12 @@
             break;
             case 'keyword':
               $keyword = mysqli_real_escape_string($conn, $keyword);
-              array_push($queries, " (MATCH(Events.CommentCClean) AGAINST ('$keyword' IN NATURAL LANGUAGE MODE) OR Events.CommentCClean LIKE '%$keyword%'
-                  OR MATCH(PerfTitleClean) AGAINST ('$keyword' IN NATURAL LANGUAGE MODE) OR PerfTitleClean LIKE '%$keyword%'
-                  OR MATCH(CommentPClean) AGAINST ('$keyword' IN NATURAL LANGUAGE MODE) OR CommentPClean LIKE '%$keyword%'
-                  OR MATCH(RoleClean, PerformerClean) AGAINST ('$keyword' IN NATURAL LANGUAGE MODE) OR RoleClean LIKE '%$keyword%' OR PerformerClean LIKE '%$keyword%'
-                  OR MATCH(AuthNameClean) AGAINST ('$keyword' IN NATURAL LANGUAGE MODE) OR AuthNameClean LIKE '%$keyword%') ");
+              $keywordClean = mysqli_real_escape_string($conn, cleanQuotes($keyword));
+              array_push($queries, " (MATCH(Events.CommentCClean) AGAINST ('$keyword' IN NATURAL LANGUAGE MODE) OR Events.CommentCClean LIKE '%$keywordClean%'
+                  OR MATCH(PerfTitleClean) AGAINST ('$keyword' IN NATURAL LANGUAGE MODE) OR PerfTitleClean LIKE '%$keywordClean%'
+                  OR MATCH(CommentPClean) AGAINST ('$keyword' IN NATURAL LANGUAGE MODE) OR CommentPClean LIKE '%$keywordClean%'
+                  OR MATCH(RoleClean, PerformerClean) AGAINST ('$keyword' IN NATURAL LANGUAGE MODE) OR RoleClean LIKE '%$keywordClean%' OR PerformerClean LIKE '%$keywordClean%'
+                  OR MATCH(AuthNameClean) AGAINST ('$keyword' IN NATURAL LANGUAGE MODE) OR AuthNameClean LIKE '%$keywordClean%') ");
 
               // Promote matches on Performance Titles and demote matches on Performance or Event Comments
               array_push($orders, "((pTScore * 2) + (pCScore / 3) + (eScore / 3) + cScore + aScore) DESC");
@@ -226,10 +227,10 @@
 
 
   /**
-  * Cleans string of all special chars except semicolons, spaces, and double quotes
+  * Cleans string of all special chars except semicolons, spaces, and double quotes.
   *
-  * Replaces '-' and '_' with a space, then removes all chars not alphanumeric,
-  *  space, double quotes, or semicolon
+  * Replaces '-' and '_' with a space. Replaces ” and “ with ". Then removes all 
+  *  chars not alphanumeric, space, double quotes, or semicolon.
   *
   * @param string $str Unsanitized string from $_GET
   *
@@ -238,6 +239,8 @@
   function cleanStr($str) {
     $string = str_replace('-', ' ', $str);
     $string = str_replace('_', ' ', $string);
+    $string = str_replace('”', '"', $string);
+    $string = str_replace('“', '"', $string);
 
     return preg_replace('/[^A-Za-z0-9 ;"]/', '', $string);
   }
