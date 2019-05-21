@@ -20,5 +20,5 @@
     $data[] = $row['AuthName'];
   }
 
-  echo json_encode($data);
+  echo json_encode(array_unique($data));
 ?>
