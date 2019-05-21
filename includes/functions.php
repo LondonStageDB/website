@@ -667,7 +667,7 @@
     if ($author === '') return '';
 
     $author = cleanStr($author);
-    $authorClean = mysqli_real_escape_string($conn, cleanQuotes($author, true));
+    $authorClean = mysqli_real_escape_string($conn, cleanQuotes($author));
     $author = mysqli_real_escape_string($conn, $author);
 
     // If there are ptypes, generate statement
