@@ -17,7 +17,7 @@
 
   $data = array();
   while ($row = $result->fetch_assoc()) {
-    $data[] = $row['PerfTitleClean'];
+    $data[] = trim($row['PerfTitleClean']);
   }
 
   echo json_encode(array_unique($data));
