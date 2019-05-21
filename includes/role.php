@@ -17,7 +17,7 @@
 
   $data = array();
   while ($row = $result->fetch_assoc()) {
-    $data[] = $row['Role'];
+    $data[] = $row['RoleClean'];
   }
 
   echo json_encode($data);
