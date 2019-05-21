@@ -59,7 +59,7 @@
     // Tack on Performance related parameters for relevance sorting
     if (!empty($_GET['performance'])) {
       $perfTemp = mysqli_real_escape_string($conn, $getters['performance']);  // Retains double quotes
-      $perfClean = mysqli_real_escape_string($conn, cleanQuotes($getters['performance'])); // No double quotes for 'LIKE' search
+      $perfClean = mysqli_real_escape_string($conn, cleanQuotes($getters['performance'], true)); // No double quotes for 'LIKE' search
       $sql .= ", (MATCH(PerfTitleClean) AGAINST ('$perfTemp' IN BOOLEAN MODE) + ";
       $sql .= " case when PerfTitleClean LIKE '$perfClean' then 50 "; // Exact match gets higher rating
 
@@ -98,7 +98,7 @@
       // Tack on Performance related parameters for relevance sorting
       if (!empty($_GET['performance'])) {
         $perfTemp = mysqli_real_escape_string($conn, $getters['performance']);  // Retains double quotes
-        $perfClean = mysqli_real_escape_string($conn, cleanQuotes($getters['performance']));  // No double quotes for 'LIKE' search
+        $perfClean = mysqli_real_escape_string($conn, cleanQuotes($getters['performance'], true));  // No double quotes for 'LIKE' search
         $sql .= ", (MATCH(PerfTitleClean) AGAINST ('$perfTemp' IN BOOLEAN MODE) + ";
         $sql .= " case when PerfTitleClean LIKE '$perfClean' then 50 "; // Exact match gets higher rating
 
@@ -143,12 +143,12 @@
               }
             break;
             case 'actor':
-              $actorClean = mysqli_real_escape_string($conn, cleanQuotes($actor));
+              $actorClean = mysqli_real_escape_string($conn, cleanQuotes($actor, true));
               $actor = mysqli_real_escape_string($conn, $actor);
               array_push($queries, "(MATCH(Cast.PerformerClean) AGAINST ('\"$actor\" @4' IN BOOLEAN MODE) OR Cast.PerformerClean LIKE '%$actorClean%')");
             break;
             case 'role':
-              $roleClean = mysqli_real_escape_string($conn, cleanQuotes($role));
+              $roleClean = mysqli_real_escape_string($conn, cleanQuotes($role, true));
               $role = mysqli_real_escape_string($conn, $role);
               array_push($queries, "(MATCH(Cast.RoleClean) AGAINST ('\"$role\" @4' IN BOOLEAN MODE) OR Cast.RoleClean LIKE '%$roleClean%')");
             break;
@@ -156,7 +156,7 @@
               // Include ptype parameter if exists
               $typeStr = '';
               if (!empty($ptypes)) $typeStr = " AND Performances.PType IN ($ptype_qry)";
-              $performanceClean = mysqli_real_escape_string($conn, cleanQuotes($performance));
+              $performanceClean = mysqli_real_escape_string($conn, cleanQuotes($performance, true));
               $performance = mysqli_real_escape_string($conn, $performance);
               array_push($queries, "((MATCH(PerfTitleClean) AGAINST ('\"$performance\" @4' IN BOOLEAN MODE) OR PerfTitleClean LIKE '%$performanceClean%') $typeStr)");
               array_push($orders, "PerfScore DESC");
@@ -171,7 +171,7 @@
               array_push($queries, getAuthorQuery($author, $ptype_qry));
             break;
             case 'keyword':
-              $keywordClean = mysqli_real_escape_string($conn, cleanQuotes($keyword));
+              $keywordClean = mysqli_real_escape_string($conn, cleanQuotes($keyword, true));
               $keyword = mysqli_real_escape_string($conn, $keyword);
               array_push($queries, " (MATCH(Events.CommentCClean) AGAINST ('$keyword' IN NATURAL LANGUAGE MODE) OR Events.CommentCClean LIKE '%$keywordClean%'
                   OR MATCH(PerfTitleClean) AGAINST ('$keyword' IN NATURAL LANGUAGE MODE) OR PerfTitleClean LIKE '%$keywordClean%'
@@ -250,11 +250,20 @@
   * Removes all double quotes from string
   *
   * @param string $str Cleaned string containing double quotes
+  * @param boolean $wrap Denotes whether or not to wrap the returned
+  *  string in spaces. For use in LIKE '% word %'.
   *
   * @return string The cleaned string with double quotes removed
   */
-  function cleanQuotes($str) {
+  function cleanQuotes($str, $wrap = false) {
+    $hasQuotes = false;
+    if (strpos($str, '"') !== false) $hasQuotes = true;
+
     $string = str_replace('"', '', $str);
+
+    if ($wrap && $hasQuotes) {
+      $string = " " . $string . " ";
+    }
     return $string;
   }
 
@@ -658,7 +667,7 @@
     if ($author === '') return '';
 
     $author = cleanStr($author);
-    $authorClean = mysqli_real_escape_string($conn, cleanQuotes($author));
+    $authorClean = mysqli_real_escape_string($conn, cleanQuotes($author, true));
     $author = mysqli_real_escape_string($conn, $author);
 
     // If there are ptypes, generate statement
