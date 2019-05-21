@@ -17,7 +17,7 @@
 
   $data = array();
   while ($row = $result->fetch_assoc()) {
-    $data[] = $row['PerformanceTitle'];
+    $data[] = $row['PerfTitleClean'];
   }
 
   echo json_encode($data);

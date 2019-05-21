@@ -171,8 +171,8 @@
               array_push($queries, getAuthorQuery($author, $ptype_qry));
             break;
             case 'keyword':
-              $keyword = mysqli_real_escape_string($conn, $keyword);
               $keywordClean = mysqli_real_escape_string($conn, cleanQuotes($keyword));
+              $keyword = mysqli_real_escape_string($conn, $keyword);
               array_push($queries, " (MATCH(Events.CommentCClean) AGAINST ('$keyword' IN NATURAL LANGUAGE MODE) OR Events.CommentCClean LIKE '%$keywordClean%'
                   OR MATCH(PerfTitleClean) AGAINST ('$keyword' IN NATURAL LANGUAGE MODE) OR PerfTitleClean LIKE '%$keywordClean%'
                   OR MATCH(CommentPClean) AGAINST ('$keyword' IN NATURAL LANGUAGE MODE) OR CommentPClean LIKE '%$keywordClean%'
