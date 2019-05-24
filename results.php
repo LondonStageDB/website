@@ -233,6 +233,12 @@
             </div>
             <div class="grid-x results-table">
               <div class="cell">
+                <?php if ($_GET['author'] !== '') : ?>
+                <div class="author-explain">
+                  <span class="info-icon"></span>
+                  <span>Results not only include performances of plays known to be by '<?php echo cleanQuotes(cleanStr($_GET['author'])); ?>', but also performances of associated titles, including adaptations.</span>
+                </div>
+                <?php endif; ?>
                 <?php for( $i = 0; $i < count( $results->data ); $i++ ) : ?>
                 <div class="event">
                   <?php $results->data[$i]['Performances'] = getPerformances($results->data[$i]['EventId']); ?>
