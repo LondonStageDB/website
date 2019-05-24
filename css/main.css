@@ -735,9 +735,11 @@ body#home:after {
   background-repeat: no-repeat;
   width: 25px;
   height: 25px;
-  flex: 35px;
   opacity: 0.4;
   margin-right: 0.8rem;
+}
+#results .author-explain span:last-of-type {
+  flex: 1;
 }
 #results .event {
   //background-color: #ccdfcb;
