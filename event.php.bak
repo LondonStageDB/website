@@ -13,7 +13,6 @@
   <html class="no-js" lang="en">
 
   <head>
-    <link rel="stylesheet" href="/css/flexslider2-7-2.css" type="text/css" />
     <?php include_once('common/header.php'); ?>
     <title>Event</title>
   </head>
@@ -65,29 +64,9 @@
           </div>
         </div>
         <div class="cell small-12 medium-6 phases-wrap">
-          <div id="carousel" class="flexslider">
-            <span>Data Phases:</span>
-            <ul class="slides">
-              <li><a href="#">PDF</a></li>
-              <li><a href="#">Original</a></li>
-              <li><a href="#">Cleaned</a></li>
-              <li><a href="#">Final</a></li>
-            </ul>
-          </div>
-          <div id="slider" class="flexslider">
-          <ul class="image-wrap2 slides">
-            <li class="book-pdf2 responsive-embed2">
-              <div class="responsive-embed">
-              <?php if ($event['BookPDF'] && $event['BookPDF'] !== '') : ?>
-              <object data="images/pdfs/<?php echo $event['BookPDF']; ?>" type="application/pdf" height="725px" width="532px">
-                <p>Your web browser doesn't have a PDF plugin. Instead, <a href="images/pdfs/<?php echo $event['BookPDF']; ?>">click here to download the PDF file</a></p>
-              </object>
-              <?php else : ?>
-              <span class="no-pdf" style="height: 720px">PDF Coming Soon</span>
-              <?php endif; ?>
-              </div>
-            </li>
-            <li id="orig" class="phase2 p-orig2">
+          <div class="image-wrap">
+            <div id="orig" class="phase p-orig">
+              <a class="data-close-btn" onclick="toggleOrig()" aria-hidden="true">&#10005;</a>
               <div class="phase-content">
                 <h3>Original Data</h3>
                 <p class="orig-source">Source:
@@ -97,59 +76,30 @@
                   <?php echo $event['Phase1']; ?>
                 </div>
               </div>
-            </li>
-            <li id="fixed" class="phase2 p-fixed2">
+            </div>
+            <div class="book-pdf responsive-embed">
+              <?php if ($event['BookPDF'] && $event['BookPDF'] !== '') : ?>
+              <object data="images/pdfs/<?php echo $event['BookPDF']; ?>" type="application/pdf" height="725px" width="532px">
+                <p>Your web browser doesn't have a PDF plugin. Instead, <a href="images/pdfs/<?php echo $event['BookPDF']; ?>">click here to download the PDF file</a></p>
+              </object>
+              <?php else : ?>
+              <span class="no-pdf" style="height: 720px">PDF Coming Soon</span>
+              <?php endif; ?>
+            </div>
+            <div id="fixed" class="phase p-fixed">
+              <a class="data-close-btn" onclick="toggleFixed()" aria-hidden="true">&#10005;</a>
               <div class="phase-content">
                 <h3>Cleaned Data</h3>
                 <div class="phase-data">
                   <?php if ($event['Phase2']) echo $event['Phase2']; else echo 'Coming Soon'; ?>
                 </div>
               </div>
-            </li>
-            <li id="phase3" class="phase2 p-final2">
-              <div class="phase-content">
-                <h3>Final Data</h3>
-                <div class="phase-data">
-                  <?php
-                    $phase3 = getPhaseIII($event['EventId']);
-                  ?>
-                  <div class="phaseIII-section">
-                    <span class="phaseIII-heading">Event: </span>
-                    <?php echo $phase3['event']; ?>
-                  </div>
-                  <?php if (!empty($phase3['perfs'])) : ?>
-                    <?php foreach($phase3['perfs'] as $perf) : ?>
-                     <div class="phaseIII-section">
-                       <span class="phaseIII-heading">Performance: </span>
-                       <?php echo $perf['info']; ?>
-                       <?php if (!empty($perf['asSee'])) : ?>
-                         <?php foreach($perf['asSee'] as $asSee) : ?>
-                         <div class="phaseIII-section phaseIII-sub-section">
-                           <span class="phaseIII-heading">AsSeeDate: </span>
-                           <?php echo $asSee; ?>
-                         </div>
-                         <?php endforeach; ?>
-                       <?php endif; ?>
-                       <?php if (!empty($perf['cast'])) : ?>
-                       <div class="phaseIII-section phaseIII-sub-section">
-                         <span class="phaseIII-heading">Cast: </span>
-                         <?php foreach($perf['cast'] as $cast) : ?>
-                           <div class="phaseIII-cast"><?php echo $cast; ?></div>
-                         <?php endforeach; ?>
-                       </div>
-                       <?php endif; ?>
-                     </div>
-                    <?php endforeach; ?>
-                  <?php endif; ?>
-                </div>
-              </div>
-            </li>
-          </ul>
-          <!--<div class="data-nav" aria-hidden="true">
+            </div>
+          </div>
+          <div class="data-nav" aria-hidden="true">
             <span class="data-nav-title">View:</span>
             <a aria-hidden="true" id="origBtn" class="data-toggle-btn" onclick="toggleOrig()">Original Data</a>
             <a aria-hidden="true" id="fixedBtn" class="data-toggle-btn" onclick="toggleFixed()">Cleaned Data</a>
-          </div>-->
           </div>
         </div>
       </div>
@@ -236,25 +186,6 @@
       </div>
     </div>
     <?php include_once('common/footer.php'); ?>
-    <script src="/js/vendor/jquery.flexslider2-7-2-min.js"></script>
-    <script>
-      $('#carousel').flexslider({
-        animation: "slide",
-        controlNav: false,
-        animationLoop: false,
-        slideshow: false,
-        itemWidth: 100,
-        itemMargin: 10,
-        asNavFor: '#slider'
-      });
-      $('#slider').flexslider({
-        animation: "slide",
-        controlNav: false,
-        animationLoop: false,
-        slideshow: false,
-        sync: "#carousel"
-      });
-    </script>
   </body>
 
   </html>
