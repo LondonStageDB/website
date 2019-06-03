@@ -550,7 +550,7 @@ body#home:after {
   font-family: Helvetica, Roboto, Arial, sans-serif;
   width: 23px;
   height: 23px;
-  border: 2px solid #f1f1f1;
+  border: 2px solid #5A4D3F;
   border-radius: 50%;
   right: 1rem;
   font-size: 1rem;
@@ -569,7 +569,7 @@ body#home:after {
   width: 23px;
   height: 23px;
   font-size: 1rem;
-  border: 2px solid #f1f1f1;
+  border: 2px solid #5A4D3F;
   border-radius: 50%;
   right: 1rem;
   text-align: center;
@@ -1018,6 +1018,9 @@ body#home:after {
   position: relative;
   padding-top: 3rem;
 }
+#event .event-section {
+  overflow-x: hidden;
+}
 #event .event-info {
   padding: 2rem;
 }
@@ -1120,17 +1123,25 @@ body#home:after {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
   padding: 2rem 1rem;
   height: 100%;
+  overflow-y: auto;
 }
 #event .phase-content .orig-source {
   padding-bottom: 1rem;
   font-style: italic;
   text-align: center;
 }
-#event .phase-data {
-  overflow: auto;
+#event .phaseIII-section {
+  margin: 0.8rem 0;
+}
+#event .phaseIII-section > span {
+  font-weight: bold;
+  padding-right: 0.5rem;
+  display: block;
+}
+#event .phaseIII-sub-section {
+  padding-left: 0.8rem;
 }
 #event .event-info > div {
   /*padding-top: 1.5rem;*/
@@ -1597,4 +1608,62 @@ body#home:after {
   padding: 0.5rem 0;
 }
 .toggle-query {
+}
+
+
+/* FlexSlider */
+.flexslider {
+  background: #dfd9c8;
+  border: 0;
+  margin: 0 0 20px;
+}
+#carousel.flexslider {
+  background: none;
+}
+#carousel.flexslider .slides {
+  display: flex;
+  justify-content: center;
+  max-width: 100%;
+  flex-wrap: wrap;
+}
+#carousel.flexslider .slides > li {
+  background: #dfd9c8;
+  display: flex !important;
+  justify-content: center;
+  margin-top: 10px;
+}
+#carousel.flexslider .slides > li a {
+  text-decoration: none;
+  color: #655446;
+  flex: 1;
+  text-align: center;
+  padding: 0.3rem;
+}
+#carousel .flex-direction-nav {
+  display: none;
+}
+#carousel > span {
+  font-size: 1.2rem;
+  text-align: center;
+  display: block;
+}
+.flexslider .slides {
+  display: flex;
+  align-items: center;
+}
+#slider.flexslider .slides > li {
+  max-height: 725px;
+  padding: 1.5rem 0;
+  display: flex !important;
+  flex-direction: column;
+  overflow: hidden;
+}
+.flex-direction-nav a:before {
+  line-height: normal;
+}
+#carousel.flexslider .slides > li.flex-active-slide {
+  background: #655446;
+}
+#carousel.flexslider .slides > li.flex-active-slide a {
+  color: #dfd9c8;
 }

@@ -846,6 +846,60 @@
 
 
   /**
+  * Takes an eventId and returns phase III data.
+  *
+  * @param int $eventId Event ID.
+  *
+  * @return array Phase III Event data.
+  */
+  function getPhaseIII($eventId = 0) {
+    global $conn;
+
+    if ($eventId === 0) return array();
+
+    $phaseIII = array();
+    $phaseIII['event'] = '';
+    $phaseIII['perfs'] = array();
+    $eventSql = "SELECT EventId, EventDate, TheatreCode, Hathi, CommentC FROM Events WHERE EventId=" . $eventId;
+    $perfSql = "SELECT PerformanceId, EventId, PType, PerformanceTitle, CommentP FROM Performances WHERE EventId=" . $eventId;
+    $asSeeSql = "SELECT * FROM AsSeeDate WHERE PerformanceId=";
+    $castSql = "SELECT CastId, PerformanceId, Role, Performer FROM Cast WHERE PerformanceId=";
+
+    $eResult = $conn->query($eventSql);
+    while ($row = mysqli_fetch_assoc($eResult)) {
+      $phaseIII['event'] = implode(' | ', array_filter($row, 'strlen'));
+    }
+
+    if (count($phaseIII) > 0) {
+      $pResult = $conn->query($perfSql);
+      while ($row = mysqli_fetch_assoc($pResult)) {
+        $tempId = $row['PerformanceId'];
+        $tempPerf = array();
+        $tempPerf['info'] = implode(' | ', array_filter($row, 'strlen'));
+
+        $asSeeResult = $conn->query($asSeeSql . $tempId);
+        $tempPerf['asSee'] = array();
+        while ($asRow = mysqli_fetch_assoc($asSeeResult)) {
+          array_push($tempPerf['asSee'], implode(' | ', array_filter($asRow, 'strlen')));
+        }
+
+        $castResult = $conn->query($castSql . $tempId);
+        $tempPerf['cast'] = array();
+        while ($castRow = mysqli_fetch_assoc($castResult)) {
+          array_push($tempPerf['cast'], implode(' | ', array_filter($castRow, 'strlen')));
+        }
+
+        array_push($phaseIII['perfs'], $tempPerf);
+      }
+    } else {
+      return array();
+    }
+
+    return $phaseIII;
+  }
+
+
+  /**
   * Takes some HTML text and some words, highlights the words in the text
   *
   * Searches through a block of HTML text for a set of words and surrounds those words
