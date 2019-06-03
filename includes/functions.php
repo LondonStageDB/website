@@ -551,10 +551,11 @@
   * Takes a date and formats into human-readable 'd F Y' or 'F Y' if no day given
   *
   * @param int $theDate Date from Events table.
+  * @param boolean $plain Include HTML elements or not.  
   *
   * @return string Formatted date and surrounding HTML
   */
-  function formatDate($theDate = '') {
+  function formatDate($theDate = '', $plain = false) {
     if ($theDate !== '') {
       $formatted_date = preg_replace("/^(\d{4})(\d{2})(\d{2})$/", "$1-$2-$3", $theDate);
 
@@ -563,12 +564,20 @@
         $formatted_date = substr($formatted_date, 0, -2) . '01';
         $newTime = strtotime($formatted_date);
         $newDate = date('F Y', $newTime);
-        $newFormatted = '<span class="evt-date">' . substr($newDate, 0, -4) . ' ' . substr($newDate, -4) . '</span>';
+        if ($plain) {
+          $newFormatted = substr($newDate, 0, -4) . ' ' . substr($newDate, -4);
+        } else {
+          $newFormatted = '<span class="evt-date">' . substr($newDate, 0, -4) . ' ' . substr($newDate, -4) . '</span>';
+        }
         return $newFormatted;
       } else {
         $newTime = strtotime($formatted_date);
         $newDate = date('d F Y', $newTime);
-        $newFormatted = '<span class="evt-date">' . substr($newDate, 0, -4) . ' ' . substr($newDate, -4) . '</span>';
+        if ($plain) {
+          $newFormatted = substr($newDate, 0, -4) . ' ' . substr($newDate, -4);
+        } else {
+          $newFormatted = '<span class="evt-date">' . substr($newDate, 0, -4) . ' ' . substr($newDate, -4) . '</span>';
+        }
         return $newFormatted;
       }
     }
