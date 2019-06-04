@@ -142,13 +142,33 @@
             <div class="form-group field-actor inline-label">
               <label for="actor" class="fb-text-label">Actor</label>
               <span data-tooltip class="top l-tooltip" tabindex="2" title="We recommend searching by last name (for example, instead of 'Dorothy Jordan,' search 'Jordan' to return instances where she is listed as 'Mrs Jordan')">?</span>
-              <input type="text" class="actor" name="actor" id="actor" onKeyPress="checkEnter(event)">
+              <span class="cast-switch">
+                <label for="actSwitch" class="show-for-sr">Select 'AND' or 'OR' search on multiple actors.</label>
+                <select name="actSwitch" id="actSwitch" title="Select 'AND' or 'OR' search on multiple actors." disabled="disabled">
+                  <option value="and">AND</option>
+                  <option value="or">OR</option>
+                </select>
+              </span>
+              <span id="actors">
+                <input type="text" class="actor actor-search" name="actor[]" id="actor" onKeyPress="checkEnter(event)">
+              </span>
+              <div class="addActor"><a id="addActor" class="addCast" title="Add an actor">+</a></div>
             </div>
           </div>
           <div class="small-12 medium-8 large-6 cell form-section">
-            <div class="form-group field-role">
+            <div class="form-group field-role inline-label">
               <label for="role" class="fb-text-label">Role</label>
-              <input type="text" class="role" name="role" id="role" onKeyPress="checkEnter(event)">
+              <span class="cast-switch">
+                <label for="roleSwitch" class="show-for-sr">Select 'AND' or 'OR' search on multiple roles.</label>
+                <select name="roleSwitch" id="roleSwitch" title="Select 'AND' or 'OR' search on multiple roles." disabled="disabled">
+                  <option value="and">AND</option>
+                  <option value="or">OR</option>
+                </select>
+              </span>
+              <span id="roles">
+                <input type="text" class="role role-search" name="role[]" id="role" onKeyPress="checkEnter(event)">
+              </span>
+              <div class="addRole"><a id="addRole" class="addCast" title="Add a role">+</a></div>
             </div>
           </div>
         </div>

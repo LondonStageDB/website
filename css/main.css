@@ -345,6 +345,35 @@ body#home:after {
   position: relative;
   padding-bottom: 2rem;
 }
+#mainSearch #actors input[type="text"], #mainSearch #roles input[type="text"] {
+  margin-bottom: 0.4rem;
+}
+#mainSearch #actors input[type="text"]:last-of-type, #mainSearch #roles input[type="text"]:last-of-type {
+  margin-bottom: 0;
+}
+#mainSearch .cast-switch {
+  margin: 0 auto;
+  display: inline-block;
+  float: right;
+}
+#mainSearch .cast-switch select {
+  font-size: 0.8rem;
+  padding: 0.3rem 1.5rem 0.1rem 0.3rem;
+  line-height: 0.8rem;
+  height: auto;
+}
+#mainSearch .addCast {
+  width: 16px;
+  height: 16px;
+  background: #c8c2b3;
+  display: block;
+  margin: 0.3rem 0;
+  margin-left: auto;
+  line-height: 16px;
+  text-align: center;
+  text-decoration: none;
+  color: #5a4d3f;
+}
 #mainSearch .date-type-label {
   display: flex;
   flex-direction: column;
@@ -586,6 +615,35 @@ body#home:after {
   padding: 3rem;
   border-bottom: 1px solid #bbb;
   background-color: #C3D7DF;
+}
+#results #actors input[type="text"], #results #roles input[type="text"] {
+  margin-bottom: 0.4rem;
+}
+#results #actors input[type="text"]:last-of-type, #results #roles input[type="text"]:last-of-type {
+  margin-bottom: 0;
+}
+#results .cast-switch {
+  margin: 0 auto;
+  display: inline-block;
+  float: right;
+}
+#results .cast-switch select {
+  font-size: 0.8rem;
+  padding: 0.3rem 1.5rem 0.1rem 0.3rem;
+  line-height: 0.8rem;
+  height: auto;
+}
+#results .addCast {
+  width: 16px;
+  height: 16px;
+  background: #c8c2b3;
+  display: block;
+  margin: 0.3rem 0;
+  margin-left: auto;
+  line-height: 16px;
+  text-align: center;
+  text-decoration: none;
+  color: #5a4d3f;
 }
 #results .date-type {
   font-size: 0.875rem;

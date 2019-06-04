@@ -103,7 +103,7 @@
               <div class="phase-content">
                 <h3>Cleaned Data</h3>
                 <div class="phase-data">
-                  <?php if ($event['Phase2']) echo $event['Phase2']; else echo 'Coming Soon'; ?>
+                  <?php echo $event['Phase2']; ?>
                 </div>
               </div>
             </li>
@@ -120,7 +120,7 @@
                   </div>
                   <?php if (!empty($phase3['perfs'])) : ?>
                     <?php foreach($phase3['perfs'] as $perf) : ?>
-                     <div class="phaseIII-section">
+                     <div class="phaseIII-section phaseIII-perf">
                        <span class="phaseIII-heading">Performance: </span>
                        <?php echo $perf['info']; ?>
                        <?php if (!empty($perf['asSee'])) : ?>

@@ -1,4 +1,22 @@
 $(function() {
+  $('#addActor').on('click', function() {
+    let html = '<input type="text" class="actor actor-search" name="actor[]" id="actor" onKeyPress="checkEnter(event)">';
+    $('#actors').append(html);
+    $('#actSwitch').prop('disabled', false);
+    $(".actor-search").autocomplete({
+      source: "/includes/act.php",
+    });
+  });
+
+  $('#addRole').on('click', function() {
+    let html = '<input type="text" class="role role-search" name="role[]" id="role" onKeyPress="checkEnter(event)">';
+    $('#roles').append(html);
+    $('#roleSwitch').prop('disabled', false);
+    $(".role-search").autocomplete({
+      source: "/includes/role.php",
+    });
+  });
+
   // Enable Mon/Day fields on initial page load based on what is filled in
   if ($('#startYear').val()) {
     $('#startMonth').prop('disabled', false);
@@ -53,10 +71,10 @@ $(function() {
   $("#author").autocomplete({
     source: "/includes/auth.php",
   });
-  $("#actor").autocomplete({
+  $(".actor-search").autocomplete({
     source: "/includes/act.php",
   });
-  $("#role").autocomplete({
+  $(".role-search").autocomplete({
     source: "/includes/role.php",
   });
 

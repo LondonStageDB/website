@@ -17,6 +17,10 @@
 
   // Get paginated results
   $results    = $Paginator->getData( $limit, $page );
+
+  // Cleaned, pipe delimited strings from 'actor' and 'role' arrays
+  $cleanedActors = (isset($_GET['actor'])) ? implode('|', $_GET['actor']) : '';
+  $cleanedRoles = (isset($_GET['role'])) ? implode('|', $_GET['role']) : '';
 ?>
 
 <!doctype html>
@@ -181,13 +185,55 @@
                   <div class="form-group field-actor inline-label">
                     <label for="actor" class="fb-text-label">Actor</label>
                     <span data-tooltip class="top l-tooltip" tabindex="2" title="We recommend searching by last name (for example, instead of 'Dorothy Jordan,' search 'Jordan' to return instances where she is listed as 'Mrs Jordan')">?</span>
-                    <input type="text" class="actor" name="actor" id="actor" value="<?php getSticky(1, 'actor'); ?>" onKeyPress="checkEnter(event)">
+                    <span class="cast-switch">
+                      <label for="actSwitch" class="show-for-sr">Select 'AND' or 'OR' search on multiple actors.</label>
+                      <select name="actSwitch" id="actSwitch" title="Select 'AND' or 'OR' search on multiple actors." <?php echo (isset($_GET['actor']) && count(array_filter($_GET['actor'], 'strlen')) > 1) ? '' : 'disabled="disabled"'; ?>>
+                        <option value="and" <?php getSticky(2, 'actSwitch', 'and'); ?>>AND</option>
+                        <option value="or" <?php getSticky(2, 'actSwitch', 'or'); ?>>OR</option>
+                      </select>
+                    </span>
+                    <span id="actors">
+                      <?php
+                        $actorArr = (isset($_GET['actor'])) ? array_filter($_GET['actor'], 'strlen') : [];
+                        if (count($actorArr) > 0) {
+                          $i = 0;
+                          foreach($actorArr as $act) {
+                            echo '<input type="text" class="actor actor-search" name="actor[]" id="actor" value="' . getSticky(5, 'actor', $actorArr[$i]) . '" onKeyPress="checkEnter(event)">';
+                            $i++;
+                          }
+                        } else {
+                          echo '<input type="text" class="actor actor-search" name="actor[]" id="actor" value="" onKeyPress="checkEnter(event)">';
+                        }
+                      ?>
+                    </span>
+                    <div class="addActor"><a id="addActor" class="addCast" title="Add an actor">+</a></div>
                   </div>
                 </div>
                 <div class="small-12 cell">
-                  <div class="form-group field-role">
+                  <div class="form-group field-role inline-label">
                     <label for="role" class="fb-text-label">Role</label>
-                    <input type="text" class="role" name="role" id="role" value="<?php getSticky(1, 'role'); ?>" onKeyPress="checkEnter(event)">
+                    <span class="cast-switch">
+                      <label for="roleSwitch" class="show-for-sr">Select 'AND' or 'OR' search on multiple roles.</label>
+                      <select name="roleSwitch" id="roleSwitch" title="Select 'AND' or 'OR' search on multiple roles." <?php echo (isset($_GET['role']) && count(array_filter($_GET['role'], 'strlen')) > 1) ? '' : 'disabled="disabled"'; ?>>
+                        <option value="and" <?php getSticky(2, 'roleSwitch', 'and'); ?>>AND</option>
+                        <option value="or" <?php getSticky(2, 'roleSwitch', 'or'); ?>>OR</option>
+                      </select>
+                    </span>
+                    <span id="roles">
+                      <?php
+                        $roleArr = (isset($_GET['role'])) ? array_filter($_GET['role'], 'strlen') : [];
+                        if (count($roleArr) > 0) {
+                          $i = 0;
+                          foreach($roleArr as $act) {
+                            echo '<input type="text" class="role role-search" name="role[]" id="role" value="' . getSticky(5, 'role', $roleArr[$i]) . '" onKeyPress="checkEnter(event)">';
+                            $i++;
+                          }
+                        } else {
+                          echo '<input type="text" class="role role-search" name="role[]" id="role" value="" onKeyPress="checkEnter(event)">';
+                        }
+                      ?>
+                    </span>
+                    <div class="addRole"><a id="addRole" class="addCast" title="Add a role">+</a></div>
                   </div>
                 </div>
               </div>
@@ -257,11 +303,11 @@
                         echo '<div class="perf">';
                         echo '<h4><span class="info-heading">' . getPType($perf['PType']) . ' Title: </span><i>' . highlight(cleanItalics($perf['PerformanceTitle']), cleanQuotes($_GET['keyword']) . '|' . cleanQuotes($_GET['performance'])) . '</i></h4>';
                         if (isFoundIn($perf['CommentP'], cleanQuotes($_GET['keyword'])) ) echo '<b>Performance Comment: </b>' . highlight(namedEntityLinks($perf['CommentP']), cleanQuotes($_GET['keyword'])) . '<br>';
-                        $inCast = isInCast(cleanQuotes($_GET['keyword']) . '|' . cleanQuotes($_GET['actor']), cleanQuotes($_GET['keyword']) . '|' . cleanQuotes($_GET['role']), $perf['cast']);
+                        $inCast = isInCast(cleanQuotes($_GET['keyword']) . '|' . cleanQuotes($cleanedActors), cleanQuotes($_GET['keyword']) . '|' . cleanQuotes($cleanedRoles), $perf['cast']);
                         if ($inCast !== false) {
                           echo '<div class="cast"><h5>Cast</h5>';
                           foreach ($inCast as $cast) {
-                            echo '<b>Role</b>: ' . highlight(linkedSearches('role', $cast['Role']), cleanQuotes($_GET['keyword']) . '|' . cleanQuotes($_GET['role'])) . "\t\t <b>Actor</b>: " . highlight(linkedSearches('actor', $cast['Performer']), cleanQuotes($_GET['keyword']) . '|' . cleanQuotes($_GET['actor'])) . '<br>';
+                            echo '<b>Role</b>: ' . highlight(linkedSearches('role', $cast['Role']), cleanQuotes($_GET['keyword']) . '|' . cleanQuotes($cleanedRoles)) . "\t\t <b>Actor</b>: " . highlight(linkedSearches('actor', $cast['Performer']), cleanQuotes($_GET['keyword']) . '|' . cleanQuotes($cleanedActors)) . '<br>';
                           }
                           echo '</div>';
                         }
