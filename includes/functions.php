@@ -16,6 +16,8 @@
     $keywrd = array();
     $sortBy = (!empty($_GET['sortBy']) && $_GET['sortBy'] === 'relevance') ? 'relevance' : 'date';
     $volume = (isset($_GET['vol'])) ? $_GET['vol'] : '1, 2, 3, 4, 5';
+    $roleSwitch = (isset($_GET['roleSwitch']) && $_GET['roleSwitch'] === 'or') ? 'OR' : 'AND';
+    $actSwitch = (isset($_GET['actSwitch']) && $_GET['actSwitch'] === 'or') ? 'OR' : 'AND';
 
     foreach($_GET as $key => $value) {
       $temp = is_array($value) ? $value : trim($value);
@@ -143,14 +145,42 @@
               }
             break;
             case 'actor':
-              $actorClean = mysqli_real_escape_string($conn, cleanQuotes($actor, true));
-              $actor = mysqli_real_escape_string($conn, $actor);
-              array_push($queries, "(MATCH(Cast.PerformerClean) AGAINST ('\"$actor\" @4' IN BOOLEAN MODE) OR Cast.PerformerClean LIKE '%$actorClean%')");
+              $actQry = "(";
+              $a = 1;
+              $actor = array_filter($actor, 'strlen');
+              foreach($actor as $act) {
+                if ($act !== '') {
+                  $actorClean = mysqli_real_escape_string($conn, cleanQuotes($act, true));
+                  $act = mysqli_real_escape_string($conn, $act);
+                  if ($a < count($actor)) {
+                    $actQry .= "(MATCH(Cast.PerformerClean) AGAINST ('\"$act\" @4' IN BOOLEAN MODE) OR Cast.PerformerClean LIKE '%$actorClean%') " . $actSwitch . " ";
+                  } else {
+                    $actQry .= "(MATCH(Cast.PerformerClean) AGAINST ('\"$act\" @4' IN BOOLEAN MODE) OR Cast.PerformerClean LIKE '%$actorClean%')";
+                  }
+                }
+                $a++;
+              }
+              $actQry .= ")";
+              if ($actQry !== "()") array_push($queries, $actQry);
             break;
             case 'role':
-              $roleClean = mysqli_real_escape_string($conn, cleanQuotes($role, true));
-              $role = mysqli_real_escape_string($conn, $role);
-              array_push($queries, "(MATCH(Cast.RoleClean) AGAINST ('\"$role\" @4' IN BOOLEAN MODE) OR Cast.RoleClean LIKE '%$roleClean%')");
+              $roleQry = "(";
+              $r = 1;
+              $role = array_filter($role, 'strlen');
+              foreach($role as $rle) {
+                if ($rle !== '') {
+                  $roleClean = mysqli_real_escape_string($conn, cleanQuotes($rle, true));
+                  $rle = mysqli_real_escape_string($conn, $rle);
+                  if ($r < count($role)) {
+                    $roleQry .= "(MATCH(Cast.RoleClean) AGAINST ('\"$rle\" @4' IN BOOLEAN MODE) OR Cast.RoleClean LIKE '%$roleClean%') " . $roleSwitch . " ";
+                  } else {
+                    $roleQry .= "(MATCH(Cast.RoleClean) AGAINST ('\"$rle\" @4' IN BOOLEAN MODE) OR Cast.RoleClean LIKE '%$roleClean%')";
+                  }
+                }
+                $r++;
+              }
+              $roleQry .= ")";
+              if($roleQry !== "()") array_push($queries, $roleQry);
             break;
             case 'performance':
               // Include ptype parameter if exists
@@ -512,35 +542,41 @@
   * A sticky form is one that remembers how you filled it out. This function
   *  uses $_GET values to fill in the form so the user doesn't have to refill everything
   *
-  * @param int $case Field type. 1 = text, 2 = select, 3 = checkbox, 4 = radio buttons.
+  * @param int $case Field type. 1 = text, 2 = select, 3 = checkbox, 4 = radio buttons,
+  *  5 = text arrays.
   * @param string $par The $_GET parameter.
   * @param string $value Specific value for multi-option fields like checkboxes, etc.
   * @param string $initial Used to check an initial radio button.
   */
   function getSticky($case, $par, $value="", $initial="") {
     switch($case) {
-      case 1: //text
-        if (isset($_GET[$par]) && $_GET[$par] !="") {
+      case 1: // text
+        if (isset($_GET[$par]) && $_GET[$par] != "") {
           echo htmlentities(stripslashes($_GET[$par]));
         }
       break;
-      case 2: //select
+      case 2: // select
         if (isset($_GET[$par]) && $_GET[$par] == $value) {
           echo ' selected="selected"';
         }
       break;
-      case 3: //checkboxes
+      case 3: // checkboxes
         if (isset($_GET[$par]) && $_GET[$par] !== '' && in_array($value, $_GET[$par])) {
           echo ' checked="checked"';
         }
       break;
-      case 4: //radio buttons
+      case 4: // radio buttons
         if (isset($_GET[$par]) && $_GET[$par] == $value) {
           echo ' checked="checked"';
         } else {
           if ($initial !="") {
             echo ' checked="checked"';
           }
+        }
+      break;
+      case 5: // text arrays
+        if (isset($_GET[$par]) && $_GET[$par] !== '' && in_array($value, $_GET[$par])) {
+          return htmlentities(stripslashes($value));
         }
       break;
     }
@@ -1045,7 +1081,7 @@
     if ($value === '') return '';
 
     // Clean the value string up a bit. Remove '$, |, =, *'. Change brackets to HTML entities.
-    $value = preg_replace('/[\[\]]/', '&rbrack;', strip_tags(preg_replace('/[\$|=\*]/', '', $value)));
+    $value = preg_replace('/[\[\]]/', '&rbrack;', strip_tags(preg_replace('/[\$|=\*\/]/', '', $value)));
     preg_match_all('~[^,]+~', $value, $m);
 
     foreach($m[0] as $k => $val) {
