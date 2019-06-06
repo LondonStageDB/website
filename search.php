@@ -85,10 +85,10 @@
                 <option disabled selected>Mon</option>
                 <?php getMonths('end'); ?>
               </select>
-              <label class="hidden" for="startDay">Start Day</label>
-              <select class="date-day" id="startDay" name="start-day" disabled>
+              <label class="hidden" for="endDay">End Day</label>
+              <select class="date-day" id="endDay" name="end-day" disabled>
                 <option disabled selected>Day</option>
-                <?php getDays('start'); ?>
+                <?php getDays('end'); ?>
               </select>
             </div>
             </div>
