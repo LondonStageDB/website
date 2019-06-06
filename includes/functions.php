@@ -1235,6 +1235,86 @@
 
 
   /**
+  * Creates CSV download for all search results
+  *
+  * @param array $ids Array of IDs of Events to be CSV'ed.
+  */
+  function getResultsCSV($ids = []) {
+    global $conn;
+    $results = array();
+    $events = array();
+    $colArr = array();
+    $headers = array();
+    $cols = '';
+    $filename = (count($ids) === 1) ? $ids[0] : 'results_CSV';
+    $resultQry = "SELECT Events.EventId AS e_EventId,
+        Events.EventDate AS e_EventDate,
+        Events.TheatreCode AS e_TheatreCode,
+        Events.Season AS e_Season,
+        Events.Volume AS e_Volume,
+        Events.Hathi AS e_Hathi,
+        Events.CommentC AS e_CommentC,
+        Events.TheatreId AS e_TheatreId,
+        Events.Phase1 AS e_Phase1,
+        Events.Phase2 AS e_Phase2,
+        Events.CommentCClean AS e_CommentCClean,
+        Events.BookPDF AS e_BookPDF,
+        Theatre.TheatreId AS t_TheatreId,
+        Theatre.Volume AS t_Volume,
+        Theatre.TheatreCode AS t_TheatreCode,
+        Theatre.TheatreName AS t_TheatreName,
+        Performances.PerformanceId AS p_PerformanceId,
+        Performances.EventId AS p_EventId,
+        Performances.PerformanceOrder AS p_PerformanceOrder,
+        Performances.PType AS p_PType,
+        Performances.PerformanceTitle AS p_PerformanceTitle,
+        Performances.CommentP AS p_CommentP,
+        Performances.CastAsListed AS p_CastAsListed,
+        Performances.DetailedComment AS p_DetailedComment,
+        Performances.WorkId AS p_WorkId,
+        Performances.PerfTitleClean AS p_PerfTitleClean,
+        Performances.CommentPClean AS p_CommentPClean,
+        Cast.CastId AS c_CastId,
+        Cast.PerformanceId AS c_PerformanceId,
+        Cast.Role AS c_Role,
+        Cast.Performer AS c_Performer,
+        Cast.RoleClean AS c_RoleClean,
+        Cast.PerformerClean AS c_PerformerClean
+        FROM Events 
+	LEFT JOIN Theatre ON Theatre.TheatreId = Events.TheatreId
+	LEFT JOIN Performances ON Performances.EventId = Events.EventId
+	LEFT JOIN Cast ON Cast.PerformanceId = Performances.PerformanceId
+	WHERE Events.EventId IN(" . implode(',', $ids) . ")";
+
+    // https://stackoverflow.com/questions/125113/php-code-to-convert-a-mysql-query-to-csv
+    // https://stackoverflow.com/questions/13108157/php-array-to-csv
+    // https://stackoverflow.com/questions/2539217/how-to-get-database-table-header-information-into-an-csv-file
+
+    $fp = fopen('php://output', 'w');
+    // Set headers so file automatically downloads
+    header('Content-disposition: attachment; filename=' . $filename . '.csv');
+    header('Content-type: text/csv; charset=utf-8');
+    if(empty($ids)) {
+      fputcsv($fp, 'No Events Found');
+    } else {
+      $qryResults = $conn->query($resultQry);
+      while ($row = mysqli_fetch_assoc($qryResults)) {
+        if(empty($headers)) {
+          $headers = array_keys($row);
+          fputcsv($fp, $headers);
+        }
+        foreach($row as $key => $value) {
+          $row[$key] = utf8_for_xml($value);
+        }
+        fputcsv($fp, $row);
+      }
+    }
+
+    die;
+  }
+
+
+  /**
   * Creates JSON download for a single event
   *
   * @param int $id ID of Event to be JSON'ed.
