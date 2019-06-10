@@ -73,7 +73,7 @@
               <li><a href="#">PDF</a></li>
               <li><a href="#">Original</a></li>
               <li><a href="#">Cleaned</a></li>
-              <li><a href="#">Final</a></li>
+              <li><a href="#">Parsed</a></li>
             </ul>
           </div>
           <div id="slider" class="flexslider">
@@ -110,7 +110,7 @@
             </li>
             <li id="phase3" class="phase2 p-final2">
               <div class="phase-content">
-                <h3>Final Data</h3>
+                <h3>Parsed Data</h3>
                 <div class="phase-data">
                   <?php
                     $phase3 = getPhaseIII($event['EventId']);
@@ -169,7 +169,7 @@
                   <?php if(in_array($perf['PType'], ['p', 'a'])) : ?> 
                   <div class="perf-title perf-data"><span class="info-heading">Title:</span>
                     <a href="<?php echo linkedTitles($perf['PerformanceTitle']); ?>">
-                      <?php echo cleanItalics($perf['PerformanceTitle']); ?>
+                      <?php echo cleanItalics(cleanTitle($perf['PerformanceTitle'])); ?>
                     </a>
                   </div>
                   <div class="perf-comments perf-data"><span class="info-heading">Comments:</span>
