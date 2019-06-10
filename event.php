@@ -166,6 +166,7 @@
             <div class="small-12 perf-info">
               <div class="grid-x">
                 <div class="small-12 medium-7 large-8 perf-info-left">
+                  <?php if(in_array($perf['PType'], ['p', 'a'])) : ?> 
                   <div class="perf-title perf-data"><span class="info-heading">Title:</span>
                     <a href="<?php echo linkedTitles($perf['PerformanceTitle']); ?>">
                       <?php echo cleanItalics($perf['PerformanceTitle']); ?>
@@ -195,8 +196,14 @@
                   <div class="perf-cast-as-listed light-text perf-data"><span class="info-heading">Cast as Listed:</span>
                     <?php echo $perf['CastAsListed']; ?>
                   </div>
+                  <?php else : ?>
+                    <div class="perf-det-comment perf-data"><span class="info-heading">Comment:</span>
+                      <?php echo namedEntityLinks($perf['DetailedComment']); ?>
+                    </div>
+                  <?php endif; ?>
                 </div>
                 <?php $works = getRelatedWorks($perf['PerfTitleClean']); ?>
+                <?php if(count($works) > 0) : ?>
                 <div class="small-12 medium-5 large-4 related-works">
                   <h3>Related Works</h3>
                   <?php foreach ($works as $work) : ?>
@@ -229,6 +236,7 @@
                   </div>
                   <?php endforeach; ?>
                 </div>
+                <?php endif; ?>
               </div>
             </div>
           </div>
