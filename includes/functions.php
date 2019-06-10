@@ -148,7 +148,7 @@
               $actQry = "(";
               $a = 1;
               $actor = array_filter($actor, 'strlen');
-              if ($actSwtch === "AND") {
+              if (count($actor) > 1 && $actSwtch === "AND") {
                 $actQry .= getCastQuery('actor', $actor);
               } else {
                 foreach($actor as $act) {
@@ -171,7 +171,7 @@
               $roleQry = "(";
               $r = 1;
               $role = array_filter($role, 'strlen');
-               if ($roleSwtch === "AND") {
+              if (count($role) > 1 && $roleSwtch === "AND") {
                 $roleQry .= getCastQuery('role', $role);
               } else {
                 foreach($role as $rle) {
@@ -1173,6 +1173,25 @@
     $value = strip_tags(htmlentities($value));
 
     return '/results.php?performance=' . $value;
+  }
+
+
+  /**
+  * Takes title and removes '$' and '='.
+  *
+  * Removes '$' and '=' from Titles, as they are only used for links,
+  *  but we can't place a namedEntity link within a Title link.
+  *
+  * @param string $title Title to be cleaned.
+  *
+  * @return string Cleaned title.
+  */
+  function cleanTitle($title) {
+    if ($title === '') return '';
+
+    $cleaned = str_replace(array('$', '='), '', $title);
+
+    return $cleaned;
   }
 
 
