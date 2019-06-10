@@ -16,8 +16,8 @@
     $keywrd = array();
     $sortBy = (!empty($_GET['sortBy']) && $_GET['sortBy'] === 'relevance') ? 'relevance' : 'date';
     $volume = (isset($_GET['vol'])) ? $_GET['vol'] : '1, 2, 3, 4, 5';
-    $roleSwitch = (isset($_GET['roleSwitch']) && $_GET['roleSwitch'] === 'or') ? 'OR' : 'AND';
-    $actSwitch = (isset($_GET['actSwitch']) && $_GET['actSwitch'] === 'or') ? 'OR' : 'AND';
+    $roleSwtch = (isset($_GET['roleSwitch']) && $_GET['roleSwitch'] === 'or') ? 'OR' : 'AND';
+    $actSwtch = (isset($_GET['actSwitch']) && $_GET['actSwitch'] === 'or') ? 'OR' : 'AND';
 
     foreach($_GET as $key => $value) {
       $temp = is_array($value) ? $value : trim($value);
@@ -148,17 +148,21 @@
               $actQry = "(";
               $a = 1;
               $actor = array_filter($actor, 'strlen');
-              foreach($actor as $act) {
-                if ($act !== '') {
-                  $actorClean = mysqli_real_escape_string($conn, cleanQuotes($act, true));
-                  $act = mysqli_real_escape_string($conn, $act);
-                  if ($a < count($actor)) {
-                    $actQry .= "(MATCH(Cast.PerformerClean) AGAINST ('\"$act\" @4' IN BOOLEAN MODE) OR Cast.PerformerClean LIKE '%$actorClean%') " . $actSwitch . " ";
-                  } else {
-                    $actQry .= "(MATCH(Cast.PerformerClean) AGAINST ('\"$act\" @4' IN BOOLEAN MODE) OR Cast.PerformerClean LIKE '%$actorClean%')";
+              if ($actSwtch === "AND") {
+                $actQry .= getCastQuery('actor', $actor);
+              } else {
+                foreach($actor as $act) {
+                  if ($act !== '') {
+                    $actorClean = mysqli_real_escape_string($conn, cleanQuotes($act, true));
+                    $act = mysqli_real_escape_string($conn, $act);
+                    if ($a < count($actor)) {
+                      $actQry .= "(MATCH(Cast.PerformerClean) AGAINST ('\"$act\" @4' IN BOOLEAN MODE) OR Cast.PerformerClean LIKE '%$actorClean%') " . $actSwtch . " ";
+                    } else {
+                      $actQry .= "(MATCH(Cast.PerformerClean) AGAINST ('\"$act\" @4' IN BOOLEAN MODE) OR Cast.PerformerClean LIKE '%$actorClean%')";
+                    }
                   }
+                  $a++;
                 }
-                $a++;
               }
               $actQry .= ")";
               if ($actQry !== "()") array_push($queries, $actQry);
@@ -167,17 +171,21 @@
               $roleQry = "(";
               $r = 1;
               $role = array_filter($role, 'strlen');
-              foreach($role as $rle) {
-                if ($rle !== '') {
-                  $roleClean = mysqli_real_escape_string($conn, cleanQuotes($rle, true));
-                  $rle = mysqli_real_escape_string($conn, $rle);
-                  if ($r < count($role)) {
-                    $roleQry .= "(MATCH(Cast.RoleClean) AGAINST ('\"$rle\" @4' IN BOOLEAN MODE) OR Cast.RoleClean LIKE '%$roleClean%') " . $roleSwitch . " ";
-                  } else {
-                    $roleQry .= "(MATCH(Cast.RoleClean) AGAINST ('\"$rle\" @4' IN BOOLEAN MODE) OR Cast.RoleClean LIKE '%$roleClean%')";
+               if ($roleSwtch === "AND") {
+                $roleQry .= getCastQuery('role', $role);
+              } else {
+                foreach($role as $rle) {
+                  if ($rle !== '') {
+                    $roleClean = mysqli_real_escape_string($conn, cleanQuotes($rle, true));
+                    $rle = mysqli_real_escape_string($conn, $rle);
+                    if ($r < count($role)) {
+                      $roleQry .= "(MATCH(Cast.RoleClean) AGAINST ('\"$rle\" @4' IN BOOLEAN MODE) OR Cast.RoleClean LIKE '%$roleClean%') " . $roleSwtch . " ";
+                    } else {
+                      $roleQry .= "(MATCH(Cast.RoleClean) AGAINST ('\"$rle\" @4' IN BOOLEAN MODE) OR Cast.RoleClean LIKE '%$roleClean%')";
+                    }
                   }
+                  $r++;
                 }
-                $r++;
               }
               $roleQry .= ")";
               if($roleQry !== "()") array_push($queries, $roleQry);
@@ -812,6 +820,64 @@
     $sql .= ") ";
 
     return $sql;
+  }
+
+
+  /**
+  * Takes arrays of actors or roles and generates the necessary WHERE statement for AND searches.
+  *
+  * Takes an array of actors or roles and runs queries to find events that have both.
+  *
+  * @param string $castType Either Role or Actor.
+  * @param array $casts Array of actors or roles to search on.
+  *
+  * @return string Cast WHERE statement (Where IN() list of Event Ids).
+  */
+  function getCastQuery($castType, $casts = array()) {
+    global $conn;
+
+    if (empty($casts)) return '';
+
+    $allIds = array();
+    $intersectIds = array();
+
+    $type = ($castType === 'role') ? 'Role' : 'Performer';
+
+    $sql = "SELECT Events.EventId FROM Events
+      JOIN Performances ON Performances.EventId = Events.EventId
+      JOIN Cast ON Cast.PerformanceId = Performances.PerformanceId
+      WHERE ";
+
+    $i = 1;
+    foreach ($casts as $cast) {
+      if ($cast !== '') {
+        $qry = $sql;
+        $castClean = mysqli_real_escape_string($conn, cleanQuotes($cast, true));
+        $cast = mysqli_real_escape_string($conn, $cast);
+        $qry .= "MATCH(Cast." . $type . "Clean) AGAINST ('\"$cast\" @4' IN BOOLEAN MODE) OR Cast." . $type . "Clean LIKE '%$castClean%' GROUP BY Events.EventId";
+
+        $castResult = $conn->query($qry);
+
+        $eventIds = array();
+        while ($row = mysqli_fetch_assoc($castResult)) {
+          $eventIds[] = $row['EventId'];
+        }
+        $allIds[] = $eventIds;
+      }
+      $i++;
+    }
+
+    $initial = $allIds[0];
+    for($a = 1; $a < count($allIds); $a++) {
+      foreach($allIds[$a] as $id) {
+        if (in_array($id, $initial)) $intersectIds[] = $id;
+      }
+    }
+
+    if (count($intersectIds) <= 0) return '';
+
+    $finQry = " Events.EventId IN (" . implode(',', $intersectIds) . ") ";
+    return $finQry;
   }
 
 
