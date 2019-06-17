@@ -291,7 +291,9 @@
                 <div class="event">
                   <?php $results->data[$i]['Performances'] = getPerformances($results->data[$i]['EventId']); ?>
                   <?php echo '<div class="evt-head grid-x">
-                  <h2><a href="event.php?id=' . $results->data[$i]['EventId'] . '">' . formatDate($results->data[$i]['EventDate']); ?>
+                  <h2><a href="event.php?id=' . $results->data[$i]['EventId'] . '">'; ?>
+                    <div class="evt-num"><?php echo (($limit * ($page - 1)) + ($i + 1)); ?></div>
+		    <?php echo formatDate($results->data[$i]['EventDate']); ?>
                     <span class="evt-theatre"> @ <?php echo getTheatreName($results->data[$i]['TheatreId']); ?></span>
                     </a>
                   </h2>
