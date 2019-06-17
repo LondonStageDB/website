@@ -14,7 +14,7 @@
     $orders = array(); // Contains SORT BY parameters
     $ptypes = array(); // List of ptypes from $_GET['ptype']
     $keywrd = array();
-    $sortBy = (!empty($_GET['sortBy']) && $_GET['sortBy'] === 'relevance') ? 'relevance' : 'date';
+    $sortBy = (!empty($_GET['sortBy']) && in_array($_GET['sortBy'], ['relevance', 'datea', 'dated'])) ? $_GET['sortBy'] : 'date';
     $volume = (isset($_GET['vol'])) ? $_GET['vol'] : '1, 2, 3, 4, 5';
     $roleSwtch = (isset($_GET['roleSwitch']) && $_GET['roleSwitch'] === 'or') ? 'OR' : 'AND';
     $actSwtch = (isset($_GET['actSwitch']) && $_GET['actSwitch'] === 'or') ? 'OR' : 'AND';
@@ -242,6 +242,7 @@
     $sql .= " GROUP BY Events.EventId ORDER BY ";
 
     // If sort by 'relevance', add SORT BYs for each $orders. Tack on Events.EventDate as secondary/default sort
+    $sortOrder = ($sortBy === 'datea') ? 'ASC' : 'DESC';
     if ($sortBy === 'relevance') {
       if (!empty($orders)) {
         $cnt = 1;
@@ -257,7 +258,8 @@
         $sql .= " Events.EventDate";
       }
     } else {
-      $sql .= " Events.EventDate";
+      $sql .= " Events.EventDate ";
+      $sql .= $sortOrder;
     }
 
     return $sql;

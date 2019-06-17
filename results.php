@@ -269,7 +269,8 @@
               </label>
                 <select name="sortBy" id="sortBy" class="input-group-field">
                 <option value="relevance" <?php getSticky(2, 'sortBy', 'relevance'); ?>>Relevance</option>
-                <option value="date" <?php getSticky(2, 'sortBy', 'date'); ?>>Date</option>
+                <option value="datea" <?php getSticky(2, 'sortBy', 'datea'); ?>>Date (asc)</option>
+                <option value="dated" <?php getSticky(2, 'sortBy', 'dated'); ?>>Date (desc)</option>
               </select>
                 <div class="input-group-button">
                   <input type="submit" class="search-submit button" value="Update">
