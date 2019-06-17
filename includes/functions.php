@@ -1211,7 +1211,7 @@
     if ($title === '') return '';
 
     $tidy = new tidy();
-    $clean = $tidy->repairString($title);
+    $clean = $tidy->repairString($title, array('show-body-only' => true));
     return $clean;
   }
 

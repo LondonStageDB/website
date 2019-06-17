@@ -1085,6 +1085,7 @@ body#home:after {
 }
 #event .event-info {
   padding: 2rem;
+  font-size: 1.1rem;
 }
 #event .image-wrap {
   overflow: hidden;
@@ -1282,15 +1283,25 @@ body#home:after {
 }
 #event .perf-data {
   padding: 0.2rem 0;
+  font-size: 1.1rem;
 }
-#event .perf-det-comment, #event .perf-title {
+#event .perf-comments, #event .perf-title {
   padding-bottom: 1rem;
 }
-#event .perf-title, #event .perf-cast {
-  font-size: 1.2rem;
+#event .perf-title {
+  font-size: 1.4rem;
 }
 #event .perf-title .info-heading {
+
+}
+#event .perf-title, #event .perf-cast {
+}
+#event .perf .info-heading {
   font-size: 1.4rem;
+  padding-right: 0.3rem;
+}
+#event .role .info-heading, #event .actor .info-heading {
+  font-size: 1.1rem;
 }
 #event .download-buttons {
   margin-top: 2rem;

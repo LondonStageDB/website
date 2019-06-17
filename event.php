@@ -96,7 +96,7 @@
                   <?php if ($event['Hathi'] !== '') echo 'OCR from HathiTrust PDFs'; else echo 'London Stage Information Bank' ?>
                 </p>
                 <div class="phase-data">
-                  <?php echo $event['Phase1']; ?>
+                  <?php echo htmlentities($event['Phase1']); ?>
                 </div>
               </div>
             </li>
@@ -104,7 +104,7 @@
               <div class="phase-content">
                 <h3>Cleaned Data</h3>
                 <div class="phase-data">
-                  <?php echo $event['Phase2']; ?>
+                  <?php echo htmlentities($event['Phase2']); ?>
                 </div>
               </div>
             </li>
@@ -117,13 +117,13 @@
                   ?>
                   <div class="phaseIII-section">
                     <span class="phaseIII-heading">Event: </span>
-                    <?php echo $phase3['event']; ?>
+                    <?php echo htmlentities($phase3['event']); ?>
                   </div>
                   <?php if (!empty($phase3['perfs'])) : ?>
                     <?php foreach($phase3['perfs'] as $perf) : ?>
                      <div class="phaseIII-section phaseIII-perf">
                        <span class="phaseIII-heading">Performance: </span>
-                       <?php echo $perf['info']; ?>
+                       <?php echo htmlentities($perf['info']); ?>
                        <?php if (!empty($perf['asSee'])) : ?>
                          <?php foreach($perf['asSee'] as $asSee) : ?>
                          <div class="phaseIII-section phaseIII-sub-section">
@@ -136,7 +136,7 @@
                        <div class="phaseIII-section phaseIII-sub-section">
                          <span class="phaseIII-heading">Cast: </span>
                          <?php foreach($perf['cast'] as $cast) : ?>
-                           <div class="phaseIII-cast"><?php echo $cast; ?></div>
+                           <div class="phaseIII-cast"><?php echo htmlentities($cast); ?></div>
                          <?php endforeach; ?>
                        </div>
                        <?php endif; ?>
@@ -172,11 +172,8 @@
                       <?php echo cleanItalics(cleanTitle($perf['PerformanceTitle'])); ?>
                     </a>
                   </div>
-                  <div class="perf-comments perf-data"><span class="info-heading">Comments:</span>
+                  <div class="perf-comments perf-data"><span class="info-heading">Comments:</span><br />
                     <?php echo namedEntityLinks($perf['CommentP']); ?>
-                  </div>
-                  <div class="perf-det-comment light-text perf-data"><span class="info-heading">Full Comment:</span>
-                    <?php echo $perf['DetailedComment']; ?>
                   </div>
                   <div class="perf-cast perf-data"><span class="info-heading">Cast:</span>
                     <?php if (count($perf['cast']) > 0) : ?>
@@ -193,11 +190,8 @@
                     <i>None Listed</i>
                     <?php endif; ?>
                   </div>
-                  <div class="perf-cast-as-listed light-text perf-data"><span class="info-heading">Cast as Listed:</span>
-                    <?php echo $perf['CastAsListed']; ?>
-                  </div>
                   <?php else : ?>
-                    <div class="perf-det-comment perf-data"><span class="info-heading">Comment:</span>
+                    <div class="perf-comments perf-data"><span class="info-heading">Comment:</span>
                       <?php echo namedEntityLinks($perf['DetailedComment']); ?>
                     </div>
                   <?php endif; ?>
