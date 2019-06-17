@@ -817,7 +817,6 @@ body#home:after {
   background-color: #6e2424;
 }
 #results .evt-head > h2 {
-  padding-left: 0.5rem;
   margin-bottom: 0;
   flex: 1;
   text-align: center;
@@ -829,7 +828,6 @@ body#home:after {
   display: block;
   position: relative;
   overflow: hidden;
-  text-align: left;
   color: #ece7d9;
 }
 #results .event .evt-head > h2 > a:after {
@@ -864,11 +862,13 @@ body#home:after {
 }
 #results .evt-num {
   padding: 0.5rem 1rem;
-  line-height: 1.4;
-  font-size: 1.2rem;
+  display: inline-block;
+  float: left;
+  background: #c7c1b3;
 }
 #results .evt-date, #results .evt-year {
   display: block;
+  float: left;
   padding: 0.5rem;
 }
 #results .evt-year {
@@ -1003,6 +1003,11 @@ body#home:after {
     right: -10px;
   }
 }
+@media only screen and (max-width: 500px) {
+  #results .evt-head > h2 a { 
+    text-align: left;
+  }
+}
 @media only screen and (max-width: 640px) {
   #results .main {
     padding: 0;
@@ -1014,8 +1019,7 @@ body#home:after {
   }
   #results .evt-date, #results .evt-year {
     display: inline-block;
-    position: absolute;
-    left: 0.5rem;
+    float: left;
   }
   #results .evt-head > h2 a {
     text-align: center;

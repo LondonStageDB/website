@@ -1087,7 +1087,7 @@
     $castMatch = [];
     $actorSearch = trim($actorSearch);
     $roleSearch = trim($roleSearch);
-    if (($actorSearch === '' || $actorSearch === '|') && ($roleSearch === '' || $roleSearch === '|')) { return false; }
+    if ((str_replace('|', '', $actorSearch) === '' || $actorSearch === '|') && (str_replace('|', '', $roleSearch) === '' || $roleSearch === '|')) { return false; }
     if (count($cast) <= 0) { return false; }
 
     preg_match_all('~[^|]+~', $actorSearch, $am); // Actor search terms array
