@@ -1303,6 +1303,9 @@ body#home:after {
 #event .role .info-heading, #event .actor .info-heading {
   font-size: 1.1rem;
 }
+#event .work-info .info-heading {
+  font-size: 1rem;
+}
 #event .download-buttons {
   margin-top: 2rem;
 }

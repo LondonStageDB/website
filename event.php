@@ -175,7 +175,7 @@
                   <div class="perf-comments perf-data"><span class="info-heading">Comments:</span><br />
                     <?php echo namedEntityLinks($perf['CommentP']); ?>
                   </div>
-                  <div class="perf-cast perf-data"><span class="info-heading">Cast:</span>
+                  <div class="perf-cast perf-data"><span class="info-heading">Cast:</span><br />
                     <?php if (count($perf['cast']) > 0) : ?>
                     <ul class="no-bullet">
                       <?php foreach ($perf['cast'] as $cast) : ?>
@@ -196,7 +196,7 @@
                     </div>
                   <?php endif; ?>
                 </div>
-                <?php $works = getRelatedWorks($perf['PerfTitleClean']); ?>
+                <?php $works = getRelatedWorks($perf['PerformanceTitle']); ?>
                 <?php if(count($works) > 0) : ?>
                 <div class="small-12 medium-5 large-4 related-works">
                   <h3>Related Works</h3>
