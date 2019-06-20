@@ -306,7 +306,13 @@
                       <h3>Performances</h3>
                       <?php foreach ($results->data[$i]['Performances'] as $perf) {
                         echo '<div class="perf">';
-                        echo '<h4><span class="info-heading">' . getPType($perf['PType']) . ' Title: </span><i>' . highlight(cleanItalics(cleanTitle($perf['PerformanceTitle'])), cleanQuotes($_GET['keyword']) . '|' . cleanQuotes($_GET['performance'])) . '</i></h4>';
+                        echo '<h4><span class="info-heading">' . getPType($perf['PType']) . (in_array($perf['PType'], ['a', 'p']) ? ' Title' : '') . ': </span>';
+                        if (in_array($perf['PType'], ['a', 'p'])) {
+                          echo '<i>' . highlight(cleanItalics(cleanTitle($perf['PerformanceTitle'])), cleanQuotes($_GET['keyword']) . '|' . cleanQuotes($_GET['performance'])) . '</i>';
+                        } else {
+                          echo highlight(namedEntityLinks($perf['DetailedComment']), cleanQuotes($_GET['keyword']) . '|' . cleanQuotes($_GET['performance']));
+                        }
+                        echo '</h4>';
                         if (isFoundIn($perf['CommentP'], cleanQuotes($_GET['keyword'])) ) echo '<b>Performance Comment: </b>' . highlight(namedEntityLinks($perf['CommentP']), cleanQuotes($_GET['keyword'])) . '<br>';
                         $inCast = isInCast(cleanQuotes($_GET['keyword']) . '|' . cleanQuotes($cleanedActors), cleanQuotes($_GET['keyword']) . '|' . cleanQuotes($cleanedRoles), $perf['cast']);
                         if ($inCast !== false) {

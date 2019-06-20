@@ -62,13 +62,18 @@
     if (!empty($_GET['performance'])) {
       $perfTemp = mysqli_real_escape_string($conn, $getters['performance']);  // Retains double quotes
       $perfClean = mysqli_real_escape_string($conn, cleanQuotes($getters['performance'], true)); // No double quotes for 'LIKE' search
+      $perfCleanExact = mysqli_real_escape_string($conn, cleanQuotes($getters['performance'], false)); // No space wrap for exact search
       $sql .= ", (MATCH(PerfTitleClean) AGAINST ('$perfTemp' IN BOOLEAN MODE) + ";
-      $sql .= " case when PerfTitleClean LIKE '$perfClean' then 50 "; // Exact match gets higher rating
+      $sql .= " case when PerformanceTitle LIKE '$perfCleanExact' then 50 "; // Exact orig column gets highest rating
+      $sql .= " when PerfTitleClean LIKE '$perfCleanExact' then 30 "; // Exact clean column match
 
+      // Only really needed if the search has more than one word
       if (str_word_count(preg_replace("/[^A-Za-z0-9 ]/", ' ', $getters['performance'])) > 1) {
-        $sql .= "when PerfTitleClean LIKE '%$perfClean%' then 10 "; // Partial match gets lower rating
+        $sql .= " when PerformanceTitle LIKE '%$perfCleanExact%' then 40 "; // Partial orig column wildcard
+        $sql .= " when PerfTitleClean LIKE '%$perfCleanExact%' then 20 "; // Partial clean col wildcard
+        $sql .= "when PerfTitleClean LIKE '%$perfClean%' then 10 "; // Partial clean col w/ surrounding spaces match gets lowest rating
       }
-      $sql .= "end) as PerfScore ";
+      $sql .= "else 0 end) as PerfScore ";
 
       // TODO case when MATCH(PerformanceTitle) AGAINST ('+love a la +mode' IN BOOLEAN MODE) then 100 end as PerfBetterScore";
     }
@@ -101,13 +106,18 @@
       if (!empty($_GET['performance'])) {
         $perfTemp = mysqli_real_escape_string($conn, $getters['performance']);  // Retains double quotes
         $perfClean = mysqli_real_escape_string($conn, cleanQuotes($getters['performance'], true));  // No double quotes for 'LIKE' search
+        $perfCleanExact = mysqli_real_escape_string($conn, cleanQuotes($getters['performance'], false)); // No space wrap for exact search
         $sql .= ", (MATCH(PerfTitleClean) AGAINST ('$perfTemp' IN BOOLEAN MODE) + ";
-        $sql .= " case when PerfTitleClean LIKE '$perfClean' then 50 "; // Exact match gets higher rating
+        $sql .= " case when PerformanceTitle LIKE '$perfCleanExact' then 50 "; // Exact orig column gets highest rating
+        $sql .= " when PerfTitleClean LIKE '$perfCleanExact' then 30 "; // Exact clean column match
 
+        // Only really needed if the search has more than one word
         if (str_word_count(preg_replace("/[^A-Za-z0-9 ]/", ' ', $getters['performance'])) > 1) {
-          $sql .= "when PerfTitleClean LIKE '%$perfClean%' then 10 "; // Partial match gets lower rating
+          $sql .= " when PerformanceTitle LIKE '%$perfCleanExact%' then 40 "; // Partial orig column wildcard
+          $sql .= " when PerfTitleClean LIKE '%$perfCleanExact%' then 10 "; // Partial clean col wildcard
+          $sql .= "when PerfTitleClean LIKE '%$perfClean%' then 20 "; // Partial clean col w/ surrounding spaces match gets lowest rating
         }
-        $sql .= "end) as PerfScore ";
+        $sql .= "else 0 end) as PerfScore ";
 
         // TODO case when MATCH(PerformanceTitle) AGAINST ('+love a la +mode' IN BOOLEAN MODE) then 100 end as PerfBetterScore";
       }
@@ -156,9 +166,9 @@
                     $actorClean = mysqli_real_escape_string($conn, cleanQuotes($act, true));
                     $act = mysqli_real_escape_string($conn, $act);
                     if ($a < count($actor)) {
-                      $actQry .= "(MATCH(Cast.PerformerClean) AGAINST ('\"$act\" @4' IN BOOLEAN MODE) OR Cast.PerformerClean LIKE '%$actorClean%') " . $actSwtch . " ";
+                      $actQry .= "(MATCH(Cast.PerformerClean) AGAINST ('$act' IN NATURAL LANGUAGE MODE) OR Cast.PerformerClean LIKE '%$actorClean%') " . $actSwtch . " ";
                     } else {
-                      $actQry .= "(MATCH(Cast.PerformerClean) AGAINST ('\"$act\" @4' IN BOOLEAN MODE) OR Cast.PerformerClean LIKE '%$actorClean%')";
+                      $actQry .= "(MATCH(Cast.PerformerClean) AGAINST ('$act' IN NATURAL LANGUAGE MODE) OR Cast.PerformerClean LIKE '%$actorClean%')";
                     }
                   }
                   $a++;
@@ -179,9 +189,9 @@
                     $roleClean = mysqli_real_escape_string($conn, cleanQuotes($rle, true));
                     $rle = mysqli_real_escape_string($conn, $rle);
                     if ($r < count($role)) {
-                      $roleQry .= "(MATCH(Cast.RoleClean) AGAINST ('\"$rle\" @4' IN BOOLEAN MODE) OR Cast.RoleClean LIKE '%$roleClean%') " . $roleSwtch . " ";
+                      $roleQry .= "(MATCH(Cast.RoleClean) AGAINST ('$rle' IN NATURAL LANGUAGE MODE) OR Cast.RoleClean LIKE '%$roleClean%') " . $roleSwtch . " ";
                     } else {
-                      $roleQry .= "(MATCH(Cast.RoleClean) AGAINST ('\"$rle\" @4' IN BOOLEAN MODE) OR Cast.RoleClean LIKE '%$roleClean%')";
+                      $roleQry .= "(MATCH(Cast.RoleClean) AGAINST ('$rle' IN NATURAL LANGUAGE MODE) OR Cast.RoleClean LIKE '%$roleClean%')";
                     }
                   }
                   $r++;
@@ -196,7 +206,7 @@
               if (!empty($ptypes)) $typeStr = " AND Performances.PType IN ($ptype_qry)";
               $performanceClean = mysqli_real_escape_string($conn, cleanQuotes($performance, true));
               $performance = mysqli_real_escape_string($conn, $performance);
-              array_push($queries, "((MATCH(PerfTitleClean) AGAINST ('\"$performance\" @4' IN BOOLEAN MODE) OR PerfTitleClean LIKE '%$performanceClean%') $typeStr)");
+              array_push($queries, "((MATCH(PerfTitleClean) AGAINST ('$performance' IN BOOLEAN MODE) OR PerfTitleClean LIKE '%$performanceClean%') $typeStr)");
               array_push($orders, "PerfScore DESC");
             break;
             case 'ptype':
@@ -432,6 +442,8 @@
   */
   function getRelatedWorks($perfTitle = '') {
     global $conn;
+    $prefix = "or ";
+
     if ($perfTitle !== '') {
       $titles = array_map('trim', explode(';', $perfTitle));
       $sql = 'SELECT Works.*, WorksVariant.VariantName, WorkAuthMaster.Title as TheTitle, Performances.PerformanceTitle
@@ -439,6 +451,10 @@
 
       $i = 1;
       foreach($titles as $perf) {
+        $perf = cleanStr($perf);
+        if (strtolower(substr($perf, 0, strlen($prefix))) == $prefix) {
+          $perf = substr($perf, strlen($prefix));
+        }
         if ($i < count($titles)) {
           $sql .= ' Works.TitleClean LIKE "%' . $perf . '%" OR Performances.PerfTitleClean LIKE "%' . $perf . '%" OR WorksVariant.NameClean LIKE "%' . $perf . '%" OR ';
         } else {
@@ -451,11 +467,38 @@
       $sql .= ' GROUP BY Works.WorkId';
 
       $result = $conn->query($sql);
-      $works = [];
+      $works = array();
+      $sources = array();
       while ($row = mysqli_fetch_assoc($result)) {
+        $sources[] = $row['SourceResearched'];
         $row['author'] = getAuthorInfo($row['WorkId']);
         $works[] = $row;
       }
+
+      // Get Work Sources and perform same search on them
+      $sources = array_filter($sources, 'strlen');
+      if (!empty($sources)) {
+        $ssql = 'SELECT Works.*, WorksVariant.VariantName, WorkAuthMaster.Title as TheTitle, Performances.PerformanceTitle
+          FROM Works LEFT JOIN WorksVariant ON WorksVariant.WorkId = Works.WorkId JOIN WorkAuthMaster ON WorkAuthMaster.WorkId = Works.WorkId LEFT JOIN Performances ON Performances.WorkId = Works.WorkId WHERE';
+
+        $i = 1;
+        foreach($sources as $source) {
+          if ($i < count($sources)) {
+            $ssql .= ' Works.TitleClean LIKE "%' . $source . '%" OR Performances.PerfTitleClean LIKE "%' . $source . '%" OR WorksVariant.NameClean LIKE "%' . $perf . '%" OR ';
+          } else {
+            $ssql .= ' Works.TitleClean LIKE "%' . $source . '%" OR Performances.PerfTitleClean LIKE "%' . $source . '%" OR WorksVariant.NameClean LIKE "%' . $perf . '%" ';
+          }
+          $i++;
+        }
+        $ssql .= ' GROUP BY Works.WorkId';
+        $sresult = $conn->query($ssql);
+
+        while ($srow = mysqli_fetch_assoc($sresult)) {
+          $srow['author'] = getAuthorInfo($srow['WorkId']);
+          $works[] = $srow;
+        }
+      }
+
       return $works;
     }
   }
