@@ -19,8 +19,14 @@
   $results    = $Paginator->getData( $limit, $page );
 
   // Cleaned, pipe delimited strings from 'actor' and 'role' arrays
-  $cleanedActors = (isset($_GET['actor'])) ? implode('|', $_GET['actor']) : '';
-  $cleanedRoles = (isset($_GET['role'])) ? implode('|', $_GET['role']) : '';
+  $getActors = array_map(function($act) {
+    return cleanStr($act);
+  }, $_GET['actor']);
+  $getRoles = array_map(function($rle) {
+    return cleanStr($rle);
+  }, $_GET['role']);
+  $cleanedActors = (isset($_GET['actor'])) ? implode('|', $getActors) : '';
+  $cleanedRoles = (isset($_GET['role'])) ? implode('|', $getRoles) : '';
 ?>
 
 <!doctype html>
@@ -300,7 +306,7 @@
                   </h2>
                 </div>
                 <div class="evt-body">
-                  <?php if (isFoundIn($results->data[$i]['CommentC'], cleanQuotes($_GET['keyword']))) echo '<div class="evt-info"><b>Event Comment: </b>' . highlight(namedEntityLinks($results->data[$i]['CommentC']), cleanQuotes($_GET['keyword'])) . '</div>';?>
+                  <?php if (isFoundIn($results->data[$i]['CommentC'], cleanQuotes(cleanStr($_GET['keyword'])))) echo '<div class="evt-info"><b>Event Comment: </b>' . highlight(namedEntityLinks($results->data[$i]['CommentC']), cleanQuotes(cleanStr($_GET['keyword']))) . '</div>';?>
                   <div class="evt-other clearfix">
                     <div class="perfs">
                       <h3>Performances</h3>
@@ -308,17 +314,17 @@
                         echo '<div class="perf">';
                         echo '<h4><span class="info-heading">' . getPType($perf['PType']) . (in_array($perf['PType'], ['a', 'p']) ? ' Title' : '') . ': </span>';
                         if (in_array($perf['PType'], ['a', 'p'])) {
-                          echo '<i>' . highlight(cleanItalics(cleanTitle($perf['PerformanceTitle'])), cleanQuotes($_GET['keyword']) . '|' . cleanQuotes($_GET['performance'])) . '</i>';
+                          echo '<i>' . highlight(cleanItalics(cleanTitle($perf['PerformanceTitle'])), cleanQuotes(cleanStr($_GET['keyword'])) . '|' . cleanQuotes(cleanStr($_GET['performance']))) . '</i>';
                         } else {
-                          echo highlight(namedEntityLinks($perf['DetailedComment']), cleanQuotes($_GET['keyword']) . '|' . cleanQuotes($_GET['performance']));
+                          echo highlight(namedEntityLinks($perf['DetailedComment']), cleanQuotes(cleanStr($_GET['keyword'])) . '|' . cleanQuotes(cleanStr($_GET['performance'])));
                         }
                         echo '</h4>';
-                        if (isFoundIn($perf['CommentP'], cleanQuotes($_GET['keyword'])) ) echo '<b>Performance Comment: </b>' . highlight(namedEntityLinks($perf['CommentP']), cleanQuotes($_GET['keyword'])) . '<br>';
-                        $inCast = isInCast(cleanQuotes($_GET['keyword']) . '|' . cleanQuotes($cleanedActors), cleanQuotes($_GET['keyword']) . '|' . cleanQuotes($cleanedRoles), $perf['cast']);
+                        if (isFoundIn($perf['CommentP'], cleanQuotes(cleanStr($_GET['keyword']))) ) echo '<b>Performance Comment: </b>' . highlight(namedEntityLinks($perf['CommentP']), cleanQuotes(cleanStr($_GET['keyword']))) . '<br>';
+                        $inCast = isInCast(cleanQuotes($_GET['keyword']) . '|' . cleanQuotes($cleanedActors), cleanQuotes(cleanStr($_GET['keyword'])) . '|' . cleanQuotes($cleanedRoles), $perf['cast']);
                         if ($inCast !== false) {
                           echo '<div class="cast"><h5>Cast</h5>';
                           foreach ($inCast as $cast) {
-                            echo '<b>Role</b>: ' . highlight(linkedSearches('role', $cast['Role']), cleanQuotes($_GET['keyword']) . '|' . cleanQuotes($cleanedRoles)) . "\t\t <b>Actor</b>: " . highlight(linkedSearches('actor', $cast['Performer']), cleanQuotes($_GET['keyword']) . '|' . cleanQuotes($cleanedActors)) . '<br>';
+                            echo '<b>Role</b>: ' . highlight(linkedSearches('role', $cast['Role']), cleanQuotes(cleanStr($_GET['keyword'])) . '|' . cleanQuotes($cleanedRoles)) . "\t\t <b>Actor</b>: " . highlight(linkedSearches('actor', $cast['Performer']), cleanQuotes(cleanStr($_GET['keyword'])) . '|' . cleanQuotes($cleanedActors)) . '<br>';
                           }
                           echo '</div>';
                         }

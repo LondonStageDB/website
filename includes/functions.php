@@ -14,7 +14,7 @@
     $orders = array(); // Contains SORT BY parameters
     $ptypes = array(); // List of ptypes from $_GET['ptype']
     $keywrd = array();
-    $sortBy = (!empty($_GET['sortBy']) && in_array($_GET['sortBy'], ['relevance', 'datea', 'dated'])) ? $_GET['sortBy'] : 'date';
+    $sortBy = (!empty($_GET['sortBy']) && in_array($_GET['sortBy'], ['relevance', 'datea', 'dated'])) ? $_GET['sortBy'] : 'relevance';
     $volume = (isset($_GET['vol'])) ? $_GET['vol'] : '1, 2, 3, 4, 5';
     $roleSwtch = (isset($_GET['roleSwitch']) && $_GET['roleSwitch'] === 'or') ? 'OR' : 'AND';
     $actSwtch = (isset($_GET['actSwitch']) && $_GET['actSwitch'] === 'or') ? 'OR' : 'AND';
@@ -95,11 +95,12 @@
       // Tack on Keyword related parameters for relevance sorting
       if (!empty($_GET['keyword'])) {
         $keyTemp = mysqli_real_escape_string($conn, $keywrd['keyword']);
-        $sql .=", MATCH(PerfTitleClean) AGAINST ('$keyTemp' IN NATURAL LANGUAGE MODE) as pTScore,
-                MATCH(CommentPClean) AGAINST ('$keyTemp' IN NATURAL LANGUAGE MODE) as pCScore,
-                MATCH(Events.CommentCClean) AGAINST ('$keyTemp' IN NATURAL LANGUAGE MODE) as eScore,
-                MATCH(RoleClean, PerformerClean) AGAINST ('$keyTemp' IN NATURAL LANGUAGE MODE) as cScore,
-                MATCH(AuthNameClean) AGAINST ('$keyTemp' IN NATURAL LANGUAGE MODE) as aScore ";
+        $sql .=", max(((MATCH(PerfTitleClean) AGAINST ('$keyTemp' IN NATURAL LANGUAGE MODE) + case when PerfTitleClean LIKE '%$keyTemp%' then 20 else 0.3 end) * 2) +
+                ((MATCH(CommentPClean) AGAINST ('$keyTemp' IN NATURAL LANGUAGE MODE) + case when CommentPClean LIKE '%$keyTemp%' then 20 else 0.3 end) / 3) +
+                ((MATCH(CommentCClean) AGAINST ('$keyTemp' IN NATURAL LANGUAGE MODE) + case when CommentCClean LIKE '%$keyTemp%' then 20 else 0.3 end) / 3) +
+                ((MATCH(RoleClean) AGAINST ('$keyTemp' IN NATURAL LANGUAGE MODE) + case when RoleClean LIKE '%$keyTemp%' then 20 else 0.3 end) +
+                (MATCH(PerformerClean) AGAINST ('$keyTemp' IN NATURAL LANGUAGE MODE) + case when PerformerClean LIKE '%$keyTemp%' then 20 else 0.3 end)) +
+                (MATCH(AuthNameClean) AGAINST ('$keyTemp' IN NATURAL LANGUAGE MODE) + case when AuthNameClean LIKE '%$keyTemp%' then 20 else 0.3 end)) as keyScore ";
       }
 
       // Tack on Performance related parameters for relevance sorting
@@ -221,14 +222,14 @@
             case 'keyword':
               $keywordClean = mysqli_real_escape_string($conn, cleanQuotes($keyword, true));
               $keyword = mysqli_real_escape_string($conn, $keyword);
-              array_push($queries, " (MATCH(Events.CommentCClean) AGAINST ('$keyword' IN NATURAL LANGUAGE MODE) OR Events.CommentCClean LIKE '%$keywordClean%'
+              array_push($queries, " (MATCH(CommentCClean) AGAINST ('$keyword' IN NATURAL LANGUAGE MODE) OR CommentCClean LIKE '%$keywordClean%'
                   OR MATCH(PerfTitleClean) AGAINST ('$keyword' IN NATURAL LANGUAGE MODE) OR PerfTitleClean LIKE '%$keywordClean%'
                   OR MATCH(CommentPClean) AGAINST ('$keyword' IN NATURAL LANGUAGE MODE) OR CommentPClean LIKE '%$keywordClean%'
                   OR MATCH(RoleClean, PerformerClean) AGAINST ('$keyword' IN NATURAL LANGUAGE MODE) OR RoleClean LIKE '%$keywordClean%' OR PerformerClean LIKE '%$keywordClean%'
                   OR MATCH(AuthNameClean) AGAINST ('$keyword' IN NATURAL LANGUAGE MODE) OR AuthNameClean LIKE '%$keywordClean%') ");
 
               // Promote matches on Performance Titles and demote matches on Performance or Event Comments
-              array_push($orders, "((pTScore * 2) + (pCScore / 3) + (eScore / 3) + cScore + aScore) DESC");
+              array_push($orders, " keyScore DESC");
             break;
           }
         }
@@ -1073,13 +1074,20 @@
     $words = trim($words);
     if ($words === '') return $text;
 
-    preg_match_all('~[^|]+~', $words, $m);
-    if(!$m || count($m[0]) === 0) {
+    preg_match_all('~[^|]+~', $words, $m); // Array of | delimited phrases
+    preg_match_all('~[^| ]+~', $words, $n); // Array of each word in each phrase
+    $allWords = array_unique(array_merge($m[0], $n[0])); // Combine unique
+    if(!$allWords || count($allWords) === 0) {
         return $text;
     }
 
+    // We only want to highlight words or parts of words longer than 2 characters
+    $allWords = array_filter($allWords, function($werd) {
+      return strlen($werd) > 2;
+    });
+
     // Only match outside of angle brackets <>. Don't want HTML in our hrefs!
-    $re = '/<[^>]*>(*SKIP)(*F)|' . implode('|', $m[0]) . '/i';
+    $re = '/<[^>]*>(*SKIP)(*F)|' . implode('|', $allWords) . '/i';
     return preg_replace($re, '<span class="highlight">$0</span>', $text);
   }
 
@@ -1097,12 +1105,19 @@
     $words = trim($words);
     if ($words === '' || $text === '') { return false; }
 
-    preg_match_all('~[^|]+~', $words, $m);
-    if(!$m || count($m[0]) === 0) {
+    preg_match_all('~[^|]+~', $words, $m); // Array of | delimited phrases
+    preg_match_all('~[^| ]+~', $words, $n); // Array of ' ' delimited phrases
+    $allWords = array_unique(array_merge($m[0], $n[0])); // Combine unique
+    if(!$allWords || count($allWords) === 0) {
         return false;
     }
 
-    $re = '/\\w*?' . implode('|', $m[0]) . '\\w*/i';
+    // We only want to find words or parts of words longer than 2 characters
+    $allWords = array_filter($allWords, function($werd) {
+      return strlen($werd) > 2;
+    });
+
+    $re = '/\\w*?' . implode('|', $allWords) . '\\w*/i';
     if(!preg_match($re, $text)) {
       return false;
     }
@@ -1135,14 +1150,26 @@
     if ((str_replace('|', '', $actorSearch) === '' || $actorSearch === '|') && (str_replace('|', '', $roleSearch) === '' || $roleSearch === '|')) { return false; }
     if (count($cast) <= 0) { return false; }
 
-    preg_match_all('~[^|]+~', $actorSearch, $am); // Actor search terms array
-    preg_match_all('~[^|]+~', $roleSearch, $rm); // Role search terms array
-    if(!$am && !$rm) {
+    preg_match_all('~[^|]+~', $actorSearch, $am); // Actor search terms | delimited array
+    preg_match_all('~[^| ]+~', $actorSearch, $an); // Actor search terms ' ' delimited array
+    preg_match_all('~[^|]+~', $roleSearch, $rm); // Role search terms | delimited array
+    preg_match_all('~[^| ]+~', $roleSearch, $rn); // Role search terms ' ' delimited array
+    $allActors = array_unique(array_merge($am[0], $an[0])); // Combine unique
+    $allRoles = array_unique(array_merge($rm[0], $rn[0])); // Combine unique
+    if((!$allActors || count($allActors) === 0) && (!$allRoles || count($allRoles === 0))) {
         return false;
     }
 
-    $re_a = '/\\w*?' . implode('|', $am[0]) . '\\w*/i'; // Actor regex
-    $re_r = '/\\w*?' . implode('|', $rm[0]) . '\\w*/i'; // Role regex
+    // We only want to find words or parts of words longer than 2 characters
+    $allActors = array_filter($allActors, function($werd) {
+      return strlen($werd) > 2;
+    });
+    $allRoles = array_filter($allRoles, function($werd) {
+      return strlen($werd) > 2;
+    });
+
+    $re_a = '/\\w*?' . implode('|', $allActors) . '\\w*/i'; // Actor regex
+    $re_r = '/\\w*?' . implode('|', $allRoles) . '\\w*/i'; // Role regex
 
     foreach ($cast as $mem) {
       if (($actorSearch !== '' && $actorSearch !== '|' && preg_match($re_a, $mem['Performer'])) || ($roleSearch !== '' && $roleSearch !== '|' && preg_match($re_r, $mem['Role']))) {
