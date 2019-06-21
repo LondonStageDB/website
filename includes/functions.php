@@ -1182,6 +1182,59 @@
     return false;
   }
 
+  /**
+  * Takes a string and removes words not near a highlighted word
+  *
+  * @param string $text String to be cut down
+  *
+  * @return string
+  */
+  function cutString($string) {
+    if (strpos($string, 'highlight') === false) return $string;
+
+    $numChars = 25; // Number of characters around the highlighted word to keep
+    $needle = 'highlight';
+    $lastPos = 0;
+    $positions = array();
+    $finalString = '';
+    $startDisregard = 13; // Num chars to subtract from positions before counting the 25. (for <span class=" )
+
+  //https://stackoverflow.com/questions/1193500/truncate-text-containing-html-ignoring-tags
+
+    // Make array of tag objects
+    // arr[0] = {tag: 'a', tagStart: 12, tagEnd: 33};
+    // Then, if 'highlight' is found between a tag start and end, +/- $numChars from its tag values unless it reaches another tagEnd first.
+    // So find all tags that 'highlight' is inside. Take $numChars from the outside tag unless run into another tag first. 
+
+/*    $html = mb_convert_encoding($string, "HTML-ENTITIES", 'UTF-8');
+ 
+ $dom = new domDocument;
+ $dom->preserveWhiteSpace = false;
+ $dom->loadHTML($html, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
+ 
+ $contents = $dom->getElementsByTagName('a');*/ // Array of Content
+ // https://www.techfry.com/php-tutorial/html-basic-tags
+
+  print_r($contents);
+
+    while (($lastPos = strpos($string, $needle, $lastPos))!== false) {
+      $positions[] = $lastPos;
+      $lastPos = $lastPos + strlen($needle);
+    }
+
+    $i = 1;
+    foreach ($positions as $pos) {
+      $startPos = (($pos - $startDisregard) - $numChars < 0) ? 0 : ($pos - $startDisregard) - $numChars;
+      $finalPos = (($pos + $startDisregard) + $numChars > strlen($string)) ? strlen($string) : ($pos + $startDisregard) + $numChars;
+      if ($i === 1 && $startPos !== 0) $finalString .= '... ';
+      $finalString .= substr($string, $startPos, $finalPos-$startPos);
+      if ($i < count($positions) && $finalPos !== strlen($string)) $finalString .= ' ... ';
+      $i++;
+    }
+
+    return $string . ' END ' . $finalString;
+  }
+
 
   /**
   * Takes some text and creates links for any instances of $name=
