@@ -306,7 +306,7 @@
                   </h2>
                 </div>
                 <div class="evt-body">
-                  <?php if (isFoundIn($results->data[$i]['CommentC'], cleanQuotes(cleanStr($_GET['keyword'])))) echo '<div class="evt-info"><b>Event Comment: </b>' . highlight(namedEntityLinks($results->data[$i]['CommentC']), cleanQuotes(cleanStr($_GET['keyword']))) . '</div>';?>
+                  <?php if (isFoundIn($results->data[$i]['CommentC'], cleanQuotes(cleanStr($_GET['keyword'])))) echo '<div class="evt-info"><b>Event Comment: </b>' . cutString(highlight(namedEntityLinks($results->data[$i]['CommentC']), cleanQuotes(cleanStr($_GET['keyword'])))) . '</div>';?>
                   <div class="evt-other clearfix">
                     <div class="perfs">
                       <h3>Performances</h3>
@@ -319,7 +319,7 @@
                           echo highlight(namedEntityLinks($perf['DetailedComment']), cleanQuotes(cleanStr($_GET['keyword'])) . '|' . cleanQuotes(cleanStr($_GET['performance'])));
                         }
                         echo '</h4>';
-                        if (isFoundIn($perf['CommentP'], cleanQuotes(cleanStr($_GET['keyword']))) ) echo '<b>Performance Comment: </b>' . highlight(namedEntityLinks($perf['CommentP']), cleanQuotes(cleanStr($_GET['keyword']))) . '<br>';
+                        if (isFoundIn($perf['CommentP'], cleanQuotes(cleanStr($_GET['keyword']))) ) echo '<b>Performance Comment: </b>' . cutString(highlight(namedEntityLinks($perf['CommentP']), cleanQuotes(cleanStr($_GET['keyword'])))) . '<br>';
                         $inCast = isInCast(cleanQuotes($_GET['keyword']) . '|' . cleanQuotes($cleanedActors), cleanQuotes(cleanStr($_GET['keyword'])) . '|' . cleanQuotes($cleanedRoles), $perf['cast']);
                         if ($inCast !== false) {
                           echo '<div class="cast"><h5>Cast</h5>';
