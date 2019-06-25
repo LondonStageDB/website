@@ -267,7 +267,42 @@
         </div>
         <div class="form-results cell small-12 large-9">
           <div class="results-wrap">
-            <?php echo $results->total . ' results'; ?>
+            <div class="your-search">
+              <span class="num-results"><?php echo $results->total . ' results'; ?></span><?php echo yourSearch(); ?>
+            </div>
+            <?php if(onlyKeyword()) {
+              $resByCol = getResultsByColumn(cleanStr($_GET['keyword']));
+              $msg = "We found ";
+              $resCnt = 1;
+
+              foreach($resByCol as $colKey => $col) {
+                $colMsg = '';
+                switch($col['col']) {
+                  case 'pcount':
+                    $colMsg = ' ' . $col['count'] . ' matches on Performance Title';
+                  break;
+                  case 'acount':
+                    $colMsg = ' ' . $col['count'] . ' matches on Author';
+                  break;
+                  case 'pccount':
+                    $colMsg = ' ' . $col['count'] . ' matches on Performance Comments';
+                  break;
+                  case 'eccount':
+                    $colMsg = ' ' . $col['count'] . ' matches on Event Comments';
+                  break;
+                  case 'ccount':
+                    $colMsg = ' ' . $col['count'] . ' matches on Roles/Actors';
+                  break;
+                }
+                if ($resCnt < count($resByCol)) {
+                  $msg .= $colMsg . ',';
+                } else {
+                  $msg .= ' and ' . $colMsg . '.';
+                }
+                $resCnt++;
+              }
+              echo '<div class="res-by-col">' . $msg . '</div>';
+            } ?>
             <?php if ($results->total > 0) { ?>
             <div class="grid-x results-header">
               <div class="input-group relevance-menu-wrap">
@@ -306,7 +341,7 @@
                   </h2>
                 </div>
                 <div class="evt-body">
-                  <?php if (isFoundIn($results->data[$i]['CommentC'], cleanQuotes(cleanStr($_GET['keyword'])))) echo '<div class="evt-info"><b>Event Comment: </b>' . cutString(highlight(namedEntityLinks($results->data[$i]['CommentC']), cleanQuotes(cleanStr($_GET['keyword'])))) . '</div>';?>
+                  <?php if (isFoundIn($results->data[$i]['CommentC'], cleanQuotes(cleanStr($_GET['keyword'])))) echo '<div class="evt-info"><b>Event Comment: </b>' . highlight(namedEntityLinks($results->data[$i]['CommentC']), cleanQuotes(cleanStr($_GET['keyword']))) . '</div>';?>
                   <div class="evt-other clearfix">
                     <div class="perfs">
                       <h3>Performances</h3>
@@ -319,7 +354,7 @@
                           echo highlight(namedEntityLinks($perf['DetailedComment']), cleanQuotes(cleanStr($_GET['keyword'])) . '|' . cleanQuotes(cleanStr($_GET['performance'])));
                         }
                         echo '</h4>';
-                        if (isFoundIn($perf['CommentP'], cleanQuotes(cleanStr($_GET['keyword']))) ) echo '<b>Performance Comment: </b>' . cutString(highlight(namedEntityLinks($perf['CommentP']), cleanQuotes(cleanStr($_GET['keyword'])))) . '<br>';
+                        if (isFoundIn($perf['CommentP'], cleanQuotes(cleanStr($_GET['keyword']))) ) echo '<b>Performance Comment: </b>' . highlight(namedEntityLinks($perf['CommentP']), cleanQuotes(cleanStr($_GET['keyword']))) . '<br>';
                         $inCast = isInCast(cleanQuotes($_GET['keyword']) . '|' . cleanQuotes($cleanedActors), cleanQuotes(cleanStr($_GET['keyword'])) . '|' . cleanQuotes($cleanedRoles), $perf['cast']);
                         if ($inCast !== false) {
                           echo '<div class="cast"><h5>Cast</h5>';
@@ -340,6 +375,10 @@
           <nav aria-label="Pagination" class="grid-x pag-wrap">
             <?php echo $Paginator->createLinks( $links, 'pagination pagination-sm pag-bottom' ); ?>
           </nav>
+          <?php } else { ?>
+            <div class="no-results">
+              No results found. Modify the filters to the left or <a href="/search.php">try a new search</a>
+            </div>
           <?php } ?>
         </div>
       </div>

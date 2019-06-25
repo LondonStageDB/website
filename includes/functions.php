@@ -278,6 +278,92 @@
 
 
   /**
+  * Returns match counts for keyword searches. Columns are PerfCleanTitle,
+  *  AuthNameClean, CommentPClean, CommentCClean, and RoleClean/PerformerClean.
+  *
+  * @param string $keyword Sanitizes keyword from $_GET
+  *
+  * @return array Array of match counts by column
+  */
+  function getResultsByColumn($keyword) {
+    global $conn;
+    $keywordClean = mysqli_real_escape_string($conn, cleanQuotes($keyword, true));
+    $keywrd = mysqli_real_escape_string($conn, $keyword);
+    $pcount = [];
+    $acount = [];
+    $pccount = [];
+    $eccount = [];
+    $ccount = [];
+    $counts = [];
+
+    $psql = "SELECT COUNT(*) AS count FROM Performances WHERE MATCH(PerfTitleClean) AGAINST ('$keywrd' IN NATURAL LANGUAGE MODE) OR PerfTitleClean LIKE '%$keywordClean%'";
+    $asql = "SELECT COUNT(*) AS count FROM Author WHERE MATCH(AuthNameClean) AGAINST ('$keywrd' IN NATURAL LANGUAGE MODE) OR AuthNameClean LIKE '%$keywordClean%'";
+    $pcsql = "SELECT COUNT(*) AS count FROM Performances WHERE MATCH(CommentPClean) AGAINST ('$keywrd' IN NATURAL LANGUAGE MODE) OR CommentPClean LIKE '%$keywordClean%'";
+    $ecsql = "SELECT COUNT(*) AS count FROM Events WHERE MATCH(CommentCClean) AGAINST ('$keywrd' IN NATURAL LANGUAGE MODE) OR CommentCClean LIKE '%$keywordClean%'";
+    $csql = "SELECT COUNT(*) AS count FROM Cast WHERE MATCH(RoleClean, PerformerClean) AGAINST ('$keywrd' IN NATURAL LANGUAGE MODE) OR RoleClean LIKE '%$keywordClean%' OR PerformerClean LIKE '%$keywordClean%'";
+
+    $presult = $conn->query($psql);
+    $aresult = $conn->query($asql);
+    $pcresult = $conn->query($pcsql);
+    $ecresult = $conn->query($ecsql);
+    $cresult = $conn->query($csql);
+
+    while ($row = $presult->fetch_assoc()) {
+      $pcount[] = $row;
+    }
+    while ($row = $aresult->fetch_assoc()) {
+      $acount[] = $row;
+    }
+    while ($row = $pcresult->fetch_assoc()) {
+      $pccount[] = $row;
+    }
+    while ($row = $ecresult->fetch_assoc()) {
+      $eccount[] = $row;
+    }
+    while ($row = $cresult->fetch_assoc()) {
+      $ccount[] = $row;
+    }
+
+    $counts[] = array('col' => 'pcount', 'count' => $pcount[0]['count']);
+    $counts[] = array('col' => 'acount', 'count' => $acount[0]['count']);
+    $counts[] = array('col' => 'pccount', 'count' => $pccount[0]['count']);
+    $counts[] = array('col' => 'eccount', 'count' => $eccount[0]['count']);
+    $counts[] = array('col' => 'ccount', 'count' => $ccount[0]['count']);
+
+    function cmp($a, $b)
+    {
+      return $a['count'] < $b['count'];
+    }
+
+    usort($counts, 'cmp');
+
+    return $counts;
+  }
+
+
+  /**
+  * Checks if only 'keyword' is filled out. Only show Results by Column if it's the only field. 
+  *
+  * @return boolean
+  */
+  function onlyKeyword() {
+    $actors = (isset($_GET['actor']) && array_filter($_GET['actor'], 'strlen')) ? array_filter($_GET['actor'], 'strlen') : [];
+    $roles = (isset($_GET['role']) && array_filter($_GET['role'], 'strlen')) ? array_filter($_GET['role'], 'strlen') : [];
+    $ptypes = (isset($_GET['ptype']) && array_filter($_GET['ptype'], 'strlen')) ? array_filter($_GET['ptype'], 'strlen') : [];
+    if (isset($_GET['author']) && trim($_GET['author']) !== '') return false;
+    if (isset($_GET['performance']) && trim($_GET['performance']) !== '') return false;
+    if (isset($_GET['theatre']) && trim($_GET['theatre']) !== '') return false;
+    if (isset($_GET['volume']) && trim($_GET['volume']) !== '') return false;
+    if (isset($_GET['start-year']) && trim($_GET['start-year']) !== '') return false;
+    if (isset($_GET['end-year']) && trim($_GET['end-year']) !== '') return false;
+    if (isset($_GET['actor']) && count($actors) > 0) return false;
+    if (isset($_GET['role']) && count($roles) > 0) return false;
+    if (isset($_GET['ptype']) && count($ptypes) > 0) return false;
+    return true;
+  }
+
+
+  /**
   * Cleans string of all special chars except semicolons, spaces, and double quotes.
   *
   * Replaces '-' and '_' with a space. Replaces ” and “ with ". Then removes all 
@@ -977,6 +1063,23 @@
 
 
   /**
+  * Returns 'Your Search' info for results page
+  *
+  * @return string
+  */
+  function yourSearch() {
+    $yourSearch = '';
+    if (!empty($_GET['keyword'])) $yourSearch .= '<span class="your-search-item">Keyword - ' . htmlentities($_GET['keyword']) . '</span>';
+    if (!empty($_GET['performance'])) $yourSearch .= '<span class="your-search-item">Title - ' . htmlentities($_GET['performance']) . '</span>';
+    if (!empty(array_filter($_GET['actor'], 'strlen'))) $yourSearch .= '<span class="your-search-item">Actors - ' . htmlentities(implode(', ', array_filter($_GET['actor'], 'strlen'))) . '</span>';
+    if (!empty(array_filter($_GET['role'], 'strlen'))) $yourSearch .= '<span class="your-search-item">Roles - ' . htmlentities(implode(', ', array_filter($_GET['role'], 'strlen'))) . '</span>';
+    if (!empty($_GET['author'])) $yourSearch .= '<span class="your-search-item">Author - ' . htmlentities($_GET['author']) . '</span>';
+
+    return (!empty($yourSearch)) ? '<span class="your-search-for"> for: </span><span class="your-search-items">' . $yourSearch . '</span>' : '';
+  }
+
+
+  /**
   * Takes an eventId and returns an Event
   *
   * @param int $eventId Event ID.
@@ -1214,8 +1317,6 @@
  
  $contents = $dom->getElementsByTagName('a');*/ // Array of Content
  // https://www.techfry.com/php-tutorial/html-basic-tags
-
-  print_r($contents);
 
     while (($lastPos = strpos($string, $needle, $lastPos))!== false) {
       $positions[] = $lastPos;
