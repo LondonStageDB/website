@@ -61,16 +61,19 @@
               <label class="hidden" for="startYear">Start Year</label>
               <select class="date-year" id="startYear" name="start-year">
                 <option disabled selected>Year</option>
+                <option value="">All</option>
                 <?php getYears('start'); ?>
               </select>
               <label class="hidden" for="startMonth">Start Month</label>
               <select class="date-month" id="startMonth" name="start-month" disabled>
                 <option disabled selected>Mon</option>
+                <option value="">All</option>
                 <?php getMonths('start'); ?>
               </select>
               <label class="hidden" for="startDay">Start Day</label>
               <select class="date-day" id="startDay" name="start-day" disabled>
                 <option disabled selected>Day</option>
+                <option value="">All</option>
                 <?php getDays('start'); ?>
               </select>
             </div>
@@ -79,16 +82,19 @@
               <label class="hidden" for="endYear">End Year</label>
               <select class="date-year" id="endYear" name="end-year">
                 <option disabled selected>Year</option>
+                <option value="">All</option>
                 <?php getYears('end'); ?>
               </select>
               <label class="hidden" for="endMonth">End Month</label>
               <select class="date-month" id="endMonth" name="end-month" disabled>
                 <option disabled selected>Mon</option>
+                <option value="">All</option>
                 <?php getMonths('end'); ?>
               </select>
               <label class="hidden" for="endDay">End Day</label>
               <select class="date-day" id="endDay" name="end-day" disabled>
                 <option disabled selected>Day</option>
+                <option value="">All</option>
                 <?php getDays('end'); ?>
               </select>
             </div>

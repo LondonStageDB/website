@@ -145,8 +145,13 @@
           switch($key) {
             case 'theatre':
               if ($theatre !== 'all') {
-                $theatre = mysqli_real_escape_string($conn, $theatre);
-                array_push($queries, "Theatre.TheatreName = '$theatre'");
+                if(substr($theatre, 0, 3) === '111') {
+                  $theatre = mysqli_real_escape_string($conn, substr($theatre, 3));
+                  array_push($queries, "Theatre.TheatreName LIKE '%$theatre%'");
+                } else {
+                  $theatre = mysqli_real_escape_string($conn, $theatre);
+                  array_push($queries, "Theatre.TheatreName = '$theatre'");
+                }
               }
             break;
             case 'volume':
@@ -414,6 +419,23 @@
     $sql = 'SELECT * from Theatre GROUP BY TheatreName ORDER BY TheatreName';
     $result = $conn->query($sql);
     $output = [];
+
+    echo '<optgroup label="Common Theatres">';
+    echo '<option value="111Covent Garden"';
+      getSticky(2, 'theatre', "111Covent Garden");
+      echo '>Covent Garden (All)</option>';
+    echo '<option value="111Drury Lane"';
+      getSticky(2, 'theatre', "111Drury Lane");
+      echo '>Drury Lane (All)</option>';
+    echo '<option value="111Haymarket"';
+      getSticky(2, 'theatre', "111Harmarket");
+      echo '>Haymarket (All)</option>';
+    echo '<option value="111Lincoln\'s Inn"';
+      getSticky(2, 'theatre', "111Lincoln\'s Inn");
+      echo '>Lincoln\'s Inn (All)</option>';
+    echo '</optgroup>';
+    echo '<option disabled>_________</option>';
+
     while ($row = $result->fetch_assoc()) {
       echo '<option value="' . $row['TheatreName'] . '"';
       getSticky(2, 'theatre', $row['TheatreName']);
@@ -696,7 +718,8 @@
         }
       break;
       case 2: // select
-        if (isset($_GET[$par]) && $_GET[$par] == $value) {
+        if (isset($_GET[$par]) && $_GET[$par] === "") {} // Do nothing if empty
+        else if (isset($_GET[$par]) && $_GET[$par] == $value) {
           echo ' selected="selected"';
         }
       break;
@@ -786,17 +809,17 @@
 
     // If no date defined, don't return a query
     if (in_array($dateTp, [2,3,4]) && !isset($startYr)) return '';
-    if (!isset($startYr) && !isset($endYr)) {
+    if ((!isset($startYr) || $startYr === '') && (!isset($endYr) || $endYr === '')) {
       return '';
     }
 
     // Set defaults if not in $_GET info or outside limits
     if (!isset($startYr) || $startYr < 1659 || $startYr > 1800) $startYr = 1659;
     if (!isset($endYr) || $endYr < 1659 || $endYr > 1800) $endYr = 1800;
-    if (!isset($startMon) || ($startMon < 0 || $startMon > 12)) {$startMon = 0; $monSet = false;}
-    if (!isset($startDay) || ($startDay < 0 || $startDay > 31)) {$startDay = 0; $daySet = false;}
-    if (!isset($endMon) || ($endMon < 0 || $endMon > 12)) $endMon = 12;
-    if (!isset($endDay) || ($endDay < 0 || $endDay > 31)) $endDay = 31;
+    if (!isset($startMon) || $startMon === '' || ($startMon < 0 || $startMon > 12)) {$startMon = 0; $monSet = false;}
+    if (!isset($startDay) || $startDay === '' || ($startDay < 0 || $startDay > 31)) {$startDay = 0; $daySet = false;}
+    if (!isset($endMon) || $endMon === '' || ($endMon < 0 || $endMon > 12)) $endMon = 12;
+    if (!isset($endDay) || $endDay === '' || ($endDay < 0 || $endDay > 31)) $endDay = 31;
 
     $startStr = $startYr . substr('0' . $startMon, -2) . substr('0' . $startDay, -2);
     $endStr = $endYr . substr('0' . $endMon, -2) . substr('0' . $endDay, -2);
