@@ -238,6 +238,15 @@
         </div>
         <?php endforeach; ?>
       </div>
+      <div class="cite-wrap hide">
+        <h4>Cite this page</h4>
+        <div class="cite-chicago-wrap">
+          <span>Chicago: </span><span id="citeChicago"></span>
+        </div>
+        <div class="cite-mla-wrap">
+          <span>MLA: </span><span id="citeMla"></span>
+        </div>
+      </div>
     </div>
     <?php include_once('common/footer.php'); ?>
     <script src="/js/vendor/jquery.flexslider2-7-2-min.js"></script>

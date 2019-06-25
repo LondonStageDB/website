@@ -1115,7 +1115,6 @@ body#home:after {
   //background-color: #ede4db;
   //background-color: #ece7d9; /* tad more yellow */
   padding: 0;
-  padding-bottom: 3rem;
   width: 100%;
 }
 #event .event-header-wrap {
@@ -1255,6 +1254,9 @@ body#home:after {
 #event .perf-section, #event .perf-info {
   margin-top: 2.5rem;
 }
+#event .perf-section {
+  padding-bottom: 3rem;
+}
 #event .perf {
   margin-top: 2.5rem;
 }
@@ -1372,6 +1374,20 @@ body#home:after {
   background-color: #d6d0c2;
   padding: 0.3rem 0.6rem;
   margin-top: 0.5rem;
+}
+#event .cite-wrap {
+  padding: 1rem 2rem;
+  padding-bottom: 3rem;
+  background: #d6d0c2;
+}
+#event .cite-wrap .cite-chicago-wrap {
+  padding-bottom: 0.3rem;
+}
+#event .cite-wrap h4 {
+  font-size: 1.2rem;
+}
+#event .cite-wrap span {
+  font-size: 0.9rem;
 }
 @media only screen and (min-width: 640px) {
   #event .event-header-wrap {
