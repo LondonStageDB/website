@@ -38,16 +38,20 @@ $(function() {
 
   // Enable Mon/Day fields as previous date fields filled in
   $('#startYear').on('change', function() {
-    if ($('#startYear').val()) $('#startMonth').prop('disabled', false);
+    if ($('#startYear').val() && $('#startYear').val() !== '') $('#startMonth').prop('disabled', false);
+    else {$('#startMonth').prop('disabled', true); $('#startDay').prop('disabled', true);}
   });
   $('#startMonth').on('change', function() {
-    if ($('#startMonth').val()) $('#startDay').prop('disabled', false);
+    if ($('#startMonth').val() && $('#startMonth').val() !== '') $('#startDay').prop('disabled', false);
+    else $('#startDay').prop('disabled', true);
   });
   $('#endYear').on('change', function() {
-    if ($('#endYear').val()) $('#endMonth').prop('disabled', false);
+    if ($('#endYear').val() && $('#endYear').val() !== '') $('#endMonth').prop('disabled', false);
+    else {$('#endMonth').prop('disabled', true); $('#endDay').prop('disabled', true);}
   });
   $('#endMonth').on('change', function() {
-    if ($('#endMonth').val()) $('#endDay').prop('disabled', false);
+    if ($('#endMonth').val() && $('#endMonth').val() !== '') $('#endDay').prop('disabled', false);
+    else $('#endDay').prop('disabled', true);
   });
 
   // Only show dateType option if has JS
