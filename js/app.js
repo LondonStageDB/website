@@ -1,6 +1,20 @@
 $(document).foundation();
 
 (function($) {
+  // Show Citations on Event page
+  $('.cite-wrap').removeClass('hide');
+
+  // Generate event citation strings
+  if ($('#citeChicago').length) {
+    var options = { year: 'numeric', month: 'long', day: 'numeric' };
+    var today = new Date();
+    $('#citeChicago').html('"' + document.title + '." London Stage Database. Accessed ' + today.toLocaleDateString("en-US", options) + '. ' + window.location.href + '.');
+
+    var mlaDateArr = today.toLocaleDateString("en-US", options).replace(',', '').split(" ");
+    var mlaDate = mlaDateArr[1] + ' ' + mlaDateArr[0] + ' ' + mlaDateArr[2];
+    $('#citeMla').html('"' + document.title + '." <i>London Stage Database,</i> ' + window.location.href + '. Accessed ' + mlaDate + '.');
+  }
+
   // Toggle SQL Query on results page
   $('#toggle').click(function() {
     $('.sql-query').slideToggle();
