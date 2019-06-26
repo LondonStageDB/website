@@ -302,7 +302,7 @@
     $counts = [];
 
     $psql = "SELECT COUNT(*) AS count FROM Performances WHERE MATCH(PerfTitleClean) AGAINST ('$keywrd' IN NATURAL LANGUAGE MODE) OR PerfTitleClean LIKE '%$keywordClean%'";
-    $asql = "SELECT COUNT(*) AS count FROM Author WHERE MATCH(AuthNameClean) AGAINST ('$keywrd' IN NATURAL LANGUAGE MODE) OR AuthNameClean LIKE '%$keywordClean%'";
+    $asql = "SELECT COUNT(*) AS count FROM (SELECT Events.EventId FROM Events LEFT JOIN Performances ON Performances.EventId = Events.EventId LEFT JOIN Works ON Works.WorkId = Performances.WorkId LEFT JOIN WorkAuthMaster on WorkAuthMaster.WorkId = Works.WorkId LEFT JOIN Author on Author.AuthId = WorkAuthMaster.AuthId WHERE MATCH(AuthNameClean) AGAINST ('$keywrd' IN NATURAL LANGUAGE MODE) OR AuthNameClean LIKE '%$keywordClean%' GROUP BY Events.EventId) as qry";
     $pcsql = "SELECT COUNT(*) AS count FROM Performances WHERE MATCH(CommentPClean) AGAINST ('$keywrd' IN NATURAL LANGUAGE MODE) OR CommentPClean LIKE '%$keywordClean%'";
     $ecsql = "SELECT COUNT(*) AS count FROM Events WHERE MATCH(CommentCClean) AGAINST ('$keywrd' IN NATURAL LANGUAGE MODE) OR CommentCClean LIKE '%$keywordClean%'";
     $csql = "SELECT COUNT(*) AS count FROM Cast WHERE MATCH(RoleClean, PerformerClean) AGAINST ('$keywrd' IN NATURAL LANGUAGE MODE) OR RoleClean LIKE '%$keywordClean%' OR PerformerClean LIKE '%$keywordClean%'";
@@ -357,8 +357,8 @@
     $ptypes = (isset($_GET['ptype']) && array_filter($_GET['ptype'], 'strlen')) ? array_filter($_GET['ptype'], 'strlen') : [];
     if (isset($_GET['author']) && trim($_GET['author']) !== '') return false;
     if (isset($_GET['performance']) && trim($_GET['performance']) !== '') return false;
-    if (isset($_GET['theatre']) && trim($_GET['theatre']) !== '') return false;
-    if (isset($_GET['volume']) && trim($_GET['volume']) !== '') return false;
+    if (isset($_GET['theatre']) && trim($_GET['theatre']) !== '' && $_GET['theatre'] !== 'all') return false;
+    if (isset($_GET['volume']) && trim($_GET['volume']) !== '' && $_GET['volume'] !== 'all') return false;
     if (isset($_GET['start-year']) && trim($_GET['start-year']) !== '') return false;
     if (isset($_GET['end-year']) && trim($_GET['end-year']) !== '') return false;
     if (isset($_GET['actor']) && count($actors) > 0) return false;
