@@ -25,7 +25,7 @@
         // Create ptype array to later implode to string
         if ($key === 'ptype') {
           foreach ($_GET['ptype'] as $type) {
-            array_push($ptypes, "'".$type."'");
+            if (in_array($type, ['p', 'a', 'm', 'd', 'e', 's', 'b', 'i', 'o', 'u', 't'])) array_push($ptypes, "'".$type."'");
           }
         }
         // If it's a keyword, add to keyword array, otherwise add to $getters
@@ -146,17 +146,20 @@
             case 'theatre':
               if ($theatre !== 'all') {
                 if(substr($theatre, 0, 3) === '111') {
-                  $theatre = mysqli_real_escape_string($conn, substr($theatre, 3));
+                  $theatre = preg_replace('/[0-9;"`\~\!\@\#\$\%\^\&\*\<\>\[\]]/', '', $theatre); // Remove any numbers and special chars
+                  $theatre = mysqli_real_escape_string($conn, $theatre);
                   array_push($queries, "Theatre.TheatreName LIKE '%$theatre%'");
                 } else {
+                  $theatre = preg_replace('/[0-9;"`\~\!\@\#\$\%\^\&\*\<\>\[\]]/', '', $theatre); // Remove any numbres and special chars
                   $theatre = mysqli_real_escape_string($conn, $theatre);
                   array_push($queries, "Theatre.TheatreName = '$theatre'");
                 }
               }
             break;
             case 'volume':
+              
               $volume = mysqli_real_escape_string($conn, $volume);
-              if ($volume !== 'all') {
+              if ($volume !== 'all' && in_array($volume, [1, 2, 3, 4, 5])) {
                 array_push($queries, "Theatre.Volume = '$volume'");
               }
             break;
