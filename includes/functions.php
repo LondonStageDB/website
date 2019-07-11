@@ -95,9 +95,9 @@
       // Tack on Keyword related parameters for relevance sorting
       if (!empty($_GET['keyword'])) {
         $keyTemp = mysqli_real_escape_string($conn, $keywrd['keyword']);
-        $sql .=", max(((MATCH(PerfTitleClean) AGAINST ('$keyTemp' IN NATURAL LANGUAGE MODE) + case when PerfTitleClean LIKE '%$keyTemp%' then 20 else 0.3 end) * 2) +
-                ((MATCH(CommentPClean) AGAINST ('$keyTemp' IN NATURAL LANGUAGE MODE) + case when CommentPClean LIKE '%$keyTemp%' then 20 else 0.3 end) / 3) +
-                ((MATCH(CommentCClean) AGAINST ('$keyTemp' IN NATURAL LANGUAGE MODE) + case when CommentCClean LIKE '%$keyTemp%' then 20 else 0.3 end) / 3) +
+        $sql .=", max(((MATCH(PerfTitleClean) AGAINST ('$keyTemp' IN NATURAL LANGUAGE MODE) + case when PerfTitleClean LIKE '%$keyTemp%' then 20 else 0.3 end)) +
+                ((MATCH(CommentPClean) AGAINST ('$keyTemp' IN NATURAL LANGUAGE MODE) + case when CommentPClean LIKE '%$keyTemp%' then 20 else 0.3 end) * .75) +
+                ((MATCH(CommentCClean) AGAINST ('$keyTemp' IN NATURAL LANGUAGE MODE) + case when CommentCClean LIKE '%$keyTemp%' then 20 else 0.3 end) * .75) +
                 ((MATCH(RoleClean) AGAINST ('$keyTemp' IN NATURAL LANGUAGE MODE) + case when RoleClean LIKE '%$keyTemp%' then 20 else 0.3 end) +
                 (MATCH(PerformerClean) AGAINST ('$keyTemp' IN NATURAL LANGUAGE MODE) + case when PerformerClean LIKE '%$keyTemp%' then 20 else 0.3 end)) +
                 (MATCH(AuthNameClean) AGAINST ('$keyTemp' IN NATURAL LANGUAGE MODE) + case when AuthNameClean LIKE '%$keyTemp%' then 20 else 0.3 end)) as keyScore ";
@@ -355,6 +355,7 @@
   * @return boolean
   */
   function onlyKeyword() {
+    if (!isset($_GET['keyword']) || $_GET['keyword'] === '') return false;
     $actors = (isset($_GET['actor']) && array_filter($_GET['actor'], 'strlen')) ? array_filter($_GET['actor'], 'strlen') : [];
     $roles = (isset($_GET['role']) && array_filter($_GET['role'], 'strlen')) ? array_filter($_GET['role'], 'strlen') : [];
     $ptypes = (isset($_GET['ptype']) && array_filter($_GET['ptype'], 'strlen')) ? array_filter($_GET['ptype'], 'strlen') : [];
@@ -555,6 +556,8 @@
   function getRelatedWorks($perfTitle = '') {
     global $conn;
     $prefix = "or ";
+    $stopwords = ['[c|C]oncert[s]?', '[e|E]ntertainment[s]?'];
+    $perfTitle =  preg_replace('/\b(' . implode('|', $stopwords) . ')\b/', '', $perfTitle);
 
     if ($perfTitle !== '') {
       $titles = array_map('trim', explode(';', $perfTitle));
@@ -568,9 +571,9 @@
           $perf = substr($perf, strlen($prefix));
         }
         if ($i < count($titles)) {
-          $sql .= ' Works.TitleClean LIKE "%' . $perf . '%" OR Performances.PerfTitleClean LIKE "%' . $perf . '%" OR WorksVariant.NameClean LIKE "%' . $perf . '%" OR ';
+          $sql .= ' Works.TitleClean REGEXP "(.*)[[:<:]]' . $perf . '[[:>:]](.*)" OR Performances.PerfTitleClean REGEXP "(.*)[[:<:]]' . $perf . '[[:>:]](.*)" OR WorksVariant.NameClean REGEXP "(.*)[[:<:]]' . $perf . '[[:>:]](.*)" OR Works.Source1 REGEXP "(.*)[[:<:]]' . $perf . '[[:>:]](.*)" OR Works.Source2 REGEXP "(.*)[[:<:]]' . $perf . '[[:>:]](.*)" OR Works.SourceResearched REGEXP "(.*)[[:<:]]' . $perf . '[[:>:]](.*)" OR ';
         } else {
-          $sql .= ' Works.TitleClean LIKE "%' . $perf . '%" OR Performances.PerfTitleClean LIKE "%' . $perf . '%" OR WorksVariant.NameClean LIKE "%' . $perf . '%" ';
+          $sql .= ' Works.TitleClean REGEXP "(.*)[[:<:]]' . $perf . '[[:>:]](.*)" OR Performances.PerfTitleClean REGEXP "(.*)[[:<:]]' . $perf . '[[:>:]](.*)" OR WorksVariant.NameClean REGEXP "(.*)[[:<:]]' . $perf . '[[:>:]](.*)" OR Works.Source1 REGEXP "(.*)[[:<:]]' . $perf . '[[:>:]](.*)" OR Works.Source2 REGEXP "(.*)[[:<:]]' . $perf . '[[:>:]](.*)" OR Works.SourceResearched REGEXP "(.*)[[:<:]]' . $perf . '[[:>:]](.*)" ';
         }
         $i++;
       }
@@ -581,11 +584,17 @@
       $result = $conn->query($sql);
       $works = array();
       $sources = array();
+      $workIds = array();
       while ($row = mysqli_fetch_assoc($result)) {
         $sources[] = $row['SourceResearched'];
+        $sources[] = $row['Source1'];
+        $sources[] = $row['Source2'];
         $row['author'] = getAuthorInfo($row['WorkId']);
         $works[] = $row;
+        $workIds[] = $row['WorkId'];
       }
+
+      $sources = array_filter($sources, 'strlen');
 
       // Get Work Sources and perform same search on them
       $sources = array_filter($sources, 'strlen');
@@ -596,9 +605,9 @@
         $i = 1;
         foreach($sources as $source) {
           if ($i < count($sources)) {
-            $ssql .= ' Works.TitleClean LIKE "%' . $source . '%" OR Performances.PerfTitleClean LIKE "%' . $source . '%" OR WorksVariant.NameClean LIKE "%' . $perf . '%" OR ';
+            $ssql .= ' Works.TitleClean REGEXP "(.*)[[:<:]]' . $source . '[[:>:]](.*)" OR Performances.PerfTitleClean REGEXP "(.*)[[:<:]]' . $source . '[[:>:]](.*)" OR WorksVariant.NameClean REGEXP "(.*)[[:<:]]' . $perf . '[[:>:]](.*)" OR ';
           } else {
-            $ssql .= ' Works.TitleClean LIKE "%' . $source . '%" OR Performances.PerfTitleClean LIKE "%' . $source . '%" OR WorksVariant.NameClean LIKE "%' . $perf . '%" ';
+            $ssql .= ' Works.TitleClean REGEXP "(.*)[[:<:]]' . $source . '[[:>:]](.*)" OR Performances.PerfTitleClean REGEXP "(.*)[[:<:]]' . $source . '[[:>:]](.*)" OR WorksVariant.NameClean REGEXP "(.*)[[:<:]]' . $perf . '[[:>:]](.*)" ';
           }
           $i++;
         }
@@ -606,8 +615,10 @@
         $sresult = $conn->query($ssql);
 
         while ($srow = mysqli_fetch_assoc($sresult)) {
-          $srow['author'] = getAuthorInfo($srow['WorkId']);
-          $works[] = $srow;
+          if (!in_array($srow['WorkId'], $workIds)) {
+            $srow['author'] = getAuthorInfo($srow['WorkId']);
+            $works[] = $srow;
+          }
         }
       }
 
@@ -627,10 +638,8 @@
     global $conn;
 
     if ($workId !== '') {
-      $sql = 'SELECT * FROM Author
-              WHERE Author.AuthId In
-                (SELECT AuthId FROM WorkAuthMaster
-                WHERE WorkAuthMaster.WorkId = ' . $workId . ')';
+      $sql = 'SELECT Author.*, WorkAuthMaster.AuthType FROM Author JOIN WorkAuthMaster ON WorkAuthMaster.AuthId = Author.AuthId
+              WHERE WorkAuthMaster.WorkId = ' . $workId;
 
       $result = $conn->query($sql);
       $auths = [];
@@ -767,18 +776,18 @@
         $newTime = strtotime($formatted_date);
         $newDate = date('F Y', $newTime);
         if ($plain) {
-          $newFormatted = substr($newDate, 0, -4) . ' ' . substr($newDate, -4);
+          $newFormatted = substr($newDate, 0, -4) . substr($newDate, -4);
         } else {
-          $newFormatted = '<span class="evt-date">' . substr($newDate, 0, -4) . ' ' . substr($newDate, -4) . '</span>';
+          $newFormatted = '<span class="evt-date">' . substr($newDate, 0, -4) . substr($newDate, -4) . '</span>';
         }
         return $newFormatted;
       } else {
         $newTime = strtotime($formatted_date);
         $newDate = date('d F Y', $newTime);
         if ($plain) {
-          $newFormatted = substr($newDate, 0, -4) . ' ' . substr($newDate, -4);
+          $newFormatted = substr($newDate, 0, -4) . substr($newDate, -4);
         } else {
-          $newFormatted = '<span class="evt-date">' . substr($newDate, 0, -4) . ' ' . substr($newDate, -4) . '</span>';
+          $newFormatted = '<span class="evt-date">' . substr($newDate, 0, -4) . substr($newDate, -4) . '</span>';
         }
         return $newFormatted;
       }
@@ -893,9 +902,8 @@
           WHERE WorkAuthMaster.TitleClean IN (
             SELECT WorkAuthMaster.TitleClean FROM WorkAuthMaster
             LEFT JOIN Author ON Author.AuthId = WorkAuthMaster.AuthId
-            WHERE (Author.AuthNameClean LIKE '%$authorClean%') )
-            OR (Works.SourceAuthor LIKE '%$authorClean%' OR REPLACE(Works.SourceAuthor, \"'\", \"\") LIKE '%$authorClean%')
-            OR WorksVariant.NameClean IN (
+            WHERE (Author.AuthNameClean LIKE '%$authorClean%') ) ";
+            $workIdSql .= " OR WorksVariant.NameClean IN (
               SELECT WorkAuthMaster.TitleClean FROM WorkAuthMaster
               LEFT JOIN Author ON Author.AuthId = WorkAuthMaster.AuthId
               WHERE (Author.AuthNameClean LIKE '%$authorClean%')
@@ -910,9 +918,8 @@
           WHERE WorkAuthMaster.TitleClean IN (
             SELECT WorkAuthMaster.TitleClean FROM WorkAuthMaster
             LEFT JOIN Author ON Author.AuthId = WorkAuthMaster.AuthId
-            WHERE (Author.AuthNameClean LIKE '%$authorClean%') )
-            OR (Works.SourceAuthor LIKE '%$authorClean%' OR REPLACE(Works.SourceAuthor, \"'\", \"\") LIKE '%$authorClean%')
-            OR WorksVariant.NameClean IN (
+            WHERE (Author.AuthNameClean LIKE '%$authorClean%') ) ";
+            $varIdSql .= " OR WorksVariant.NameClean IN (
               SELECT WorkAuthMaster.TitleClean FROM WorkAuthMaster
               LEFT JOIN Author ON Author.AuthId = WorkAuthMaster.AuthId
               WHERE (Author.AuthNameClean LIKE '%$authorClean%')

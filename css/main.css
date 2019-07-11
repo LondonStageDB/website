@@ -10,7 +10,12 @@ html.yes-flex, .yes-flex body {
   flex-direction: column;
 }
 html, body, h1, h2, h3, h4, h5, h6, p {
-  font-family: 'junicoderxtighter', Helvetica, Roboto, Arial, sans-serif;
+  font-family: 'junicoderxregular', Helvetica, Roboto, Arial, sans-serif;
+}
+.smcp {
+  font-feature-settings: "smcp";
+  -moz-font-feature-settings: "smcp";
+  -webkit-font-feature-settings: "smcp";
 }
 a {
   color: #8C1D1D;
@@ -121,6 +126,16 @@ ul.ui-autocomplete {
 }
 .top-bar a, .top-bar ul a {
   color: #efefef;
+}
+.menu li {
+  flex: 100%;
+  text-align: center;
+}
+@media only screen and (min-width: 640px) {
+  .menu li {
+    flex: auto;
+    text-align: left;
+  }
 }
 
 .menu-text {
@@ -267,9 +282,6 @@ body#home:after {
   font-size: 3rem;
   padding: 1rem 0;
   font-family: 'aquilinetworegular';
-  //font-feature-settings: "smcp";
-  //-moz-font-feature-settings: "smcp";
-  //-webkit-font-feature-settings: "smcp";
 }
 #mainSearch .main {
   width: 100%;
@@ -921,6 +933,7 @@ body#home:after {
   //color: #e4e4e4;
 }
 #results .evt-other {
+  padding-top: 1rem;
 }
 #results .evt-info .highlight {
   color: #67727A;
@@ -956,11 +969,10 @@ body#home:after {
 }
 #results .perfs {
   margin: 0 1rem;
-  margin-top: 1.5rem;
   background-color: #ece7d9;
 }
 #results .perfs h3 {
-  font-size: 1.5rem;
+  font-size: 1.4rem;
   //background-color: #6991AC;
   //background-color: #AE9D74;
   margin: 0;
@@ -970,6 +982,7 @@ body#home:after {
 }
 #results .perf {
   padding: 0.5rem 1rem;
+  margin-bottom: 0.7rem;
   color: #222;
 }
 #results .perf:nth-of-type(odd) {
@@ -982,12 +995,22 @@ body#home:after {
   background-color: #f7f4ed;
 }
 #results .perf h4 {
-  font-size: 1.2rem;
+  font-size: 1.3rem;
   margin: 0;
 }
-#results .cast {
-  margin-top: 0.5rem;
-  margin-bottom: 0.5rem;
+#results .perf-body, #results .perf-comm {
+  padding-left: 0.7rem;
+}
+#results .c-role, #results .work-wrap {
+  padding-right: 1.5rem;
+}
+#results .cast, #results .rltd-wrks {
+  margin-top: 0.8rem;
+  margin-bottom: 0.2rem;
+}
+#results .cast h5, #results .rltd-wrks h5 {
+  margin-bottom: 0.2rem;
+  font-size: 1.2rem;
 }
 #results .theatre {
   margin-bottom: 0;
@@ -1126,7 +1149,12 @@ body#home:after {
 }
 #event .event-info {
   padding: 2rem;
-  font-size: 1.1rem;
+  font-size: 1rem;
+}
+#event .event-info > span {
+  font-size: 1.3rem;
+  display: block;
+  padding-bottom: 0.3rem;
 }
 #event .image-wrap {
   overflow: hidden;
@@ -1310,7 +1338,7 @@ body#home:after {
   margin: 2rem 0;
 }
 #event .work-nav h3, #event .download-buttons h3 {
-  font-size: 1.4rem;
+  font-size: 1.3rem;
 }
 #event .work-nav a {
   font-size: 1.1rem;
@@ -1327,25 +1355,27 @@ body#home:after {
 }
 #event .perf-data {
   padding: 0.2rem 0;
-  font-size: 1.1rem;
 }
 #event .perf-comments, #event .perf-title {
   padding-bottom: 1rem;
 }
 #event .perf-title {
-  font-size: 1.4rem;
+  font-size: 1.3rem;
 }
-#event .perf-title .info-heading {
-
+#event .perf-cast > span, #event .perf-comments > span {
+  font-size: 1.3rem;
 }
 #event .perf-title, #event .perf-cast {
 }
 #event .perf .info-heading {
-  font-size: 1.4rem;
+  font-size: 1rem;
   padding-right: 0.3rem;
 }
+#event .perf-title .info-heading {
+  font-size: 1.3rem;
+}
 #event .role .info-heading, #event .actor .info-heading {
-  font-size: 1.1rem;
+  font-size: 1rem;
 }
 #event .work-info .info-heading {
   font-size: 1rem;
@@ -1407,7 +1437,7 @@ body#home:after {
     padding-top: 0;
   }
   #event .related-works h3 {
-    font-size: 1.2rem;
+    font-size: 1.3rem;
     margin-left: 1.5rem;
   }
 }
@@ -1544,6 +1574,9 @@ body#home:after {
 }
 #about .about-section {
   padding: 0 1rem;
+  padding-bottom: 2rem;
+}
+#about .about-opening {
   padding-bottom: 2rem;
 }
 @media only screen and (min-width: 640px) {
@@ -1775,12 +1808,21 @@ body#home:after {
   position: relative;
   padding-bottom: 3rem;
 }
+#data .data-wrap {
+  justify-content: center;
+}
+#data .data-content {
+  text-align: center;
+}
 #data .page-heading h1 {
   text-align: center;
   font-size: 3rem;
   padding: 1rem 0;
   font-family: 'aquilinetworegular';
   padding-bottom: 2rem;
+}
+#data h2 {
+  font-size: 1.2rem;
 }
 
 
@@ -1903,7 +1945,7 @@ body#home:after {
   display: none;
 }
 #carousel > span {
-  font-size: 1.2rem;
+  font-size: 1.3rem;
   text-align: center;
   display: block;
 }
