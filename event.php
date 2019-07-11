@@ -2,6 +2,7 @@
   include_once('includes/functions.php');
 
   $eventId = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT);
+  $eventId = preg_replace('/[.+-]/', '', $eventId);
   $event = getEvent(($eventId !== '' && $eventId >= 0) ? $eventId : 1);
   $event['Performances'] = getPerformances($event['EventId']);
 
@@ -29,10 +30,11 @@
           <?php endif; ?>
           <div class="grid-x perf-type-wrap">
             <div class="cell small-12 text-center perf-type">
-              <h2><?php echo formatDate($event['EventDate']); ?></h2></div>
+              <h2 title="<?php echo formatDate($event['EventDate'], true); ?>"><?php echo formatDate($event['EventDate']); ?></h2></div>
           </div>
         </div>
         <div class="cell small-12 medium-6 event-info">
+          <span>Event Information</span>
           <div class="event-theatre"><span class="info-heading">Theatre:</span>
             <?php echo getTheatreName($event['TheatreId']); ?>
           </div>
@@ -68,7 +70,7 @@
         </div>
         <div class="cell small-12 medium-6 phases-wrap">
           <div id="carousel" class="flexslider">
-            <span>Data Phases:</span>
+            <span>Data Phases</span>
             <ul class="slides">
               <li><a href="#">PDF</a></li>
               <li><a href="#">Original</a></li>
@@ -172,10 +174,10 @@
                       <?php echo cleanItalics(cleanTitle($perf['PerformanceTitle'])); ?>
                     </a>
                   </div>
-                  <div class="perf-comments perf-data"><span class="info-heading">Comments:</span><br />
+                  <div class="perf-comments perf-data"><span>Comments:</span><br />
                     <?php echo namedEntityLinks($perf['CommentP']); ?>
                   </div>
-                  <div class="perf-cast perf-data"><span class="info-heading">Cast:</span><br />
+                  <div class="perf-cast perf-data"><span>Cast:</span><br />
                     <?php if (count($perf['cast']) > 0) : ?>
                     <ul class="no-bullet">
                       <?php foreach ($perf['cast'] as $cast) : ?>
@@ -212,6 +214,7 @@
                     </div>
                     <?php if (array_filter($work['author'])) : ?>
                     <?php foreach ($work['author'] as $auth) : ?>
+                    <?php if (in_array($auth['AuthType'], ['Researched', 'Primary'])) : ?>
                     <div class="auth-info">
                       <div><span class="info-heading">Author: </span>
                         <?php echo linkedSearches('author', $auth['AuthName']); ?>
@@ -225,6 +228,7 @@
                         </div>
                       </div>
                     </div>
+                    <?php endif; ?>
                     <?php endforeach; ?>
                     <?php endif; ?>
                   </div>
