@@ -572,10 +572,8 @@
         }
         if ($i < count($titles)) {
           $sql .= ' Works.TitleClean LIKE "' . $perf . '" OR Performances.PerfTitleClean LIKE "' . $perf . '" OR WorksVariant.NameClean LIKE "' . $perf . '" OR Works.Source1 LIKE "' . $perf . '" OR Works.Source2 LIKE "' . $perf . '" OR Works.SourceResearched LIKE "' . $perf . '" OR ';
-          //$sql .= ' Works.TitleClean REGEXP "(.*)[[:<:]]' . $perf . '[[:>:]](.*)" OR Performances.PerfTitleClean REGEXP "(.*)[[:<:]]' . $perf . '[[:>:]](.*)" OR WorksVariant.NameClean REGEXP "(.*)[[:<:]]' . $perf . '[[:>:]](.*)" OR Works.Source1 REGEXP "(.*)[[:<:]]' . $perf . '[[:>:]](.*)" OR Works.Source2 REGEXP "(.*)[[:<:]]' . $perf . '[[:>:]](.*)" OR Works.SourceResearched REGEXP "(.*)[[:<:]]' . $perf . '[[:>:]](.*)" OR ';
         } else {
           $sql .= ' Works.TitleClean LIKE "' . $perf . '" OR Performances.PerfTitleClean LIKE "' . $perf . '" OR WorksVariant.NameClean LIKE "' . $perf . '" OR Works.Source1 LIKE "' . $perf . '" OR Works.Source2 LIKE "' . $perf . '" OR Works.SourceResearched LIKE "' . $perf . '" ';
-          //$sql .= ' Works.TitleClean REGEXP "(.*)[[:<:]]' . $perf . '[[:>:]](.*)" OR Performances.PerfTitleClean REGEXP "(.*)[[:<:]]' . $perf . '[[:>:]](.*)" OR WorksVariant.NameClean REGEXP "(.*)[[:<:]]' . $perf . '[[:>:]](.*)" OR Works.Source1 REGEXP "(.*)[[:<:]]' . $perf . '[[:>:]](.*)" OR Works.Source2 REGEXP "(.*)[[:<:]]' . $perf . '[[:>:]](.*)" OR Works.SourceResearched REGEXP "(.*)[[:<:]]' . $perf . '[[:>:]](.*)" ';
         }
         $i++;
       }
@@ -607,9 +605,9 @@
         $i = 1;
         foreach($sources as $source) {
           if ($i < count($sources)) {
-            $ssql .= ' Works.TitleClean REGEXP "(.*)[[:<:]]' . $source . '[[:>:]](.*)" OR Performances.PerfTitleClean REGEXP "(.*)[[:<:]]' . $source . '[[:>:]](.*)" OR WorksVariant.NameClean REGEXP "(.*)[[:<:]]' . $perf . '[[:>:]](.*)" OR ';
+            $ssql .= ' Works.TitleClean LIKE "' . $source . '" OR Performances.PerfTitleClean LIKE "' . $source . '" OR WorksVariant.NameClean LIKE "' . $perf . '" OR ';
           } else {
-            $ssql .= ' Works.TitleClean REGEXP "(.*)[[:<:]]' . $source . '[[:>:]](.*)" OR Performances.PerfTitleClean REGEXP "(.*)[[:<:]]' . $source . '[[:>:]](.*)" OR WorksVariant.NameClean REGEXP "(.*)[[:<:]]' . $perf . '[[:>:]](.*)" ';
+            $ssql .= ' Works.TitleClean LIKE "' . $source . '" OR Performances.PerfTitleClean LIKE "' . $source . '" OR WorksVariant.NameClean LIKE "' . $perf . '" ';
           }
           $i++;
         }
