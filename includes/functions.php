@@ -560,7 +560,7 @@
     $perfTitle =  preg_replace('/\b(' . implode('|', $stopwords) . ')\b/', '', $perfTitle);
 
     if ($perfTitle !== '') {
-      $titles = array_map('trim', explode(';', $perfTitle));
+      $titles = array_map('trim', preg_split("[;|,]", $perfTitle));
       $sql = 'SELECT Works.*, WorksVariant.VariantName, WorkAuthMaster.Title as TheTitle, Performances.PerformanceTitle
         FROM Works LEFT JOIN WorksVariant ON WorksVariant.WorkId = Works.WorkId JOIN WorkAuthMaster ON WorkAuthMaster.WorkId = Works.WorkId LEFT JOIN Performances ON Performances.WorkId = Works.WorkId WHERE';
 
@@ -1212,7 +1212,8 @@
 
     preg_match_all('~[^|]+~', $words, $m); // Array of | delimited phrases
     preg_match_all('~[^| ]+~', $words, $n); // Array of each word in each phrase
-    $allWords = array_unique(array_merge($m[0], $n[0])); // Combine unique
+    $cleaned = array_map('cleanStr', $n);
+    $allWords = array_unique(array_merge($m[0], $n[0], $cleaned[0])); // Combine unique
     if(!$allWords || count($allWords) === 0) {
         return $text;
     }

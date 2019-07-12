@@ -347,7 +347,7 @@
                   </h2>
                 </div>
                 <div class="evt-body">
-                  <?php if (isFoundIn($results->data[$i]['CommentC'], cleanQuotes(cleanStr($_GET['keyword'])))) echo '<div class="evt-info"><b>Event Comment: </b>' . highlight(namedEntityLinks($results->data[$i]['CommentC']), cleanQuotes(cleanStr($_GET['keyword']))) . '</div>';?>
+                  <?php if (isFoundIn($results->data[$i]['CommentC'], cleanQuotes(cleanStr($_GET['keyword'])))) echo '<div class="evt-info"><b>Event Comment: </b>' . highlight(namedEntityLinks($results->data[$i]['CommentC']), cleanQuotes($_GET['keyword'])) . '</div>';?>
                   <div class="evt-other clearfix">
                     <div class="perfs">
                       <h3>Performances</h3>
@@ -358,18 +358,18 @@
                         echo '<div class="perf">';
                         echo '<h4><span class="info-heading">' . getPType($perf['PType']) . (in_array($perf['PType'], ['a', 'p']) ? ' Title' : '') . ': </span>';
                         if (in_array($perf['PType'], ['a', 'p'])) {
-                          echo '<i>' . highlight(cleanItalics(cleanTitle($perf['PerformanceTitle'])), cleanQuotes(cleanStr($_GET['keyword'])) . '|' . cleanQuotes(cleanStr($_GET['performance']))) . '</i>';
+                          echo '<i>' . highlight(cleanItalics(cleanTitle($perf['PerformanceTitle'])), cleanQuotes($_GET['keyword']) . '|' . cleanQuotes($_GET['performance'])) . '</i>';
                         } else {
-                          echo highlight(namedEntityLinks($perf['DetailedComment']), cleanQuotes(cleanStr($_GET['keyword'])) . '|' . cleanQuotes(cleanStr($_GET['performance'])));
+                          echo highlight(namedEntityLinks($perf['DetailedComment']), cleanQuotes($_GET['keyword']) . '|' . cleanQuotes($_GET['performance']));
                         }
                         echo '</h4>';
-                        if (isFoundIn($perf['CommentP'], cleanQuotes(cleanStr($_GET['keyword']))) ) echo '<span class="perf-comm"><span class="smcp"><b>Performance Comment: </b></span>' . highlight(namedEntityLinks($perf['CommentP']), cleanQuotes(cleanStr($_GET['keyword']))) . '</span><br>';
+                        if (isFoundIn($perf['CommentP'], cleanQuotes(cleanStr($_GET['keyword']))) ) echo '<span class="perf-comm"><span class="smcp"><b>Performance Comment: </b></span>' . highlight(namedEntityLinks($perf['CommentP']), cleanQuotes($_GET['keyword'])) . '</span><br>';
                         echo '<div class="perf-body">';
                         $inCast = isInCast(cleanQuotes($_GET['keyword']) . '|' . cleanQuotes($cleanedActors), cleanQuotes(cleanStr($_GET['keyword'])) . '|' . cleanQuotes($cleanedRoles), $perf['cast']);
                         if ($inCast !== false) {
                           echo '<div class="cast"><h5>Cast</h5>';
                           foreach ($inCast as $cast) {
-                            echo '<span class="c-role"><span class="smcp"><b>Role</b></span>: ' . highlight(linkedSearches('role', $cast['Role']), cleanQuotes(cleanStr($_GET['keyword'])) . '|' . cleanQuotes($cleanedRoles)) . '</span> <span class="c-act"><span class="smcp"><b>Actor</b></span>: ' . highlight(linkedSearches('actor', $cast['Performer']), cleanQuotes(cleanStr($_GET['keyword'])) . '|' . cleanQuotes($cleanedActors)) . '</span><br>';
+                            echo '<span class="c-role"><span class="smcp"><b>Role</b></span>: ' . highlight(linkedSearches('role', $cast['Role']), cleanQuotes($_GET['keyword']) . '|' . cleanQuotes($cleanedRoles)) . '</span> <span class="c-act"><span class="smcp"><b>Actor</b></span>: ' . highlight(linkedSearches('actor', $cast['Performer']), cleanQuotes($_GET['keyword']) . '|' . cleanQuotes($cleanedActors)) . '</span><br>';
                           }
                           echo '</div>';
                         }
@@ -400,7 +400,7 @@
                                   echo '<span class="auth-wrap"><span class="smcp"><b>Author(s):</b></span> ';
                                   foreach ($rltd2['author'] as $rltdAuth2) {
                                     if (isFoundIn($rltdAuth2['AuthName'], cleanQuotes(cleanStr($_GET['keyword'])) . '|' . cleanQuotes(cleanStr($_GET['author'])))) {
-                                      echo '<span class="auth">' . highlight($rltdAuth2['AuthName'], cleanQuotes(cleanStr($_GET['keyword'])) . '|' . cleanQuotes(cleanStr($_GET['author']))) . '</span>';
+                                      echo '<span class="auth">' . highlight($rltdAuth2['AuthName'], cleanQuotes($_GET['keyword']) . '|' . cleanQuotes($_GET['author'])) . '</span>';
                                     }
                                   }
                                   echo '</span></div>';
