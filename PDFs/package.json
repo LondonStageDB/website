@@ -1,0 +1,16 @@
+{
+  "scripts": {
+    "webpack": "webpack"
+  },
+  "devDependencies": {
+    "webpack-cli": "^2.0.13",
+    "webpack-dev-server": "^3.1.1"
+  },
+  "dependencies": {
+    "buffertools": "^2.1.6",
+    "mysql": "^2.16.0",
+    "pdfjs-dist": "^2.0.466",
+    "scissors": "^0.2.3",
+    "stream-to-promise": "^2.2.0"
+  }
+}

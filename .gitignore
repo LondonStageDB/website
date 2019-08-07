@@ -1,4 +1,5 @@
-/PDFs
 /Data
 /includes/db.php
 *.swp
+/PDFs/NA
+/PDFs/node_modules
