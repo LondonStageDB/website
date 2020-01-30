@@ -182,9 +182,9 @@
                     <ul class="no-bullet">
                       <?php foreach ($perf['cast'] as $cast) : ?>
                       <li class="grid-x"><span class="role cell small-4"><span class="info-heading">Role:</span>
-                        <?php echo linkedSearches('role', $cast['Role']); ?> </span>
+                        <?php echo linkedSearches('role[]', $cast['Role']); ?> </span>
                         <span class="actor cell small-6"><span class="info-heading">Actor:</span>
-                        <?php echo linkedSearches('actor', $cast['Performer']); ?> </span>
+                        <?php echo linkedSearches('actor[]', $cast['Performer']); ?> </span>
                       </li>
                       <?php endforeach; ?>
                     </ul>

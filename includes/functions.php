@@ -532,7 +532,7 @@
       $perfs = [];
       while ($row = mysqli_fetch_assoc($result)) {
         $row['cast'] = getShortCastList($row['PerformanceId']);
-        $row['author'] = getAuthorInfo($row['WorkId']);
+        //$row['author'] = getAuthorInfo($row['WorkId']);
         $perfs[] = $row;
       }
       return $perfs;
@@ -1415,7 +1415,8 @@
     }
 
     $re = '/' . implode('|', $m[0]) . '/i';
-    return preg_replace($re, '<a href="results.php?'.preg_replace('/[\[\]]/', '&rbrack;', $key).'=$0">$0</a>', $value);
+    //return preg_replace($re, '<a href="results.php?'.preg_replace('/[\[\]]/', '&rbrack;', $key).'=$0">$0</a>', $value);
+    return preg_replace($re, '<a href="results.php?'.$key.'=$0">$0</a>', $value);
   }
 
 
@@ -1671,10 +1672,17 @@
       $filename = 'error';
     } else {
       $filename = $id;
-      $event['Performances'] = getPerformances($event['EventId']);
+      $event['Performances'] = array();
+      //$event['Performances'] = getPerformances($event['EventId']);
+      $perfs = getPerformances($event['EventId']);
+
+      foreach ($perfs as $perf) {
+        $perf['RelatedWorks'] = getRelatedWorks($perf['PerformanceTitle']);
+        $event['Performances'][] = $perf;
+      }
     }
 
-    $json = json_encode($event);
+    $json = json_encode(utf8ize($event));
 
     // Set headers so file automatically downloads
     header('Content-disposition: attachment; filename=' . $filename . '.json');
@@ -1700,8 +1708,8 @@
       $events[] = $event;
     }
 
-    if (count($ids) < 5000) {
-      $json = json_encode($events);
+    if (count($ids) < 2000) {
+      $json = json_encode(utf8ize($events));
     } else {
       $json = encodeLargeArray($events);
     }
@@ -1725,11 +1733,11 @@
   *
   * @return string JSON encoded events.
   */
-  function encodeLargeArray($events, $threshold = 5000) {
+  function encodeLargeArray($events, $threshold = 2000) {
     $json = array();
     while (count($events) > 0) {
         $partial_array = array_slice($events, 0, $threshold);
-        $json[] = ltrim(rtrim(json_encode($partial_array), "]"), "[");
+        $json[] = ltrim(rtrim(json_encode(utf8ize($partial_array)), "]"), "[");
         $events = array_slice($events, $threshold);
     }
 
@@ -1744,5 +1752,18 @@
     return $jsonStr2;
   }
 
+
+
+
+  function utf8ize($d) {
+    if (is_array($d)) {
+        foreach ($d as $k => $v) {
+            $d[$k] = utf8ize($v);
+        }
+    } else if (is_string ($d)) {
+        return utf8_encode($d);
+    }
+    return $d;
+  }
 
 ?>
