@@ -18,14 +18,14 @@ You'll need a web server with MySQL and PHP already installed. 
 >*Instructions are for a Linux server*
 
 
-  ``` bash
+``` bash
 # clone repo
 git clone https://github.com/LondonStageDB/website.git
 ```
 
 
 Included with the repo is a compressed export of the database called London.tgz. 
-  ``` bash
+``` bash
 # untar/zip the file
 # this will extract a file called London.sql
 tar -xzf London.tgz
@@ -62,7 +62,7 @@ You'll need to create a file in the /includes folder called db.php and paste in 
 
 ### Files
 A few quick explanations for some of the files/folders in the project.
-  ``` bash
+``` bash
 - /common
         Contains header, footer, and nav include files
 
