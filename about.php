@@ -123,8 +123,9 @@
             <p>This project has been made possible in part by a major grant from the <a href="http://www.neh.gov/">NEH</a> <a href="https://www.neh.gov/divisions/odh">Office of Digital 
               Humanities</a>. Any views, findings, conclusions, or recommendations expressed through this database or on this website do not necessarily represent those of the National 
               Endowment for the Humanities.</p>
-            <p>Additional support has been provided by the <a href="http://english.usu.edu/">Department of English</a>, the <a href="https://chass.usu.edu/">College of Humanities and Social 
-              Sciences</a>, and the <a href="http://rgs.usu.edu/">Office of Research</a> at Utah State University.</p>
+            <p>Additional support has been provided by the <a href="http://english.usu.edu/">Department of English</a>, the <a href="https://chass.usu.edu/">College of Humanities and 
+              Social Sciences</a>, and the <a href="http://rgs.usu.edu/">Office of Research</a> at Utah State University, as well as the <a href="https://cas.uoregon.edu/">College of 
+              Arts and Sciences</a> at the University of Oregon.</p>
             <div class="logo-wrap grid-x">
               <div class="small-12 medium-6 large-3"><a href="http://www.neh.gov/"><img class="funding-logo" src="/images/NEH_h-logo_01_fullcolor.svg" alt="NEH Logo" /></a></div>
               <div class="small-12 medium-6 large-3"><a href="http://english.usu.edu/"><img class="funding-logo" src="/images/English-logo-bw.png" alt="USU English Logo" /></a></div>
@@ -140,7 +141,7 @@
             <p>The <i>London Stage Database</i>, like any project of this scope, is the work of numerous individuals across multiple disciplines who have contributed a range of skills and expertise.</p>
             <h3>Principal Investigator and Project Director:</h3>
             <ul>
-              <li><a href="http://www.mattieburkert.com">Mattie Burkert</a>, Assistant Professor, Department of English, Utah State University
+              <li><a href="http://www.mattieburkert.com">Mattie Burkert</a>, Assistant Professor, Department of English, University of Oregon
             </ul>
             <h3>Developers:</h3>
             <ul>
@@ -172,6 +173,8 @@
               <li>Sam Phelps, Technical Support Specialist, Information Technology, Utah State University</li>
               <li>Betty Rozum, Data Services Coordinator, Merrill-Cazier Library, Utah State University</li>
               <li>Annie Strickland-Neilson, Business Manager, Department of English, Utah State University</li>
+              <li>Joe Kaili, Network Administrator, College of Humanities and Social Sciences, Utah State University</li>
+              <li><a href="https://devservices.uoregon.edu/">Development Services</a>, University of Oregon</li>
             </ul>
             <p>This project would not be possible without the help of those who supported its earliest stages, including Susan Barribeau, Will Daland, Steven Dast, Erin Dix, Jack Keel, Cal Lee, Bronwen Maseman, Nick Schneider, Cindy Serikaku, Carl Stahmer,
               Dorothea Salo, Brianna Uzuner, Steel Wagstaff, Kam Woods, Angela Zaytsev, and Irene Zimmerman.</p>
