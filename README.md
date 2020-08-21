@@ -4,7 +4,7 @@
 This repository includes all the files needed to replicate the London Stage Database Website on your server.
 
 
-The live website can be viewed here: http://londonstagedatabase.usu.edu
+The live website can be viewed here: https://londonstagedatabase.uoregon.edu
 
 
 ## Setup
