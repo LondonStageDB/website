@@ -1,5 +1,6 @@
 <?php
   include_once('includes/functions.php');
+  ini_set('memory_limit', '1024M');
   global $conn;
 
   $qResults = [];
