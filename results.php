@@ -27,6 +27,16 @@
   }, $_GET['role']);
   $cleanedActors = (isset($_GET['actor'])) ? implode('|', $getActors) : '';
   $cleanedRoles = (isset($_GET['role'])) ? implode('|', $getRoles) : '';
+
+  $search_filters_empty = TRUE;
+  foreach ($_GET as $key => $value) {
+    if ($key == 'date-type') break;
+    if ($key == 'sortBy') break;
+    if ($_GET[$key] == 'all') break;
+    if (!empty($value)) {
+      $search_filters_empty = FALSE;
+    }
+  }
 ?>
 
 <!doctype html>
@@ -309,6 +319,9 @@
               }
               echo '<div class="res-by-col">' . $msg . '</div>';
             } ?>
+            <?php if ($search_filters_empty) { ?>
+              <div class="res-by-col">It looks like you're trying to access the full dataset. Please visit <a href="/data.php">Data</a> to do so.</div>
+            <?php } ?>
             <?php if ($results->total > 0) { ?>
             <div class="grid-x results-header">
               <div class="input-group relevance-menu-wrap">
