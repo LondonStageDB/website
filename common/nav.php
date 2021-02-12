@@ -11,6 +11,7 @@
         <div class="top-bar-right">
           <ul class="dropdown menu" data-dropdown-menu>
             <li><a href="/">Home</a></li>
+            <li><a href="/sphinx-search-home.php">Faster Search Home</a></li>
             <li><a href="/search.php">Search</a></li>
             <li><a href="/data.php">Data</a></li>
             <li><a href="/guide.php">User Guide</a></li>
