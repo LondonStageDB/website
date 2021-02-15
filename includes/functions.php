@@ -157,7 +157,7 @@
               }
             break;
             case 'volume':
-              
+
               $volume = mysqli_real_escape_string($conn, $volume);
               if ($volume !== 'all' && in_array($volume, [1, 2, 3, 4, 5])) {
                 array_push($queries, "Theatre.Volume = '$volume'");
@@ -284,6 +284,267 @@
     return $sql;
   }
 
+/**
+ * Build search query off of $_GET data
+ *
+ * @param boolean $outputOnly
+ *   If true, will only echo the generated query instead of run it.
+ *
+ * @return string the SQL query used for the search, minus pagination parameters
+ */
+  function buildSphinxQuery($outputOnly = false) {
+    global $sphinx_conn;
+
+    $getters = array(); // Contains all search parameters
+    $queries = array(); // Contains all 'WHERE' parameters
+    $orders = array(); // Contains SORT BY parameters
+    $ptypes = array(); // List of ptypes from $_GET['ptype']
+    $keywrd = array();
+    $sortBy = (!empty($_GET['sortBy']) && in_array($_GET['sortBy'], ['relevance', 'datea', 'dated'])) ? $_GET['sortBy'] : 'relevance';
+    $volume = (isset($_GET['vol'])) ? $_GET['vol'] : '1, 2, 3, 4, 5';
+    $roleSwtch = (isset($_GET['roleSwitch']) && $_GET['roleSwitch'] === 'or') ? 'OR' : 'AND';
+    $actSwtch = (isset($_GET['actSwitch']) && $_GET['actSwitch'] === 'or') ? 'OR' : 'AND';
+
+    foreach($_GET as $key => $value) {
+      $temp = is_array($value) ? $value : trim($value);
+      if (!empty($temp)) {
+        // Create ptype array to later implode to string
+        if ($key === 'ptype') {
+          foreach ($_GET['ptype'] as $type) {
+            if (in_array($type, ['p', 'a', 'm', 'd', 'e', 's', 'b', 'i', 'o', 'u', 't'])) array_push($ptypes, "'".$type."'");
+          }
+        }
+        // If it's a keyword, add to keyword array, otherwise add to $getters
+        if ($key === 'keyword') {
+          $keywrd[$key] = cleanStr($value);
+        } elseif (!in_array($key, $getters)) {
+          if ($key === 'performance' || $key === 'actor' || $key === 'role' || $key === 'keyword') {
+            $getters[$key] = cleanStr($value);
+          } else {
+            $getters[$key] = $value;
+          }
+        }
+      }
+    }
+
+    // Then add the keyword search last to minimize query time a bit
+    if (!empty($keywrd)) {
+      $getters['keyword'] = $keywrd['keyword'];
+    }
+
+    // Create ptypes string to be used in 'WHERE IN()' later
+    $ptype_qry = '';
+    if (!empty($ptypes)) {
+      $ptype_qry = implode(",", $ptypes);
+    }
+
+    /*
+     * The SELECT columns of a Sphinx query must be accompanied by an alias.
+     * The identifiers of the index's columns match the mysql column names all-
+     * lower cased.
+     *
+     * The original value of the select column list was written for MySQL's as
+     * "TableName.ColumnName". The code below likely expects the original
+     * column list's camelcasing for values lookup. So the original column list
+     * was used to generate the map between index columnname and table
+     * ColumnName: "SELECT Events.EventId, ... , Theatre.TheatreName" is now
+     * "SELECT eventid AS EventId, ... , theatrename AS TheatreName".
+     */
+    $sql = "SELECT eventid AS EventId, eventdate AS EventDate, season AS Season, hathi AS Hathi, commentc AS CommentC, theatreid AS TheatreId,
+            performanceid AS PerformanceId, performanceorder AS PerformanceOrder, ptype AS PType, performancetitle AS PerformanceTitle, commentp AS CommentP, castaslisted AS CastAsListed, detailedcomment AS DetailedComment,
+            castid AS CastId, role AS Role, performer AS Performer,
+            volume AS Volume, theatrename AS TheatreName ";
+
+    /*
+     * The logic for the original MySQL query related to the calculated value
+     * "PerfScore" or "keyScore" are no longer needed because the way that
+     * Sphinx does matching is more effective and the calculated match is not
+     * needed any longer.
+     *
+     * The FROM statement for MySQL becomes the single index identifier in
+     * Sphinx.
+     */
+    $sql .= " FROM london_stages";
+
+    // If author or keyword search, need diff SELECT values
+    if (!empty($_GET['author']) || !empty($_GET['keyword'])) {
+      // See the mapping process from the old columnlist to index column list
+      // which was used to generate the list below, in a comment above.
+      $sql = "SELECT eventid AS EventId, eventdate AS EventDate, season AS Season, hathi AS Hathi, commentc AS CommentC, theatreid AS TheatreId,
+              performanceid AS PerformanceId, performanceorder AS PerformanceOrder, ptype AS PType, performancetitle AS PerformanceTitle, commentp AS CommentP, castaslisted AS CastAsListed, detailedcomment AS DetailedComment,
+              castid AS CastId, role AS Role, performer AS Performer,
+              volume AS Volume, theatrename AS TheatreName,
+              workid AS WorkId,
+              authid AS AuthId, authname AS AuthName";
+
+      /*
+       * Because the keyScore and PerfScore relevance scores are no longer used
+       * to sort the results, they have been dropped from the column list.
+       *
+       * The FROM table list is now just one index name.
+       */
+      $sql .= " FROM london_stages";
+
+      // Get our WHERE parameter for any selected date and add to $queries
+      $dateQuery = getDateQuery();
+      if ($dateQuery !== '') {
+        array_push($queries, $dateQuery);
+      }
+
+      // Add $queries entry for each value in $getters
+      if (!empty($getters)) {
+        foreach ($getters as $key => $value) {
+          ${$key} = $value;
+          switch ($key) {
+            case 'theatre':
+              if ($theatre !== 'all') {
+                if (substr($theatre, 0, 3) === '111') {
+                  $theatre = preg_replace('/[0-9;"`\~\!\@\#\$\%\^\&\*\<\>\[\]]/', '', $theatre); // Remove any numbers and special chars
+                  $theatre = mysqli_real_escape_string($sphinx_conn, $theatre);
+                  array_push($queries, "theatrename LIKE '%$theatre%'");
+                } else {
+                  $theatre = preg_replace('/[0-9;"`\~\!\@\#\$\%\^\&\*\<\>\[\]]/', '', $theatre); // Remove any numbres and special chars
+                  $theatre = mysqli_real_escape_string($sphinx_conn, $theatre);
+                  array_push($queries, "theatrename = '$theatre'");
+                }
+              }
+              break;
+            case 'volume':
+              $volume = mysqli_real_escape_string($sphinx_conn, $volume);
+              if ($volume !== 'all' && in_array($volume, [1, 2, 3, 4, 5])) {
+                array_push($queries, "Theatre.Volume = '$volume'");
+              }
+              break;
+            case 'actor':
+              $actQry = "(";
+              $a = 1;
+              $actor = array_filter($actor, 'strlen');
+              if (count($actor) > 1 && $actSwtch === "AND") {
+                $actQry .= getCastQuery('actor', $actor);
+              } else {
+                foreach ($actor as $act) {
+                  if ($act !== '') {
+                    $actorClean = mysqli_real_escape_string($sphinx_conn, cleanQuotes($act, true));
+                    $act = mysqli_real_escape_string($sphinx_conn, $act);
+                    if ($a < count($actor)) {
+                      $actQry .= "(MATCH(Cast.PerformerClean) AGAINST ('$act' IN NATURAL LANGUAGE MODE) OR Cast.PerformerClean LIKE '%$actorClean%') " . $actSwtch . " ";
+                    } else {
+                      $actQry .= "(MATCH(Cast.PerformerClean) AGAINST ('$act' IN NATURAL LANGUAGE MODE) OR Cast.PerformerClean LIKE '%$actorClean%')";
+                    }
+                  }
+                  $a++;
+                }
+              }
+              $actQry .= ")";
+              if ($actQry !== "()") array_push($queries, $actQry);
+              break;
+            case 'role':
+              $roleQry = "(";
+              $r = 1;
+              $role = array_filter($role, 'strlen');
+              if (count($role) > 1 && $roleSwtch === "AND") {
+                $roleQry .= getCastQuery('role', $role);
+              } else {
+                foreach ($role as $rle) {
+                  if ($rle !== '') {
+                    $roleClean = mysqli_real_escape_string($sphinx_conn, cleanQuotes($rle, true));
+                    $rle = mysqli_real_escape_string($sphinx_conn, $rle);
+                    if ($r < count($role)) {
+                      $roleQry .= "(MATCH(Cast.RoleClean) AGAINST ('$rle' IN NATURAL LANGUAGE MODE) OR Cast.RoleClean LIKE '%$roleClean%') " . $roleSwtch . " ";
+                    } else {
+                      $roleQry .= "(MATCH(Cast.RoleClean) AGAINST ('$rle' IN NATURAL LANGUAGE MODE) OR Cast.RoleClean LIKE '%$roleClean%')";
+                    }
+                  }
+                  $r++;
+                }
+              }
+              $roleQry .= ")";
+              if ($roleQry !== "()") array_push($queries, $roleQry);
+              break;
+            case 'performance':
+              // Include ptype parameter if exists
+              $typeStr = '';
+              if (!empty($ptypes)) $typeStr = " AND Performances.PType IN ($ptype_qry)";
+              $performanceClean = mysqli_real_escape_string($sphinx_conn, cleanQuotes($performance, true));
+              $performance = mysqli_real_escape_string($sphinx_conn, $performance);
+              array_push($queries, "((MATCH(PerfTitleClean) AGAINST ('$performance' IN BOOLEAN MODE) OR PerfTitleClean LIKE '%$performanceClean%') $typeStr)");
+              array_push($orders, "PerfScore DESC");
+              break;
+            case 'ptype':
+              // If 'performance title' or 'author' search, ptype parameter will be included in those queries, so exclude here
+              if ((!array_key_exists('performance', $getters) || $getters['performance'] === '') && (!array_key_exists('author', $getters) || $getters['author'] === '')) {
+                array_push($queries, "Events.EventId IN (SELECT Events.EventId from Events JOIN Performances on Performances.EventId = Events.EventId WHERE Performances.PType IN ($ptype_qry))");
+              }
+              break;
+            case 'author':
+              array_push($queries, getAuthorQuery($author, $ptype_qry));
+              break;
+            case 'keyword':
+              // $keywordClean = mysqli_real_escape_string($sphinx_conn, cleanQuotes($keyword, true));
+              $keyword = mysqli_real_escape_string($sphinx_conn, $keyword);
+              array_push($queries, ' MATCH("' . $keyword . '") ');
+              /*
+               * Old keyword search clause.
+                array_push($queries, " (MATCH(CommentCClean) AGAINST ('$keyword' IN NATURAL LANGUAGE MODE) OR CommentCClean LIKE '%$keywordClean%'
+                  OR MATCH(PerfTitleClean) AGAINST ('$keyword' IN NATURAL LANGUAGE MODE) OR PerfTitleClean LIKE '%$keywordClean%'
+                  OR MATCH(CommentPClean) AGAINST ('$keyword' IN NATURAL LANGUAGE MODE) OR CommentPClean LIKE '%$keywordClean%'
+                  OR MATCH(RoleClean, PerformerClean) AGAINST ('$keyword' IN NATURAL LANGUAGE MODE) OR RoleClean LIKE '%$keywordClean%' OR PerformerClean LIKE '%$keywordClean%'
+                  OR MATCH(AuthNameClean) AGAINST ('$keyword' IN NATURAL LANGUAGE MODE) OR AuthNameClean LIKE '%$keywordClean%') ");
+              */
+
+              // Promote matches on Performance Titles and demote matches on Performance or Event Comments
+              // array_push($orders, " keyScore DESC");
+              break;
+          }
+        }
+      }
+
+      // Add our WHERE statements to $sql
+      if (!empty($queries)) {
+        $sql .= " WHERE ";
+        $i = 1;
+        foreach ($queries as $query) {
+          if ($i < count($queries)) {
+            $sql .= $query . ' AND ';
+          } else {
+            $sql .= $query;
+          }
+          $i++;
+        }
+      }
+
+    }
+    // The results need to be grouped by Event to avoid redundancy
+    $sql .= " GROUP BY eventid ";
+    // ORDER BY ";
+
+    // If sort by 'relevance', add SORT BYs for each $orders.
+    // Tack on eventdate as secondary/default sort
+    /* ERROR: ORDER IS UNDEFINED FOR INDEX
+    $sortOrder = ($sortBy === 'datea') ? 'ASC' : 'DESC';
+    if ($sortBy === 'relevance') {
+      if (!empty($orders)) {
+        $cnt = 1;
+        foreach($orders as $order) {
+          if ($cnt < count($orders)) {
+            $sql .= $order . ', ';
+          } else {
+            $sql .= $order . ', eventdate';
+          }
+          $cnt++;
+        }
+      } else {
+        $sql .= " eventdate";
+      }
+    } else {
+      $sql .= " eventdate ";
+      $sql .= $sortOrder;
+    }
+    */
+
+    return $sql;
+  }
+
 
   /**
   * Returns match counts for keyword searches. Columns are PerfCleanTitle,
@@ -350,7 +611,7 @@
 
 
   /**
-  * Checks if only 'keyword' is filled out. Only show Results by Column if it's the only field. 
+  * Checks if only 'keyword' is filled out. Only show Results by Column if it's the only field.
   *
   * @return boolean
   */
@@ -375,7 +636,7 @@
   /**
   * Cleans string of all special chars except semicolons, spaces, and double quotes.
   *
-  * Replaces '-' and '_' with a space. Replaces ” and “ with ". Then removes all 
+  * Replaces '-' and '_' with a space. Replaces ” and “ with ". Then removes all
   *  chars not alphanumeric, space, double quotes, or semicolon.
   *
   * @param string $str Unsanitized string from $_GET
@@ -762,7 +1023,7 @@
   * Takes a date and formats into human-readable 'd F Y' or 'F Y' if no day given
   *
   * @param int $theDate Date from Events table.
-  * @param boolean $plain Include HTML elements or not.  
+  * @param boolean $plain Include HTML elements or not.
   *
   * @return string Formatted date and surrounding HTML
   */
@@ -1341,14 +1602,14 @@
     // Make array of tag objects
     // arr[0] = {tag: 'a', tagStart: 12, tagEnd: 33};
     // Then, if 'highlight' is found between a tag start and end, +/- $numChars from its tag values unless it reaches another tagEnd first.
-    // So find all tags that 'highlight' is inside. Take $numChars from the outside tag unless run into another tag first. 
+    // So find all tags that 'highlight' is inside. Take $numChars from the outside tag unless run into another tag first.
 
 /*    $html = mb_convert_encoding($string, "HTML-ENTITIES", 'UTF-8');
- 
+
  $dom = new domDocument;
  $dom->preserveWhiteSpace = false;
  $dom->loadHTML($html, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
- 
+
  $contents = $dom->getElementsByTagName('a');*/ // Array of Content
  // https://www.techfry.com/php-tutorial/html-basic-tags
 
