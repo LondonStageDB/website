@@ -464,10 +464,11 @@
             case 'performance':
               // Include ptype parameter if exists
               $typeStr = '';
-              if (!empty($ptypes)) $typeStr = " AND Performances.PType IN ($ptype_qry)";
+              if (!empty($ptypes)) $typeStr = " AND ptype IN ($ptype_qry)";
               $performanceClean = mysqli_real_escape_string($sphinx_conn, cleanQuotes($performance, true));
               $performance = mysqli_real_escape_string($sphinx_conn, $performance);
-              array_push($queries, "((MATCH(PerfTitleClean) AGAINST ('$performance' IN BOOLEAN MODE) OR PerfTitleClean LIKE '%$performanceClean%') $typeStr)");
+              array_push($queries, "MATCH(\'@perftitleclean ' . $performance .'\') $typeStr')");
+              // array_push($queries, "((MATCH(PerfTitleClean) AGAINST ('$performance' IN BOOLEAN MODE) OR PerfTitleClean LIKE '%$performanceClean%') $typeStr)");
               array_push($orders, "PerfScore DESC");
               break;
             case 'ptype':
@@ -482,7 +483,7 @@
             case 'keyword':
               // $keywordClean = mysqli_real_escape_string($sphinx_conn, cleanQuotes($keyword, true));
               $keyword = mysqli_real_escape_string($sphinx_conn, $keyword);
-              array_push($queries, ' MATCH("' . $keyword . '") ');
+              array_push($queries, ' MATCH(\'' . $keyword . '\') ');
               /*
                * Old keyword search clause.
                 array_push($queries, " (MATCH(CommentCClean) AGAINST ('$keyword' IN NATURAL LANGUAGE MODE) OR CommentCClean LIKE '%$keywordClean%'
@@ -515,32 +516,14 @@
 
     }
     // The results need to be grouped by Event to avoid redundancy
-    $sql .= " GROUP BY eventid ";
-    // ORDER BY ";
+    $sql .= " GROUP BY eventid";
 
     // If sort by 'relevance', add SORT BYs for each $orders.
     // Tack on eventdate as secondary/default sort
-    /* ERROR: ORDER IS UNDEFINED FOR INDEX
     $sortOrder = ($sortBy === 'datea') ? 'ASC' : 'DESC';
-    if ($sortBy === 'relevance') {
-      if (!empty($orders)) {
-        $cnt = 1;
-        foreach($orders as $order) {
-          if ($cnt < count($orders)) {
-            $sql .= $order . ', ';
-          } else {
-            $sql .= $order . ', eventdate';
-          }
-          $cnt++;
-        }
-      } else {
-        $sql .= " eventdate";
-      }
-    } else {
-      $sql .= " eventdate ";
-      $sql .= $sortOrder;
+    if ($sortBy !== 'relevance') {
+      $sql .= " ORDER BY eventdate " . $sortOrder;
     }
-    */
 
     return $sql;
   }
