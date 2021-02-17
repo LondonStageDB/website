@@ -54,7 +54,6 @@ public function getData( $limit = 25, $page = 1 ) {
     while ( $row = $rs->fetch_assoc() ) {
         $results[]  = $row;
     }
-
     $result         = new stdClass();
     $result->page   = $this->_page;
     $result->limit  = $this->_limit;
