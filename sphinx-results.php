@@ -13,10 +13,10 @@
   $limit      = ( $g_lim !== '' && $g_lim > 0 ) ? $g_lim : 25;
   $page       = ( $g_p !== '' && $g_p > 0 ) ? $g_p : 1;
   $links      = 3;
-  // $Paginator  = new Paginator( $sphinx_conn, $sql );
+  $Paginator  = new Paginator( $sphinx_conn, $sql );
 
   // Get paginated results
-  // $results    = $Paginator->getData( $limit, $page );
+  $results    = $Paginator->getData( $limit, $page );
 
   // Cleaned, pipe delimited strings from 'actor' and 'role' arrays
   $getActors = array_map(function($act) {
@@ -284,7 +284,7 @@
         <div class="form-results cell small-12 large-9">
           <div class="results-wrap">
             <div class="your-search">
-              <span class="num-results"><?php //echo $results->total . ' results'; ?></span><?php echo yourSearch(); ?>
+              <span class="num-results"><?php echo $results->total . ' results'; ?></span><?php echo yourSearch(); ?>
             </div>
             <?php if(onlyKeyword()) {
               $resByCol = getResultsByColumn(cleanStr($_GET['keyword']));
@@ -322,7 +322,7 @@
             <?php if ($search_filters_empty) { ?>
               <div class="res-by-col">It looks like you're trying to access the full dataset. Please visit <a href="/data.php">Data</a> to do so.</div>
             <?php } ?>
-            <?php // if ($results->total > 0) { ?>
+            <?php if ($results->total > 0) { ?>
             <div class="grid-x results-header">
               <div class="input-group relevance-menu-wrap">
                 <label for="sortBy" class="input-group-label relevance-menu">Sort By
@@ -337,7 +337,7 @@
                 </div>
               </div>
               <nav aria-label="Pagination" class="grid-x pag-wrap">
-                <?php // echo $Paginator->createLinks( $links, 'pagination pagination-sm' ); ?>
+                <?php echo $Paginator->createLinks( $links, 'pagination pagination-sm' ); ?>
               </nav>
             </div>
             <div class="grid-x results-table">
@@ -348,97 +348,98 @@
                   <span>Results not only include performances of plays known to be by '<?php echo cleanQuotes(cleanStr($_GET['author'])); ?>', but also performances of associated titles, including adaptations.</span>
                 </div>
                 <?php endif; ?>
-                <?php // for( $i = 0; $i < count( $results->data ); $i++ ) : ?>
+                <pre><?php print_r($results, true) ?></pre>
+                <?php for( $i = 0; $i < count( $results->data ); $i++ ) : ?>
                 <div class="event">
-                  <?php // $results->data[$i]['Performances'] = getPerformances($results->data[$i]['EventId']); ?>
+                  <?php $results->data[$i]['performances'] = getPerformances($results->data[$i]['eventid']); ?>
                   <div class="evt-head grid-x">
-                    <h2><a href="event.php?id=<?php // echo $results->data[$i]['EventId'] ?>">
-                    <div class="evt-num"><?php // echo (($limit * ($page - 1)) + ($i + 1)); ?></div>
-		    <?php // echo formatDate($results->data[$i]['EventDate']); ?>
-                    <span class="evt-theatre"> @ <?php // echo getTheatreName($results->data[$i]['TheatreId']); ?></span>
+                    <h2><a href="event.php?id=<?php echo $results->data[$i]['eventid'] ?>">
+                    <div class="evt-num"><?php echo (($limit * ($page - 1)) + ($i + 1)); ?></div>
+		    <?php echo formatDate($results->data[$i]['eventdate']); ?>
+                    <span class="evt-theatre"> @ <?php echo getTheatreName($results->data[$i]['theatreid']); ?></span>
                     </a>
                   </h2>
                 </div>
                 <div class="evt-body">
-                  <?php // if (isFoundIn($results->data[$i]['CommentC'], cleanQuotes(cleanStr($_GET['keyword'])))) echo '<div class="evt-info"><b>Event Comment: </b>' . highlight(namedEntityLinks($results->data[$i]['CommentC']), cleanQuotes($_GET['keyword'])) . '</div>';?>
+                  <?php if (isFoundIn($results->data[$i]['commentc'], cleanQuotes(cleanStr($_GET['keyword'])))) echo '<div class="evt-info"><b>Event Comment: </b>' . highlight(namedEntityLinks($results->data[$i]['commentc']), cleanQuotes($_GET['keyword'])) . '</div>';?>
                   <div class="evt-other clearfix">
                     <div class="perfs">
                       <h3>Performances</h3>
-                      <?php // foreach ($results->data[$i]['Performances'] as $perf) {
-                        // if ((isset($_GET['author']) && trim($_GET['author']) !== '') || (isset($_GET['keyword']) && trim($_GET['keyword']) !== '')) {
-                        //   $perf['relatedWorks'] = getRelatedWorks($perf['PerformanceTitle']);
-                        // }
-                        // echo '<div class="perf">';
-                        // echo '<h4><span class="info-heading">' . getPType($perf['PType']) . (in_array($perf['PType'], ['a', 'p']) ? ' Title' : '') . ': </span>';
-                        // if (in_array($perf['PType'], ['a', 'p'])) {
-                        //   echo '<i>' . highlight(cleanItalics(cleanTitle($perf['PerformanceTitle'])), cleanQuotes($_GET['keyword']) . '|' . cleanQuotes($_GET['performance'])) . '</i>';
-                        // } else {
-                        //   echo highlight(namedEntityLinks($perf['DetailedComment']), cleanQuotes($_GET['keyword']) . '|' . cleanQuotes($_GET['performance']));
-                        // }
-                        // echo '</h4>';
-                        // if (isFoundIn($perf['CommentP'], cleanQuotes(cleanStr($_GET['keyword']))) ) echo '<span class="perf-comm"><span class="smcp"><b>Performance Comment: </b></span>' . highlight(namedEntityLinks($perf['CommentP']), cleanQuotes($_GET['keyword'])) . '</span><br>';
-                        // echo '<div class="perf-body">';
-                        // $inCast = isInCast(cleanQuotes($_GET['keyword']) . '|' . cleanQuotes($cleanedActors), cleanQuotes(cleanStr($_GET['keyword'])) . '|' . cleanQuotes($cleanedRoles), $perf['cast']);
-                        // if ($inCast !== false) {
-                        //   echo '<div class="cast"><h5>Cast</h5>';
-                        //   foreach ($inCast as $cast) {
-                        //     echo '<span class="c-role"><span class="smcp"><b>Role</b></span>: ' . highlight(linkedSearches('role[]', $cast['Role']), cleanQuotes($_GET['keyword']) . '|' . cleanQuotes($cleanedRoles)) . '</span> <span class="c-act"><span class="smcp"><b>Actor</b></span>: ' . highlight(linkedSearches('actor[]', $cast['Performer']), cleanQuotes($_GET['keyword']) . '|' . cleanQuotes($cleanedActors)) . '</span><br>';
-                        //   }
-                        //   echo '</div>';
-                        // }
-                        // if ((isset($_GET['author']) && trim($_GET['author']) !== '') || (isset($_GET['keyword']) && trim($_GET['keyword']) !== '')) {
-                        //   if (count($perf['relatedWorks']) > 0) {
-                        //     $isFoundInRelated = false;
-//                            $isFoundUnique = array(); // Track unique work names
-//                            $isFoundArr = array();
-//                            foreach ($perf['relatedWorks'] as $rltd) {
-//                              if (isset($rltd['author']) && count($rltd['author']) > 0) {
-//                                foreach ($rltd['author'] as $rltdAuth) {
-//                                  if (isFoundIn($rltdAuth['AuthName'], cleanQuotes(cleanStr($_GET['keyword'])) . '|' . cleanQuotes(cleanStr($_GET['author'])))) {
-//                                    $isFoundInRelated = true;
-//                                    if (!in_array($rltd['Title'], $isFoundUnique)) {
-//                                      $isFoundUnique[] = $rltd['Title'];
-//                                      $isFoundArr[] = $rltd;
-//                                    }
-//                                    //break 2;
-//                                  }
-//                                }
-//                              }
-//                            }
-//                            if ($isFoundInRelated) {
-//                              echo '<div class="rltd-wrks"><h5>Related Works</h5>';
-//                                //print_r($perf['relatedWorks']);
-//                                foreach ($isFoundArr as $rltd2) {
-//                                  echo '<div class="rltd-auth"><span class="work-wrap"><span class="smcp"><b>Related Work:</b></span> ' . $rltd2['Title'] . '</span> ';
-//                                  echo '<span class="auth-wrap"><span class="smcp"><b>Author(s):</b></span> ';
-//                                  foreach ($rltd2['author'] as $rltdAuth2) {
-//                                    if (isFoundIn($rltdAuth2['AuthName'], cleanQuotes(cleanStr($_GET['keyword'])) . '|' . cleanQuotes(cleanStr($_GET['author'])))) {
-//                                      echo '<span class="auth">' . highlight($rltdAuth2['AuthName'], cleanQuotes($_GET['keyword']) . '|' . cleanQuotes($_GET['author'])) . '</span>';
-//                                    }
-//                                  }
-//                                  echo '</span></div>';
-//                                }
-//                              echo '</div>'; // End rltd-wrks
-//                            }
-//                          }
-//                        }
-//                        echo '</div></div>'; // End perf-body and perf
-//                      } ?>
+                      <?php foreach ($results->data[$i]['performances'] as $perf) {
+                        if ((isset($_GET['author']) && trim($_GET['author']) !== '') || (isset($_GET['keyword']) && trim($_GET['keyword']) !== '')) {
+                            $perf['RelatedWorks'] = getRelatedWorks($perf['PerformanceTitle']);
+                        }
+                        echo '<div class="perf">';
+                        echo '<h4><span class="info-heading">' . getPType($perf['PType']) . (in_array($perf['PType'], ['a', 'p']) ? ' Title' : '') . ': </span>';
+                         if (in_array($perf['PType'], ['a', 'p'])) {
+                           echo '<i>' . highlight(cleanItalics(cleanTitle($perf['PerformanceTitle'])), cleanQuotes($_GET['keyword']) . '|' . cleanQuotes($_GET['performance'])) . '</i>';
+                         } else {
+                           echo highlight(namedEntityLinks($perf['DetailedComment']), cleanQuotes($_GET['keyword']) . '|' . cleanQuotes($_GET['performance']));
+                         }
+                         echo '</h4>';
+                         if (isFoundIn($perf['CommentP'], cleanQuotes(cleanStr($_GET['keyword']))) ) echo '<span class="perf-comm"><span class="smcp"><b>Performance Comment: </b></span>' . highlight(namedEntityLinks($perf['CommentP']), cleanQuotes($_GET['keyword'])) . '</span><br>';
+                         echo '<div class="perf-body">';
+                         $inCast = isInCast(cleanQuotes($_GET['keyword']) . '|' . cleanQuotes($cleanedActors), cleanQuotes(cleanStr($_GET['keyword'])) . '|' . cleanQuotes($cleanedRoles), $perf['cast']);
+                         if ($inCast !== false) {
+                           echo '<div class="cast"><h5>Cast</h5>';
+                           foreach ($inCast as $cast) {
+                             echo '<span class="c-role"><span class="smcp"><b>Role</b></span>: ' . highlight(linkedSearches('role[]', $cast['role']), cleanQuotes($_GET['keyword']) . '|' . cleanQuotes($cleanedRoles)) . '</span> <span class="c-act"><span class="smcp"><b>Actor</b></span>: ' . highlight(linkedSearches('actor[]', $cast['performer']), cleanQuotes($_GET['keyword']) . '|' . cleanQuotes($cleanedActors)) . '</span><br>';
+                           }
+                           echo '</div>';
+                         }
+                         if ((isset($_GET['author']) && trim($_GET['author']) !== '') || (isset($_GET['keyword']) && trim($_GET['keyword']) !== '')) {
+                           if (count($perf['RelatedWorks']) > 0) {
+                             $isFoundInRelated = false;
+                            $isFoundUnique = array(); // Track unique work names
+                            $isFoundArr = array();
+                            foreach ($perf['RelatedWorks'] as $rltd) {
+                              if (isset($rltd['Author']) && count($rltd['Author']) > 0) {
+                                foreach ($rltd['Author'] as $rltdAuth) {
+                                  if (isFoundIn($rltdAuth['AuthName'], cleanQuotes(cleanStr($_GET['keyword'])) . '|' . cleanQuotes(cleanStr($_GET['author'])))) {
+                                    $isFoundInRelated = true;
+                                    if (!in_array($rltd['Title'], $isFoundUnique)) {
+                                      $isFoundUnique[] = $rltd['Title'];
+                                      $isFoundArr[] = $rltd;
+                                    }
+                                    //break 2;
+                                  }
+                                }
+                              }
+                            }
+                            if ($isFoundInRelated) {
+                              echo '<div class="rltd-wrks"><h5>Related Works</h5>';
+                                print_r($perf['RelatedWorks']);
+                                foreach ($isFoundArr as $rltd2) {
+                                  echo '<div class="rltd-auth"><span class="work-wrap"><span class="smcp"><b>Related Work:</b></span> ' . $rltd2['Title'] . '</span> ';
+                                  echo '<span class="auth-wrap"><span class="smcp"><b>Author(s):</b></span> ';
+                                  foreach ($rltd2['Author'] as $rltdAuth2) {
+                                    if (isFoundIn($rltdAuth2['AuthName'], cleanQuotes(cleanStr($_GET['keyword'])) . '|' . cleanQuotes(cleanStr($_GET['author'])))) {
+                                      echo '<span class="auth">' . highlight($rltdAuth2['AuthName'], cleanQuotes($_GET['keyword']) . '|' . cleanQuotes($_GET['author'])) . '</span>';
+                                    }
+                                  }
+                                  echo '</span></div>';
+                                }
+                              echo '</div>'; // End rltd-wrks
+                            }
+                          }
+                        }
+                        echo '</div></div>'; // End perf-body and perf
+                      } ?>
                     </div>
                   </div>
                 </div>
               </div>
-              <?php // endfor; ?>
+              <?php endfor; ?>
             </div>
           </div>
           <nav aria-label="Pagination" class="grid-x pag-wrap">
-            <?php // echo $Paginator->createLinks( $links, 'pagination pagination-sm pag-bottom' ); ?>
+            <?php echo $Paginator->createLinks( $links, 'pagination pagination-sm pag-bottom' ); ?>
           </nav>
-          <?php // } else { ?>
+          <?php } else { ?>
             <div class="no-results">
               No results found. Modify the filters to the left or <a href="/search.php">try a new search</a>
             </div>
-          <?php // } ?>
+          <?php } ?>
         </div>
       </div>
   </div>
