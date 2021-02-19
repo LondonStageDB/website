@@ -1,4 +1,9 @@
 <?php
+  $time = microtime();
+  $time = explode(' ', $time);
+  $time = $time[1] + $time[0];
+  $start = $time;
+ 
   include_once('includes/functions.php');
   require_once 'includes/Paginator.class.php';
 
@@ -383,7 +388,7 @@
                          if ($inCast !== false) {
                            echo '<div class="cast"><h5>Cast</h5>';
                            foreach ($inCast as $cast) {
-                             echo '<span class="c-role"><span class="smcp"><b>Role</b></span>: ' . highlight(linkedSearches('role[]', $cast['role']), cleanQuotes($_GET['keyword']) . '|' . cleanQuotes($cleanedRoles)) . '</span> <span class="c-act"><span class="smcp"><b>Actor</b></span>: ' . highlight(linkedSearches('actor[]', $cast['performer']), cleanQuotes($_GET['keyword']) . '|' . cleanQuotes($cleanedActors)) . '</span><br>';
+                             echo '<span class="c-role"><span class="smcp"><b>Role</b></span>: ' . highlight(linkedSearches('role[]', $cast['Role']), cleanQuotes($_GET['keyword']) . '|' . cleanQuotes($cleanedRoles)) . '</span> <span class="c-act"><span class="smcp"><b>Actor</b></span>: ' . highlight(linkedSearches('actor[]', $cast['Performer']), cleanQuotes($_GET['keyword']) . '|' . cleanQuotes($cleanedActors)) . '</span><br>';
                            }
                            echo '</div>';
                          }
@@ -448,6 +453,14 @@
   <?php include_once('common/footer.php'); ?>
   <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
   <script src="/js/search.js"></script>
+<?php
+$time = microtime();
+$time = explode(' ', $time);
+$time = $time[1] + $time[0];
+$finish = $time;
+$total_time = round(($finish - $start), 4);
+echo 'Page generated in '.$total_time.' seconds.';
+?>
 </body>
 
 </html>
