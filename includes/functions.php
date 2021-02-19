@@ -798,6 +798,8 @@
   * @return array Related Works
   */
   function getRelatedWorks($perfTitle = '') {
+    // Return without looking up Related Works
+    return '';
     global $conn;
     $prefix = "or ";
     $stopwords = ['[c|C]oncert[s]?', '[e|E]ntertainment[s]?'];
