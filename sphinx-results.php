@@ -3,9 +3,9 @@
   $time = explode(' ', $time);
   $time = $time[1] + $time[0];
   $start = $time;
- 
+
   include_once('includes/functions.php');
-  require_once 'includes/Paginator.class.php';
+  require_once 'includes/SphinxPaginator.class.php';
 
   global $sphinx_conn;
 
@@ -18,7 +18,7 @@
   $limit      = ( $g_lim !== '' && $g_lim > 0 ) ? $g_lim : 25;
   $page       = ( $g_p !== '' && $g_p > 0 ) ? $g_p : 1;
   $links      = 3;
-  $Paginator  = new Paginator( $sphinx_conn, $sql );
+  $Paginator  = new SphinxPaginator( $sphinx_conn, $sql );
 
   // Get paginated results
   $results    = $Paginator->getData( $limit, $page );
@@ -366,7 +366,7 @@
                   </h2>
                 </div>
                 <div class="evt-body">
-                  <?php if (isFoundIn($results->data[$i]['commentc'], cleanQuotes(cleanStr($_GET['keyword'])))) echo '<div class="evt-info"><b>Event Comment: </b>' . highlight(namedEntityLinks($results->data[$i]['commentc']), cleanQuotes($_GET['keyword'])) . '</div>';?>
+                  <?php if (isFoundIn($results->data[$i]['commentc'], cleanQuotes(cleanStr($_GET['keyword'])))) echo '<div class="evt-info"><b>Event Comment: </b>' . highlight(namedEntityLinks($results->data[$i]['commentc'], true), cleanQuotes($_GET['keyword'])) . '</div>';?>
                   <div class="evt-other clearfix">
                     <div class="perfs">
                       <h3>Performances</h3>
@@ -379,16 +379,16 @@
                          if (in_array($perf['PType'], ['a', 'p'])) {
                            echo '<i>' . highlight(cleanItalics(cleanTitle($perf['PerformanceTitle'])), cleanQuotes($_GET['keyword']) . '|' . cleanQuotes($_GET['performance'])) . '</i>';
                          } else {
-                           echo highlight(namedEntityLinks($perf['DetailedComment']), cleanQuotes($_GET['keyword']) . '|' . cleanQuotes($_GET['performance']));
+                           echo highlight(namedEntityLinks($perf['DetailedComment'], true), cleanQuotes($_GET['keyword']) . '|' . cleanQuotes($_GET['performance']));
                          }
                          echo '</h4>';
-                         if (isFoundIn($perf['CommentP'], cleanQuotes(cleanStr($_GET['keyword']))) ) echo '<span class="perf-comm"><span class="smcp"><b>Performance Comment: </b></span>' . highlight(namedEntityLinks($perf['CommentP']), cleanQuotes($_GET['keyword'])) . '</span><br>';
+                         if (isFoundIn($perf['CommentP'], cleanQuotes(cleanStr($_GET['keyword']))) ) echo '<span class="perf-comm"><span class="smcp"><b>Performance Comment: </b></span>' . highlight(namedEntityLinks($perf['CommentP'], true), cleanQuotes($_GET['keyword'])) . '</span><br>';
                          echo '<div class="perf-body">';
                          $inCast = isInCast(cleanQuotes($_GET['keyword']) . '|' . cleanQuotes($cleanedActors), cleanQuotes(cleanStr($_GET['keyword'])) . '|' . cleanQuotes($cleanedRoles), $perf['cast']);
                          if ($inCast !== false) {
                            echo '<div class="cast"><h5>Cast</h5>';
                            foreach ($inCast as $cast) {
-                             echo '<span class="c-role"><span class="smcp"><b>Role</b></span>: ' . highlight(linkedSearches('role[]', $cast['Role']), cleanQuotes($_GET['keyword']) . '|' . cleanQuotes($cleanedRoles)) . '</span> <span class="c-act"><span class="smcp"><b>Actor</b></span>: ' . highlight(linkedSearches('actor[]', $cast['Performer']), cleanQuotes($_GET['keyword']) . '|' . cleanQuotes($cleanedActors)) . '</span><br>';
+                             echo '<span class="c-role"><span class="smcp"><b>Role</b></span>: ' . highlight(linkedSearches('role[]', $cast['Role'], true), cleanQuotes($_GET['keyword']) . '|' . cleanQuotes($cleanedRoles)) . '</span> <span class="c-act"><span class="smcp"><b>Actor</b></span>: ' . highlight(linkedSearches('actor[]', $cast['Performer'], true), cleanQuotes($_GET['keyword']) . '|' . cleanQuotes($cleanedActors)) . '</span><br>';
                            }
                            echo '</div>';
                          }
