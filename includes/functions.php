@@ -1617,38 +1617,42 @@
   }
 
 
-  /**
-  * Takes some text and creates links for any instances of $name=
-  *
-  * In the 1970s database, they wrapped many names in $=. We want to find these and
-  *  create links that take the user to a keyword search for that person.
-  *
-  * @param string $text Text block that may contains named entities ($name=)
-  *
-  * @return string HTML Text block with named entities linked out to keyword searches
-  */
-  function namedEntityLinks($text) {
+/**
+ * Takes some text and creates links for any instances of $name=
+ *
+ * In the 1970s database, they wrapped many names in $=. We want to find these and
+ *  create links that take the user to a keyword search for that person.
+ *
+ * @param string $text Text block that may contains named entities ($name=)
+ * @param bool $sphinx_results When set to true, will like to sphinx results.
+ *
+ * @return string HTML Text block with named entities linked out to keyword searches
+ */
+  function namedEntityLinks($text, $sphinx_results = false) {
     $text = trim($text);
     if ($text === "") return '';
 
     $re = '/(\$)([\s\S]+)(=)([^\"]*)/U'; // Matches $name=
 
-    return preg_replace($re, '<a href="/results.php?keyword=$2">$2$4</a>', $text);
+    return $sphinx_results ?
+        preg_replace($re, '<a href="/sphinx-results.php?keyword=$2">$2$4</a>', $text) :
+        preg_replace($re, '<a href="/results.php?keyword=$2">$2$4</a>', $text);
   }
 
 
-  /**
-  * Creates a link out to a new search for a given key.
-  *
-  * Creates crosslinks for a given key out to a search for that key. So, a key of
-  *  'actor' will take the value and link to a search for ?actor=value.
-  *
-  * @param string $key The key for which we will create a search link.
-  * @param string $value The value for which to be searched.
-  *
-  * @return string HTML Text block with values linked out to relevant searches.
-  */
-  function linkedSearches($key, $value) {
+/**
+ * Creates a link out to a new search for a given key.
+ *
+ * Creates crosslinks for a given key out to a search for that key. So, a key of
+ *  'actor' will take the value and link to a search for ?actor=value.
+ *
+ * @param string $key The key for which we will create a search link.
+ * @param string $value The value for which to be searched.
+ * @param bool $sphinx_results When set to true, will like to sphinx results.
+ *
+ * @return string HTML Text block with values linked out to relevant searches.
+ */
+  function linkedSearches($key, $value, $sphinx_results = false) {
     $value = trim($value);
     if ($value === '') return '';
 
@@ -1662,7 +1666,9 @@
 
     $re = '/' . implode('|', $m[0]) . '/i';
     //return preg_replace($re, '<a href="results.php?'.preg_replace('/[\[\]]/', '&rbrack;', $key).'=$0">$0</a>', $value);
-    return preg_replace($re, '<a href="results.php?'.$key.'=$0">$0</a>', $value);
+    return $sphinx_results ?
+        preg_replace($re, '<a href="sphinx-results.php?'.$key.'=$0">$0</a>', $value) :
+        preg_replace($re, '<a href="results.php?'.$key.'=$0">$0</a>', $value);
   }
 
 
@@ -1670,16 +1676,19 @@
   * Generates href for performance title link
   *
   * @param string $value The title to be linked.
+  * @param bool $sphinx_results When set to true, will like to sphinx results.
   *
   * @return string href value.
   */
-  function linkedTitles($value) {
+  function linkedTitles($value, $sphinx_results = false) {
     $value = trim($value);
     if ($value === '') return '';
 
     $value = strip_tags(htmlentities($value));
 
-    return '/results.php?performance=' . $value;
+    return $sphinx_results ?
+        '/sphinx-results.php?performance=' . $value :
+        '/results.php?performance=' . $value;
   }
 
 
