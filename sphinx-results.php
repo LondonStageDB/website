@@ -282,7 +282,7 @@
             </div>
           </div>
           <div class="cell small-12 button-wrap">
-            <a href="/search.php" class="new-search show-for-large">New Search</a>
+            <a href="/sphinx-search-home.php" class="new-search show-for-large">New Search</a>
             <input type="submit" class="search-submit button" value="Update Results">
           </div>
         </div>
@@ -442,7 +442,7 @@
           </nav>
           <?php } else { ?>
             <div class="no-results">
-              No results found. Modify the filters to the left or <a href="/search.php">try a new search</a>
+              No results found. Modify the filters to the left or <a href="/sphinx-search-home.php">try a new search</a>
             </div>
           <?php } ?>
         </div>
