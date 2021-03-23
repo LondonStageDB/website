@@ -353,7 +353,6 @@
                   <span>Results not only include performances of plays known to be by '<?php echo cleanQuotes(cleanStr($_GET['author'])); ?>', but also performances of associated titles, including adaptations.</span>
                 </div>
                 <?php endif; ?>
-                <pre><?php print_r($results, true) ?></pre>
                 <?php for( $i = 0; $i < count( $results->data ); $i++ ) : ?>
                 <div class="event">
                   <?php $results->data[$i]['performances'] = getPerformances($results->data[$i]['eventid']); ?>
@@ -398,12 +397,12 @@
                             $isFoundUnique = array(); // Track unique work names
                             $isFoundArr = array();
                             foreach ($perf['RelatedWorks'] as $rltd) {
-                              if (isset($rltd['Author']) && count($rltd['Author']) > 0) {
-                                foreach ($rltd['Author'] as $rltdAuth) {
+                              if (isset($rltd['author']) && count($rltd['author']) > 0) {
+                                foreach ($rltd['author'] as $rltdAuth) {
                                   if (isFoundIn($rltdAuth['AuthName'], cleanQuotes(cleanStr($_GET['keyword'])) . '|' . cleanQuotes(cleanStr($_GET['author'])))) {
                                     $isFoundInRelated = true;
-                                    if (!in_array($rltd['Title'], $isFoundUnique)) {
-                                      $isFoundUnique[] = $rltd['Title'];
+                                    if (!in_array($rltd['title'], $isFoundUnique)) {
+                                      $isFoundUnique[] = $rltd['title'];
                                       $isFoundArr[] = $rltd;
                                     }
                                     //break 2;
@@ -413,11 +412,10 @@
                             }
                             if ($isFoundInRelated) {
                               echo '<div class="rltd-wrks"><h5>Related Works</h5>';
-                                print_r($perf['RelatedWorks']);
                                 foreach ($isFoundArr as $rltd2) {
-                                  echo '<div class="rltd-auth"><span class="work-wrap"><span class="smcp"><b>Related Work:</b></span> ' . $rltd2['Title'] . '</span> ';
+                                  echo '<div class="rltd-auth"><span class="work-wrap"><span class="smcp"><b>Related Work:</b></span> ' . $rltd2['title'] . '</span> ';
                                   echo '<span class="auth-wrap"><span class="smcp"><b>Author(s):</b></span> ';
-                                  foreach ($rltd2['Author'] as $rltdAuth2) {
+                                  foreach ($rltd2['author'] as $rltdAuth2) {
                                     if (isFoundIn($rltdAuth2['AuthName'], cleanQuotes(cleanStr($_GET['keyword'])) . '|' . cleanQuotes(cleanStr($_GET['author'])))) {
                                       echo '<span class="auth">' . highlight($rltdAuth2['AuthName'], cleanQuotes($_GET['keyword']) . '|' . cleanQuotes($_GET['author'])) . '</span>';
                                     }
@@ -459,7 +457,7 @@ $time = explode(' ', $time);
 $time = $time[1] + $time[0];
 $finish = $time;
 $total_time = round(($finish - $start), 4);
-echo 'Page generated in '.$total_time.' seconds.';
+echo '<div style="color: #0a0a0a; margin: auto; padding: 15px; font-weight: 600; background-color: #f7f4ed; max-width: 75rem;">Page generated in '.$total_time.' seconds.</div>';
 ?>
 </body>
 
