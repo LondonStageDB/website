@@ -843,25 +843,25 @@
       // Get Work Sources and perform same search on them
       $sources = array_filter($sources, 'strlen');
       if (!empty($sources)) {
-        $ssql = 'SELECT Works.*, WorksVariant.VariantName, WorkAuthMaster.Title as TheTitle, Performances.PerformanceTitle
-          FROM Works LEFT JOIN WorksVariant ON WorksVariant.WorkId = Works.WorkId JOIN WorkAuthMaster ON WorkAuthMaster.WorkId = Works.WorkId LEFT JOIN Performances ON Performances.WorkId = Works.WorkId WHERE';
+        $ssql = "SELECT WorkId, Title, Type1, Type2, Source1, Source2, SourceResearched, TitleClean, VariantName, TheTitle, PerformanceTitle \nFROM related_work";
+        $ssql .= "\nWHERE MATCH('@TitleClean \"" . implode($sources, '"|"') . "\" @PerfTitleClean \"" . implode($sources, '"|"') . "\" @NameClean \"" . implode($sources, '"|"') . "\"')";
 
-        $i = 1;
-        foreach($sources as $source) {
-          if ($i < count($sources)) {
-            $ssql .= ' Works.TitleClean LIKE "' . $source . '" OR Performances.PerfTitleClean LIKE "' . $source . '" OR WorksVariant.NameClean LIKE "' . $perf . '" OR ';
-          } else {
-            $ssql .= ' Works.TitleClean LIKE "' . $source . '" OR Performances.PerfTitleClean LIKE "' . $source . '" OR WorksVariant.NameClean LIKE "' . $perf . '" ';
-          }
-          $i++;
-        }
-        $ssql .= ' GROUP BY Works.WorkId';
+        // $i = 1;
+        // foreach($sources as $source) {
+        //   if ($i < count($sources)) {
+        //     $ssql .= ' Works.TitleClean LIKE "' . $source . '" OR Performances.PerfTitleClean LIKE "' . $source . '" OR WorksVariant.NameClean LIKE "' . $perf . '" OR ';
+        //   } else {
+        //     $ssql .= ' Works.TitleClean LIKE "' . $source . '" OR Performances.PerfTitleClean LIKE "' . $source . '" OR WorksVariant.NameClean LIKE "' . $perf . '" ';
+        //   }
+        //   $i++;
+        // }
+        $ssql .= ' GROUP BY WorkId';
 
-        $sresult = $conn->query($ssql);
+        $sresult = $sphinx_conn->query($ssql);
 
         while ($srow = mysqli_fetch_assoc($sresult)) {
-          if (!in_array($srow['WorkId'], $workIds)) {
-            $srow['author'] = getAuthorInfo($srow['WorkId']);
+          if (!in_array($srow['workid'], $workIds)) {
+            $srow['author'] = getAuthorInfo($srow['workid']);
             $works[] = $srow;
           }
         }
@@ -880,13 +880,12 @@
   * @return array Array of author info
   */
   function getAuthorInfo($workId = '') {
-    global $conn;
+    global $sphinx_conn;
 
     if ($workId !== '') {
-      $sql = 'SELECT Author.*, WorkAuthMaster.AuthType FROM Author JOIN WorkAuthMaster ON WorkAuthMaster.AuthId = Author.AuthId
-              WHERE WorkAuthMaster.WorkId = ' . $workId;
+      $sql = "SELECT AuthId, AuthName, AuthType \nFROM related_work \nWHERE WorkId = " . $workId . " GROUP BY AuthId";
 
-      $result = $conn->query($sql);
+      $result = $sphinx_conn->query($sql);
       $auths = [];
       while ($row = mysqli_fetch_assoc($result)) {
         $auths[] = $row;

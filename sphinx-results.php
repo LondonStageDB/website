@@ -399,7 +399,7 @@
                             foreach ($perf['RelatedWorks'] as $rltd) {
                               if (isset($rltd['author']) && count($rltd['author']) > 0) {
                                 foreach ($rltd['author'] as $rltdAuth) {
-                                  if (isFoundIn($rltdAuth['AuthName'], cleanQuotes(cleanStr($_GET['keyword'])) . '|' . cleanQuotes(cleanStr($_GET['author'])))) {
+                                  if (isFoundIn($rltdAuth['authname'], cleanQuotes(cleanStr($_GET['keyword'])) . '|' . cleanQuotes(cleanStr($_GET['author'])))) {
                                     $isFoundInRelated = true;
                                     if (!in_array($rltd['title'], $isFoundUnique)) {
                                       $isFoundUnique[] = $rltd['title'];
@@ -416,8 +416,8 @@
                                   echo '<div class="rltd-auth"><span class="work-wrap"><span class="smcp"><b>Related Work:</b></span> ' . $rltd2['title'] . '</span> ';
                                   echo '<span class="auth-wrap"><span class="smcp"><b>Author(s):</b></span> ';
                                   foreach ($rltd2['author'] as $rltdAuth2) {
-                                    if (isFoundIn($rltdAuth2['AuthName'], cleanQuotes(cleanStr($_GET['keyword'])) . '|' . cleanQuotes(cleanStr($_GET['author'])))) {
-                                      echo '<span class="auth">' . highlight($rltdAuth2['AuthName'], cleanQuotes($_GET['keyword']) . '|' . cleanQuotes($_GET['author'])) . '</span>';
+                                    if (isFoundIn($rltdAuth2['authname'], cleanQuotes(cleanStr($_GET['keyword'])) . '|' . cleanQuotes(cleanStr($_GET['author'])))) {
+                                      echo '<span class="auth">' . highlight($rltdAuth2['authname'], cleanQuotes($_GET['keyword']) . '|' . cleanQuotes($_GET['author'])) . '</span>';
                                     }
                                   }
                                   echo '</span></div>';
