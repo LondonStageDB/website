@@ -799,70 +799,69 @@
   */
   function getRelatedWorks($perfTitle = '') {
     // Return without looking up Related Works
-    return '';
     global $conn;
+    global $sphinx_conn;
+
     $prefix = "or ";
     $stopwords = ['[c|C]oncert[s]?', '[e|E]ntertainment[s]?'];
     $perfTitle =  preg_replace('/\b(' . implode('|', $stopwords) . ')\b/', '', $perfTitle);
 
     if ($perfTitle !== '') {
       $titles = array_map('trim', preg_split("[;|,]", $perfTitle));
-      $sql = 'SELECT Works.*, WorksVariant.VariantName, WorkAuthMaster.Title as TheTitle, Performances.PerformanceTitle
-        FROM Works LEFT JOIN WorksVariant ON WorksVariant.WorkId = Works.WorkId JOIN WorkAuthMaster ON WorkAuthMaster.WorkId = Works.WorkId LEFT JOIN Performances ON Performances.WorkId = Works.WorkId WHERE';
+      $sql = "SELECT *\nFROM related_work";
+      $values = [];
 
-      $i = 1;
       foreach($titles as $perf) {
         $perf = cleanStr($perf);
         if (strtolower(substr($perf, 0, strlen($prefix))) == $prefix) {
           $perf = substr($perf, strlen($prefix));
         }
-        if ($i < count($titles)) {
-          $sql .= ' Works.TitleClean LIKE "' . $perf . '" OR Performances.PerfTitleClean LIKE "' . $perf . '" OR WorksVariant.NameClean LIKE "' . $perf . '" OR Works.Source1 LIKE "' . $perf . '" OR Works.Source2 LIKE "' . $perf . '" OR Works.SourceResearched LIKE "' . $perf . '" OR ';
-        } else {
-          $sql .= ' Works.TitleClean LIKE "' . $perf . '" OR Performances.PerfTitleClean LIKE "' . $perf . '" OR WorksVariant.NameClean LIKE "' . $perf . '" OR Works.Source1 LIKE "' . $perf . '" OR Works.Source2 LIKE "' . $perf . '" OR Works.SourceResearched LIKE "' . $perf . '" ';
+        if (strtolower($perf) === 'or') {
+          continue;
         }
-        $i++;
+        $values[] = '"' . $perf . '"';
       }
+      $values = implode($values, '|');
+      $sql .= "\nWHERE MATCH('" . $values . "')\n";
 
       // Only want to show unique works, not all iterations of a given work title
-      $sql .= ' GROUP BY Works.WorkId';
+      $sql .= 'GROUP BY WorkId';
 
-      $result = $conn->query($sql);
+      $result = $sphinx_conn->query($sql);
       $works = array();
       $sources = array();
       $workIds = array();
       while ($row = mysqli_fetch_assoc($result)) {
-        $sources[] = $row['SourceResearched'];
-        $sources[] = $row['Source1'];
-        $sources[] = $row['Source2'];
-        $row['author'] = getAuthorInfo($row['WorkId']);
+        $sources[] = $row['sourceresearched'];
+        $sources[] = $row['source1'];
+        $sources[] = $row['source2'];
+        $row['author'] = getAuthorInfo($row['workid']);
         $works[] = $row;
-        $workIds[] = $row['WorkId'];
+        $workIds[] = $row['workid'];
       }
-
-      $sources = array_filter($sources, 'strlen');
 
       // Get Work Sources and perform same search on them
       $sources = array_filter($sources, 'strlen');
       if (!empty($sources)) {
-        $ssql = 'SELECT Works.*, WorksVariant.VariantName, WorkAuthMaster.Title as TheTitle, Performances.PerformanceTitle
-          FROM Works LEFT JOIN WorksVariant ON WorksVariant.WorkId = Works.WorkId JOIN WorkAuthMaster ON WorkAuthMaster.WorkId = Works.WorkId LEFT JOIN Performances ON Performances.WorkId = Works.WorkId WHERE';
+        $ssql = "SELECT WorkId, Title, Type1, Type2, Source1, Source2, SourceResearched, TitleClean, VariantName, TheTitle, PerformanceTitle \nFROM related_work";
+        $ssql .= "\nWHERE MATCH('@TitleClean \"" . implode($sources, '"|"') . "\" @PerfTitleClean \"" . implode($sources, '"|"') . "\" @NameClean \"" . implode($sources, '"|"') . "\"')";
 
-        $i = 1;
-        foreach($sources as $source) {
-          if ($i < count($sources)) {
-            $ssql .= ' Works.TitleClean LIKE "' . $source . '" OR Performances.PerfTitleClean LIKE "' . $source . '" OR WorksVariant.NameClean LIKE "' . $perf . '" OR ';
-          } else {
-            $ssql .= ' Works.TitleClean LIKE "' . $source . '" OR Performances.PerfTitleClean LIKE "' . $source . '" OR WorksVariant.NameClean LIKE "' . $perf . '" ';
-          }
-          $i++;
-        }
-        $ssql .= ' GROUP BY Works.WorkId';
-        $sresult = $conn->query($ssql);
+        // $i = 1;
+        // foreach($sources as $source) {
+        //   if ($i < count($sources)) {
+        //     $ssql .= ' Works.TitleClean LIKE "' . $source . '" OR Performances.PerfTitleClean LIKE "' . $source . '" OR WorksVariant.NameClean LIKE "' . $perf . '" OR ';
+        //   } else {
+        //     $ssql .= ' Works.TitleClean LIKE "' . $source . '" OR Performances.PerfTitleClean LIKE "' . $source . '" OR WorksVariant.NameClean LIKE "' . $perf . '" ';
+        //   }
+        //   $i++;
+        // }
+        $ssql .= ' GROUP BY WorkId';
+
+        $sresult = $sphinx_conn->query($ssql);
 
         while ($srow = mysqli_fetch_assoc($sresult)) {
-          if (!in_array($srow['WorkId'], $workIds)) {
-            $srow['author'] = getAuthorInfo($srow['WorkId']);
+          if (!in_array($srow['workid'], $workIds)) {
+            $srow['author'] = getAuthorInfo($srow['workid']);
             $works[] = $srow;
           }
         }
@@ -881,13 +880,12 @@
   * @return array Array of author info
   */
   function getAuthorInfo($workId = '') {
-    global $conn;
+    global $sphinx_conn;
 
     if ($workId !== '') {
-      $sql = 'SELECT Author.*, WorkAuthMaster.AuthType FROM Author JOIN WorkAuthMaster ON WorkAuthMaster.AuthId = Author.AuthId
-              WHERE WorkAuthMaster.WorkId = ' . $workId;
+      $sql = "SELECT AuthId, AuthName, AuthType \nFROM related_work \nWHERE WorkId = " . $workId . " GROUP BY AuthId";
 
-      $result = $conn->query($sql);
+      $result = $sphinx_conn->query($sql);
       $auths = [];
       while ($row = mysqli_fetch_assoc($result)) {
         $auths[] = $row;
