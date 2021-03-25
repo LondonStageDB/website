@@ -484,17 +484,6 @@
               // $keywordClean = mysqli_real_escape_string($sphinx_conn, cleanQuotes($keyword, true));
               $keyword = mysqli_real_escape_string($sphinx_conn, $keyword);
               array_push($queries, ' MATCH(\'"' . $keyword . '"/1\') ');
-              /*
-               * Old keyword search clause.
-                array_push($queries, " (MATCH(CommentCClean) AGAINST ('$keyword' IN NATURAL LANGUAGE MODE) OR CommentCClean LIKE '%$keywordClean%'
-                  OR MATCH(PerfTitleClean) AGAINST ('$keyword' IN NATURAL LANGUAGE MODE) OR PerfTitleClean LIKE '%$keywordClean%'
-                  OR MATCH(CommentPClean) AGAINST ('$keyword' IN NATURAL LANGUAGE MODE) OR CommentPClean LIKE '%$keywordClean%'
-                  OR MATCH(RoleClean, PerformerClean) AGAINST ('$keyword' IN NATURAL LANGUAGE MODE) OR RoleClean LIKE '%$keywordClean%' OR PerformerClean LIKE '%$keywordClean%'
-                  OR MATCH(AuthNameClean) AGAINST ('$keyword' IN NATURAL LANGUAGE MODE) OR AuthNameClean LIKE '%$keywordClean%') ");
-              */
-
-              // Promote matches on Performance Titles and demote matches on Performance or Event Comments
-              // array_push($orders, " keyScore DESC");
               break;
           }
         }
