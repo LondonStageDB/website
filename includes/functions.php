@@ -350,10 +350,10 @@
      * ColumnName: "SELECT Events.EventId, ... , Theatre.TheatreName" is now
      * "SELECT eventid AS EventId, ... , theatrename AS TheatreName".
      */
-    $sql = "SELECT eventid AS EventId, eventdate AS EventDate, season AS Season, hathi AS Hathi, commentc AS CommentC, theatreid AS TheatreId,
-            performanceid AS PerformanceId, performanceorder AS PerformanceOrder, ptype AS PType, performancetitle AS PerformanceTitle, commentp AS CommentP, castaslisted AS CastAsListed, detailedcomment AS DetailedComment,
-            castid AS CastId, role AS Role, performer AS Performer,
-            volume AS Volume, theatrename AS TheatreName ";
+    $sql = "SELECT eventid, eventdate, season, hathi, commentc, theatreid,
+            performanceid, performanceorder, ptype, performancetitle, commentp, castaslisted, detailedcomment,
+            castid, role, performer,
+            volume, theatrename ";
 
     /*
      * The logic for the original MySQL query related to the calculated value
@@ -370,12 +370,12 @@
     if (!empty($_GET['author']) || !empty($_GET['keyword'])) {
       // See the mapping process from the old columnlist to index column list
       // which was used to generate the list below, in a comment above.
-      $sql = "SELECT eventid AS EventId, eventdate AS EventDate, season AS Season, hathi AS Hathi, commentc AS CommentC, theatreid AS TheatreId,
-              performanceid AS PerformanceId, performanceorder AS PerformanceOrder, ptype AS PType, performancetitle AS PerformanceTitle, commentp AS CommentP, castaslisted AS CastAsListed, detailedcomment AS DetailedComment,
-              castid AS CastId, role AS Role, performer AS Performer,
-              volume AS Volume, theatrename AS TheatreName,
-              workid AS WorkId,
-              authid AS AuthId, authname AS AuthName";
+      $sql = "SELECT eventid, eventdate, season, hathi, commentc, theatreid,
+              performanceid, performanceorder, ptype, performancetitle, commentp, castaslisted, detailedcomment,
+              castid, role, performer,
+              volume, theatrename,
+              workid,
+              authid, authname";
 
       /*
        * Because the keyScore and PerfScore relevance scores are no longer used
@@ -483,18 +483,7 @@
             case 'keyword':
               // $keywordClean = mysqli_real_escape_string($sphinx_conn, cleanQuotes($keyword, true));
               $keyword = mysqli_real_escape_string($sphinx_conn, $keyword);
-              array_push($queries, ' MATCH(\'' . $keyword . '\') ');
-              /*
-               * Old keyword search clause.
-                array_push($queries, " (MATCH(CommentCClean) AGAINST ('$keyword' IN NATURAL LANGUAGE MODE) OR CommentCClean LIKE '%$keywordClean%'
-                  OR MATCH(PerfTitleClean) AGAINST ('$keyword' IN NATURAL LANGUAGE MODE) OR PerfTitleClean LIKE '%$keywordClean%'
-                  OR MATCH(CommentPClean) AGAINST ('$keyword' IN NATURAL LANGUAGE MODE) OR CommentPClean LIKE '%$keywordClean%'
-                  OR MATCH(RoleClean, PerformerClean) AGAINST ('$keyword' IN NATURAL LANGUAGE MODE) OR RoleClean LIKE '%$keywordClean%' OR PerformerClean LIKE '%$keywordClean%'
-                  OR MATCH(AuthNameClean) AGAINST ('$keyword' IN NATURAL LANGUAGE MODE) OR AuthNameClean LIKE '%$keywordClean%') ");
-              */
-
-              // Promote matches on Performance Titles and demote matches on Performance or Event Comments
-              // array_push($orders, " keyScore DESC");
+              array_push($queries, ' MATCH(\'"' . $keyword . '"/1\') ');
               break;
           }
         }
@@ -845,16 +834,6 @@
       if (!empty($sources)) {
         $ssql = "SELECT WorkId, Title, Type1, Type2, Source1, Source2, SourceResearched, TitleClean, VariantName, TheTitle, PerformanceTitle \nFROM related_work";
         $ssql .= "\nWHERE MATCH('@TitleClean \"" . implode($sources, '"|"') . "\" @PerfTitleClean \"" . implode($sources, '"|"') . "\" @NameClean \"" . implode($sources, '"|"') . "\"')";
-
-        // $i = 1;
-        // foreach($sources as $source) {
-        //   if ($i < count($sources)) {
-        //     $ssql .= ' Works.TitleClean LIKE "' . $source . '" OR Performances.PerfTitleClean LIKE "' . $source . '" OR WorksVariant.NameClean LIKE "' . $perf . '" OR ';
-        //   } else {
-        //     $ssql .= ' Works.TitleClean LIKE "' . $source . '" OR Performances.PerfTitleClean LIKE "' . $source . '" OR WorksVariant.NameClean LIKE "' . $perf . '" ';
-        //   }
-        //   $i++;
-        // }
         $ssql .= ' GROUP BY WorkId';
 
         $sresult = $sphinx_conn->query($ssql);
