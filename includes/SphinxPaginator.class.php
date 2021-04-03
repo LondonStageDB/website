@@ -56,6 +56,10 @@ public function getData( $limit = 25, $page = 1 ) {
         // The last row this page would display.
         $query     .= "\nOPTION max_matches=" . $this->_page * $this->_limit;
     }
+
+    // test
+    echo $query;
+
     $rs             = $this->_conn->query( $query );
 
     while ( $row = $rs->fetch_assoc() ) {
