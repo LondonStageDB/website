@@ -297,6 +297,7 @@
 
     $getters = array(); // Contains all search parameters
     $queries = array(); // Contains all 'WHERE' parameters
+    $matches = array(); // Contains Sphinx all MATCH() parameters
     $orders = array(); // Contains SORT BY parameters
     $ptypes = array(); // List of ptypes from $_GET['ptype']
     $keywrd = array();
@@ -467,9 +468,9 @@
               if (!empty($ptypes)) $typeStr = " AND ptype IN ($ptype_qry)";
               $performanceClean = mysqli_real_escape_string($sphinx_conn, cleanQuotes($performance, true));
               $performance = mysqli_real_escape_string($sphinx_conn, $performance);
-              array_push($queries, "MATCH(\'@perftitleclean ' . $performance .'\') $typeStr')");
+              array_push($matches, "@perftitleclean $performance");
+              array_push($queries, " $typeStr");
               // array_push($queries, "((MATCH(PerfTitleClean) AGAINST ('$performance' IN BOOLEAN MODE) OR PerfTitleClean LIKE '%$performanceClean%') $typeStr)");
-              array_push($orders, "PerfScore DESC");
               break;
             case 'ptype':
               // If 'performance title' or 'author' search, ptype parameter will be included in those queries, so exclude here
@@ -478,19 +479,20 @@
               }
               break;
             case 'author':
-              array_push($queries, getAuthorQuery($author, $ptype_qry));
+              $auth_sql = getSphinxAuthorQuery($author, $ptype_qry);
+              if (!empty($auth_sql)) array_push($matches, $auth_sql);
               break;
             case 'keyword':
               // $keywordClean = mysqli_real_escape_string($sphinx_conn, cleanQuotes($keyword, true));
               $keyword = mysqli_real_escape_string($sphinx_conn, $keyword);
-              array_push($queries, ' MATCH(\'"' . $keyword . '"/1\') ');
+              array_push($matches, "@* \"$keyword\"/1");
               break;
           }
         }
       }
 
       // Add our WHERE statements to $sql
-      if (!empty($queries)) {
+      if (!empty($queries) || !empty($matches)) {
         $sql .= " WHERE ";
         $i = 1;
         foreach ($queries as $query) {
@@ -501,8 +503,8 @@
           }
           $i++;
         }
+        $sql .= "MATCH('" . implode(" ", $matches) . "')";
       }
-
     }
     // The results need to be grouped by Event to avoid redundancy
     $sql .= " GROUP BY eventid";
@@ -1208,6 +1210,99 @@
     $sql .= ") ";
 
     return $sql;
+  }
+
+  function getSphinxAuthorQuery($author, $ptype_qry = '') {
+    global $sphinx_conn;
+
+    if ($author === '') return '';
+
+    $author = cleanStr($author);
+    $authorClean = mysqli_real_escape_string($sphinx_conn, cleanQuotes($author));
+    $author = mysqli_real_escape_string($sphinx_conn, $author);
+
+    // If there are ptypes, generate statement
+    $typeStr = '';
+    if ($ptype_qry !== '') $typeStr = " ptype IN ($ptype_qry) AND ";
+
+    // Look for related titles in the Works table
+    // $workIdSql = "SELECT Works.TitleClean FROM Works WHERE Works.WorkId IN (
+    //       SELECT WorkAuthMaster.WorkId FROM WorkAuthMaster
+    //       JOIN Works ON Works.WorkId = WorkAuthMaster.WorkId
+    //       LEFT JOIN WorksVariant ON WorksVariant.WorkId = Works.WorkId
+    //       WHERE WorkAuthMaster.TitleClean IN (
+    //         SELECT WorkAuthMaster.TitleClean FROM WorkAuthMaster
+    //         LEFT JOIN Author ON Author.AuthId = WorkAuthMaster.AuthId
+    //         WHERE (Author.AuthNameClean LIKE '%$authorClean%') ) ";
+    // $workIdSql .= " OR WorksVariant.NameClean IN (
+    //         SELECT WorkAuthMaster.TitleClean FROM WorkAuthMaster
+    //         LEFT JOIN Author ON Author.AuthId = WorkAuthMaster.AuthId
+    //         WHERE (Author.AuthNameClean LIKE '%$authorClean%')
+    //       )
+    //     )";
+    $workIdSql = "SELECT titleclean FROM related_work WHERE MATCH('@authnameclean $authorClean')";
+
+    // look for related titles in the WorksVariant table
+    // $varIdSql = "SELECT WorksVariant.NameClean FROM WorksVariant WHERE WorksVariant.WorkId IN (
+    //       SELECT WorkAuthMaster.WorkId FROM WorkAuthMaster
+    //       JOIN Works ON Works.WorkId = WorkAuthMaster.WorkId
+    //       LEFT JOIN WorksVariant ON WorksVariant.WorkId = Works.WorkId
+    //       WHERE WorkAuthMaster.TitleClean IN (
+    //         SELECT WorkAuthMaster.TitleClean FROM WorkAuthMaster
+    //         LEFT JOIN Author ON Author.AuthId = WorkAuthMaster.AuthId
+    //         WHERE (Author.AuthNameClean LIKE '%$authorClean%') ) ";
+    //         $varIdSql .= " OR WorksVariant.NameClean IN (
+    //           SELECT WorkAuthMaster.TitleClean FROM WorkAuthMaster
+    //           LEFT JOIN Author ON Author.AuthId = WorkAuthMaster.AuthId
+    //           WHERE (Author.AuthNameClean LIKE '%$authorClean%')
+    //         )
+    //       )";
+    $varIdSql = "SELECT nameclean FROM related_work WHERE MATCH('@authnameclean $authorClean')";
+
+    $workIdResult = $sphinx_conn->query($workIdSql);
+
+    $workIds = [];
+    while ($row = mysqli_fetch_assoc($workIdResult)) {
+      $workIds[] = $row['titleclean'];
+    }
+
+    $varIdResult = $sphinx_conn->query($varIdSql);
+    while ($row = mysqli_fetch_assoc($varIdResult)) {
+      $workIds[] = $row['nameclean'];
+    }
+    
+    if (empty($workIds)) return '';
+
+    // Unique list of titles from both queries
+    $titles = array_unique($workIds);
+
+    $sql = " ";
+
+    // Include ptype statement
+    $sql .= "$typeStr (";
+
+    // Some titles actually contain multiple titles, separated by a semicolon or
+    //  '; or '. We'll trim and explode out the title on the semicolon, and $prefix is used
+    //  to strip out the 'or '
+    $prefix = "or ";
+
+    $cleanTitle = array();
+    foreach ($titles as $title) {
+      $titleArr = array_map('trim', explode(';', $title));
+      foreach ($titleArr as $titl) {
+        // Check for 'or ' prefix and strip it
+        if (strtolower(substr($titl, 0, strlen($prefix))) == $prefix) {
+          $titl = substr($titl, strlen($prefix));
+        }
+        $cleanTitle[] = $titl;
+      }
+    }
+    echo "<pre>" . print_r($titles, true) . "</pre>";
+    $sphinx_sql = "@perftitleclean \"" . implode('" | "', $cleanTitle) ."\"";
+
+    $sql .= ") ";
+
+    return $sphinx_sql;
   }
 
 
