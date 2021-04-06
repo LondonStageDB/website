@@ -297,6 +297,7 @@
 
     $getters = array(); // Contains all search parameters
     $queries = array(); // Contains all 'WHERE' parameters
+    $matches = array(); // Contains Sphinx all MATCH() parameters
     $orders = array(); // Contains SORT BY parameters
     $ptypes = array(); // List of ptypes from $_GET['ptype']
     $keywrd = array();
@@ -330,12 +331,6 @@
     // Then add the keyword search last to minimize query time a bit
     if (!empty($keywrd)) {
       $getters['keyword'] = $keywrd['keyword'];
-    }
-
-    // Create ptypes string to be used in 'WHERE IN()' later
-    $ptype_qry = '';
-    if (!empty($ptypes)) {
-      $ptype_qry = implode(",", $ptypes);
     }
 
     /*
@@ -462,36 +457,32 @@
               if ($roleQry !== "()") array_push($queries, $roleQry);
               break;
             case 'performance':
-              // Include ptype parameter if exists
-              $typeStr = '';
-              if (!empty($ptypes)) $typeStr = " AND ptype IN ($ptype_qry)";
               $performanceClean = mysqli_real_escape_string($sphinx_conn, cleanQuotes($performance, true));
               $performance = mysqli_real_escape_string($sphinx_conn, $performance);
-              array_push($queries, "MATCH(\'@perftitleclean ' . $performance .'\') $typeStr')");
-              // array_push($queries, "((MATCH(PerfTitleClean) AGAINST ('$performance' IN BOOLEAN MODE) OR PerfTitleClean LIKE '%$performanceClean%') $typeStr)");
-              array_push($orders, "PerfScore DESC");
+              array_push($matches, "@perftitleclean \"$performance\"/1");
               break;
             case 'ptype':
-              // If 'performance title' or 'author' search, ptype parameter will be included in those queries, so exclude here
-              if ((!array_key_exists('performance', $getters) || $getters['performance'] === '') && (!array_key_exists('author', $getters) || $getters['author'] === '')) {
-                array_push($queries, "Events.EventId IN (SELECT Events.EventId from Events JOIN Performances on Performances.EventId = Events.EventId WHERE Performances.PType IN ($ptype_qry))");
+              $ptype_qry = '';
+              if (!empty($ptypes)) {
+                $ptype_qry = implode(",", $ptypes);
+                array_push($queries, " AND ptype IN ($ptype_qry)");
               }
               break;
             case 'author':
-              array_push($queries, getAuthorQuery($author, $ptype_qry));
+              array_push($matches, "@authnameclean \"$author\"/1");
               break;
             case 'keyword':
               // $keywordClean = mysqli_real_escape_string($sphinx_conn, cleanQuotes($keyword, true));
               $keyword = mysqli_real_escape_string($sphinx_conn, $keyword);
-              array_push($queries, ' MATCH(\'"' . $keyword . '"/1\') ');
+              array_push($matches, "@* \"$keyword\"/1");
               break;
           }
         }
       }
 
       // Add our WHERE statements to $sql
-      if (!empty($queries)) {
-        $sql .= " WHERE ";
+      if (!empty($queries) || !empty($matches)) {
+        $sql .= " WHERE MATCH('" . implode(" ", $matches) . "')";
         $i = 1;
         foreach ($queries as $query) {
           if ($i < count($queries)) {
@@ -502,7 +493,6 @@
           $i++;
         }
       }
-
     }
     // The results need to be grouped by Event to avoid redundancy
     $sql .= " GROUP BY eventid";
@@ -1209,7 +1199,6 @@
 
     return $sql;
   }
-
 
   /**
   * Takes arrays of actors or roles and generates the necessary WHERE statement for AND searches.
