@@ -333,12 +333,6 @@
       $getters['keyword'] = $keywrd['keyword'];
     }
 
-    // Create ptypes string to be used in 'WHERE IN()' later
-    $ptype_qry = '';
-    if (!empty($ptypes)) {
-      $ptype_qry = implode(",", $ptypes);
-    }
-
     /*
      * The SELECT columns of a Sphinx query must be accompanied by an alias.
      * The identifiers of the index's columns match the mysql column names all-
@@ -463,24 +457,19 @@
               if ($roleQry !== "()") array_push($queries, $roleQry);
               break;
             case 'performance':
-              // Include ptype parameter if exists
-              $typeStr = '';
-              if (!empty($ptypes)) $typeStr = " AND ptype IN ($ptype_qry)";
               $performanceClean = mysqli_real_escape_string($sphinx_conn, cleanQuotes($performance, true));
               $performance = mysqli_real_escape_string($sphinx_conn, $performance);
-              array_push($matches, "@perftitleclean $performance");
-              array_push($queries, " $typeStr");
-              // array_push($queries, "((MATCH(PerfTitleClean) AGAINST ('$performance' IN BOOLEAN MODE) OR PerfTitleClean LIKE '%$performanceClean%') $typeStr)");
+              array_push($matches, "@perftitleclean \"$performance\"/1");
               break;
             case 'ptype':
-              // If 'performance title' or 'author' search, ptype parameter will be included in those queries, so exclude here
-              if ((!array_key_exists('performance', $getters) || $getters['performance'] === '') && (!array_key_exists('author', $getters) || $getters['author'] === '')) {
-                array_push($queries, "Events.EventId IN (SELECT Events.EventId from Events JOIN Performances on Performances.EventId = Events.EventId WHERE Performances.PType IN ($ptype_qry))");
+              $ptype_qry = '';
+              if (!empty($ptypes)) {
+                $ptype_qry = implode(",", $ptypes);
+                array_push($queries, " AND ptype IN ($ptype_qry)");
               }
               break;
             case 'author':
-              $auth_sql = getSphinxAuthorQuery($author, $ptype_qry);
-              if (!empty($auth_sql)) array_push($matches, $auth_sql);
+              array_push($matches, "@authnameclean \"$author\"/1");
               break;
             case 'keyword':
               // $keywordClean = mysqli_real_escape_string($sphinx_conn, cleanQuotes($keyword, true));
@@ -493,7 +482,7 @@
 
       // Add our WHERE statements to $sql
       if (!empty($queries) || !empty($matches)) {
-        $sql .= " WHERE ";
+        $sql .= " WHERE MATCH('" . implode(" ", $matches) . "')";
         $i = 1;
         foreach ($queries as $query) {
           if ($i < count($queries)) {
@@ -503,7 +492,6 @@
           }
           $i++;
         }
-        $sql .= "MATCH('" . implode(" ", $matches) . "')";
       }
     }
     // The results need to be grouped by Event to avoid redundancy
