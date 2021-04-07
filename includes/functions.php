@@ -334,174 +334,133 @@
     }
 
     /*
-     * The SELECT columns of a Sphinx query must be accompanied by an alias.
-     * The identifiers of the index's columns match the mysql column names all-
-     * lower cased.
-     *
-     * The original value of the select column list was written for MySQL's as
-     * "TableName.ColumnName". The code below likely expects the original
-     * column list's camelcasing for values lookup. So the original column list
-     * was used to generate the map between index columnname and table
-     * ColumnName: "SELECT Events.EventId, ... , Theatre.TheatreName" is now
-     * "SELECT eventid AS EventId, ... , theatrename AS TheatreName".
+     * The SELECT fields (columns) of the Sphinx query can be simplified
+     * because only the columns that were used in the original query populate
+     * the index.
      */
-    $sql = "SELECT eventid, eventdate, season, hathi, commentc, theatreid,
-            performanceid, performanceorder, ptype, performancetitle, commentp, castaslisted, detailedcomment,
-            castid, role, performer,
-            volume, theatrename ";
-
+    $sql = "SELECT *";
     /*
      * The logic for the original MySQL query related to the calculated value
      * "PerfScore" or "keyScore" are no longer needed because the way that
      * Sphinx does matching is more effective and the calculated match is not
-     * needed any longer.
+     * needed any longer. Modifications to the field ranking can be done later.
      *
-     * The FROM statement for MySQL becomes the single index identifier in
-     * Sphinx.
+     * The FROM statement for MySQL translates to the index identifier in
+     * Sphinx queries. No joins are needed in this function to search because
+     * the index was built using the original MySQL query's Join statements.
      */
-    $sql .= " FROM london_stages";
+    $sql .= "\nFROM london_stages";
 
-    // If author or keyword search, need diff SELECT values
-    if (!empty($_GET['author']) || !empty($_GET['keyword'])) {
-      // See the mapping process from the old columnlist to index column list
-      // which was used to generate the list below, in a comment above.
-      $sql = "SELECT eventid, eventdate, season, hathi, commentc, theatreid,
-              performanceid, performanceorder, ptype, performancetitle, commentp, castaslisted, detailedcomment,
-              castid, role, performer,
-              volume, theatrename,
-              workid,
-              authid, authname";
+    // Get our WHERE parameter for any selected date and add to $queries
+    $dateQuery = getDateQuery();
+    if ($dateQuery !== '') {
+      array_push($queries, $dateQuery);
+    }
 
-      /*
-       * Because the keyScore and PerfScore relevance scores are no longer used
-       * to sort the results, they have been dropped from the column list.
-       *
-       * The FROM table list is now just one index name.
-       */
-      $sql .= " FROM london_stages";
-
-      // Get our WHERE parameter for any selected date and add to $queries
-      $dateQuery = getDateQuery();
-      if ($dateQuery !== '') {
-        array_push($queries, $dateQuery);
-      }
-
-      // Add $queries entry for each value in $getters
-      if (!empty($getters)) {
-        foreach ($getters as $key => $value) {
-          ${$key} = $value;
-          switch ($key) {
-            case 'theatre':
-              if ($theatre !== 'all') {
-                if (substr($theatre, 0, 3) === '111') {
-                  $theatre = preg_replace('/[0-9;"`\~\!\@\#\$\%\^\&\*\<\>\[\]]/', '', $theatre); // Remove any numbers and special chars
-                  $theatre = mysqli_real_escape_string($sphinx_conn, $theatre);
-                  array_push($queries, "theatrename LIKE '%$theatre%'");
-                } else {
-                  $theatre = preg_replace('/[0-9;"`\~\!\@\#\$\%\^\&\*\<\>\[\]]/', '', $theatre); // Remove any numbres and special chars
-                  $theatre = mysqli_real_escape_string($sphinx_conn, $theatre);
-                  array_push($queries, "theatrename = '$theatre'");
-                }
-              }
-              break;
-            case 'volume':
-              $volume = mysqli_real_escape_string($sphinx_conn, $volume);
-              if ($volume !== 'all' && in_array($volume, [1, 2, 3, 4, 5])) {
-                array_push($queries, "Theatre.Volume = '$volume'");
-              }
-              break;
-            case 'actor':
-              $actQry = "(";
-              $a = 1;
-              $actor = array_filter($actor, 'strlen');
-              if (count($actor) > 1 && $actSwtch === "AND") {
-                $actQry .= getCastQuery('actor', $actor);
-              } else {
-                foreach ($actor as $act) {
-                  if ($act !== '') {
-                    $actorClean = mysqli_real_escape_string($sphinx_conn, cleanQuotes($act, true));
-                    $act = mysqli_real_escape_string($sphinx_conn, $act);
-                    if ($a < count($actor)) {
-                      $actQry .= "(MATCH(Cast.PerformerClean) AGAINST ('$act' IN NATURAL LANGUAGE MODE) OR Cast.PerformerClean LIKE '%$actorClean%') " . $actSwtch . " ";
-                    } else {
-                      $actQry .= "(MATCH(Cast.PerformerClean) AGAINST ('$act' IN NATURAL LANGUAGE MODE) OR Cast.PerformerClean LIKE '%$actorClean%')";
-                    }
+    // Add $queries entry for each value in $getters
+    if (!empty($getters)) {
+      foreach ($getters as $key => $value) {
+        ${$key} = $value;
+        switch ($key) {
+          case 'theatre':
+            if ($theatre !== 'all') {
+              $theatre = preg_replace('/[0-9;"`\~\!\@\#\$\%\^\&\*\<\>\[\]]/', '', $theatre); // Remove any numbers and special chars
+              $theatre = mysqli_real_escape_string($sphinx_conn, $theatre);
+              array_push($queries, 'theatrename=\'' . $theatre . '\'');
+            }
+            break;
+          case 'volume':
+            $volume = mysqli_real_escape_string($sphinx_conn, $volume);
+            if ($volume !== 'all' && in_array($volume, [1, 2, 3, 4, 5])) {
+              array_push($queries, 'volume=' . $volume);
+            }
+            break;
+          case 'actor':
+            $actQry = "(";
+            $a = 1;
+            $actor = array_filter($actor, 'strlen');
+            if (count($actor) > 1 && $actSwtch === "AND") {
+              $actQry .= getCastQuery('actor', $actor);
+            } else {
+              foreach ($actor as $act) {
+                if ($act !== '') {
+                  $actorClean = mysqli_real_escape_string($sphinx_conn, cleanQuotes($act, true));
+                  $act = mysqli_real_escape_string($sphinx_conn, $act);
+                  if ($a < count($actor)) {
+                    $actQry .= "(MATCH(Cast.PerformerClean) AGAINST ('$act' IN NATURAL LANGUAGE MODE) OR Cast.PerformerClean LIKE '%$actorClean%') " . $actSwtch . " ";
+                  } else {
+                    $actQry .= "(MATCH(Cast.PerformerClean) AGAINST ('$act' IN NATURAL LANGUAGE MODE) OR Cast.PerformerClean LIKE '%$actorClean%')";
                   }
-                  $a++;
                 }
+                $a++;
               }
-              $actQry .= ")";
-              if ($actQry !== "()") array_push($queries, $actQry);
-              break;
-            case 'role':
-              $roleQry = "(";
-              $r = 1;
-              $role = array_filter($role, 'strlen');
-              if (count($role) > 1 && $roleSwtch === "AND") {
-                $roleQry .= getCastQuery('role', $role);
-              } else {
-                foreach ($role as $rle) {
-                  if ($rle !== '') {
-                    $roleClean = mysqli_real_escape_string($sphinx_conn, cleanQuotes($rle, true));
-                    $rle = mysqli_real_escape_string($sphinx_conn, $rle);
-                    if ($r < count($role)) {
-                      $roleQry .= "(MATCH(Cast.RoleClean) AGAINST ('$rle' IN NATURAL LANGUAGE MODE) OR Cast.RoleClean LIKE '%$roleClean%') " . $roleSwtch . " ";
-                    } else {
-                      $roleQry .= "(MATCH(Cast.RoleClean) AGAINST ('$rle' IN NATURAL LANGUAGE MODE) OR Cast.RoleClean LIKE '%$roleClean%')";
-                    }
+            }
+            $actQry .= ")";
+            if ($actQry !== "()") array_push($queries, $actQry);
+            break;
+          case 'role':
+            $roleQry = "(";
+            $r = 1;
+            $role = array_filter($role, 'strlen');
+            if (count($role) > 1 && $roleSwtch === "AND") {
+              $roleQry .= getCastQuery('role', $role);
+            } else {
+              foreach ($role as $rle) {
+                if ($rle !== '') {
+                  $roleClean = mysqli_real_escape_string($sphinx_conn, cleanQuotes($rle, true));
+                  $rle = mysqli_real_escape_string($sphinx_conn, $rle);
+                  if ($r < count($role)) {
+                    $roleQry .= "(MATCH(Cast.RoleClean) AGAINST ('$rle' IN NATURAL LANGUAGE MODE) OR Cast.RoleClean LIKE '%$roleClean%') " . $roleSwtch . " ";
+                  } else {
+                    $roleQry .= "(MATCH(Cast.RoleClean) AGAINST ('$rle' IN NATURAL LANGUAGE MODE) OR Cast.RoleClean LIKE '%$roleClean%')";
                   }
-                  $r++;
                 }
+                $r++;
               }
-              $roleQry .= ")";
-              if ($roleQry !== "()") array_push($queries, $roleQry);
-              break;
-            case 'performance':
-              $performanceClean = mysqli_real_escape_string($sphinx_conn, cleanQuotes($performance, true));
-              $performance = mysqli_real_escape_string($sphinx_conn, $performance);
-              array_push($matches, "@perftitleclean \"$performance\"/1");
-              break;
-            case 'ptype':
-              $ptype_qry = '';
-              if (!empty($ptypes)) {
-                $ptype_qry = implode(",", $ptypes);
-                array_push($queries, " AND ptype IN ($ptype_qry)");
-              }
-              break;
-            case 'author':
-              array_push($matches, "@authnameclean \"$author\"/1");
-              break;
-            case 'keyword':
-              // $keywordClean = mysqli_real_escape_string($sphinx_conn, cleanQuotes($keyword, true));
-              $keyword = mysqli_real_escape_string($sphinx_conn, $keyword);
-              array_push($matches, "@* \"$keyword\"/1");
-              break;
-          }
-        }
-      }
-
-      // Add our WHERE statements to $sql
-      if (!empty($queries) || !empty($matches)) {
-        $sql .= " WHERE MATCH('" . implode(" ", $matches) . "')";
-        $i = 1;
-        foreach ($queries as $query) {
-          if ($i < count($queries)) {
-            $sql .= $query . ' AND ';
-          } else {
-            $sql .= $query;
-          }
-          $i++;
+            }
+            $roleQry .= ")";
+            if ($roleQry !== "()") array_push($queries, $roleQry);
+            break;
+          case 'performance':
+            $performanceClean = mysqli_real_escape_string($sphinx_conn, cleanQuotes($performance, true));
+            $performance = mysqli_real_escape_string($sphinx_conn, $performance);
+            array_push($matches, "@perftitleclean \"$performance\"/1");
+            break;
+          case 'ptype':
+            $ptype_qry = '';
+            if (!empty($ptypes)) {
+              $ptype_qry = implode(",", $ptypes);
+              array_push($queries, " AND ptype IN ($ptype_qry)");
+            }
+            break;
+          case 'author':
+            array_push($matches, "@authnameclean \"$author\"/1");
+            break;
+          case 'keyword':
+            // $keywordClean = mysqli_real_escape_string($sphinx_conn, cleanQuotes($keyword, true));
+            $keyword = mysqli_real_escape_string($sphinx_conn, $keyword);
+            array_push($matches, "@* \"$keyword\"/1");
+            break;
         }
       }
     }
-    // The results need to be grouped by Event to avoid redundancy
-    $sql .= " GROUP BY eventid";
 
-    // If sort by 'relevance', add SORT BYs for each $orders.
-    // Tack on eventdate as secondary/default sort
-    $sortOrder = ($sortBy === 'datea') ? 'ASC' : 'DESC';
+    // Make the MATCH clause and add it to queries.
+    if (!empty($matches)) {
+      $matches = 'MATCH(\'' . implode(' ', $matches) . '\')';
+      array_push($queries, $matches);
+    }
+    // Build the WHERE clause with what was added.
+    if (!empty($queries)) {
+      $sql .= "\nWHERE " . implode($queries, ' AND ');
+    }
+    // The results need to be grouped by Event to avoid redundancy
+    $sql .= "\nGROUP BY eventid";
+    // If sorting by event date, add an ORDER BY clause.
+    // Determine if ascending or descending and then .
     if ($sortBy !== 'relevance') {
-      $sql .= " ORDER BY eventdate " . $sortOrder;
+      $sortOrder = ($sortBy === 'datea') ? 'ASC' : 'DESC';
+      $sql .= "\nORDER BY eventdate " . $sortOrder;
     }
 
     return $sql;
