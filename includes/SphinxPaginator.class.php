@@ -58,8 +58,15 @@ public function getData( $limit = 25, $page = 1 ) {
     }
     $rs             = $this->_conn->query( $query );
 
-    while ( $row = $rs->fetch_assoc() ) {
-        $results[]  = $row;
+    if (!$rs) {
+      echo "<strong>Error</strong>: The query had an error.\nRS: <pre>";
+      echo print_r($rs, TRUE). "</pre><br>";
+      echo "Error from connector: <code><pre>" . print_r($rs->error, TRUE);
+      echo "</pre></code>";
+    } else {
+      while ( $row = $rs->fetch_assoc() ) {
+        $results[] = $row;
+      }
     }
     $result         = new stdClass();
     $result->page   = $this->_page;

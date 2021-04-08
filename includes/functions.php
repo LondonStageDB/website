@@ -287,24 +287,25 @@
 /**
  * Build search query off of $_GET data
  *
- * @param boolean $outputOnly
- *   If true, will only echo the generated query instead of run it.
- *
  * @return string the SQL query used for the search, minus pagination parameters
  */
-  function buildSphinxQuery($outputOnly = false) {
+  function buildSphinxQuery() {
     global $sphinx_conn;
 
     $getters = array(); // Contains all search parameters
     $queries = array(); // Contains all 'WHERE' parameters
     $matches = array(); // Contains Sphinx all MATCH() parameters
-    $orders = array(); // Contains SORT BY parameters
     $ptypes = array(); // List of ptypes from $_GET['ptype']
     $keywrd = array();
-    $sortBy = (!empty($_GET['sortBy']) && in_array($_GET['sortBy'], ['relevance', 'datea', 'dated'])) ? $_GET['sortBy'] : 'relevance';
+    $sortBy = 'relevance'; // Default. Will set to parameter if valid, later.
     $volume = (isset($_GET['vol'])) ? $_GET['vol'] : '1, 2, 3, 4, 5';
     $roleSwtch = (isset($_GET['roleSwitch']) && $_GET['roleSwitch'] === 'or') ? 'OR' : 'AND';
     $actSwtch = (isset($_GET['actSwitch']) && $_GET['actSwitch'] === 'or') ? 'OR' : 'AND';
+
+    if (!empty($_GET['sortBy']) &&
+        in_array($_GET['sortBy'], ['datea', 'dated'])) {
+      $_GET['sortBy'];
+    }
 
     foreach($_GET as $key => $value) {
       $temp = is_array($value) ? $value : trim($value);
@@ -312,7 +313,9 @@
         // Create ptype array to later implode to string
         if ($key === 'ptype') {
           foreach ($_GET['ptype'] as $type) {
-            if (in_array($type, ['p', 'a', 'm', 'd', 'e', 's', 'b', 'i', 'o', 'u', 't'])) array_push($ptypes, "'".$type."'");
+            if (in_array($type, ['p', 'a', 'm', 'd', 'e', 's', 'b', 'i', 'o', 'u', 't'])) {
+              array_push($ptypes, "'" . $type . "'");
+            }
           }
         }
         // If it's a keyword, add to keyword array, otherwise add to $getters
@@ -427,10 +430,9 @@
             array_push($matches, "@perftitleclean \"$performance\"/1");
             break;
           case 'ptype':
-            $ptype_qry = '';
             if (!empty($ptypes)) {
               $ptype_qry = implode(",", $ptypes);
-              array_push($queries, " AND ptype IN ($ptype_qry)");
+              array_push($queries, "ptype IN ($ptype_qry)");
             }
             break;
           case 'author':
@@ -445,12 +447,12 @@
       }
     }
 
-    // Make the MATCH clause and add it to queries.
+    // Build the MATCH statement and add it to the list of queries.
     if (!empty($matches)) {
       $matches = 'MATCH(\'' . implode(' ', $matches) . '\')';
       array_push($queries, $matches);
     }
-    // Build the WHERE clause with what was added.
+    // Build the WHERE clause.
     if (!empty($queries)) {
       $sql .= "\nWHERE " . implode($queries, ' AND ');
     }
