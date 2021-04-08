@@ -44,7 +44,8 @@ public function getData( $limit = 25, $page = 1 ) {
     $this->_page    = $page;
     $results = [];
 
-    // In Sphinx must specify a limit and max-matches if returning > 1000.
+    // In Sphinx must specify a limit and max-matches if interested in > 1000
+    //   results queries (regardless of what is specified in the LIMIT).
     if ( $this->_limit == 'all' ) {
         // Set limits to some arbitrary, high number.
         $query      = $this->_query . 'LIMIT 99999 OPTION max-matches=99999' ;
@@ -52,22 +53,21 @@ public function getData( $limit = 25, $page = 1 ) {
         // Keep the max_matches as small as we need it to be because memory on
         // Sphinx server is allocated for this size prior to running the query.
         $offset     = ( $this->_page - 1 ) * $this->_limit;
-        $query      = $this->_query . ' LIMIT ' . $offset . ", $this->_limit";
-        // The last row this page would display.
+        $query      = $this->_query . "\nLIMIT $offset, $this->_limit";
+        // Use the last row that this page would display.
         $query     .= "\nOPTION max_matches=" . $this->_page * $this->_limit;
     }
+
+    // Perform the query.
     $rs             = $this->_conn->query( $query );
 
-    if (!$rs) {
-      echo "<strong>Error</strong>: The query had an error.\nRS: <pre>";
-      echo print_r($rs, TRUE). "</pre><br>";
-      echo "Error from connector: <code><pre>" . print_r($rs->error, TRUE);
-      echo "</pre></code>";
-    } else {
+    // Only process through the results if there are any to process through.
+    if ( $rs ) {
       while ( $row = $rs->fetch_assoc() ) {
         $results[] = $row;
       }
     }
+
     $result         = new stdClass();
     $result->page   = $this->_page;
     $result->limit  = $this->_limit;
