@@ -371,7 +371,7 @@
                       <h3>Performances</h3>
                       <?php foreach ($results->data[$i]['performances'] as $perf) {
                         if ((isset($_GET['author']) && trim($_GET['author']) !== '') || (isset($_GET['keyword']) && trim($_GET['keyword']) !== '')) {
-                            $perf['RelatedWorks'] = getRelatedWorks($perf['PerformanceTitle']);
+                            $perf['RelatedWorks'] = getSphinxRelatedWorks($perf['PerformanceTitle']);
                         }
                         echo '<div class="perf">';
                         echo '<h4><span class="info-heading">' . getPType($perf['PType']) . (in_array($perf['PType'], ['a', 'p']) ? ' Title' : '') . ': </span>';
