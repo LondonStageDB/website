@@ -436,7 +436,15 @@
             }
             break;
           case 'author':
-            array_push($matches, "@authnameclean \"$author\"/1");
+            // The author filter does a lookup of all of the author's works,
+            //   then adds the full list of titles and related works titles to
+            //   the MATCH statement with an OR operator between each title.
+            $author = trim(mysqli_real_escape_string($sphinx_conn, $author));
+            $authorMatch = getSphinxAuthorQuery($author);
+            // If the query generation encountered an error it will be false.
+            if (!is_bool($authorMatch)) {
+              array_push($matches, $authorMatch);
+            }
             break;
           case 'keyword':
             // $keywordClean = mysqli_real_escape_string($sphinx_conn, cleanQuotes($keyword, true));
@@ -845,10 +853,10 @@
         $values[] = '"' . $perf . '"';
       }
       $values = implode($values, '|');
-      $sql .= "\nWHERE MATCH('" . $values . "')\n";
+      $sql .= "\nWHERE MATCH('" . $values . "')";
 
       // Only want to show unique works, not all iterations of a given work title
-      $sql .= 'GROUP BY WorkId';
+      $sql .= "\nGROUP BY WorkId";
 
       $result = $sphinx_conn->query($sql);
       $works = array();
@@ -1125,7 +1133,7 @@
   /**
   * Takes an author's name and generates WHERE statement from all related titles.
   *
-  * Takes an author's name and performes two preliminary queries to get all work
+  * Takes an author's name and performs two preliminary queries to get all work
   *  titles associated with that author, as well as any other work title that
   *  is similar or has a variant title that is similar. The list of found titles
   *  is then returned as a bunch of WHERE LIKE '%<title>%' statements to get any
@@ -1152,36 +1160,38 @@
     if ($ptype_qry !== '') $typeStr = " Performances.PType IN ($ptype_qry) AND ";
 
     // Look for related titles in the Works table
-    $workIdSql = "SELECT Works.TitleClean FROM Works WHERE Works.WorkId IN (
+    $workIdSql =
+        "SELECT Works.TitleClean FROM Works WHERE Works.WorkId IN (
           SELECT WorkAuthMaster.WorkId FROM WorkAuthMaster
           JOIN Works ON Works.WorkId = WorkAuthMaster.WorkId
           LEFT JOIN WorksVariant ON WorksVariant.WorkId = Works.WorkId
           WHERE WorkAuthMaster.TitleClean IN (
             SELECT WorkAuthMaster.TitleClean FROM WorkAuthMaster
             LEFT JOIN Author ON Author.AuthId = WorkAuthMaster.AuthId
-            WHERE (Author.AuthNameClean LIKE '%$authorClean%') ) ";
-            $workIdSql .= " OR WorksVariant.NameClean IN (
+            WHERE (Author.AuthNameClean LIKE '%$authorClean%')
+          ) OR WorksVariant.NameClean IN (
               SELECT WorkAuthMaster.TitleClean FROM WorkAuthMaster
               LEFT JOIN Author ON Author.AuthId = WorkAuthMaster.AuthId
               WHERE (Author.AuthNameClean LIKE '%$authorClean%')
-            )
-          )";
+          )
+        )";
 
     // look for related titles in the WorksVariant table
-    $varIdSql = "SELECT WorksVariant.NameClean FROM WorksVariant WHERE WorksVariant.WorkId IN (
+    $varIdSql =
+        "SELECT WorksVariant.NameClean FROM WorksVariant WHERE WorksVariant.WorkId IN (
           SELECT WorkAuthMaster.WorkId FROM WorkAuthMaster
           JOIN Works ON Works.WorkId = WorkAuthMaster.WorkId
           LEFT JOIN WorksVariant ON WorksVariant.WorkId = Works.WorkId
           WHERE WorkAuthMaster.TitleClean IN (
             SELECT WorkAuthMaster.TitleClean FROM WorkAuthMaster
             LEFT JOIN Author ON Author.AuthId = WorkAuthMaster.AuthId
-            WHERE (Author.AuthNameClean LIKE '%$authorClean%') ) ";
-            $varIdSql .= " OR WorksVariant.NameClean IN (
-              SELECT WorkAuthMaster.TitleClean FROM WorkAuthMaster
-              LEFT JOIN Author ON Author.AuthId = WorkAuthMaster.AuthId
-              WHERE (Author.AuthNameClean LIKE '%$authorClean%')
-            )
-          )";
+            WHERE (Author.AuthNameClean LIKE '%$authorClean%')
+          ) OR WorksVariant.NameClean IN (
+            SELECT WorkAuthMaster.TitleClean FROM WorkAuthMaster
+            LEFT JOIN Author ON Author.AuthId = WorkAuthMaster.AuthId
+            WHERE (Author.AuthNameClean LIKE '%$authorClean%')
+          )
+        )";
 
     $workIdResult = $conn->query($workIdSql);
 
@@ -1242,6 +1252,77 @@
     $sql .= ") ";
 
     return $sql;
+  }
+
+
+  /**
+   * Takes an author's name and generates MATCH fragment for related works.
+   *
+   * Takes an author's name and performs a preliminary query to get all work
+   *  titles associated with that author, as well as any other work title that
+   *  is similar or has a variant title that is similar. The list of found titles
+   *  is then returned as a bunch of WHERE LIKE '%<title>%' statements to get any
+   *  performance with a similar title. The idea is to introduce ambiguity and
+   *  cast as wide a net as possible because we don't know for sure who authored
+   *  the version of the play that was performed on any given night.
+   *
+   * @param string $author Cleaned author name from $_GET.
+   *
+   * @return string|bool
+   *   MATCH statement fragments to include in the WHERE clause. Value is FALSE
+   *     if the author is not found, there are no related works, or an error is
+   *     encountered.
+   */
+  function getSphinxAuthorQuery($author) {
+    if ($author === '') return FALSE;
+    global $sphinx_conn;
+
+    $author = cleanStr($author);
+    $authorClean = mysqli_real_escape_string($sphinx_conn, cleanQuotes($author));
+    // Find the author's works in the Related Works index.
+    $authorWorksSql =
+        "SELECT *
+         FROM related_work
+         WHERE MATCH('@authnameclean \"$authorClean\"')
+         GROUP BY workid
+         LIMIT 1000";
+    // Run the query.
+    $workResult = $sphinx_conn->query($authorWorksSql);
+    // TRUE if there was an error returned by the query.
+    if (is_bool($workResult)) return FALSE;
+    // Process through the results, gather all works and similarly named works.
+    $workTitles = [];
+    while ($row = mysqli_fetch_assoc($workResult)) {
+      // Add contents of whatever work name fields have a value in the record.
+      if ($row['titleclean'] && $row['titleclean'] !== '')
+        $workTitles[] = $row['titleclean'];
+      if ($row['nameclean'] && $row['nameclean'] !== '')
+        $workTitles[] = $row['nameclean'];
+      if ($row['perftitleclean'] && $row['perftitleclean'] !== '')
+        $workTitles[] = $row['perftitleclean'];
+    }
+    if (empty($workTitles)) return FALSE;
+    // Unique list of all titles.
+    $titles = array_unique($workTitles);
+    // Some titles actually contain multiple titles, separated by a semicolon or
+    //   '; or '. We'll trim and explode out the title on the semicolon, and
+    //   $prefix is used to strip out the 'or '.
+    $processedTitles = [];
+    $prefix = "or ";
+    foreach ($titles as $title) {
+      $titleArr = array_map('trim', explode(';', $title));
+      foreach ($titleArr as $titl) {
+        if (strtolower(substr($titl, 0, strlen($prefix))) == $prefix) {
+          $titl = substr($titl, strlen($prefix));
+        }
+        // Add each title within double quotes.
+        $processedTitles[] = '"' . $titl . '"';
+      }
+    }
+    // Return the MATCH statement for the performance title field with all
+    //   titles in double quotes, separated by the OR operator.
+    $processedTitles = implode(' | ' , $processedTitles);
+    return "@perftitleclean $processedTitles";
   }
 
   /**
