@@ -896,7 +896,7 @@
     global $sphinx_conn;
 
     if ($workId !== '') {
-      $sql = "SELECT AuthId, AuthName, AuthType \nFROM related_work \nWHERE WorkId = " . $workId . " GROUP BY AuthId";
+      $sql = "SELECT AuthId, AuthName, StartDate, StartType, EndDate, EndType, AuthType \nFROM related_work \nWHERE WorkId = " . $workId . " GROUP BY AuthId";
 
       $result = $sphinx_conn->query($sql);
       $auths = [];
