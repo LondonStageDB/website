@@ -1152,38 +1152,36 @@
     if ($ptype_qry !== '') $typeStr = " Performances.PType IN ($ptype_qry) AND ";
 
     // Look for related titles in the Works table
-    $workIdSql =
-        "SELECT Works.TitleClean FROM Works WHERE Works.WorkId IN (
+    $workIdSql = "SELECT Works.TitleClean FROM Works WHERE Works.WorkId IN (
           SELECT WorkAuthMaster.WorkId FROM WorkAuthMaster
           JOIN Works ON Works.WorkId = WorkAuthMaster.WorkId
           LEFT JOIN WorksVariant ON WorksVariant.WorkId = Works.WorkId
           WHERE WorkAuthMaster.TitleClean IN (
             SELECT WorkAuthMaster.TitleClean FROM WorkAuthMaster
             LEFT JOIN Author ON Author.AuthId = WorkAuthMaster.AuthId
-            WHERE (Author.AuthNameClean LIKE '%$authorClean%')
-          ) OR WorksVariant.NameClean IN (
+            WHERE (Author.AuthNameClean LIKE '%$authorClean%') ) ";
+            $workIdSql .= " OR WorksVariant.NameClean IN (
               SELECT WorkAuthMaster.TitleClean FROM WorkAuthMaster
               LEFT JOIN Author ON Author.AuthId = WorkAuthMaster.AuthId
               WHERE (Author.AuthNameClean LIKE '%$authorClean%')
-          )
-        )";
+            )
+          )";
 
     // look for related titles in the WorksVariant table
-    $varIdSql =
-        "SELECT WorksVariant.NameClean FROM WorksVariant WHERE WorksVariant.WorkId IN (
+    $varIdSql = "SELECT WorksVariant.NameClean FROM WorksVariant WHERE WorksVariant.WorkId IN (
           SELECT WorkAuthMaster.WorkId FROM WorkAuthMaster
           JOIN Works ON Works.WorkId = WorkAuthMaster.WorkId
           LEFT JOIN WorksVariant ON WorksVariant.WorkId = Works.WorkId
           WHERE WorkAuthMaster.TitleClean IN (
             SELECT WorkAuthMaster.TitleClean FROM WorkAuthMaster
             LEFT JOIN Author ON Author.AuthId = WorkAuthMaster.AuthId
-            WHERE (Author.AuthNameClean LIKE '%$authorClean%')
-          ) OR WorksVariant.NameClean IN (
-            SELECT WorkAuthMaster.TitleClean FROM WorkAuthMaster
-            LEFT JOIN Author ON Author.AuthId = WorkAuthMaster.AuthId
-            WHERE (Author.AuthNameClean LIKE '%$authorClean%')
-          )
-        )";
+            WHERE (Author.AuthNameClean LIKE '%$authorClean%') ) ";
+            $varIdSql .= " OR WorksVariant.NameClean IN (
+              SELECT WorkAuthMaster.TitleClean FROM WorkAuthMaster
+              LEFT JOIN Author ON Author.AuthId = WorkAuthMaster.AuthId
+              WHERE (Author.AuthNameClean LIKE '%$authorClean%')
+            )
+          )";
 
     $workIdResult = $conn->query($workIdSql);
 
