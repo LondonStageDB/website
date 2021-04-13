@@ -821,6 +821,8 @@
   * @return array Related Works
   */
   function getSphinxRelatedWorks($perfTitle = '') {
+    // Return without looking up Related Works
+    global $conn;
     global $sphinx_conn;
 
     $prefix = "or ";
@@ -843,10 +845,10 @@
         $values[] = '"' . $perf . '"';
       }
       $values = implode($values, '|');
-      $sql .= "\nWHERE MATCH('" . $values . "')";
+      $sql .= "\nWHERE MATCH('" . $values . "')\n";
 
       // Only want to show unique works, not all iterations of a given work title
-      $sql .= "\nGROUP BY WorkId";
+      $sql .= 'GROUP BY WorkId';
 
       $result = $sphinx_conn->query($sql);
       $works = array();
@@ -1123,7 +1125,7 @@
   /**
   * Takes an author's name and generates WHERE statement from all related titles.
   *
-  * Takes an author's name and performs two preliminary queries to get all work
+  * Takes an author's name and performes two preliminary queries to get all work
   *  titles associated with that author, as well as any other work title that
   *  is similar or has a variant title that is similar. The list of found titles
   *  is then returned as a bunch of WHERE LIKE '%<title>%' statements to get any
