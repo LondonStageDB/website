@@ -44,6 +44,9 @@ public function getData( $limit = 25, $page = 1 ) {
     $this->_page    = $page;
     $results = [];
 
+    $ranker .= "\nOPTION field_weights=(performancetitle=800, perftitleclean=200,
+        commentpclean=75, commentcclean=75, roleclean=100, performerclean=100,
+        authnameclean=100),ranker=expr('sum((hit_count + IF(exact_hit, 20, 0.3))*user_weight)')";
     // In Sphinx must specify a limit and max-matches if interested in > 1000
     //   results queries (regardless of what is specified in the LIMIT).
     if ( $this->_limit == 'all' ) {
@@ -54,9 +57,12 @@ public function getData( $limit = 25, $page = 1 ) {
         // Sphinx server is allocated for this size prior to running the query.
         $offset     = ( $this->_page - 1 ) * $this->_limit;
         $query      = $this->_query . "\nLIMIT $offset, $this->_limit";
+        $query     .= $ranker;
         // Use the last row that this page would display.
-        $query     .= "\nOPTION max_matches=" . $this->_page * $this->_limit;
+        $query     .= ",max_matches=" . $this->_page * $this->_limit;
+
     }
+    echo "<p>Query: <code>$query</code></p>";
 
     // Perform the query.
     $rs             = $this->_conn->query( $query );
