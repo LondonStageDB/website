@@ -214,17 +214,17 @@
                     </div>
                     <?php if (array_filter($work['author'])) : ?>
                     <?php foreach ($work['author'] as $auth) : ?>
-                    <?php if (in_array($auth['AuthType'], ['Researched', 'Primary'])) : ?>
+                    <?php if (in_array($auth['authtype'], ['Researched', 'Primary'])) : ?>
                     <div class="auth-info">
                       <div><span class="info-heading">Author: </span>
-                        <?php echo linkedSearches('author', $auth['AuthName']); ?>
+                        <?php echo linkedSearches('author', $auth['authname']); ?>
                       </div>
                       <div class="grid-x">
-                        <div class="cell small-6"><span class="info-heading"><?php echo authDateType($auth['StartType']); ?></span>
-                          <?php echo $auth['StartDate']; ?>
+                        <div class="cell small-6"><span class="info-heading"><?php echo authDateType($auth['starttype']); ?></span>
+                          <?php echo $auth['startdate']; ?>
                         </div>
-                        <div class="cell small-6"><span class="info-heading"><?php echo authDateType($auth['EndType']); ?></span>
-                          <?php echo $auth['EndDate']; ?>
+                        <div class="cell small-6"><span class="info-heading"><?php echo authDateType($auth['endtype']); ?></span>
+                          <?php echo $auth['enddate']; ?>
                         </div>
                       </div>
                     </div>
