@@ -391,16 +391,16 @@
                   $actorClean = mysqli_real_escape_string($sphinx_conn, cleanQuotes($act, true));
                   $act = mysqli_real_escape_string($sphinx_conn, $act);
                   if ($a < count($actor)) {
-                    $actQry .= "(MATCH(Cast.PerformerClean) AGAINST ('$act' IN NATURAL LANGUAGE MODE) OR Cast.PerformerClean LIKE '%$actorClean%') " . $actSwtch . " ";
+                    $actQry .= "(@performerclean \"$actorClean\") " . $actSwtch . " ";
                   } else {
-                    $actQry .= "(MATCH(Cast.PerformerClean) AGAINST ('$act' IN NATURAL LANGUAGE MODE) OR Cast.PerformerClean LIKE '%$actorClean%')";
+                    $actQry .= "(@performerclean \"$actorClean\")";
                   }
                 }
                 $a++;
               }
             }
             $actQry .= ")";
-            if ($actQry !== "()") array_push($queries, $actQry);
+            if ($actQry !== "()") array_push($matches, $actQry);
             break;
           case 'role':
             $roleQry = "(";
