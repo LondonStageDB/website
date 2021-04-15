@@ -294,10 +294,11 @@
 
     $getters = array(); // Contains all search parameters
     $queries = array(); // Contains all 'WHERE' parameters
-    $matches = array(); // Contains Sphinx all MATCH() parameters
+    $matches = array(); // Contains all Sphinx MATCH() parameters
+    $perfTitleMatches = array(); // Contains the list of perf titles to MATCH
     $ptypes = array(); // List of ptypes from $_GET['ptype']
     $keywrd = array();
-    $sortBy = 'relevance'; // Default. Will set to parameter if valid, later.
+    $sortBy = 'relevance'; // Default. Will set to parameter if valid, below.
     $volume = (isset($_GET['vol'])) ? $_GET['vol'] : '1, 2, 3, 4, 5';
     $roleSwtch = (isset($_GET['roleSwitch']) && $_GET['roleSwitch'] === 'or') ? 'OR' : 'AND';
     $actSwtch = (isset($_GET['actSwitch']) && $_GET['actSwitch'] === 'or') ? 'OR' : 'AND';
@@ -307,7 +308,7 @@
       $_GET['sortBy'];
     }
 
-    foreach($_GET as $key => $value) {
+    foreach ($_GET as $key => $value) {
       $temp = is_array($value) ? $value : trim($value);
       if (!empty($temp)) {
         // Create ptype array to later implode to string
@@ -425,9 +426,10 @@
             if ($roleQry !== "()") array_push($queries, $roleQry);
             break;
           case 'performance':
-            $performanceClean = mysqli_real_escape_string($sphinx_conn, cleanQuotes($performance, true));
             $performance = mysqli_real_escape_string($sphinx_conn, $performance);
-            array_push($matches, "@perftitleclean \"$performance\"/1");
+            if (!empty($performance) && $performance !== '') {
+              array_push($perfTitleMatches, '"' . $performance . '"/1');
+            }
             break;
           case 'ptype':
             if (!empty($ptypes)) {
@@ -442,8 +444,15 @@
             $author = trim(mysqli_real_escape_string($sphinx_conn, $author));
             $authorMatch = getSphinxAuthorQuery($author);
             // If the query generation encountered an error it will be false.
-            if (!is_bool($authorMatch)) {
-              array_push($matches, $authorMatch);
+            if (is_bool($authorMatch)) {
+              // When the author query returns nothing useful, there should be
+              //   no matches in the main query, to match the legacy behavior.
+              array_push($queries, '0'); // Returns an empty set.
+            }
+            else {
+              // Include the returned list of perf titles in the MATCH statement.
+              // array_push($matches, $authorMatch);
+              array_push($perfTitleMatches, $authorMatch);
             }
             break;
           case 'keyword':
@@ -455,6 +464,14 @@
       }
     }
 
+    // Build the perfTitleClean field MATCH parameter and add to that array.
+    if (!empty($perfTitleMatches)) {
+      // The operator between parameters should be "AND", which is a space.
+      $perfTitleMatches = implode(' ', $perfTitleMatches);
+      // Place the new string at the beginning of the array because the MAYBE
+      //   parameter added when the title filter is set should come after.
+      array_unshift($matches, "(@perftitleclean $perfTitleMatches)");
+    }
     // Build the MATCH statement and add it to the list of queries.
     if (!empty($matches)) {
       $matches = 'MATCH(\'' . implode(' ', $matches) . '\')';
@@ -470,7 +487,7 @@
     // Determine if ascending or descending and then .
     if ($sortBy !== 'relevance') {
       $sortOrder = ($sortBy === 'datea') ? 'ASC' : 'DESC';
-      $sql .= "\nORDER BY eventdate " . $sortOrder;
+      $sql .= "\nORDER BY eventdate $sortOrder";
     }
 
     return $sql;
@@ -1321,8 +1338,7 @@
     }
     // Return the MATCH statement for the performance title field with all
     //   titles in double quotes, separated by the OR operator.
-    $processedTitles = implode(' | ' , $processedTitles);
-    return "@perftitleclean $processedTitles";
+    return implode(' | ' , $processedTitles);
   }
 
   /**
