@@ -1139,7 +1139,7 @@
           // If zero month (e.g. 17160000), run LIKE '1716%'
           if ($monSet === false) {
             $sql = $forSphinx ?
-                "eventdate BETWEEN " . $startStr . "0000 AND " . $startStr . "1231" :
+                "eventdate BETWEEN " . $startYr . "0000 AND " . $startYr . "1231" :
                 "Events.EventDate LIKE '" . $startYr . "%'";
           } else {
             $yearEnd = $startYr;
@@ -1150,7 +1150,7 @@
             }
             $strEnd = $yearEnd . substr('0' . $monthEnd, -2) . '00';
             $sql = $forSphinx ?
-                "eventdate BETWEEN " . $startStr . "00 AND $strEnd" :
+                "eventdate BETWEEN " . $startStr . " AND " . $startYr . $startMon ."31" :
                 "Events.EventDate LIKE '" . $startYr . substr('0' . $startMon, -2) . "%'";
           }
         } else { // Else exact match
