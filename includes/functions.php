@@ -356,7 +356,7 @@
     $sql .= "\nFROM london_stages";
 
     // Get our WHERE parameter for any selected date and add to $queries
-    $dateQuery = getDateQuery();
+    $dateQuery = getDateQuery(true);
     if ($dateQuery !== '') {
       array_push($queries, $dateQuery);
     }
@@ -1078,12 +1078,16 @@
   }
 
 
-  /**
-  * Generates date WHERE statement.
-  *
-  * @return string Date WHERE query.
-  */
-  function getDateQuery() {
+/**
+ * Generates the date conditions for the WHERE statement.
+ *
+ * @param bool $forSphinx
+ *   If TRUE, the return is compatible with Sphinx. Default is FALSE.
+ *
+ * @return string
+ *   EventDate conditions to add to the WHERE statement of the query.
+ */
+  function getDateQuery($forSphinx = FALSE) {
     global $conn;
     $sql = "";
     $monSet = true;
@@ -1120,26 +1124,45 @@
 
     switch($dateTp) {
       case 1: // Between
-        $sql = "Events.EventDate BETWEEN $startStr AND $endStr";
+        $sql = $forSphinx ?
+            "eventdate BETWEEN $startStr AND $endStr" :
+            "Events.EventDate BETWEEN $startStr AND $endStr";
         break;
       case 2: // Before
-        $sql = "Events.EventDate <= $startStr";
+        $sql = $forSphinx ?
+            "eventdate <= $startStr" :
+            "Events.EventDate <= $startStr";
         break;
       case 3: // On
         // If zero date (e.g. 17161100), run LIKE '171611%'
         if ($daySet === false) {
           // If zero month (e.g. 17160000), run LIKE '1716%'
           if ($monSet === false) {
-            $sql = "Events.EventDate LIKE '" . $startYr . "%'";
+            $sql = $forSphinx ?
+                "eventdate BETWEEN " . $startYr . "0000 AND " . $startYr . "1231" :
+                "Events.EventDate LIKE '" . $startYr . "%'";
           } else {
-            $sql = "Events.EventDate LIKE '" . $startYr . substr('0' . $startMon, -2) . "%'";
+            $yearEnd = $startYr;
+            $monthEnd = $startMon + 1;
+            if ($monthEnd > 12) {
+              $yearEnd++;
+              $monthEnd = 1;
+            }
+            $strEnd = $yearEnd . substr('0' . $monthEnd, -2) . '00';
+            $sql = $forSphinx ?
+                "eventdate BETWEEN " . $startStr . " AND " . $startYr . $startMon ."31" :
+                "Events.EventDate LIKE '" . $startYr . substr('0' . $startMon, -2) . "%'";
           }
         } else { // Else exact match
-          $sql = "Events.EventDate = $startStr";
+          $sql = $forSphinx ?
+              "eventdate = $startStr" :
+              "Events.EventDate = $startStr";
         }
         break;
       case 4: // After
-        $sql = "Events.EventDate >= $startStr";
+        $sql = $forSphinx ?
+            "eventdate >= $startStr" :
+            "Events.EventDate >= $startStr";
         break;
     }
 
