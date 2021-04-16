@@ -296,6 +296,7 @@
     $queries = array(); // Contains all 'WHERE' parameters
     $matches = array(); // Contains all Sphinx MATCH() parameters
     $perfTitleMatches = array(); // Contains the list of perf titles to MATCH
+    $castIds = array(); // Contains all event IDs coming from Actor and Role
     $ptypes = array(); // List of ptypes from $_GET['ptype']
     $keywrd = array();
     $sortBy = 'relevance'; // Default. Will set to parameter if valid, below.
@@ -384,9 +385,9 @@
             $a = 1;
             $actor = array_filter($actor, 'strlen');
             if (count($actor) > 1 && $actSwtch === "AND") {
-              $actQry .= getSphinxCastQuery('actor', $actor);
-              if ($actQry !== "") array_push($queries, $actQry);
+              $castIds = array_merge($castIds, getSphinxCastId('actor', $actor));
             } else {
+              $includeCastIds = 0;
               foreach ($actor as $act) {
                 if ($act !== '') {
                   $actorClean = mysqli_real_escape_string($sphinx_conn, cleanQuotes($act, true));
@@ -407,9 +408,9 @@
             $r = 1;
             $role = array_filter($role, 'strlen');
             if (count($role) > 1 && $roleSwtch === "AND") {
-              $roleQry .= getSphinxCastQuery('role', $role);
-              if ($roleQry !== "") array_push($queries, $roleQry);
+              $castIds = array_merge($castIds,getSphinxCastId('role', $role));
             } else {
+              $includeCastIds = 0;
               foreach ($role as $rle) {
                 if ($rle !== '') {
                   $roleClean = mysqli_real_escape_string($sphinx_conn, cleanQuotes($rle, true));
@@ -471,6 +472,10 @@
       // Place the new string at the beginning of the array because the MAYBE
       //   parameter added when the title filter is set should come after.
       array_unshift($matches, "(@perftitleclean $perfTitleMatches)");
+    }
+    // Build the Cast filter query statement.
+    if ($includeCastIds) {
+      array_push($queries, " eventId IN (" . implode(',', $castIds) . ") ");
     }
     // Build the MATCH statement and add it to the list of queries.
     if (!empty($matches)) {
@@ -1429,9 +1434,9 @@
   * @param string $castType Either Role or Actor.
   * @param array $casts Array of actors or roles to search on.
   *
-  * @return string Cast WHERE statement (Where IN() list of Event Ids).
+  * @return array All IDs of either Role or Actor.
   */
-  function getSphinxCastQuery($castType, $casts = array()) {
+  function getSphinxCastId($castType, $casts = array()) {
     global $conn;
 
     if (empty($casts)) return '';
@@ -1472,10 +1477,7 @@
       }
     }
 
-    //if (count($intersectIds) <= 0) return '';
-
-    $finQry = " eventId IN (" . implode(',', $intersectIds) . ") ";
-    return $finQry;
+    return $intersectIds;
   }
 
 
