@@ -390,21 +390,6 @@
             $actQry = (count($actor) > 1 && $actSwtch === "AND") ?
               getSphinxCastQuery('actor', $actor) :
               getSphinxCastQuery('actor', $actor, 'OR');
-              /*
-              foreach ($actor as $act) {
-                if ($act !== '') {
-                  $actorClean = mysqli_real_escape_string($sphinx_conn, cleanQuotes($act, true));
-                  $act = mysqli_real_escape_string($sphinx_conn, $act);
-                  if ($a < count($actor)) {
-                    $actQry .= "\"$actorClean\"" . (($actSwtch === "OR") ? "|" : "");
-                  } else {
-                    $actQry .= "\"$actorClean\"";
-                  }
-                }
-                $a++;
-              }
-              if ($actQry !== "") array_push($matches, "@performerclean " . $actQry);
-              */
             array_push($eventIdQueries, $actQry);
             break;
           case 'role':
@@ -417,23 +402,6 @@
               getSphinxCastQuery('role', $role) :
               getSphinxCastQuery('role', $role, 'OR');
             array_push($eventIdQueries, $roleQry);
-            /*
-             } else {
-              foreach ($role as $rle) {
-                if ($rle !== '') {
-                  $roleClean = mysqli_real_escape_string($sphinx_conn, cleanQuotes($rle, true));
-                  $rle = mysqli_real_escape_string($sphinx_conn, $rle);
-                  if ($r < count($role)) {
-                    $roleQry .= "\"$roleClean\"" . (($roleSwtch === "OR") ? "|" : "");
-                  } else {
-                    $roleQry .= "\"$roleClean\"";
-                  }
-                }
-                $r++;
-              }
-              if ($roleQry !== "") array_push($matches, "@roleclean " . $roleQry);
-            }
-            */
             break;
           case 'performance':
             $performance = mysqli_real_escape_string($sphinx_conn, $performance);
@@ -1510,7 +1478,6 @@
     }
     // Now return the WHERE condition statement.
     return $outputEventIds;
-    // return "eventid IN ($outputEventIds)";
   }
 
 
