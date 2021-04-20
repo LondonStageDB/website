@@ -157,7 +157,6 @@
               }
             break;
             case 'volume':
-
               $volume = mysqli_real_escape_string($conn, $volume);
               if ($volume !== 'all' && in_array($volume, [1, 2, 3, 4, 5])) {
                 array_push($queries, "Theatre.Volume = '$volume'");
@@ -296,6 +295,8 @@
     $queries = array(); // Contains all 'WHERE' parameters
     $matches = array(); // Contains all Sphinx MATCH() parameters
     $perfTitleMatches = array(); // Contains the list of perf titles to MATCH
+    $eventIdQueries = array(); // Contains lists of EventIds to intersect.
+    $castMatch = array();
     $ptypes = array(); // List of ptypes from $_GET['ptype']
     $keywrd = array();
     $sortBy = 'relevance'; // Default. Will set to parameter if valid, below.
@@ -380,12 +381,16 @@
             }
             break;
           case 'actor':
-            $actQry = "";
-            $a = 1;
             $actor = array_filter($actor, 'strlen');
-            if (count($actor) > 1 && $actSwtch === "AND") {
-              array_push($queries, getSphinxCastQuery('actor', $actor));
-            } else {
+            if (count($actor) < 1) break;
+            // First do this for better ordering of results.
+            $castMatch = array_merge($castMatch, $actor);
+            // Then do this to actually filter.
+            // array_push($queries, getSphinxCastQuery('actor', $actor));
+            $actQry = (count($actor) > 1 && $actSwtch === "AND") ?
+              getSphinxCastQuery('actor', $actor) :
+              getSphinxCastQuery('actor', $actor, 'OR');
+              /*
               foreach ($actor as $act) {
                 if ($act !== '') {
                   $actorClean = mysqli_real_escape_string($sphinx_conn, cleanQuotes($act, true));
@@ -399,15 +404,21 @@
                 $a++;
               }
               if ($actQry !== "") array_push($matches, "@performerclean " . $actQry);
-            }
+              */
+            array_push($eventIdQueries, $actQry);
             break;
           case 'role':
-            $roleQry = "";
-            $r = 1;
             $role = array_filter($role, 'strlen');
-            if (count($role) > 1 && $roleSwtch === "AND") {
-              array_push($queries, getSphinxCastQuery('role', $role));
-            } else {
+            if (count($role) < 1) break;
+            // First do this for better ordering of results.
+            $castMatch = array_merge($castMatch, $role);
+            // Then do this to actually filter.
+            $roleQry = (count($role) > 1 && $roleSwtch === "AND") ?
+              getSphinxCastQuery('role', $role) :
+              getSphinxCastQuery('role', $role, 'OR');
+            array_push($eventIdQueries, $roleQry);
+            /*
+             } else {
               foreach ($role as $rle) {
                 if ($rle !== '') {
                   $roleClean = mysqli_real_escape_string($sphinx_conn, cleanQuotes($rle, true));
@@ -422,6 +433,7 @@
               }
               if ($roleQry !== "") array_push($matches, "@roleclean " . $roleQry);
             }
+            */
             break;
           case 'performance':
             $performance = mysqli_real_escape_string($sphinx_conn, $performance);
@@ -469,6 +481,15 @@
       // Place the new string at the beginning of the array because the MAYBE
       //   parameter added when the title filter is set should come after.
       array_unshift($matches, "(@perftitleclean $perfTitleMatches)");
+    }
+    // Build eventid IN() statement with intersect of $eventIdQueries items.
+    if (!empty($eventIdQueries)) {
+      $eventIdQueries = call_user_func_array('array_intersect', $eventIdQueries);
+      $eventIdQueries = 'eventid IN (' . implode(', ', $eventIdQueries) . ')';
+      array_push($queries, $eventIdQueries);
+      $castMatch = implode('|', $castMatch);
+      $castMatch = preg_replace('/\s/', '|', $castMatch);
+      array_push($matches, "(@(performerclean,roleclean) $castMatch)");
     }
     // Build the MATCH statement and add it to the list of queries.
     if (!empty($matches)) {
@@ -1420,59 +1441,76 @@
   }
 
   /**
-  * Takes arrays of actors or roles and generates the necessary WHERE statement for AND searches.
-  *
-  * Takes an array of actors or roles and runs queries to find events that have both.
-  *
-  * @param string $castType Either Role or Actor.
-  * @param array $casts Array of actors or roles to search on.
-  *
-  * @return string eventid IN(), list of Event Ids, in Sphinx format.
-  */
-  function getSphinxCastQuery($castType, $casts = array()) {
+   * Generates the necessary WHERE statement for the actor or role filter.
+   *
+   * Takes an array of actors or roles and runs queries to find an event list.
+   *
+   * If operator is set to 'AND' the EventIds will relate to all in the casts
+   *   array. Otherwise, behaves as 'OR' with EventIds that relate to any in
+   *   the casts array.
+   *
+   * @param string $castType
+   *   Either Role or Actor.
+   * @param array $casts
+   *   Array of actors or roles to search on.
+   * @param string $operator
+   *   Operator to find the event list. Defaults to 'AND'.
+   *
+   * @return array
+   *   EventId list for the WHERE statement.
+   */
+  function getSphinxCastQuery($castType, $casts = array(), $operator = 'AND') {
     global $conn;
 
-    if (empty($casts)) return '';
-
+    if (empty($casts)) return [];
     $allIds = array();
-    $intersectIds = array();
-
+    $outputEventIds = array();
     $type = ($castType === 'role') ? 'Role' : 'Performer';
-
     $sql = "SELECT Events.EventId FROM Events
       JOIN Performances ON Performances.EventId = Events.EventId
       JOIN Cast ON Cast.PerformanceId = Performances.PerformanceId
       WHERE ";
-
+    // Collect the EventIds associated with each role or performer.
     $i = 1;
     foreach ($casts as $cast) {
       if ($cast !== '') {
+        // Finish putting the query together for this role or performer.
         $qry = $sql;
         $castClean = mysqli_real_escape_string($conn, cleanQuotes($cast, true));
         $cast = mysqli_real_escape_string($conn, $cast);
         $qry .= "MATCH(Cast." . $type . "Clean) AGAINST ('\"$cast\" @4' IN BOOLEAN MODE) OR Cast." . $type . "Clean LIKE '%$castClean%' GROUP BY Events.EventId";
-
+        // Execute the query and add the list to the allIds list.
         $castResult = $conn->query($qry);
-
         $eventIds = array();
         while ($row = mysqli_fetch_assoc($castResult)) {
           $eventIds[] = $row['EventId'];
         }
+        // Add this role or performer's eventId list to the allIds array.
         $allIds[] = $eventIds;
       }
       $i++;
     }
 
-    $initial = $allIds[0];
-    for($a = 1; $a < count($allIds); $a++) {
-      foreach($allIds[$a] as $id) {
-        if (in_array($id, $initial)) $intersectIds[] = $id;
+    if ($operator === 'AND') {
+      // Add all common EventIds of the sub-arrays (intersect).
+      $initial = $allIds[0];
+      for ($a = 1; $a < count($allIds); $a++) {
+        foreach ($allIds[$a] as $id) {
+          if (in_array($id, $initial)) $outputEventIds[] = $id;
+        }
       }
     }
-
-    if (count($intersectIds) <= 0) return "eventid IN ()";
-
-    return " eventid IN (" . implode(',', $intersectIds) . ") ";
+    else { // 'OR'.
+      // Add all EventIds from the sub-arrays together (union).
+      foreach ($allIds as $castEventIds) {
+        foreach ($castEventIds as $eventId) {
+          $outputEventIds[$eventId] = $eventId; // Keeps the values unique.
+        }
+      }
+    }
+    // Now return the WHERE condition statement.
+    return $outputEventIds;
+    // return "eventid IN ($outputEventIds)";
   }
 
 
