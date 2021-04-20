@@ -380,50 +380,48 @@
             }
             break;
           case 'actor':
-            $actQry = "(";
+            $actQry = "";
             $a = 1;
             $actor = array_filter($actor, 'strlen');
             if (count($actor) > 1 && $actSwtch === "AND") {
-              $actQry .= getCastQuery('actor', $actor);
+              array_push($queries, getSphinxCastQuery('actor', $actor));
             } else {
               foreach ($actor as $act) {
                 if ($act !== '') {
                   $actorClean = mysqli_real_escape_string($sphinx_conn, cleanQuotes($act, true));
                   $act = mysqli_real_escape_string($sphinx_conn, $act);
                   if ($a < count($actor)) {
-                    $actQry .= "(MATCH(Cast.PerformerClean) AGAINST ('$act' IN NATURAL LANGUAGE MODE) OR Cast.PerformerClean LIKE '%$actorClean%') " . $actSwtch . " ";
+                    $actQry .= "\"$actorClean\"" . (($actSwtch === "OR") ? "|" : "");
                   } else {
-                    $actQry .= "(MATCH(Cast.PerformerClean) AGAINST ('$act' IN NATURAL LANGUAGE MODE) OR Cast.PerformerClean LIKE '%$actorClean%')";
+                    $actQry .= "\"$actorClean\"";
                   }
                 }
                 $a++;
               }
+              if ($actQry !== "") array_push($matches, "@performerclean " . $actQry);
             }
-            $actQry .= ")";
-            if ($actQry !== "()") array_push($queries, $actQry);
             break;
           case 'role':
-            $roleQry = "(";
+            $roleQry = "";
             $r = 1;
             $role = array_filter($role, 'strlen');
             if (count($role) > 1 && $roleSwtch === "AND") {
-              $roleQry .= getCastQuery('role', $role);
+              array_push($queries, getSphinxCastQuery('role', $role));
             } else {
               foreach ($role as $rle) {
                 if ($rle !== '') {
                   $roleClean = mysqli_real_escape_string($sphinx_conn, cleanQuotes($rle, true));
                   $rle = mysqli_real_escape_string($sphinx_conn, $rle);
                   if ($r < count($role)) {
-                    $roleQry .= "(MATCH(Cast.RoleClean) AGAINST ('$rle' IN NATURAL LANGUAGE MODE) OR Cast.RoleClean LIKE '%$roleClean%') " . $roleSwtch . " ";
+                    $roleQry .= "\"$roleClean\"" . (($roleSwtch === "OR") ? "|" : "");
                   } else {
-                    $roleQry .= "(MATCH(Cast.RoleClean) AGAINST ('$rle' IN NATURAL LANGUAGE MODE) OR Cast.RoleClean LIKE '%$roleClean%')";
+                    $roleQry .= "\"$roleClean\"";
                   }
                 }
                 $r++;
               }
+              if ($roleQry !== "") array_push($matches, "@roleclean " . $roleQry);
             }
-            $roleQry .= ")";
-            if ($roleQry !== "()") array_push($queries, $roleQry);
             break;
           case 'performance':
             $performance = mysqli_real_escape_string($sphinx_conn, $performance);
@@ -1419,6 +1417,62 @@
 
     $finQry = " Events.EventId IN (" . implode(',', $intersectIds) . ") ";
     return $finQry;
+  }
+
+  /**
+  * Takes arrays of actors or roles and generates the necessary WHERE statement for AND searches.
+  *
+  * Takes an array of actors or roles and runs queries to find events that have both.
+  *
+  * @param string $castType Either Role or Actor.
+  * @param array $casts Array of actors or roles to search on.
+  *
+  * @return string eventid IN(), list of Event Ids, in Sphinx format.
+  */
+  function getSphinxCastQuery($castType, $casts = array()) {
+    global $conn;
+
+    if (empty($casts)) return '';
+
+    $allIds = array();
+    $intersectIds = array();
+
+    $type = ($castType === 'role') ? 'Role' : 'Performer';
+
+    $sql = "SELECT Events.EventId FROM Events
+      JOIN Performances ON Performances.EventId = Events.EventId
+      JOIN Cast ON Cast.PerformanceId = Performances.PerformanceId
+      WHERE ";
+
+    $i = 1;
+    foreach ($casts as $cast) {
+      if ($cast !== '') {
+        $qry = $sql;
+        $castClean = mysqli_real_escape_string($conn, cleanQuotes($cast, true));
+        $cast = mysqli_real_escape_string($conn, $cast);
+        $qry .= "MATCH(Cast." . $type . "Clean) AGAINST ('\"$cast\" @4' IN BOOLEAN MODE) OR Cast." . $type . "Clean LIKE '%$castClean%' GROUP BY Events.EventId";
+
+        $castResult = $conn->query($qry);
+
+        $eventIds = array();
+        while ($row = mysqli_fetch_assoc($castResult)) {
+          $eventIds[] = $row['EventId'];
+        }
+        $allIds[] = $eventIds;
+      }
+      $i++;
+    }
+
+    $initial = $allIds[0];
+    for($a = 1; $a < count($allIds); $a++) {
+      foreach($allIds[$a] as $id) {
+        if (in_array($id, $initial)) $intersectIds[] = $id;
+      }
+    }
+
+    if (count($intersectIds) <= 0) return "eventid IN ()";
+
+    return " eventid IN (" . implode(',', $intersectIds) . ") ";
   }
 
 
