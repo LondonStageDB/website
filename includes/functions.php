@@ -383,10 +383,6 @@
           case 'actor':
             $actor = array_filter($actor, 'strlen');
             if (count($actor) < 1) break;
-            // First do this for better ordering of results.
-            $castMatch = array_merge($castMatch, $actor);
-            // Then do this to actually filter.
-            // array_push($queries, getSphinxCastQuery('actor', $actor));
             $actQry = (count($actor) > 1 && $actSwtch === "AND") ?
               getSphinxCastQuery('actor', $actor) :
               getSphinxCastQuery('actor', $actor, 'OR');
@@ -395,9 +391,6 @@
           case 'role':
             $role = array_filter($role, 'strlen');
             if (count($role) < 1) break;
-            // First do this for better ordering of results.
-            $castMatch = array_merge($castMatch, $role);
-            // Then do this to actually filter.
             $roleQry = (count($role) > 1 && $roleSwtch === "AND") ?
               getSphinxCastQuery('role', $role) :
               getSphinxCastQuery('role', $role, 'OR');
@@ -452,12 +445,13 @@
     }
     // Build eventid IN() statement with intersect of $eventIdQueries items.
     if (!empty($eventIdQueries)) {
-      $eventIdQueries = call_user_func_array('array_intersect', $eventIdQueries);
+      if (is_array($eventIdQueries) && count($eventIdQueries) === 1 && is_array($eventIdQueries[0]))
+        $eventIdQueries = $eventIdQueries[0];
+      elseif (is_array($eventIdQueries[0]))
+        $eventIdQueries = call_user_func_array('array_intersect', $eventIdQueries);
+
       $eventIdQueries = 'eventid IN (' . implode(', ', $eventIdQueries) . ')';
       array_push($queries, $eventIdQueries);
-      $castMatch = implode('|', $castMatch);
-      $castMatch = preg_replace('/\s/', '|', $castMatch);
-      array_push($matches, "(@(performerclean,roleclean) $castMatch)");
     }
     // Build the MATCH statement and add it to the list of queries.
     if (!empty($matches)) {
@@ -472,9 +466,12 @@
     $sql .= "\nGROUP BY eventid";
     // If sorting by event date, add an ORDER BY clause.
     // Determine if ascending or descending and then .
-    if ($sortBy !== 'relevance') {
-      $sortOrder = ($sortBy === 'datea') ? 'ASC' : 'DESC';
+    if ($sortBy !== 'relevance' ||
+        (empty($perfTitleMatches) && empty($getters['keyword']))) {
+      $sortOrder = ($sortBy === 'dated') ? 'DESC' : 'ASC';
       $sql .= "\nORDER BY eventdate $sortOrder";
+    } elseif ($sortBy === 'relevance') {
+      $sql .= "\nORDER BY weight() desc, eventdate asc";
     }
 
     return $sql;
