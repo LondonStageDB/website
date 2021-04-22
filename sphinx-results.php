@@ -89,7 +89,8 @@
                   <div class="form-group field-theatre">
                     <label for="theatre" class="fb-select-label">Theatre</label>
                     <select class="theatre" name="theatre" id="theatre">
-                      <option value="" disabled selected>Select a Theatre</option>
+                      <option disabled <?php if ((!$_GET['theatre']) || ($_GET['theatre'] && $_GET['theatre'] !== '')) echo 'selected="selected"'; ?>>
+                          Select a Theatre</option>
                       <option value="all">Any Theatre...</option>
                       <option disabled>_________</option>
                       <?php getTheatres(); ?>
