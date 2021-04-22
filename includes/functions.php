@@ -368,10 +368,11 @@
         ${$key} = $value;
         switch ($key) {
           case 'theatre':
-            if ($theatre !== 'all') {
-              $theatre = preg_replace('/[0-9;"`\~\!\@\#\$\%\^\&\*\<\>\[\]]/', '', $theatre); // Remove any numbers and special chars
-              $theatre = mysqli_real_escape_string($sphinx_conn, $theatre);
-              array_push($queries, 'theatrename=\'' . $theatre . '\'');
+            if ($theatre === 'all') break;
+            $theatres = getSphinxTheatreNamesQuery($theatre);
+            if (is_array($theatres) && count($theatres) > 0) {
+              $theatres = implode(', ', $theatres);
+              array_push($queries, "theatrename IN ($theatres)");
             }
             break;
           case 'volume':
@@ -613,9 +614,8 @@
   function getTheatres() {
     global $conn;
 
-    $sql = 'SELECT * from Theatre GROUP BY TheatreName ORDER BY TheatreName';
+    $sql = 'SELECT * FROM Theatre GROUP BY TheatreName ORDER BY TheatreName';
     $result = $conn->query($sql);
-    $output = [];
 
     echo '<optgroup label="Common Theatres">';
     echo '<option value="111Covent Garden"';
@@ -625,7 +625,7 @@
       getSticky(2, 'theatre', "111Drury Lane");
       echo '>Drury Lane (All)</option>';
     echo '<option value="111Haymarket"';
-      getSticky(2, 'theatre', "111Harmarket");
+      getSticky(2, 'theatre', "111Haymarket");
       echo '>Haymarket (All)</option>';
     echo '<option value="111Lincoln\'s Inn"';
       getSticky(2, 'theatre', "111Lincoln\'s Inn");
@@ -635,10 +635,9 @@
 
     while ($row = $result->fetch_assoc()) {
       echo '<option value="' . $row['TheatreName'] . '"';
-      getSticky(2, 'theatre', $row['TheatreName']);
-      echo '>' . $row['TheatreName'] . '</option>';
+        getSticky(2, 'theatre', $row['TheatreName']);
+        echo '>' . $row['TheatreName'] . '</option>';
     }
-
   }
 
 
@@ -701,6 +700,42 @@
       $theatres[] = $row;
     }
     return $theatres[0]['TheatreName'];
+  }
+
+
+  /**
+   * Gets a list of Theatre Names to add to the Sphinx WHERE clause.
+   *
+   * @param int $theatreName
+   *  Theatre ID
+   *
+   * @return array
+   *   Array of Theatre Names with single quotes added for the query.
+   */
+  function getSphinxTheatreNamesQuery($theatreName = '') {
+    global $conn;
+    if ($theatreName === '') return [];
+    $theatres = []; // Storage for return value.
+    // Clean the filter input.
+    $theatre  = preg_replace('/[0-9;"`\~\!\@\#\$\%\^\&\*\<\>\[\]]/', '', $theatreName); // Remove any numbers and special chars
+    $theatre  = mysqli_real_escape_string($conn, $theatre);
+    // If '111' is a prefix then look up names using 'LIKE' condition.
+    if (substr($theatreName, 0, 3) === '111') {
+      $sql = "SELECT * FROM Theatre
+              WHERE TheatreName LIKE '%$theatre%'
+              GROUP BY TheatreName";
+      $result = $conn->query($sql);
+      while ($row = mysqli_fetch_assoc($result)) {
+        $theatre = preg_replace('/[0-9;"`\~\!\@\#\$\%\^\&\*\<\>\[\]]/', '', $row['TheatreName']); // Remove any numbers and special chars
+        $theatre = mysqli_real_escape_string($conn, $theatre);
+        $theatres[] = "'$theatre'";
+      }
+    }
+    // An individual theatre was selected, so just add it and return.
+    else {
+      $theatres[] = "'$theatre'";
+    }
+    return $theatres;
   }
 
 
