@@ -45,7 +45,7 @@
             <?php echo $event['Volume']; ?>
           </div>
           <div class="event-comments"><span class="info-heading">Comments:</span>
-            <?php echo namedEntityLinks($event['CommentC']); ?>
+            <?php echo namedEntityLinks($event['CommentC'], TRUE); ?>
           </div>
           <div class="event-btns grid-x">
             <div class="work-nav small-12 medium-8">
@@ -168,23 +168,23 @@
             <div class="small-12 perf-info">
               <div class="grid-x">
                 <div class="small-12 medium-7 large-8 perf-info-left">
-                  <?php if(in_array($perf['PType'], ['p', 'a'])) : ?> 
+                  <?php if(in_array($perf['PType'], ['p', 'a'])) : ?>
                   <div class="perf-title perf-data"><span class="info-heading">Title:</span>
-                    <a href="<?php echo linkedTitles($perf['PerformanceTitle']); ?>">
+                    <a href="<?php echo linkedTitles($perf['PerformanceTitle'], TRUE); ?>">
                       <?php echo cleanItalics(cleanTitle($perf['PerformanceTitle'])); ?>
                     </a>
                   </div>
                   <div class="perf-comments perf-data"><span>Comments:</span><br />
-                    <?php echo namedEntityLinks($perf['CommentP']); ?>
+                    <?php echo namedEntityLinks($perf['CommentP'], TRUE); ?>
                   </div>
                   <div class="perf-cast perf-data"><span>Cast:</span><br />
                     <?php if (count($perf['cast']) > 0) : ?>
                     <ul class="no-bullet">
                       <?php foreach ($perf['cast'] as $cast) : ?>
                       <li class="grid-x"><span class="role cell small-4"><span class="info-heading">Role:</span>
-                        <?php echo linkedSearches('role[]', $cast['Role']); ?> </span>
+                        <?php echo linkedSearches('role[]', $cast['Role'], TRUE); ?> </span>
                         <span class="actor cell small-6"><span class="info-heading">Actor:</span>
-                        <?php echo linkedSearches('actor[]', $cast['Performer']); ?> </span>
+                        <?php echo linkedSearches('actor[]', $cast['Performer'], TRUE); ?> </span>
                       </li>
                       <?php endforeach; ?>
                     </ul>
@@ -194,7 +194,7 @@
                   </div>
                   <?php else : ?>
                     <div class="perf-comments perf-data"><span class="info-heading">Comment:</span>
-                      <?php echo namedEntityLinks($perf['DetailedComment']); ?>
+                      <?php echo namedEntityLinks($perf['DetailedComment'], TRUE); ?>
                     </div>
                   <?php endif; ?>
                 </div>
@@ -205,7 +205,7 @@
                   <?php foreach ($works as $work) : ?>
                   <div class="work-info">
                     <div><span class="info-heading">Work Title:</span>
-                      <a href="<?php echo linkedTitles((!empty($work['Title'])) ? $work['Title'] : $work['Title']); ?>">
+                      <a href="<?php echo linkedTitles((!empty($work['Title'])) ? $work['Title'] : $work['Title'], TRUE); ?>">
                         <?php echo (!empty($work['Title'])) ? $work['Title'] : $work['Title']; ?>
                       </a>
                     </div>
@@ -217,7 +217,7 @@
                     <?php if (in_array($auth['authtype'], ['Researched', 'Primary'])) : ?>
                     <div class="auth-info">
                       <div><span class="info-heading">Author: </span>
-                        <?php echo linkedSearches('author', $auth['authname']); ?>
+                        <?php echo linkedSearches('author', $auth['authname'], TRUE); ?>
                       </div>
                       <div class="grid-x">
                         <div class="cell small-6"><span class="info-heading"><?php echo authDateType($auth['starttype']); ?></span>
