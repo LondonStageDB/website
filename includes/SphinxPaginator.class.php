@@ -48,7 +48,7 @@ public function getData( $limit = 25, $page = 1 ) {
     //   results queries (regardless of what is specified in the LIMIT).
     if ( $this->_limit == 'all' ) {
         // Set limits to some arbitrary, high number.
-        $query      = $this->_query . 'LIMIT 99999 OPTION max-matches=99999' ;
+        $query      = $this->_query . 'LIMIT 99999 OPTION max_matches=99999' ;
     } else {
         // Keep the max_matches as small as we need it to be because memory on
         // Sphinx server is allocated for this size prior to running the query.
