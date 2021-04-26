@@ -56,7 +56,7 @@
   <?php include_once('common/nav.php'); ?>
   <div id="main" class="main grid-container">
     <div class="sql-query-wrap">
-      <div class="toggle-query"><a id="toggle">Toggle Query</a></div>
+      <div class="toggle-query"><a id="toggle">Toggle Sphinx Query</a></div>
       <div class="sql-query">
         <?php echo $sql; ?>
       </div>
@@ -325,9 +325,6 @@
               }
               echo '<div class="res-by-col">' . $msg . '</div>';
             } ?>
-            <?php if ($search_filters_empty) { ?>
-              <div class="res-by-col">It looks like you're trying to access the full dataset. Please visit <a href="/data.php">Data</a> to do so.</div>
-            <?php } ?>
             <?php if ($results->total > 0) { ?>
             <div class="grid-x results-header">
               <div class="input-group relevance-menu-wrap">
