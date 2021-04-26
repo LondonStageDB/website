@@ -57,7 +57,7 @@
   <?php include_once('common/nav.php'); ?>
   <div id="main" class="main grid-container">
     <div class="sql-query-wrap">
-      <div class="toggle-query"><a id="toggle">Toggle Query</a></div>
+      <div class="toggle-query"><a id="toggle">Toggle SQL Query</a></div>
       <div class="sql-query">
         <?php echo $sql; ?>
       </div>
