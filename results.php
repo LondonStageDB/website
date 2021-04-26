@@ -450,18 +450,17 @@
   </div>
   </form>
   </div>
+  <?php
+      $time = microtime();
+      $time = explode(' ', $time);
+      $time = $time[1] + $time[0];
+      $finish = $time;
+      $total_time = round(($finish - $start), 4);
+      echo "<div style=\"color: #0a0a0a; margin: auto; padding: 15px; font-weight: 600; background-color: #f7f4ed; max-width: 75rem;\">Page generated in $total_time seconds.</div>";
+  ?>
   <?php include_once('common/footer.php'); ?>
   <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
   <script src="/js/search.js"></script>
-
-<?php
-$time = microtime();
-$time = explode(' ', $time);
-$time = $time[1] + $time[0];
-$finish = $time;
-$total_time = round(($finish - $start), 4);
-echo 'Page generated in '.$total_time.' seconds.';
-?>
 
 </body>
 
