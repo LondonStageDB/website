@@ -75,10 +75,10 @@
           <div class="download-btns">
             <h2>Result Options</h2>
             Download: <br>
-            <a href="get_all_json.php?<?php echo $_SERVER['QUERY_STRING']; ?>" class="button dwnld-btn">JSON</a>
+            <a href="get_all_sphinx_json.php?<?php echo $_SERVER['QUERY_STRING']; ?>" class="button dwnld-btn">JSON</a>
             <!--<a href="get_all_xml.php?ids=<?php //echo htmlspecialchars(json_encode($allResultIds), ENT_QUOTES); ?>" class="button dwnld-btn">Download XML</a>-->
-            <a href="get_all_xml.php?<?php echo $_SERVER['QUERY_STRING']; ?>" class="button dwnld-btn">XML</a>
-            <a href="get_all_csv.php?<?php echo $_SERVER['QUERY_STRING']; ?>" class="button dwnld-btn">CSV</a>
+            <a href="get_all_sphinx_xml.php?<?php echo $_SERVER['QUERY_STRING']; ?>" class="button dwnld-btn">XML</a>
+            <a href="get_all_sphinx_csv.php?<?php echo $_SERVER['QUERY_STRING']; ?>" class="button dwnld-btn">CSV</a>
           </div>
           <h2>Search Filters</h2>
           <div class="grid-x filter-sections-wrap form-accordion">
