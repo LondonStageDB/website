@@ -41,7 +41,7 @@
       <div id="top" class="small-12 medium-8 large-9 about-content">
         <div class="grid-x about-section">
           <div class="small-12">
-            <p>This page offers a detailed account of the history, institutional framework, theoretical commitments, and limitations of the <i>London Stage Database</i> project. For a quick guide to interacting with the database, refer instead to the <a href="https://londonstagedatabase.usu.edu/guide.php">User Guide</a>.</p>
+            <p>This page offers a detailed account of the history, institutional framework, theoretical commitments, and limitations of the <i>London Stage Database</i> project. For a quick guide to interacting with the database, refer instead to the <a href="/guide.php">User Guide</a>.</p>
           </div>
         </div>
         <div class="grid-x about-section">
@@ -67,10 +67,12 @@
               and the origins of her efforts to recover the lost database, are detailed in the essay <a href="http://www.digitalhumanities.org/dhq/vol/11/3/000321/000321.html">"Recovering the
               London Stage Information Bank: Lessons from an Early Humanities Computing Project" (<i>Digital Humanities Quarterly</i> 11.3 [2017])</a>.</p>
             <p>From 2018 to 2019, with the support of <a href="#Funding">the National Endowment for the Humanities and other funders</a>, Burkert and a <a href="#Team">team of researchers,
-              developers, and advisors</a> worked to salvage the damaged data and code from the <i>Information Bank</i> and to transform it into a modern relational database. The result of our
-              effort is this website, which is designed to be accessible to users who wish to search for specific actors, theaters, play titles, playwrights, etc. In addition, those who wish
-              to download part or all of the data and conduct exploratory analyses can do so using the freely available assets (programs, data files, and documentation) in the team’s
-              <a href="https://github.com/LondonStageDB">GitHub repository</a>.</p>
+              developers, and advisors</a> worked to salvage the damaged data and code from the <i>Information Bank</i> and to transform it into a modern relational database. In 2020, Burkert
+              moved to the University of Oregon and worked with developers there to migrate the site to UO servers; the following spring, the team launched a major update with improvements
+              to the security and efficiency of the site, with a particular focus on the speed and accuracy of searches. Users can use the <a href="/">keyword</a> or <a href="/search.php">
+              advanced search</a> pages to seek information about specific actors, theaters, play titles, playwrights, etc., or visit the <a href="/legacy-search.php">legacy search</a> page
+              to reproduce queries run before May 2021. In addition, those who wish to download part or all of the data and conduct exploratory analyses can do so using the freely available
+              assets (programs, data files, and documentation) in the team’s <a href="https://github.com/LondonStageDB">GitHub repository</a>.</p>
             <p>These open access and open source values distinguish the <i>London Stage Database</i> from related resources, such as the subscription-based <i>Eighteenth-Century Drama</i>
               portal developed by publisher Adam Matthew. Furthermore, the media archaeological nature of our project informs our team's commitment to transparency about our sources, our decisions,
               and the limitations of our work. Like any resource of its kind, the <i>London Stage Database</i> offers a useful starting point for research and teaching, but the data should not
@@ -98,7 +100,7 @@
               but at the necessary cost of fidelity to the 1970s project. The team has also added new features and functionality not present in the <i>Information Bank</i>, such as tables linking
               abbreviated theater codes from the recovered data to the actual names of the theaters, as well as information about the known or assumed authors of particular plays and entertainments
               (data collected painstakingly by Research Assistant Emma Hallock). In doing so, our work has no doubt introduced new forms of error and ambiguity.</p>
-            <p>The user interface is designed to make the rich history of this data, as well as its many limitations, intuitively clear to those who interact with the site. The "Toggle Query"
+            <p>The user interface is designed to make the rich history of this data, as well as its many limitations, intuitively clear to those who interact with the site. The "Toggle Sphinx Query"
               button at the top of the search results page allows users to see exactly how their search results were translated into SQL queries and relayed via PHP to our server (for, as
               <a href="https://nyupress.org/9781479837243/algorithms-of-oppression/">Safiya Noble reminds us</a>, search algorithms are never intellectually or ideologically neutral). The image
               carousel on each event page makes it possible to view the reference book pages from which the data is taken, alongside the roughest form of the data (recovered from the archives at
@@ -144,16 +146,20 @@
             <p>The <i>London Stage Database</i>, like any project of this scope, is the work of numerous individuals across multiple disciplines who have contributed a range of skills and expertise.</p>
             <h3>Principal Investigator and Project Director:</h3>
             <ul>
-              <li><a href="http://www.mattieburkert.com">Mattie Burkert</a>, Assistant Professor, Department of English, University of Oregon
+              <li><a href="http://www.mattieburkert.com">Mattie Burkert</a>, Assistant Professor, Department of English, University of Oregon</li>
             </ul>
             <h3>Developers:</h3>
             <ul>
-              <li>Todd Hugie, Director of Library Information Technology, Merrill-Cazier Library, Utah State University
-              <li>Dustin Olson, Systems Administrator, Merrill-Cazier Library, Utah State University
+              <li>Todd Hugie, Director of Library Information Technology, Merrill-Cazier Library, Utah State University</li>
+              <li>Daniel Mundra, Senior Developer, Application Services, University of Oregon</li>
+              <li>Dustin Olson, Systems Administrator, Merrill-Cazier Library, Utah State University</li>
+              <li>Cameron Seright, Analyst Programmer 2, Information Services, University of Oregon</li>
+              <li>Caden Williams, UX/UI Designer, Information Services, University of Oregon</li>
+              <li>John Zhao, Analyst Programmer 2, Information Services, University of Oregon</li>
             </ul>
             <h3>Research Assistant:</h3>
             <ul>
-              <li>Emma Hallock, Honors Program, Department of English, Utah State University
+              <li>Emma Hallock, Honors Program, Department of English, Utah State University</li>
             </ul>
             <h3>Advisory Board:</h3>
             <ul>
@@ -170,6 +176,7 @@
               <li>James Ascher, Doctoral Candidate, Department of English, University of Virginia and Designer, <a href="https://gitlab.com/cacology/JunicodeRX">JunicodeRX font</a></li>
               <li>Annette Cottle, Business Manager, Department of Sociology, Social Work & Anthropology, Utah State University</li>
               <li>Katie Dana, Grant and Contract Officer, Office of Research, Utah State University</li>
+              <li>Shirley Galloway, Application Support Specialist, Information Services, University of Oregon</li>
               <li>Clint Gillespie, Graduate, Management Information Systems, Utah State University</li>
               <li>Garth Mikesell, Head of Information Systems, Merrill-Cazier Library, Utah State University</li>
               <li>Angela Moore-Swafford, Rights and Permissions Manager, Southern Illinois University Press</li>
