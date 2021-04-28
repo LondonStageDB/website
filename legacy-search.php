@@ -13,6 +13,11 @@
   <?php include_once('common/nav.php'); ?>
   <div id="main" class="main grid-container">
     <h1>Legacy Search</h1>
+    <div class="cell small-12 section-wrap">
+      <div class="search-page-message">
+        <p>This page allows users to replicate searches conducted between the site launch in July 2019 and the major update in May 2021. It is preserved here to promote reproducible research and to enable scholarly and technical critique of the <em>London Stage Database</em> itself. If you are starting a new inquiry, we suggest using the <a href="/search.php">updated search</a> instead.</p>
+      </div>
+    </div>
     <form id="searchForm" class="form-accordion search-form grid-x grid-margin-x" method="get" action="results.php">
       <input type="hidden" name="sortBy" value="relevance">
       <div class="cell small-12 section-wrap">
