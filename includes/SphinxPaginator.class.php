@@ -42,17 +42,15 @@ public function getFieldWeights() {
   $keywordFilter  = ($_GET['keyword'] && $_GET['keyword'] !== '');
   $perfFilter     = ($_GET['performance'] && $_GET['performance'] !== '');
   if ($keywordFilter && $perfFilter) {
-    return "field_weights=(perftitleclean=3,performanceTitle=2," .
-        "commentpclean=1,commentcclean=1,roleclean=2,performerclean=2," .
+    return "field_weights=(perftitleclean=150,performancetitle=300," .
+        "commentpclean=75,commentcclean=75,roleclean=100,performerclean=100," .
         "authnameclean=2)";
   } elseif ($keywordFilter) {
-    return "field_weights=(perftitleclean=10,performanceTitle=10," .
-        "commentpclean=7,commentcclean=7,roleclean=10,performerclean=10," .
-        "authnameclean=10)";
+    return "field_weights=(perftitleclean=100," .
+        "commentpclean=75,commentcclean=75,roleclean=100,performerclean=100," .
+        "authnameclean=100)";
   } elseif ($perfFilter) {
-    return "field_weights=(perftitleclean=2,performanceTitle=1," .
-        "commentpclean=0,commentcclean=0,roleclean=0,performerclean=0," .
-        "authnameclean=0)";
+    return "field_weights=(perftitleclean=150,performancetitle=300)";
   }
   return FALSE;
 }
