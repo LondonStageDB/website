@@ -295,8 +295,7 @@
     $queries = array(); // Contains all 'WHERE' parameters
     $matches = array(); // Contains all Sphinx MATCH() parameters
     $perfTitleMatches = array(); // Contains the list of perf titles to MATCH
-    $eventIdQueries = array(); // Contains lists of EventIds to intersect.
-    $castMatch = array();
+    $eventIdQueries = array(); // Contains lists of EventIds to intersect
     $ptypes = array(); // List of ptypes from $_GET['ptype']
     $keywrd = array();
     $sortBy = 'relevance'; // Default. Will set to parameter if valid, below.
