@@ -441,7 +441,7 @@
       $perfTitleMatches = implode(' ', $perfTitleMatches);
       // Place the new string at the beginning of the array because the MAYBE
       //   parameter added when the title filter is set should come after.
-      array_unshift($matches, "(@perftitleclean $perfTitleMatches)");
+      array_unshift($matches, "(@(perftitleclean,performancetitle) $perfTitleMatches)");
     }
     // Build eventid IN() statement with intersect of $eventIdQueries items.
     if (!empty($eventIdQueries)) {
