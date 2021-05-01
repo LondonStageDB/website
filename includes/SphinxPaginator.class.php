@@ -44,13 +44,13 @@ public function getFieldWeights() {
   if ($keywordFilter && $perfFilter) {
     return "field_weights=(perftitleclean=150,performancetitle=300," .
         "commentpclean=75,commentcclean=75,roleclean=100,performerclean=100," .
-        "authnameclean=2)";
+        "authnameclean=100), ranker=expr('sum((lcs*hit_count+bm25)*user_weight)')";
   } elseif ($keywordFilter) {
     return "field_weights=(perftitleclean=100," .
         "commentpclean=75,commentcclean=75,roleclean=100,performerclean=100," .
-        "authnameclean=100)";
+        "authnameclean=100), ranker=expr('sum((lcs*hit_count+bm25)*user_weight)')";
   } elseif ($perfFilter) {
-    return "field_weights=(perftitleclean=150,performancetitle=300)";
+    return "field_weights=(perftitleclean=150,performancetitle=100), ranker=wordcount";
   }
   return FALSE;
 }
@@ -63,7 +63,7 @@ public function getData( $limit = 25, $page = 1 ) {
     $option         = [];
     $weights        = $this->getFieldWeights();
     if ($weights) {
-      $option[]     = "ranker=expr('sum((lcs*hit_count+bm25)*user_weight)')";
+      //$option[]     = "ranker=expr('sum((lcs*hit_count+bm25)*user_weight)')";
       $option[]     = $weights;
     }
 
