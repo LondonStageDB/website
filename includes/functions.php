@@ -295,8 +295,7 @@
     $queries = array(); // Contains all 'WHERE' parameters
     $matches = array(); // Contains all Sphinx MATCH() parameters
     $perfTitleMatches = array(); // Contains the list of perf titles to MATCH
-    $eventIdQueries = array(); // Contains lists of EventIds to intersect.
-    $castMatch = array();
+    $eventIdQueries = array(); // Contains lists of EventIds to intersect
     $ptypes = array(); // List of ptypes from $_GET['ptype']
     $keywrd = array();
     $sortBy = 'relevance'; // Default. Will set to parameter if valid, below.
@@ -442,7 +441,7 @@
       $perfTitleMatches = implode(' ', $perfTitleMatches);
       // Place the new string at the beginning of the array because the MAYBE
       //   parameter added when the title filter is set should come after.
-      array_unshift($matches, "(@perftitleclean $perfTitleMatches)");
+      array_unshift($matches, "(@(perftitleclean,performancetitle) $perfTitleMatches)");
     }
     // Build eventid IN() statement with intersect of $eventIdQueries items.
     if (!empty($eventIdQueries)) {
