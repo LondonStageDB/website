@@ -26,48 +26,72 @@ public function __construct( $conn, $query ) {
     }
 }
 
-public function getDataIds() {
-    $results = [];
-    $query   = $this->_query;
-
-    $rs      = $this->_conn->query( $query );
-
-    while ( $row = $rs->fetch_assoc() ) {
-        $results[]  = $row;
-    }
-
-    return array_column($results, 'EventId');
+  /**
+   * Gets the field weights string to use in the Sphinx query.
+   *
+   * These weights replace the functionality of the perfscore and keyscore
+   * columns used in the original SQL query to rank the matching records.
+   *
+   * Returns false if the field weights are not needed. This occurs when the
+   * search does not include the performance title or keyword filters.
+   *
+   * @return false|string
+   *   A field weights string to add to the OPTION statement for sphinx.
+   */
+public function getFieldWeights() {
+  $keywordFilter  = ($_GET['keyword'] && $_GET['keyword'] !== '');
+  $perfFilter     = ($_GET['performance'] && $_GET['performance'] !== '');
+  if ($keywordFilter && $perfFilter) {
+    return "field_weights=(perftitleclean=150,performancetitle=300," .
+        "commentpclean=75,commentcclean=75,roleclean=100,performerclean=100," .
+        "authnameclean=100), ranker=expr('sum((lcs*hit_count+bm25)*user_weight)')";
+  } elseif ($keywordFilter) {
+    return "field_weights=(perftitleclean=100," .
+        "commentpclean=75,commentcclean=75,roleclean=100,performerclean=100," .
+        "authnameclean=100), ranker=expr('sum((lcs*hit_count+bm25)*user_weight)')";
+  } elseif ($perfFilter) {
+    return "field_weights=(perftitleclean=150,performancetitle=100), ranker=wordcount";
+  }
+  return FALSE;
 }
 
 public function getData( $limit = 25, $page = 1 ) {
     $this->_limit   = $limit;
     $this->_page    = $page;
-    $results = [];
+    // Add the rank function, and the field weights if the keyword or
+    //   or performance title filters are set.
+    $option         = [];
+    $weights        = $this->getFieldWeights();
+    if ($weights) {
+      //$option[]     = "ranker=expr('sum((lcs*hit_count+bm25)*user_weight)')";
+      $option[]     = $weights;
+    }
 
     // In Sphinx must specify a limit and max-matches if interested in > 1000
     //   results queries (regardless of what is specified in the LIMIT).
     if ( $this->_limit == 'all' ) {
         // Set limits to some arbitrary, high number.
-        $query      = $this->_query . 'LIMIT 99999 OPTION max_matches=99999' ;
+        $option[]   = 'max_matches=99999';
+        $query      = $this->_query . 'LIMIT 99999' ;
     } else {
         // Keep the max_matches as small as we need it to be because memory on
         // Sphinx server is allocated for this size prior to running the query.
         $offset     = ( $this->_page - 1 ) * $this->_limit;
         $query      = $this->_query . "\nLIMIT $offset, $this->_limit";
-        // Use the last row that this page would display.
-        $query     .= "\nOPTION max_matches=" . $this->_page * $this->_limit;
+        $option[]   = "max_matches=" . $this->_page * $this->_limit;
     }
-
+    // Build and append the option statement which is a comma separated list.
+    $query         .= "\nOPTION " . implode(', ', $option);
+    // echo "<p>Query: <code>$query</code></p>";
     // Perform the query.
     $rs             = $this->_conn->query( $query );
-
+    $results        = [];
     // Only process through the results if there are any to process through.
     if ( $rs ) {
       while ( $row = $rs->fetch_assoc() ) {
         $results[] = $row;
       }
     }
-
     $result         = new stdClass();
     $result->page   = $this->_page;
     $result->limit  = $this->_limit;
