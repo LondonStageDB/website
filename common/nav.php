@@ -13,7 +13,7 @@
             <li><a href="/">Home</a></li>
             <li><a href="/search.php">Advanced Search</a></li>
             <li><a href="/legacy-search.php">Legacy Search</a></li>
-            <li><a href="/data.php">Data</a></li>
+            <li><a href="/data.php">Full Data Sets</a></li>
             <li><a href="/guide.php">User Guide</a></li>
             <li><a href="/about.php">About</a></li>
             <li><a href="/contact.php">Contact</a></li>

@@ -23,15 +23,18 @@
   // Get paginated results
   $results    = $Paginator->getData( $limit, $page );
 
+  // Add the ranker OPTION statements for sphinx to be output in Toggle SQL.
+  $sql       .= "\nOPTION " . $Paginator->getFieldWeights();
+
   // Cleaned, pipe delimited strings from 'actor' and 'role' arrays
-  $getActors = array_map(function($act) {
+  $getActors  = array_map(function($act) {
     return cleanStr($act);
   }, $_GET['actor']);
-  $getRoles = array_map(function($rle) {
+  $getRoles   = array_map(function($rle) {
     return cleanStr($rle);
   }, $_GET['role']);
   $cleanedActors = (isset($_GET['actor'])) ? implode('|', $getActors) : '';
-  $cleanedRoles = (isset($_GET['role'])) ? implode('|', $getRoles) : '';
+  $cleanedRoles  = (isset($_GET['role'])) ? implode('|', $getRoles) : '';
 
   $search_filters_empty = TRUE;
   foreach ($_GET as $key => $value) {
