@@ -543,6 +543,76 @@
 
 
   /**
+   * Returns match counts for keyword searches using Sphinx.
+   *
+   * Columns are PerfCleanTitle, AuthNameClean, CommentPClean, CommentCClean,
+   * and RoleClean/PerformerClean.
+   *
+   * @param string $keyword
+   *   Keyword from $_GET to run search on.
+   *
+   * @return array
+   *   Array of match counts by column.
+   */
+  function getSphinxResultsByColumn($keyword) {
+    global $sphinx_conn;
+    $keywrd   = mysqli_real_escape_string($sphinx_conn, $keyword);
+    $psql     = "SELECT performanceid FROM london_stages WHERE MATCH('@perftitleclean \"$keywrd\"') GROUP BY performanceid";
+    $asql     = "SELECT performanceid FROM london_stages WHERE MATCH('@authnameclean \"$keywrd\"') GROUP BY performanceid";
+    $pcsql    = "SELECT performanceid FROM london_stages WHERE MATCH('@commentpclean \"$keywrd\"') GROUP BY performanceid";
+    $ecsql    = "SELECT eventid FROM london_stages WHERE MATCH('@commentcclean \"$keywrd\"') GROUP BY eventid";
+    $csql     = "SELECT eventid FROM london_stages WHERE MATCH('@(roleclean,performerclean) \"$keywrd\"') GROUP BY castid";
+    $metasql  = "SHOW meta";
+
+    $presult  = $sphinx_conn->query($psql);
+    $presultmeta  = $sphinx_conn->query($metasql);
+    $aresult  = $sphinx_conn->query($asql);
+    $aresultmeta  = $sphinx_conn->query($metasql);
+    $pcresult = $sphinx_conn->query($pcsql);
+    $pcresultmeta = $sphinx_conn->query($metasql);
+    $ecresult = $sphinx_conn->query($ecsql);
+    $ecresultmeta = $sphinx_conn->query($metasql);
+    $cresult  = $sphinx_conn->query($csql);
+    $cresultmeta  = $sphinx_conn->query($metasql);
+    $all_counts   = [];
+
+    if (!is_bool($presult) && !is_bool($presultmeta))
+      while ($row = $presultmeta->fetch_assoc())
+        if ($row['Variable_name'] === 'total_found')
+          $all_counts[] = ['col' => 'pcount', 'count' => $row['Value']];
+
+    if (!is_bool($aresult) && !is_bool($aresultmeta))
+      while ($row = $aresultmeta->fetch_assoc())
+        if ($row['Variable_name'] === 'total_found')
+          $all_counts[] = ['col' => 'acount', 'count' => $row['Value']];
+
+    if (!is_bool($pcresult) && !is_bool($pcresultmeta))
+      while ($row = $pcresultmeta->fetch_assoc())
+        if ($row['Variable_name'] === 'total_found')
+          $all_counts[] = ['col' => 'pccount', 'count' => $row['Value']];
+
+    if (!is_bool($ecresult) && !is_bool($ecresultmeta))
+      while ($row = $ecresultmeta->fetch_assoc())
+        if ($row['Variable_name'] === 'total_found')
+          $all_counts[] = ['col' => 'eccount', 'count' => $row['Value']];
+
+    if (!is_bool($cresult) && !is_bool($cresultmeta))
+      while ($row = $cresultmeta->fetch_assoc())
+        if ($row['Variable_name'] === 'total_found')
+          $all_counts[] = ['col' => 'ccount', 'count' => $row['Value']];
+
+    function cmp($a, $b)
+    {
+      return $a['count'] < $b['count'];
+    }
+
+    usort($all_counts, 'cmp');
+
+    return $all_counts;
+  }
+
+
+  /**
   * Checks if only 'keyword' is filled out. Only show Results by Column if it's the only field.
   *
   * @return boolean
