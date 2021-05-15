@@ -296,7 +296,7 @@
               <span class="num-results"><?php echo $results->total . ' results'; ?></span><?php echo yourSearch(); ?>
             </div>
             <?php if(onlyKeyword()) {
-              $resByCol = getResultsByColumn(cleanStr($_GET['keyword']));
+              $resByCol = getSphinxResultsByColumn(cleanStr($_GET['keyword']));
               $msg = "We found ";
               $resCnt = 1;
 
