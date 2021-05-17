@@ -543,7 +543,7 @@
 
 
   /**
-   * Returns match counts for keyword searches using Sphinx.
+   * Finds match counts for keyword searches on specific columns using Sphinx.
    *
    * Columns are PerfCleanTitle, AuthNameClean, CommentPClean, CommentCClean,
    * and RoleClean/PerformerClean.
@@ -564,40 +564,40 @@
     $csql     = "SELECT eventid FROM london_stages WHERE MATCH('@(roleclean,performerclean) \"$keywrd\"') GROUP BY castid";
     $metasql  = "SHOW meta";
 
-    $presult  = $sphinx_conn->query($psql);
-    $presultmeta  = $sphinx_conn->query($metasql);
-    $aresult  = $sphinx_conn->query($asql);
-    $aresultmeta  = $sphinx_conn->query($metasql);
-    $pcresult = $sphinx_conn->query($pcsql);
-    $pcresultmeta = $sphinx_conn->query($metasql);
-    $ecresult = $sphinx_conn->query($ecsql);
-    $ecresultmeta = $sphinx_conn->query($metasql);
-    $cresult  = $sphinx_conn->query($csql);
-    $cresultmeta  = $sphinx_conn->query($metasql);
+    $result['p']  = $sphinx_conn->query($psql);
+    $result['p_meta']  = $sphinx_conn->query($metasql);
+    $result['a']  = $sphinx_conn->query($asql);
+    $result['a_meta']  = $sphinx_conn->query($metasql);
+    $result['pc'] = $sphinx_conn->query($pcsql);
+    $result['pc_meta'] = $sphinx_conn->query($metasql);
+    $result['ec'] = $sphinx_conn->query($ecsql);
+    $result['ec_meta'] = $sphinx_conn->query($metasql);
+    $result['c']  = $sphinx_conn->query($csql);
+    $result['c_meta']  = $sphinx_conn->query($metasql);
     $all_counts   = [];
 
-    if (!is_bool($presult) && !is_bool($presultmeta))
-      while ($row = $presultmeta->fetch_assoc())
+    if (!is_bool($result['p']) && !is_bool($result['p_meta']))
+      while ($row = $result['p_meta']->fetch_assoc())
         if ($row['Variable_name'] === 'total_found')
           $all_counts[] = ['col' => 'pcount', 'count' => $row['Value']];
 
-    if (!is_bool($aresult) && !is_bool($aresultmeta))
-      while ($row = $aresultmeta->fetch_assoc())
+    if (!is_bool($result['a']) && !is_bool($result['a_meta']))
+      while ($row = $result['a_meta']->fetch_assoc())
         if ($row['Variable_name'] === 'total_found')
           $all_counts[] = ['col' => 'acount', 'count' => $row['Value']];
 
-    if (!is_bool($pcresult) && !is_bool($pcresultmeta))
-      while ($row = $pcresultmeta->fetch_assoc())
+    if (!is_bool($result['pc']) && !is_bool($result['pc_meta']))
+      while ($row = $result['pc_meta']->fetch_assoc())
         if ($row['Variable_name'] === 'total_found')
           $all_counts[] = ['col' => 'pccount', 'count' => $row['Value']];
 
-    if (!is_bool($ecresult) && !is_bool($ecresultmeta))
-      while ($row = $ecresultmeta->fetch_assoc())
+    if (!is_bool($result['ec']) && !is_bool($result['ec_meta']))
+      while ($row = $result['ec_meta']->fetch_assoc())
         if ($row['Variable_name'] === 'total_found')
           $all_counts[] = ['col' => 'eccount', 'count' => $row['Value']];
 
-    if (!is_bool($cresult) && !is_bool($cresultmeta))
-      while ($row = $cresultmeta->fetch_assoc())
+    if (!is_bool($result['c_meta']) && !is_bool($result['c_meta']))
+      while ($row = $result['c_meta']->fetch_assoc())
         if ($row['Variable_name'] === 'total_found')
           $all_counts[] = ['col' => 'ccount', 'count' => $row['Value']];
 
