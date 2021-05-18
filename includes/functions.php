@@ -422,14 +422,18 @@
             }
             else {
               // Include the returned list of perf titles in the MATCH statement.
-              // array_push($matches, $authorMatch);
               array_push($perfTitleMatches, $authorMatch);
             }
             break;
           case 'keyword':
-            // $keywordClean = mysqli_real_escape_string($sphinx_conn, cleanQuotes($keyword, true));
             $keyword = mysqli_real_escape_string($sphinx_conn, $keyword);
-            array_push($matches, "@* \"$keyword\"/1");
+            // The role and performer should not use the quorum number ('/1')
+            // on the entered keyword to better match the way that keyword
+            // search worked in the legacy search. Use it for the other fields.
+            array_push(
+              $matches,
+              "(@(authnameclean,perftitleclean,commentcclean,commentpclean) \"$keyword\"/1) | (@(roleclean,performerclean) \"$keyword\")"
+            );
             break;
         }
       }
@@ -539,6 +543,76 @@
     usort($counts, 'cmp');
 
     return $counts;
+  }
+
+
+  /**
+   * Finds match counts for keyword searches on specific columns using Sphinx.
+   *
+   * Columns are PerfCleanTitle, AuthNameClean, CommentPClean, CommentCClean,
+   * and RoleClean/PerformerClean.
+   *
+   * @param string $keyword
+   *   Keyword from $_GET to run search on.
+   *
+   * @return array
+   *   Array of match counts by column.
+   */
+  function getSphinxResultsByColumn($keyword) {
+    global $sphinx_conn;
+    $keywrd   = mysqli_real_escape_string($sphinx_conn, $keyword);
+    $psql     = "SELECT performanceid FROM london_stages WHERE MATCH('@perftitleclean \"$keywrd\"/1') GROUP BY performanceid";
+    $asql     = "SELECT eventid FROM london_stages WHERE MATCH('@authnameclean \"$keywrd\"/1') GROUP BY eventid";
+    $pcsql    = "SELECT performanceid FROM london_stages WHERE MATCH('@commentpclean \"$keywrd\"/1') GROUP BY performanceid";
+    $ecsql    = "SELECT eventid FROM london_stages WHERE MATCH('@commentcclean \"$keywrd\"/1') GROUP BY eventid";
+    $csql     = "SELECT castid FROM london_stages WHERE MATCH('@(roleclean,performerclean) \"$keywrd\"') GROUP BY castid";
+    $metasql  = "SHOW meta";
+
+    $result['p']  = $sphinx_conn->query($psql);
+    $result['p_meta']  = $sphinx_conn->query($metasql);
+    $result['a']  = $sphinx_conn->query($asql);
+    $result['a_meta']  = $sphinx_conn->query($metasql);
+    $result['pc'] = $sphinx_conn->query($pcsql);
+    $result['pc_meta'] = $sphinx_conn->query($metasql);
+    $result['ec'] = $sphinx_conn->query($ecsql);
+    $result['ec_meta'] = $sphinx_conn->query($metasql);
+    $result['c']  = $sphinx_conn->query($csql);
+    $result['c_meta']  = $sphinx_conn->query($metasql);
+    $all_counts   = [];
+
+    if (!is_bool($result['p']) && !is_bool($result['p_meta']))
+      while ($row = $result['p_meta']->fetch_assoc())
+        if ($row['Variable_name'] === 'total_found')
+          $all_counts[] = ['col' => 'pcount', 'count' => $row['Value']];
+
+    if (!is_bool($result['a']) && !is_bool($result['a_meta']))
+      while ($row = $result['a_meta']->fetch_assoc())
+        if ($row['Variable_name'] === 'total_found')
+          $all_counts[] = ['col' => 'acount', 'count' => $row['Value']];
+
+    if (!is_bool($result['pc']) && !is_bool($result['pc_meta']))
+      while ($row = $result['pc_meta']->fetch_assoc())
+        if ($row['Variable_name'] === 'total_found')
+          $all_counts[] = ['col' => 'pccount', 'count' => $row['Value']];
+
+    if (!is_bool($result['ec']) && !is_bool($result['ec_meta']))
+      while ($row = $result['ec_meta']->fetch_assoc())
+        if ($row['Variable_name'] === 'total_found')
+          $all_counts[] = ['col' => 'eccount', 'count' => $row['Value']];
+
+    if (!is_bool($result['c_meta']) && !is_bool($result['c_meta']))
+      while ($row = $result['c_meta']->fetch_assoc())
+        if ($row['Variable_name'] === 'total_found')
+          $all_counts[] = ['col' => 'ccount', 'count' => $row['Value']];
+
+    function cmp($a, $b)
+    {
+      return $a['count'] < $b['count'];
+    }
+
+    usort($all_counts, 'cmp');
+
+    return $all_counts;
   }
 
 
