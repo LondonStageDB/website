@@ -422,14 +422,18 @@
             }
             else {
               // Include the returned list of perf titles in the MATCH statement.
-              // array_push($matches, $authorMatch);
               array_push($perfTitleMatches, $authorMatch);
             }
             break;
           case 'keyword':
-            // $keywordClean = mysqli_real_escape_string($sphinx_conn, cleanQuotes($keyword, true));
             $keyword = mysqli_real_escape_string($sphinx_conn, $keyword);
-            array_push($matches, "@* \"$keyword\"/1");
+            // The role and performer should not use the quorum number ('/1')
+            // on the entered keyword to better match the way that keyword
+            // search worked in the legacy search. Use it for the other fields.
+            array_push(
+              $matches,
+              "(@(authnameclean,perftitleclean,commentcclean,commentpclean) \"$keyword\"/1) | (@(roleclean,performerclean) \"$keyword\")"
+            );
             break;
         }
       }
@@ -557,11 +561,11 @@
   function getSphinxResultsByColumn($keyword) {
     global $sphinx_conn;
     $keywrd   = mysqli_real_escape_string($sphinx_conn, $keyword);
-    $psql     = "SELECT performanceid FROM london_stages WHERE MATCH('@perftitleclean \"$keywrd\"') GROUP BY performanceid";
-    $asql     = "SELECT performanceid FROM london_stages WHERE MATCH('@authnameclean \"$keywrd\"') GROUP BY performanceid";
-    $pcsql    = "SELECT performanceid FROM london_stages WHERE MATCH('@commentpclean \"$keywrd\"') GROUP BY performanceid";
-    $ecsql    = "SELECT eventid FROM london_stages WHERE MATCH('@commentcclean \"$keywrd\"') GROUP BY eventid";
-    $csql     = "SELECT eventid FROM london_stages WHERE MATCH('@(roleclean,performerclean) \"$keywrd\"') GROUP BY castid";
+    $psql     = "SELECT performanceid FROM london_stages WHERE MATCH('@perftitleclean \"$keywrd\"/1') GROUP BY performanceid";
+    $asql     = "SELECT eventid FROM london_stages WHERE MATCH('@authnameclean \"$keywrd\"/1') GROUP BY eventid";
+    $pcsql    = "SELECT performanceid FROM london_stages WHERE MATCH('@commentpclean \"$keywrd\"/1') GROUP BY performanceid";
+    $ecsql    = "SELECT eventid FROM london_stages WHERE MATCH('@commentcclean \"$keywrd\"/1') GROUP BY eventid";
+    $csql     = "SELECT castid FROM london_stages WHERE MATCH('@(roleclean,performerclean) \"$keywrd\"') GROUP BY castid";
     $metasql  = "SHOW meta";
 
     $result['p']  = $sphinx_conn->query($psql);
