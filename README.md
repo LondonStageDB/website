@@ -1,13 +1,45 @@
 # London Stage Database Website
 
 
-This repository includes all the files needed to replicate the London Stage Database Website on your server.
+This repository includes all the files needed to replicate the London Stage Database Website, both MySQL and Sphinx search, on your server.
 
+You can choose either MySQL or Sphinx as the site search engine.
 
 The live website can be viewed here: https://londonstagedatabase.uoregon.edu
 
+## Sphinx Search Setup
 
-## Setup
+### Requirements
+You will need a web server with MySQL, Sphinx and PHP already installed. 
+
+### Installation
+>*Instructions are for a Linux server*
+
+#### Sphinx Installation
+There are two ways to install Sphinx engine.
+- Directly install the Sphinx engine on a server. Please follow the official instructions [here](http://sphinxsearch.com/docs/current.html#installing-debian).
+- You can also use our Dockerfile to run the Sphinx container easily. The Dockerfile in this compose file is hosted at: [casit/sphinxsearch](https://hub.docker.com/r/casit/sphinxsearch).
+
+#### Build-up Database
+This step is identical to the MySQL search installation part.
+
+### Get started
+
+You will need to add the Sphinx connection into the db.php file in the /includes folder. Please paste the following contents (replacing the user/pass with your own Sphinx authentication):
+
+``` php
+<?php
+  define("SPHINX_HOST", "localhost");
+  define("SPHINX_NAME", "");
+  define("SPHINX_USER", "");
+  define("SPHINX_PASS", "");
+  define("SPHINX_PORT", "9306");
+
+  $sphinx_conn = new mysqli(SPHINX_HOST, SPHINX_USER, SPHINX_PASS, SPHINX_NAME, SPHINX_PORT);
+?>
+```
+
+## MySQL Search Setup
 
 
 ### Requirements
