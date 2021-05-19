@@ -157,7 +157,6 @@
               }
             break;
             case 'volume':
-              
               $volume = mysqli_real_escape_string($conn, $volume);
               if ($volume !== 'all' && in_array($volume, [1, 2, 3, 4, 5])) {
                 array_push($queries, "Theatre.Volume = '$volume'");
@@ -284,6 +283,204 @@
     return $sql;
   }
 
+/**
+ * Build search query off of $_GET data
+ *
+ * @return string the SQL query used for the search, minus pagination parameters
+ */
+  function buildSphinxQuery() {
+    global $sphinx_conn;
+
+    $getters = array(); // Contains all search parameters
+    $queries = array(); // Contains all 'WHERE' parameters
+    $matches = array(); // Contains all Sphinx MATCH() parameters
+    $perfTitleMatches = array(); // Contains the list of perf titles to MATCH
+    $eventIdQueries = array(); // Contains lists of EventIds to intersect
+    $ptypes = array(); // List of ptypes from $_GET['ptype']
+    $keywrd = array();
+    $sortBy = 'relevance'; // Default. Will set to parameter if valid, below.
+    $volume = (isset($_GET['vol'])) ? $_GET['vol'] : '1, 2, 3, 4, 5';
+    $roleSwtch = (isset($_GET['roleSwitch']) && $_GET['roleSwitch'] === 'or') ? 'OR' : 'AND';
+    $actSwtch = (isset($_GET['actSwitch']) && $_GET['actSwitch'] === 'or') ? 'OR' : 'AND';
+
+    if (!empty($_GET['sortBy']) &&
+        in_array($_GET['sortBy'], ['datea', 'dated'])) {
+      $_GET['sortBy'];
+    }
+
+    foreach ($_GET as $key => $value) {
+      $temp = is_array($value) ? $value : trim($value);
+      if (!empty($temp)) {
+        // Create ptype array to later implode to string
+        if ($key === 'ptype') {
+          foreach ($_GET['ptype'] as $type) {
+            if (in_array($type, ['p', 'a', 'm', 'd', 'e', 's', 'b', 'i', 'o', 'u', 't'])) {
+              array_push($ptypes, "'" . $type . "'");
+            }
+          }
+        }
+        // If it's a keyword, add to keyword array, otherwise add to $getters
+        if ($key === 'keyword') {
+          $keywrd[$key] = cleanStr($value);
+        } elseif (!in_array($key, $getters)) {
+          if ($key === 'performance' || $key === 'actor' || $key === 'role' || $key === 'keyword') {
+            $getters[$key] = cleanStr($value);
+          } else {
+            $getters[$key] = $value;
+          }
+        }
+      }
+    }
+
+    // Then add the keyword search last to minimize query time a bit
+    if (!empty($keywrd)) {
+      $getters['keyword'] = $keywrd['keyword'];
+    }
+
+    /*
+     * The SELECT fields (columns) of the Sphinx query can be simplified
+     * because only the columns that were used in the original query populate
+     * the index.
+     */
+    $sql = "SELECT *";
+    /*
+     * The logic for the original MySQL query related to the calculated value
+     * "PerfScore" or "keyScore" are no longer needed because the way that
+     * Sphinx does matching is more effective and the calculated match is not
+     * needed any longer. Modifications to the field ranking can be done later.
+     *
+     * The FROM statement for MySQL translates to the index identifier in
+     * Sphinx queries. No joins are needed in this function to search because
+     * the index was built using the original MySQL query's Join statements.
+     */
+    $sql .= "\nFROM london_stages";
+
+    // Get our WHERE parameter for any selected date and add to $queries
+    $dateQuery = getDateQuery(true);
+    if ($dateQuery !== '') {
+      array_push($queries, $dateQuery);
+    }
+
+    // Add $queries entry for each value in $getters
+    if (!empty($getters)) {
+      foreach ($getters as $key => $value) {
+        ${$key} = $value;
+        switch ($key) {
+          case 'theatre':
+            if ($theatre === 'all') break;
+            $theatres = getSphinxTheatreNamesQuery($theatre);
+            if (is_array($theatres) && count($theatres) > 0) {
+              $theatres = implode(', ', $theatres);
+              array_push($queries, "theatrename IN ($theatres)");
+            }
+            break;
+          case 'volume':
+            $volume = mysqli_real_escape_string($sphinx_conn, $volume);
+            if ($volume !== 'all' && in_array($volume, [1, 2, 3, 4, 5])) {
+              array_push($queries, 'volume=' . $volume);
+            }
+            break;
+          case 'actor':
+            $actor = array_filter($actor, 'strlen');
+            if (count($actor) < 1) break;
+            $actQry = (count($actor) > 1 && $actSwtch === "AND") ?
+              getSphinxCastQuery('actor', $actor) :
+              getSphinxCastQuery('actor', $actor, 'OR');
+            array_push($eventIdQueries, $actQry);
+            break;
+          case 'role':
+            $role = array_filter($role, 'strlen');
+            if (count($role) < 1) break;
+            $roleQry = (count($role) > 1 && $roleSwtch === "AND") ?
+              getSphinxCastQuery('role', $role) :
+              getSphinxCastQuery('role', $role, 'OR');
+            array_push($eventIdQueries, $roleQry);
+            break;
+          case 'performance':
+            $performance = mysqli_real_escape_string($sphinx_conn, $performance);
+            if (!empty($performance) && $performance !== '') {
+              array_push($perfTitleMatches, '"' . $performance . '"/1');
+            }
+            break;
+          case 'ptype':
+            if (!empty($ptypes)) {
+              $ptype_qry = implode(",", $ptypes);
+              array_push($queries, "ptype IN ($ptype_qry)");
+            }
+            break;
+          case 'author':
+            // The author filter does a lookup of all of the author's works,
+            //   then adds the full list of titles and related works titles to
+            //   the MATCH statement with an OR operator between each title.
+            $author = trim(mysqli_real_escape_string($sphinx_conn, $author));
+            $authorMatch = getSphinxAuthorQuery($author);
+            // If the query generation encountered an error it will be false.
+            if (is_bool($authorMatch)) {
+              // When the author query returns nothing useful, there should be
+              //   no matches in the main query, to match the legacy behavior.
+              array_push($queries, '0'); // Returns an empty set.
+            }
+            else {
+              // Include the returned list of perf titles in the MATCH statement.
+              array_push($perfTitleMatches, $authorMatch);
+            }
+            break;
+          case 'keyword':
+            $keyword = mysqli_real_escape_string($sphinx_conn, $keyword);
+            // The role and performer should not use the quorum number ('/1')
+            // on the entered keyword to better match the way that keyword
+            // search worked in the legacy search. Use it for the other fields.
+            array_push(
+              $matches,
+              "(@(authnameclean,perftitleclean,commentcclean,commentpclean) \"$keyword\"/1) | (@(roleclean,performerclean) \"$keyword\")"
+            );
+            break;
+        }
+      }
+    }
+
+    // Build the perfTitleClean field MATCH parameter and add to that array.
+    if (!empty($perfTitleMatches)) {
+      // The operator between parameters should be "AND", which is a space.
+      $perfTitleMatches = implode(' ', $perfTitleMatches);
+      // Place the new string at the beginning of the array because the MAYBE
+      //   parameter added when the title filter is set should come after.
+      array_unshift($matches, "(@(perftitleclean,performancetitle) $perfTitleMatches)");
+    }
+    // Build eventid IN() statement with intersect of $eventIdQueries items.
+    if (!empty($eventIdQueries)) {
+      if (is_array($eventIdQueries) && count($eventIdQueries) === 1 && is_array($eventIdQueries[0]))
+        $eventIdQueries = $eventIdQueries[0];
+      elseif (is_array($eventIdQueries[0]))
+        $eventIdQueries = call_user_func_array('array_intersect', $eventIdQueries);
+
+      $eventIdQueries = 'eventid IN (' . implode(', ', $eventIdQueries) . ')';
+      array_push($queries, $eventIdQueries);
+    }
+    // Build the MATCH statement and add it to the list of queries.
+    if (!empty($matches)) {
+      $matches = 'MATCH(\'' . implode(' ', $matches) . '\')';
+      array_push($queries, $matches);
+    }
+    // Build the WHERE clause.
+    if (!empty($queries)) {
+      $sql .= "\nWHERE " . implode($queries, ' AND ');
+    }
+    // The results need to be grouped by Event to avoid redundancy
+    $sql .= "\nGROUP BY eventid";
+    // If sorting by event date, add an ORDER BY clause.
+    // Determine if ascending or descending and then .
+    if ($sortBy !== 'relevance' ||
+        (empty($perfTitleMatches) && empty($getters['keyword']))) {
+      $sortOrder = ($sortBy === 'dated') ? 'DESC' : 'ASC';
+      $sql .= "\nORDER BY eventdate $sortOrder";
+    } elseif ($sortBy === 'relevance') {
+      $sql .= "\nORDER BY weight() desc, eventdate asc";
+    }
+
+    return $sql;
+  }
+
 
   /**
   * Returns match counts for keyword searches. Columns are PerfCleanTitle,
@@ -350,7 +547,77 @@
 
 
   /**
-  * Checks if only 'keyword' is filled out. Only show Results by Column if it's the only field. 
+   * Finds match counts for keyword searches on specific columns using Sphinx.
+   *
+   * Columns are PerfCleanTitle, AuthNameClean, CommentPClean, CommentCClean,
+   * and RoleClean/PerformerClean.
+   *
+   * @param string $keyword
+   *   Keyword from $_GET to run search on.
+   *
+   * @return array
+   *   Array of match counts by column.
+   */
+  function getSphinxResultsByColumn($keyword) {
+    global $sphinx_conn;
+    $keywrd   = mysqli_real_escape_string($sphinx_conn, $keyword);
+    $psql     = "SELECT performanceid FROM london_stages WHERE MATCH('@perftitleclean \"$keywrd\"/1') GROUP BY performanceid";
+    $asql     = "SELECT eventid FROM london_stages WHERE MATCH('@authnameclean \"$keywrd\"/1') GROUP BY eventid";
+    $pcsql    = "SELECT performanceid FROM london_stages WHERE MATCH('@commentpclean \"$keywrd\"/1') GROUP BY performanceid";
+    $ecsql    = "SELECT eventid FROM london_stages WHERE MATCH('@commentcclean \"$keywrd\"/1') GROUP BY eventid";
+    $csql     = "SELECT castid FROM london_stages WHERE MATCH('@(roleclean,performerclean) \"$keywrd\"') GROUP BY castid";
+    $metasql  = "SHOW meta";
+
+    $result['p']  = $sphinx_conn->query($psql);
+    $result['p_meta']  = $sphinx_conn->query($metasql);
+    $result['a']  = $sphinx_conn->query($asql);
+    $result['a_meta']  = $sphinx_conn->query($metasql);
+    $result['pc'] = $sphinx_conn->query($pcsql);
+    $result['pc_meta'] = $sphinx_conn->query($metasql);
+    $result['ec'] = $sphinx_conn->query($ecsql);
+    $result['ec_meta'] = $sphinx_conn->query($metasql);
+    $result['c']  = $sphinx_conn->query($csql);
+    $result['c_meta']  = $sphinx_conn->query($metasql);
+    $all_counts   = [];
+
+    if (!is_bool($result['p']) && !is_bool($result['p_meta']))
+      while ($row = $result['p_meta']->fetch_assoc())
+        if ($row['Variable_name'] === 'total_found')
+          $all_counts[] = ['col' => 'pcount', 'count' => $row['Value']];
+
+    if (!is_bool($result['a']) && !is_bool($result['a_meta']))
+      while ($row = $result['a_meta']->fetch_assoc())
+        if ($row['Variable_name'] === 'total_found')
+          $all_counts[] = ['col' => 'acount', 'count' => $row['Value']];
+
+    if (!is_bool($result['pc']) && !is_bool($result['pc_meta']))
+      while ($row = $result['pc_meta']->fetch_assoc())
+        if ($row['Variable_name'] === 'total_found')
+          $all_counts[] = ['col' => 'pccount', 'count' => $row['Value']];
+
+    if (!is_bool($result['ec']) && !is_bool($result['ec_meta']))
+      while ($row = $result['ec_meta']->fetch_assoc())
+        if ($row['Variable_name'] === 'total_found')
+          $all_counts[] = ['col' => 'eccount', 'count' => $row['Value']];
+
+    if (!is_bool($result['c_meta']) && !is_bool($result['c_meta']))
+      while ($row = $result['c_meta']->fetch_assoc())
+        if ($row['Variable_name'] === 'total_found')
+          $all_counts[] = ['col' => 'ccount', 'count' => $row['Value']];
+
+    function cmp($a, $b)
+    {
+      return $a['count'] < $b['count'];
+    }
+
+    usort($all_counts, 'cmp');
+
+    return $all_counts;
+  }
+
+
+  /**
+  * Checks if only 'keyword' is filled out. Only show Results by Column if it's the only field.
   *
   * @return boolean
   */
@@ -375,7 +642,7 @@
   /**
   * Cleans string of all special chars except semicolons, spaces, and double quotes.
   *
-  * Replaces '-' and '_' with a space. Replaces ” and “ with ". Then removes all 
+  * Replaces '-' and '_' with a space. Replaces ” and “ with ". Then removes all
   *  chars not alphanumeric, space, double quotes, or semicolon.
   *
   * @param string $str Unsanitized string from $_GET
@@ -420,9 +687,8 @@
   function getTheatres() {
     global $conn;
 
-    $sql = 'SELECT * from Theatre GROUP BY TheatreName ORDER BY TheatreName';
+    $sql = 'SELECT * FROM Theatre GROUP BY TheatreName ORDER BY TheatreName';
     $result = $conn->query($sql);
-    $output = [];
 
     echo '<optgroup label="Common Theatres">';
     echo '<option value="111Covent Garden"';
@@ -432,7 +698,7 @@
       getSticky(2, 'theatre', "111Drury Lane");
       echo '>Drury Lane (All)</option>';
     echo '<option value="111Haymarket"';
-      getSticky(2, 'theatre', "111Harmarket");
+      getSticky(2, 'theatre', "111Haymarket");
       echo '>Haymarket (All)</option>';
     echo '<option value="111Lincoln\'s Inn"';
       getSticky(2, 'theatre', "111Lincoln\'s Inn");
@@ -442,10 +708,9 @@
 
     while ($row = $result->fetch_assoc()) {
       echo '<option value="' . $row['TheatreName'] . '"';
-      getSticky(2, 'theatre', $row['TheatreName']);
-      echo '>' . $row['TheatreName'] . '</option>';
+        getSticky(2, 'theatre', $row['TheatreName']);
+        echo '>' . $row['TheatreName'] . '</option>';
     }
-
   }
 
 
@@ -512,6 +777,42 @@
 
 
   /**
+   * Gets a list of Theatre Names to add to the Sphinx WHERE clause.
+   *
+   * @param int $theatreName
+   *  Theatre ID
+   *
+   * @return array
+   *   Array of Theatre Names with single quotes added for the query.
+   */
+  function getSphinxTheatreNamesQuery($theatreName = '') {
+    global $conn;
+    if ($theatreName === '') return [];
+    $theatres = []; // Storage for return value.
+    // Clean the filter input.
+    $theatre  = preg_replace('/[0-9;"`\~\!\@\#\$\%\^\&\*\<\>\[\]]/', '', $theatreName); // Remove any numbers and special chars
+    $theatre  = mysqli_real_escape_string($conn, $theatre);
+    // If '111' is a prefix then look up names using 'LIKE' condition.
+    if (substr($theatreName, 0, 3) === '111') {
+      $sql = "SELECT * FROM Theatre
+              WHERE TheatreName LIKE '%$theatre%'
+              GROUP BY TheatreName";
+      $result = $conn->query($sql);
+      while ($row = mysqli_fetch_assoc($result)) {
+        $theatre = preg_replace('/[0-9;"`\~\!\@\#\$\%\^\&\*\<\>\[\]]/', '', $row['TheatreName']); // Remove any numbers and special chars
+        $theatre = mysqli_real_escape_string($conn, $theatre);
+        $theatres[] = "'$theatre'";
+      }
+    }
+    // An individual theatre was selected, so just add it and return.
+    else {
+      $theatres[] = "'$theatre'";
+    }
+    return $theatres;
+  }
+
+
+  /**
   * Retrieves performances related to a given event
   *
   * Returns array of performances for a given event, including cast lists and author info
@@ -540,7 +841,6 @@
 
     return array();
   }
-
 
   /**
   * Returns array of works related to a given performance title
@@ -626,6 +926,81 @@
     }
   }
 
+  /**
+  * Returns array of works related to a given performance title
+  *
+  * Takes a given performance title [PerfTitleClean], splits it by semicolon,
+  *  and performs wildcard searches for similar titles in Performances, Works,
+  *  and WorksVariant tables
+  *
+  * @param string $perfTitle Cleaned performance title from [PerfTitleClean] column
+  *
+  * @return array Related Works
+  */
+  function getSphinxRelatedWorks($perfTitle = '') {
+    // Return without looking up Related Works
+    global $conn;
+    global $sphinx_conn;
+
+    $prefix = "or ";
+    $stopwords = ['[c|C]oncert[s]?', '[e|E]ntertainment[s]?'];
+    $perfTitle =  preg_replace('/\b(' . implode('|', $stopwords) . ')\b/', '', $perfTitle);
+
+    if ($perfTitle !== '') {
+      $titles = array_map('trim', preg_split("[;|,]", $perfTitle));
+      $sql = "SELECT *\nFROM related_work";
+      $values = [];
+
+      foreach($titles as $perf) {
+        $perf = cleanStr($perf);
+        if (strtolower(substr($perf, 0, strlen($prefix))) == $prefix) {
+          $perf = substr($perf, strlen($prefix));
+        }
+        if (strtolower($perf) === 'or') {
+          continue;
+        }
+        $values[] = '"' . $perf . '"';
+      }
+      $values = implode($values, '|');
+      $sql .= "\nWHERE MATCH('" . $values . "')";
+
+      // Only want to show unique works, not all iterations of a given work title
+      $sql .= "\nGROUP BY WorkId";
+
+      $result = $sphinx_conn->query($sql);
+      $works = array();
+      $sources = array();
+      $workIds = array();
+      while ($row = mysqli_fetch_assoc($result)) {
+        $sources[] = $row['sourceresearched'];
+        $sources[] = $row['source1'];
+        $sources[] = $row['source2'];
+        $row['author'] = getAuthorInfo($row['workid']);
+        $works[] = $row;
+        $workIds[] = $row['workid'];
+      }
+
+      // Get Work Sources and perform same search on them
+      $sources = array_filter($sources, 'strlen');
+      if (!empty($sources)) {
+        $ssql = "SELECT WorkId, Title, Type1, Type2, Source1, Source2, SourceResearched, TitleClean, VariantName, TheTitle, PerformanceTitle \nFROM related_work";
+        $ssql .= "\nWHERE MATCH('@TitleClean \"" . implode($sources, '"|"') . "\" @PerfTitleClean \"" . implode($sources, '"|"') . "\" @NameClean \"" . implode($sources, '"|"') . "\"')";
+        $ssql .= ' GROUP BY WorkId';
+
+        $sresult = $sphinx_conn->query($ssql);
+
+        while ($srow = mysqli_fetch_assoc($sresult)) {
+          if (!in_array($srow['workid'], $workIds)) {
+            $srow['author'] = getAuthorInfo($srow['workid']);
+            $works[] = $srow;
+          }
+        }
+      }
+
+      return $works;
+    }
+  }
+
 
   /**
   * Returns author information for a given work
@@ -635,13 +1010,12 @@
   * @return array Array of author info
   */
   function getAuthorInfo($workId = '') {
-    global $conn;
+    global $sphinx_conn;
 
     if ($workId !== '') {
-      $sql = 'SELECT Author.*, WorkAuthMaster.AuthType FROM Author JOIN WorkAuthMaster ON WorkAuthMaster.AuthId = Author.AuthId
-              WHERE WorkAuthMaster.WorkId = ' . $workId;
+      $sql = "SELECT AuthId, AuthName, StartDate, StartType, EndDate, EndType, AuthType \nFROM related_work \nWHERE WorkId = " . $workId . " GROUP BY AuthId";
 
-      $result = $conn->query($sql);
+      $result = $sphinx_conn->query($sql);
       $auths = [];
       while ($row = mysqli_fetch_assoc($result)) {
         $auths[] = $row;
@@ -762,7 +1136,7 @@
   * Takes a date and formats into human-readable 'd F Y' or 'F Y' if no day given
   *
   * @param int $theDate Date from Events table.
-  * @param boolean $plain Include HTML elements or not.  
+  * @param boolean $plain Include HTML elements or not.
   *
   * @return string Formatted date and surrounding HTML
   */
@@ -796,12 +1170,16 @@
   }
 
 
-  /**
-  * Generates date WHERE statement.
-  *
-  * @return string Date WHERE query.
-  */
-  function getDateQuery() {
+/**
+ * Generates the date conditions for the WHERE statement.
+ *
+ * @param bool $forSphinx
+ *   If TRUE, the return is compatible with Sphinx. Default is FALSE.
+ *
+ * @return string
+ *   EventDate conditions to add to the WHERE statement of the query.
+ */
+  function getDateQuery($forSphinx = FALSE) {
     global $conn;
     $sql = "";
     $monSet = true;
@@ -838,26 +1216,45 @@
 
     switch($dateTp) {
       case 1: // Between
-        $sql = "Events.EventDate BETWEEN $startStr AND $endStr";
+        $sql = $forSphinx ?
+            "eventdate BETWEEN $startStr AND $endStr" :
+            "Events.EventDate BETWEEN $startStr AND $endStr";
         break;
       case 2: // Before
-        $sql = "Events.EventDate <= $startStr";
+        $sql = $forSphinx ?
+            "eventdate <= $startStr" :
+            "Events.EventDate <= $startStr";
         break;
       case 3: // On
         // If zero date (e.g. 17161100), run LIKE '171611%'
         if ($daySet === false) {
           // If zero month (e.g. 17160000), run LIKE '1716%'
           if ($monSet === false) {
-            $sql = "Events.EventDate LIKE '" . $startYr . "%'";
+            $sql = $forSphinx ?
+                "eventdate BETWEEN " . $startYr . "0000 AND " . $startYr . "1231" :
+                "Events.EventDate LIKE '" . $startYr . "%'";
           } else {
-            $sql = "Events.EventDate LIKE '" . $startYr . substr('0' . $startMon, -2) . "%'";
+            $yearEnd = $startYr;
+            $monthEnd = $startMon + 1;
+            if ($monthEnd > 12) {
+              $yearEnd++;
+              $monthEnd = 1;
+            }
+            $strEnd = $yearEnd . substr('0' . $monthEnd, -2) . '00';
+            $sql = $forSphinx ?
+                "eventdate BETWEEN " . $startStr . " AND " . $startYr . $startMon ."31" :
+                "Events.EventDate LIKE '" . $startYr . substr('0' . $startMon, -2) . "%'";
           }
         } else { // Else exact match
-          $sql = "Events.EventDate = $startStr";
+          $sql = $forSphinx ?
+              "eventdate = $startStr" :
+              "Events.EventDate = $startStr";
         }
         break;
       case 4: // After
-        $sql = "Events.EventDate >= $startStr";
+        $sql = $forSphinx ?
+            "eventdate >= $startStr" :
+            "Events.EventDate >= $startStr";
         break;
     }
 
@@ -868,7 +1265,7 @@
   /**
   * Takes an author's name and generates WHERE statement from all related titles.
   *
-  * Takes an author's name and performes two preliminary queries to get all work
+  * Takes an author's name and performs two preliminary queries to get all work
   *  titles associated with that author, as well as any other work title that
   *  is similar or has a variant title that is similar. The list of found titles
   *  is then returned as a bunch of WHERE LIKE '%<title>%' statements to get any
@@ -895,36 +1292,38 @@
     if ($ptype_qry !== '') $typeStr = " Performances.PType IN ($ptype_qry) AND ";
 
     // Look for related titles in the Works table
-    $workIdSql = "SELECT Works.TitleClean FROM Works WHERE Works.WorkId IN (
+    $workIdSql =
+        "SELECT Works.TitleClean FROM Works WHERE Works.WorkId IN (
           SELECT WorkAuthMaster.WorkId FROM WorkAuthMaster
           JOIN Works ON Works.WorkId = WorkAuthMaster.WorkId
           LEFT JOIN WorksVariant ON WorksVariant.WorkId = Works.WorkId
           WHERE WorkAuthMaster.TitleClean IN (
             SELECT WorkAuthMaster.TitleClean FROM WorkAuthMaster
             LEFT JOIN Author ON Author.AuthId = WorkAuthMaster.AuthId
-            WHERE (Author.AuthNameClean LIKE '%$authorClean%') ) ";
-            $workIdSql .= " OR WorksVariant.NameClean IN (
+            WHERE (Author.AuthNameClean LIKE '%$authorClean%')
+          ) OR WorksVariant.NameClean IN (
               SELECT WorkAuthMaster.TitleClean FROM WorkAuthMaster
               LEFT JOIN Author ON Author.AuthId = WorkAuthMaster.AuthId
               WHERE (Author.AuthNameClean LIKE '%$authorClean%')
-            )
-          )";
+          )
+        )";
 
     // look for related titles in the WorksVariant table
-    $varIdSql = "SELECT WorksVariant.NameClean FROM WorksVariant WHERE WorksVariant.WorkId IN (
+    $varIdSql =
+        "SELECT WorksVariant.NameClean FROM WorksVariant WHERE WorksVariant.WorkId IN (
           SELECT WorkAuthMaster.WorkId FROM WorkAuthMaster
           JOIN Works ON Works.WorkId = WorkAuthMaster.WorkId
           LEFT JOIN WorksVariant ON WorksVariant.WorkId = Works.WorkId
           WHERE WorkAuthMaster.TitleClean IN (
             SELECT WorkAuthMaster.TitleClean FROM WorkAuthMaster
             LEFT JOIN Author ON Author.AuthId = WorkAuthMaster.AuthId
-            WHERE (Author.AuthNameClean LIKE '%$authorClean%') ) ";
-            $varIdSql .= " OR WorksVariant.NameClean IN (
-              SELECT WorkAuthMaster.TitleClean FROM WorkAuthMaster
-              LEFT JOIN Author ON Author.AuthId = WorkAuthMaster.AuthId
-              WHERE (Author.AuthNameClean LIKE '%$authorClean%')
-            )
-          )";
+            WHERE (Author.AuthNameClean LIKE '%$authorClean%')
+          ) OR WorksVariant.NameClean IN (
+            SELECT WorkAuthMaster.TitleClean FROM WorkAuthMaster
+            LEFT JOIN Author ON Author.AuthId = WorkAuthMaster.AuthId
+            WHERE (Author.AuthNameClean LIKE '%$authorClean%')
+          )
+        )";
 
     $workIdResult = $conn->query($workIdSql);
 
@@ -989,6 +1388,75 @@
 
 
   /**
+   * Takes an author's name and generates MATCH fragment for related works.
+   *
+   * Takes an author's name and performs a preliminary query to get all work
+   *  titles associated with that author, as well as any other work title that
+   *  is similar or has a variant title that is similar. The list of found titles
+   *  is then returned as a bunch of WHERE LIKE '%<title>%' statements to get any
+   *  performance with a similar title. The idea is to introduce ambiguity and
+   *  cast as wide a net as possible because we don't know for sure who authored
+   *  the version of the play that was performed on any given night.
+   *
+   * @param string $author Cleaned author name from $_GET.
+   *
+   * @return string|bool
+   *   MATCH statement fragments to include in the WHERE clause. Value is FALSE
+   *     if the author is not found, there are no related works, or an error is
+   *     encountered.
+   */
+  function getSphinxAuthorQuery($author) {
+    if ($author === '') return FALSE;
+    global $sphinx_conn;
+
+    $author = cleanStr($author);
+    $authorClean = mysqli_real_escape_string($sphinx_conn, cleanQuotes($author));
+    // Find the author's works in the Related Works index.
+    $authorWorksSql =
+        "SELECT *
+         FROM related_work
+         WHERE MATCH('@authnameclean \"$authorClean\"')
+         GROUP BY workid
+         LIMIT 1000";
+    // Run the query.
+    $workResult = $sphinx_conn->query($authorWorksSql);
+    // TRUE if there was an error returned by the query.
+    if (is_bool($workResult)) return FALSE;
+    // Process through the results, gather all works and similarly named works.
+    $workTitles = [];
+    while ($row = mysqli_fetch_assoc($workResult)) {
+      // Add contents of whatever work name fields have a value in the record.
+      if ($row['titleclean'] && $row['titleclean'] !== '')
+        $workTitles[] = $row['titleclean'];
+      if ($row['nameclean'] && $row['nameclean'] !== '')
+        $workTitles[] = $row['nameclean'];
+      if ($row['perftitleclean'] && $row['perftitleclean'] !== '')
+        $workTitles[] = $row['perftitleclean'];
+    }
+    if (empty($workTitles)) return FALSE;
+    // Unique list of all titles.
+    $titles = array_unique($workTitles);
+    // Some titles actually contain multiple titles, separated by a semicolon or
+    //   '; or '. We'll trim and explode out the title on the semicolon, and
+    //   $prefix is used to strip out the 'or '.
+    $processedTitles = [];
+    $prefix = "or ";
+    foreach ($titles as $title) {
+      $titleArr = array_map('trim', explode(';', $title));
+      foreach ($titleArr as $titl) {
+        if (strtolower(substr($titl, 0, strlen($prefix))) == $prefix) {
+          $titl = substr($titl, strlen($prefix));
+        }
+        // Add each title within double quotes.
+        $processedTitles[] = '"' . $titl . '"';
+      }
+    }
+    // Return the MATCH statement for the performance title field with all
+    //   titles in double quotes, separated by the OR operator.
+    return implode(' | ' , $processedTitles);
+  }
+
+  /**
   * Takes arrays of actors or roles and generates the necessary WHERE statement for AND searches.
   *
   * Takes an array of actors or roles and runs queries to find events that have both.
@@ -1043,6 +1511,78 @@
 
     $finQry = " Events.EventId IN (" . implode(',', $intersectIds) . ") ";
     return $finQry;
+  }
+
+  /**
+   * Generates the necessary WHERE statement for the actor or role filter.
+   *
+   * Takes an array of actors or roles and runs queries to find an event list.
+   *
+   * If operator is set to 'AND' the EventIds will relate to all in the casts
+   *   array. Otherwise, behaves as 'OR' with EventIds that relate to any in
+   *   the casts array.
+   *
+   * @param string $castType
+   *   Either Role or Actor.
+   * @param array $casts
+   *   Array of actors or roles to search on.
+   * @param string $operator
+   *   Operator to find the event list. Defaults to 'AND'.
+   *
+   * @return array
+   *   EventId list for the WHERE statement.
+   */
+  function getSphinxCastQuery($castType, $casts = array(), $operator = 'AND') {
+    global $conn;
+
+    if (empty($casts)) return [];
+    $allIds = array();
+    $outputEventIds = array();
+    $type = ($castType === 'role') ? 'Role' : 'Performer';
+    $sql = "SELECT Events.EventId FROM Events
+      JOIN Performances ON Performances.EventId = Events.EventId
+      JOIN Cast ON Cast.PerformanceId = Performances.PerformanceId
+      WHERE ";
+    // Collect the EventIds associated with each role or performer.
+    $i = 1;
+    foreach ($casts as $cast) {
+      if ($cast !== '') {
+        // Finish putting the query together for this role or performer.
+        $qry = $sql;
+        $castClean = mysqli_real_escape_string($conn, cleanQuotes($cast, true));
+        $cast = mysqli_real_escape_string($conn, $cast);
+        $qry .= "MATCH(Cast." . $type . "Clean) AGAINST ('\"$cast\" @4' IN BOOLEAN MODE) OR Cast." . $type . "Clean LIKE '%$castClean%' GROUP BY Events.EventId";
+        // Execute the query and add the list to the allIds list.
+        $castResult = $conn->query($qry);
+        $eventIds = array();
+        while ($row = mysqli_fetch_assoc($castResult)) {
+          $eventIds[] = $row['EventId'];
+        }
+        // Add this role or performer's eventId list to the allIds array.
+        $allIds[] = $eventIds;
+      }
+      $i++;
+    }
+
+    if ($operator === 'AND') {
+      // Add all common EventIds of the sub-arrays (intersect).
+      $initial = $allIds[0];
+      for ($a = 1; $a < count($allIds); $a++) {
+        foreach ($allIds[$a] as $id) {
+          if (in_array($id, $initial)) $outputEventIds[] = $id;
+        }
+      }
+    }
+    else { // 'OR'.
+      // Add all EventIds from the sub-arrays together (union).
+      foreach ($allIds as $castEventIds) {
+        foreach ($castEventIds as $eventId) {
+          $outputEventIds[$eventId] = $eventId; // Keeps the values unique.
+        }
+      }
+    }
+    // Now return the WHERE condition statement.
+    return $outputEventIds;
   }
 
 
@@ -1341,14 +1881,14 @@
     // Make array of tag objects
     // arr[0] = {tag: 'a', tagStart: 12, tagEnd: 33};
     // Then, if 'highlight' is found between a tag start and end, +/- $numChars from its tag values unless it reaches another tagEnd first.
-    // So find all tags that 'highlight' is inside. Take $numChars from the outside tag unless run into another tag first. 
+    // So find all tags that 'highlight' is inside. Take $numChars from the outside tag unless run into another tag first.
 
 /*    $html = mb_convert_encoding($string, "HTML-ENTITIES", 'UTF-8');
- 
+
  $dom = new domDocument;
  $dom->preserveWhiteSpace = false;
  $dom->loadHTML($html, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
- 
+
  $contents = $dom->getElementsByTagName('a');*/ // Array of Content
  // https://www.techfry.com/php-tutorial/html-basic-tags
 
@@ -1371,38 +1911,42 @@
   }
 
 
-  /**
-  * Takes some text and creates links for any instances of $name=
-  *
-  * In the 1970s database, they wrapped many names in $=. We want to find these and
-  *  create links that take the user to a keyword search for that person.
-  *
-  * @param string $text Text block that may contains named entities ($name=)
-  *
-  * @return string HTML Text block with named entities linked out to keyword searches
-  */
-  function namedEntityLinks($text) {
+/**
+ * Takes some text and creates links for any instances of $name=
+ *
+ * In the 1970s database, they wrapped many names in $=. We want to find these and
+ *  create links that take the user to a keyword search for that person.
+ *
+ * @param string $text Text block that may contains named entities ($name=)
+ * @param bool $sphinx_results When set to true, will like to sphinx results.
+ *
+ * @return string HTML Text block with named entities linked out to keyword searches
+ */
+  function namedEntityLinks($text, $sphinx_results = false) {
     $text = trim($text);
     if ($text === "") return '';
 
     $re = '/(\$)([\s\S]+)(=)([^\"]*)/U'; // Matches $name=
 
-    return preg_replace($re, '<a href="/results.php?keyword=$2">$2$4</a>', $text);
+    return $sphinx_results ?
+        preg_replace($re, '<a href="/sphinx-results.php?keyword=$2">$2$4</a>', $text) :
+        preg_replace($re, '<a href="/results.php?keyword=$2">$2$4</a>', $text);
   }
 
 
-  /**
-  * Creates a link out to a new search for a given key.
-  *
-  * Creates crosslinks for a given key out to a search for that key. So, a key of
-  *  'actor' will take the value and link to a search for ?actor=value.
-  *
-  * @param string $key The key for which we will create a search link.
-  * @param string $value The value for which to be searched.
-  *
-  * @return string HTML Text block with values linked out to relevant searches.
-  */
-  function linkedSearches($key, $value) {
+/**
+ * Creates a link out to a new search for a given key.
+ *
+ * Creates crosslinks for a given key out to a search for that key. So, a key of
+ *  'actor' will take the value and link to a search for ?actor=value.
+ *
+ * @param string $key The key for which we will create a search link.
+ * @param string $value The value for which to be searched.
+ * @param bool $sphinx_results When set to true, will like to sphinx results.
+ *
+ * @return string HTML Text block with values linked out to relevant searches.
+ */
+  function linkedSearches($key, $value, $sphinx_results = false) {
     $value = trim($value);
     if ($value === '') return '';
 
@@ -1416,7 +1960,9 @@
 
     $re = '/' . implode('|', $m[0]) . '/i';
     //return preg_replace($re, '<a href="results.php?'.preg_replace('/[\[\]]/', '&rbrack;', $key).'=$0">$0</a>', $value);
-    return preg_replace($re, '<a href="results.php?'.$key.'=$0">$0</a>', $value);
+    return $sphinx_results ?
+        preg_replace($re, '<a href="sphinx-results.php?'.$key.'=$0">$0</a>', $value) :
+        preg_replace($re, '<a href="results.php?'.$key.'=$0">$0</a>', $value);
   }
 
 
@@ -1424,16 +1970,19 @@
   * Generates href for performance title link
   *
   * @param string $value The title to be linked.
+  * @param bool $sphinx_results When set to true, will like to sphinx results.
   *
   * @return string href value.
   */
-  function linkedTitles($value) {
+  function linkedTitles($value, $sphinx_results = false) {
     $value = trim($value);
     if ($value === '') return '';
 
     $value = strip_tags(htmlentities($value));
 
-    return '/results.php?performance=' . $value;
+    return $sphinx_results ?
+        '/sphinx-results.php?performance=' . $value :
+        '/results.php?performance=' . $value;
   }
 
 
