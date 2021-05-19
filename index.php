@@ -21,7 +21,7 @@
         <a href="search.php" class="adv-search">Advanced Search</a>
       </form>
       <div class="margin-top-1rem">
-          <p><small>Or visit <a href="/legacy-search.php">Advanced Search (Legacy)</a> to replicate searches conducted before May 2021.</small></p>
+          <p><small>Or visit <a href="/legacy-search.php">Legacy Search</a> to replicate searches conducted before May 2021.</small></p>
       </div>
     </div>
   </div>

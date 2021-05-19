@@ -325,9 +325,6 @@
               }
               echo '<div class="res-by-col">' . $msg . '</div>';
             } ?>
-            <?php if ($search_filters_empty) { ?>
-              <div class="res-by-col">It looks like you're trying to access the full dataset. Please visit <a href="/data.php">Data</a> to do so.</div>
-            <?php } ?>
             <?php if ($results->total > 0) { ?>
             <div class="grid-x results-header">
               <div class="input-group relevance-menu-wrap">
