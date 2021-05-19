@@ -12,8 +12,8 @@
 <body id="mainSearch">
   <?php include_once('common/nav.php'); ?>
   <div id="main" class="main grid-container">
-    <h1>Advanced Search</h2>
-    <form id="searchForm" class="form-accordion search-form grid-x grid-margin-x" method="get" action="results.php">
+    <h1>Advanced Search</h1>
+    <form id="searchForm" class="form-accordion search-form grid-x grid-margin-x" method="get" action="sphinx-results.php">
       <input type="hidden" name="sortBy" value="relevance">
       <div class="cell small-12 section-wrap">
         <h2>Event</h2>
