@@ -16,8 +16,10 @@
   $result = $conn->query($search);
 
   $data = array();
-  while ($row = $result->fetch_assoc()) {
-    $data[] = trim($row['PerfTitleClean']);
+  if ($result) {
+    while ($row = $result->fetch_assoc()) {
+      $data[] = trim($row['PerfTitleClean']);
+    }
   }
 
   echo json_encode(array_unique($data));
