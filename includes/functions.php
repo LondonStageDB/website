@@ -939,7 +939,6 @@
   */
   function getSphinxRelatedWorks($perfTitle = '') {
     // Return without looking up Related Works
-    global $conn;
     global $sphinx_conn;
 
     $prefix = "or ";
