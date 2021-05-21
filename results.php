@@ -397,7 +397,7 @@
                             foreach ($perf['relatedWorks'] as $rltd) {
                               if (isset($rltd['author']) && count($rltd['author']) > 0) {
                                 foreach ($rltd['author'] as $rltdAuth) {
-                                  if (isFoundIn($rltdAuth['AuthName'], cleanQuotes(cleanStr($_GET['keyword'])) . '|' . cleanQuotes(cleanStr($_GET['author'])))) {
+                                  if (isFoundIn($rltdAuth['authname'], cleanQuotes(cleanStr($_GET['keyword'])) . '|' . cleanQuotes(cleanStr($_GET['author'])))) {
                                     $isFoundInRelated = true;
                                     if (!in_array($rltd['Title'], $isFoundUnique)) {
                                       $isFoundUnique[] = $rltd['Title'];
