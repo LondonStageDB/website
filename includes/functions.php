@@ -939,7 +939,6 @@
   */
   function getSphinxRelatedWorks($perfTitle = '') {
     // Return without looking up Related Works
-    global $conn;
     global $sphinx_conn;
 
     $prefix = "or ";
@@ -989,10 +988,12 @@
 
         $sresult = $sphinx_conn->query($ssql);
 
-        while ($srow = mysqli_fetch_assoc($sresult)) {
-          if (!in_array($srow['workid'], $workIds)) {
-            $srow['author'] = getAuthorInfo($srow['workid']);
-            $works[] = $srow;
+        if ($sresult) {
+          while ($srow = mysqli_fetch_assoc($sresult)) {
+            if (!in_array($srow['workid'], $workIds)) {
+              $srow['author'] = getAuthorInfo($srow['workid']);
+              $works[] = $srow;
+            }
           }
         }
       }
@@ -1833,7 +1834,7 @@
     preg_match_all('~[^| ]+~', $roleSearch, $rn); // Role search terms ' ' delimited array
     $allActors = array_unique(array_merge($am[0], $an[0])); // Combine unique
     $allRoles = array_unique(array_merge($rm[0], $rn[0])); // Combine unique
-    if((!$allActors || count($allActors) === 0) && (!$allRoles || count($allRoles === 0))) {
+    if((!is_array($allActors) || count($allActors) === 0) && (!is_array($allRoles) || count($allRoles === 0))) {
         return false;
     }
 
