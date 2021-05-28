@@ -120,7 +120,7 @@ A few quick explanations for some of the files/folders in the project.
 
 
 - /includes/db.php
-        Database config file (Not included in repo. You'll need to create your own - see above)
+        Database config file (Not included in repo. You will need to create your own - see above)
 
 
 - /PDFs
