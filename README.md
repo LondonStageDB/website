@@ -3,11 +3,11 @@
 
 This repository includes all the files needed to replicate the London Stage Database Website, both MySQL and Sphinx search, on your server.
 
-You can choose either MySQL or Sphinx as the site search engine.
+You can choose either **MySQL** or **Sphinx** as the site search engine.
 
 The live website can be viewed here: https://londonstagedatabase.uoregon.edu
 
-## Sphinx Search Setup
+## Site Setup with Sphinx
 
 ### Requirements
 You will need a web server with MySQL, Sphinx and PHP already installed. 
@@ -18,14 +18,13 @@ You will need a web server with MySQL, Sphinx and PHP already installed.
 #### Sphinx Installation
 There are two ways to install Sphinx engine.
 - Directly install the Sphinx engine on a server. Please follow the official instructions [here](http://sphinxsearch.com/docs/current.html#installing-debian).
-- You can also use our Dockerfile to run the Sphinx container easily. The Dockerfile in this compose file is hosted at: [casit/sphinxsearch](https://hub.docker.com/r/casit/sphinxsearch).
+- You can also use our Dockerfile to run the Sphinx container easily. The Dockerfile in this compose file is hosted at: [https://hub.docker.com/r/casit/sphinxsearch](https://hub.docker.com/r/casit/sphinxsearch).
 
 #### Build-up Database
-This step is identical to the MySQL search installation part.
+This step is identical to the MySQL search installation part in the **MySQL Search Setup** section below.
 
 ### Get started
-
-You will need to add the Sphinx connection into the db.php file in the /includes folder. Please paste the following contents (replacing the user/pass with your own Sphinx authentication):
+Git check-out code in tags `v2.0` or `sphinx` or any tags later than `v2.0`. Then you will need to add the Sphinx connection into the db.php file in the `/includes` folder. Please paste the following contents (replacing the user/pass with your own Sphinx authentication):
 
 ``` php
 <?php
@@ -38,8 +37,9 @@ You will need to add the Sphinx connection into the db.php file in the /includes
   $sphinx_conn = new mysqli(SPHINX_HOST, SPHINX_USER, SPHINX_PASS, SPHINX_NAME, SPHINX_PORT);
 ?>
 ```
+Now the site is running on the Sphinx engine.
 
-## MySQL Search Setup
+##  Site Setup with MySQL
 
 
 ### Requirements
@@ -72,8 +72,7 @@ mysql -u <user> -p London < London.sql
 
 ### Getting started
 
-
-You'll need to create a file in the /includes folder called db.php and paste in the following contents (replacing the user/pass with your own MySQL authentication):
+Git check-out code in tags `v1.0`. Then you'll need to create a file in the /includes folder called db.php and paste in the following contents (replacing the user/pass with your own MySQL authentication):
 
 
 ``` php
