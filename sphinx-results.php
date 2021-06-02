@@ -441,7 +441,7 @@
           </nav>
           <?php } else { ?>
             <div class="no-results">
-              No results found. Modify the filters to the left or <a href="/sphinx-search-home.php">try a new search</a>
+              No results found. Modify the filters to the left or <a href="/index.php">try a new search</a>
             </div>
           <?php } ?>
         </div>
