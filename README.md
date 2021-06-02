@@ -1,34 +1,118 @@
 # London Stage Database Website
 
+This repository includes all the files needed to replicate the London Stage Database website on your server.
 
-This repository includes all the files needed to replicate the London Stage Database Website, both MySQL and Sphinx search, on your server.
-
-You can choose either **MySQL** or **Sphinx** as the site search engine.
+You can choose either **MySQL** or **Sphinx + MySQL** as the site search engine.
 
 The live website can be viewed here: https://londonstagedatabase.uoregon.edu
 
-## Site Setup with Sphinx
+*Instructions are for a Linux server*
 
-### Requirements
-You will need a web server with MySQL, Sphinx and PHP already installed. 
+## Installation
 
-### Installation
->*Instructions are for a Linux server*
+You will need a web server with MySQL and PHP installed.
 
-#### Sphinx Installation
-There are two ways to install Sphinx engine.
-- Directly install the Sphinx engine on a server. Please follow the official instructions [here](http://sphinxsearch.com/docs/current.html#installing-debian).
-- You can also use our Dockerfile to run the Sphinx container easily. The Dockerfile in this compose file is hosted at: [https://hub.docker.com/r/casit/sphinxsearch](https://hub.docker.com/r/casit/sphinxsearch).
+For faster search performance, you can install the Sphinx engine.
 
-#### Build-up Database
-This step is identical to the MySQL search installation part in the **MySQL Search Setup** section below.
+### Clone the Project Repo
 
-### Get started
-Git check-out code in tags `v2.0` or `sphinx` or any tags later than `v2.0`. Then you will need to add the Sphinx connection into the db.php file in the `/includes` folder. Please paste the following contents (replacing the user/pass with your own Sphinx authentication):
+``` bash
+git clone https://github.com/LondonStageDB/website.git
+```
+
+If you choose to use Sphinx, check-out the git tag `sphinx`, `v2.0`, or any tag later than `v2.0`.
+
+If not using Sphinx, checkout the `v1.0` git tag.
+
+### Import the Database into MySQL
+
+Included with the repo is a compressed export of the database called London.tgz.
+
+``` bash
+# this will extract a file called London.sql
+tar -xzf London.tgz
+
+# Replace <user> with your MySQL username.
+# After hitting enter, it will ask for your MySQL password
+mysql -u <user> -p London < London.sql
+```
+
+### Sphinx (optional)
+
+If you do not wish to use Sphinx, skip down to the section "Create the db.php file".
+
+#### Installation
+
+There are two ways to install and use the Sphinx engine.
+
+- Directly install the Sphinx engine on a server.
+  Please follow the official instructions on the [Sphinx Search Engine website](http://sphinxsearch.com/docs/current.html#installing-debian).
+- Use our Dockerfile to run the Sphinx container easily.
+  The Dockerfile in this compose file is hosted at: [https://hub.docker.com/r/casit/sphinxsearch](https://hub.docker.com/r/casit/sphinxsearch).
+
+#### Files
+
+In the `/sphinx` directory of the repo you will find the files listed below. After installing Sphinx, copy the files to the locations indicated to set up Sphinx.
+
+##### `en.pak`
+
+Copy this file to somewhere in the Sphinx installation directory structure.
+
+When it has been placed, be sure to update the `lemmatizer_base` in the **common** section of the `sphinx.conf` file (not yet copied). The setting should be the path of the containing folder of the file.
+
+##### `stopwords.txt`
+
+Copy this file to somewhere in the Sphinx installation directory structure.
+
+When it has been placed, be sure to update the setting `stopwords` in all 3 **index** sections of the `sphinx.conf` file (not yet copied). The setting should be the full path of the file.
+
+##### `sphinx.example.conf`
+
+Copy this file to somewhere in the Sphinx installation directory structure. *Rename it `sphinx.conf`*.
+
+Read the commented lines in the file to help while updating the settings to match your set up.
+
+Make sure the path for the `lemmatizer_base` and file location for `stopwords` are updated to match the locations of the files in the sections above.
+
+#### Run the Indexer and Start Sphinx
+
+Once the configuration files are placed and updated, Sphinx needs to index the database.
+
+Update the `sphinx.conf` location when executing the commands below.
+
+```bash
+indexer --all --rotate --config /path/to/sphinx/conf/sphinx.conf
+```
+
+Now start serving requests.
+
+```bash
+searchd --config /path/to/sphinx/conf/sphinx.conf
+```
+
+### Create the `db.php` File
+
+In the `/includes` folder, create a file named `db.php`. Use the code below as a template for the file.
+
+The Sphinx configuration is only needed if the Sphinx search engine was installed. The configuration for Sphinx may not need to change if Sphinx is installed on the web server.
+
+For both the db (MySQL) and Sphinx `define()` statements, replace the host, port, user, password, and database configuration details.
 
 ``` php
 <?php
-  define("SPHINX_HOST", "localhost");
+
+  error_reporting(E_ERROR);
+
+  define("DB_HOST", "host.example.com");
+  define("DB_NAME", "London");
+  define("DB_USER", "londonstagedbuser");
+  define("DB_PASS", "areallysecurepassword1A!");
+
+  // Only keep the following lines if using Sphinx.
+
+  $conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
+
+  define("SPHINX_HOST", "localhost");
   define("SPHINX_NAME", "");
   define("SPHINX_USER", "");
   define("SPHINX_PASS", "");
@@ -37,62 +121,13 @@ Git check-out code in tags `v2.0` or `sphinx` or any tags later than `v2.0`. The
   $sphinx_conn = new mysqli(SPHINX_HOST, SPHINX_USER, SPHINX_PASS, SPHINX_NAME, SPHINX_PORT);
 ?>
 ```
-Now the site is running on the Sphinx engine.
 
-##  Site Setup with MySQL
+Now the site is installed and configured.
 
+## Files
 
-### Requirements
-You'll need a web server with MySQL and PHP already installed. 
+A few quick explanations for some files/folders in the project.
 
-
-### Installation
->*Instructions are for a Linux server*
-
-
-``` bash
-# clone repo
-git clone https://github.com/LondonStageDB/website.git
-```
-
-
-Included with the repo is a compressed export of the database called London.tgz. 
-``` bash
-# untar/zip the file
-# this will extract a file called London.sql
-tar -xzf London.tgz
-
-
-# Import database
-# replace <user> with your MySQL username
-# after hitting enter, it will ask for your MySQL password
-mysql -u <user> -p London < London.sql
-```
-
-
-### Getting started
-
-Git check-out code in tags `v1.0`. Then you'll need to create a file in the /includes folder called db.php and paste in the following contents (replacing the user/pass with your own MySQL authentication):
-
-
-``` php
-<?php
-  define("DB_HOST", "localhost");
-  define("DB_NAME", "London");
-  define("DB_USER", "yourUserName");
-  define("DB_PASS", 'yourPassword');
-
-
-  $conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
-?>
-```
-
-
-  
-
-
-### Files
-A few quick explanations for some of the files/folders in the project.
 ``` bash
 - /common
         Contains header, footer, and nav include files
@@ -114,7 +149,7 @@ A few quick explanations for some of the files/folders in the project.
         Contains all functions used on the website
 
 
-- /includes/Paginator.class.php
+- /includes/Paginator.class.php and /includes/SphinxPaginator.class.php
         Executes the search SQL query and stores the result data. Also generates
         pagination info based on the results.
 
@@ -125,5 +160,5 @@ A few quick explanations for some of the files/folders in the project.
 
 - /PDFs
         Files and scripts used in the process of reading the dates from and splitting up the 
-        PDFs. These files are not required to run the website and can be deleted if desired. 
+        PDFs. These files are not required to run the website and can be deleted if desired. 
 ```
