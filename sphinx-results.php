@@ -27,12 +27,16 @@
   $sql       .= "\nOPTION " . $Paginator->getFieldWeights();
 
   // Cleaned, pipe delimited strings from 'actor' and 'role' arrays
-  $getActors  = array_map(function($act) {
-    return cleanStr($act);
-  }, $_GET['actor']);
-  $getRoles   = array_map(function($rle) {
-    return cleanStr($rle);
-  }, $_GET['role']);
+  if (!empty($_GET['actor'])) {
+    $getActors = array_map(function ($act) {
+      return cleanStr($act);
+    }, $_GET['actor']);
+  }
+  if (!empty($_GET['role'])) {
+    $getRoles = array_map(function ($rle) {
+      return cleanStr($rle);
+    }, $_GET['role']);
+  }
   $cleanedActors = (isset($_GET['actor'])) ? implode('|', $getActors) : '';
   $cleanedRoles  = (isset($_GET['role'])) ? implode('|', $getRoles) : '';
 
@@ -348,7 +352,7 @@
             </div>
             <div class="grid-x results-table">
               <div class="cell">
-                <?php if ($_GET['author'] && $_GET['author'] !== '') : ?>
+                <?php if (!empty($_GET['author'])) : ?>
                 <div class="author-explain">
                   <span class="info-icon"></span>
                   <span>Results not only include performances of plays known to be by '<?php echo cleanQuotes(cleanStr($_GET['author'])); ?>', but also performances of associated titles, including adaptations.</span>
@@ -366,7 +370,7 @@
                   </h2>
                 </div>
                 <div class="evt-body">
-                  <?php if (isFoundIn($results->data[$i]['commentc'], cleanQuotes(cleanStr($_GET['keyword'])))) echo '<div class="evt-info"><b>Event Comment: </b>' . highlight(namedEntityLinks($results->data[$i]['commentc'], true), cleanQuotes($_GET['keyword'])) . '</div>';?>
+                  <?php if (isFoundIn($results->data[$i]['commentc'], cleanQuotes(cleanStr($_GET['keyword']) ?? ''))) echo '<div class="evt-info"><b>Event Comment: </b>' . highlight(namedEntityLinks($results->data[$i]['commentc'], true), cleanQuotes($_GET['keyword'] ?? '')) . '</div>';?>
                   <div class="evt-other clearfix">
                     <div class="perfs">
                       <h3>Performances</h3>
@@ -377,14 +381,14 @@
                         echo '<div class="perf">';
                         echo '<h4><span class="info-heading">' . getPType($perf['PType']) . (in_array($perf['PType'], ['a', 'p']) ? ' Title' : '') . ': </span>';
                          if (in_array($perf['PType'], ['a', 'p'])) {
-                           echo '<i>' . highlight(cleanItalics(cleanTitle($perf['PerformanceTitle'])), cleanQuotes($_GET['keyword']) . '|' . cleanQuotes($_GET['performance'])) . '</i>';
+                           echo '<i>' . highlight(cleanItalics(cleanTitle($perf['PerformanceTitle'])), cleanQuotes(isset($_GET['keyword']) ? $_GET['keyword'] : '') . ((!empty($_GET['performance'])) ? '|' . cleanQuotes($_GET['performance']) : '')) . '</i>';
                          } else {
-                           echo highlight(namedEntityLinks($perf['DetailedComment'], true), cleanQuotes($_GET['keyword']) . '|' . cleanQuotes($_GET['performance']));
+                           echo highlight(namedEntityLinks($perf['DetailedComment'], true), cleanQuotes(isset($_GET['keyword']) ? $_GET['keyword'] : '') . '|' . cleanQuotes(((!empty($_GET['performance'])) ? $_GET['performance'] : '')));
                          }
                          echo '</h4>';
-                         if (isFoundIn($perf['CommentP'], cleanQuotes(cleanStr($_GET['keyword']))) ) echo '<span class="perf-comm"><span class="smcp"><b>Performance Comment: </b></span>' . highlight(namedEntityLinks($perf['CommentP'], true), cleanQuotes($_GET['keyword'])) . '</span><br>';
+                         if (isFoundIn($perf['CommentP'], cleanQuotes(cleanStr($_GET['keyword'] || ''))) ) echo '<span class="perf-comm"><span class="smcp"><b>Performance Comment: </b></span>' . highlight(namedEntityLinks($perf['CommentP'], true), cleanQuotes($_GET['keyword'] || '')) . '</span><br>';
                          echo '<div class="perf-body">';
-                         $inCast = isInCast(cleanQuotes($_GET['keyword']) . '|' . cleanQuotes($cleanedActors), cleanQuotes(cleanStr($_GET['keyword'])) . '|' . cleanQuotes($cleanedRoles), $perf['cast']);
+                         $inCast = isInCast(cleanQuotes($_GET['keyword']) . '|' . cleanQuotes($cleanedActors), cleanQuotes(cleanStr($_GET['keyword'] || '')) . '|' . cleanQuotes($cleanedRoles), $perf['cast']);
                          if ($inCast !== false) {
                            echo '<div class="cast"><h5>Cast</h5>';
                            foreach ($inCast as $cast) {
@@ -393,7 +397,7 @@
                            echo '</div>';
                          }
                          if ((isset($_GET['author']) && trim($_GET['author']) !== '') || (isset($_GET['keyword']) && trim($_GET['keyword']) !== '')) {
-                           if (count($perf['RelatedWorks']) > 0) {
+                           if (!empty($perf['RelatedWorks']) && count($perf['RelatedWorks']) > 0) {
                              $isFoundInRelated = false;
                             $isFoundUnique = array(); // Track unique work names
                             $isFoundArr = array();
