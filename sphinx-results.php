@@ -290,7 +290,7 @@
             </div>
           </div>
           <div class="cell small-12 button-wrap">
-            <a href="/sphinx-search-home.php" class="new-search show-for-large">New Search</a>
+            <a href="/search.php" class="new-search show-for-large">New Search</a>
             <input type="submit" class="search-submit button" value="Update Results">
           </div>
         </div>

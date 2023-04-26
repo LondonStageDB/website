@@ -1828,14 +1828,14 @@
   *  keyword, actor, or role search terms. This function finds the matches and
   *  returns a cast list array to output.
   *
-  * @param string $actorSearch Pipe-delimited string containing keyword and actor
-  *  search terms. Words have quotes removed.
+  * @param string $actorSearch Pipe-delimited string containing keyword and
+  *  actor search terms. Words have quotes removed.
   * @param string $roleSearch Pipe-delimited string containing keyword and role
   *  search terms. Words have quotes removed.
   * @param array $cast Array of all cast members associated with an event.
   *
-  * @return array Array of cast members that match either they keyword, actor, or
-  *  role search terms.
+  * @return array|bool Array of cast members that match either they keyword,
+  *  actor, or role search terms. False if no matches.
   */
   function isInCast($actorSearch, $roleSearch, $cast) {
     $castMatch = [];
@@ -1877,14 +1877,16 @@
   }
 
   /**
-  * Takes a string and removes words not near a highlighted word
-  *
-  * @param string $text String to be cut down
-  *
-  * @return string
-  */
-  function cutString($string) {
-    if (strpos($string, 'highlight') === false) return $string;
+   * Takes a string and removes words not near a highlighted word
+   *
+   * @param string $text
+   *   String to be cut down
+   *
+   * @return string
+   *   The cut down string.
+   */
+  function cutString($string): string {
+    if (!str_contains($string, 'highlight')) return $string;
 
     $numChars = 25; // Number of characters around the highlighted word to keep
     $needle = 'highlight';
@@ -1893,21 +1895,21 @@
     $finalString = '';
     $startDisregard = 13; // Num chars to subtract from positions before counting the 25. (for <span class=" )
 
-  //https://stackoverflow.com/questions/1193500/truncate-text-containing-html-ignoring-tags
+    // https://stackoverflow.com/questions/1193500/truncate-text-containing-html-ignoring-tags
 
     // Make array of tag objects
     // arr[0] = {tag: 'a', tagStart: 12, tagEnd: 33};
     // Then, if 'highlight' is found between a tag start and end, +/- $numChars from its tag values unless it reaches another tagEnd first.
     // So find all tags that 'highlight' is inside. Take $numChars from the outside tag unless run into another tag first.
 
-/*    $html = mb_convert_encoding($string, "HTML-ENTITIES", 'UTF-8');
+    /*    $html = mb_convert_encoding($string, "HTML-ENTITIES", 'UTF-8');
 
- $dom = new domDocument;
- $dom->preserveWhiteSpace = false;
- $dom->loadHTML($html, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
+    $dom = new domDocument;
+    $dom->preserveWhiteSpace = false;
+    $dom->loadHTML($html, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
 
- $contents = $dom->getElementsByTagName('a');*/ // Array of Content
- // https://www.techfry.com/php-tutorial/html-basic-tags
+    $contents = $dom->getElementsByTagName('a');*/ // Array of Content
+    // https://www.techfry.com/php-tutorial/html-basic-tags
 
     while (($lastPos = strpos($string, $needle, $lastPos))!== false) {
       $positions[] = $lastPos;
