@@ -4,7 +4,7 @@
   },
   "devDependencies": {
     "webpack-cli": "^3.3.12",
-    "webpack-dev-server": "^3.11.0"
+    "webpack-dev-server": "^3.11.3"
   },
   "dependencies": {
     "buffertools": "^2.1.6",
