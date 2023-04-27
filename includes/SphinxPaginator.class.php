@@ -39,8 +39,8 @@ class SphinxPaginator {
    *   A field weights string to add to the OPTION statement for sphinx.
    */
   public function getFieldWeights() {
-    $keywordFilter  = ($_GET['keyword'] && $_GET['keyword'] !== '');
-    $perfFilter     = ($_GET['performance'] && $_GET['performance'] !== '');
+    $keywordFilter  = (!empty($_GET['keyword']));
+    $perfFilter     = (!empty($_GET['performance']));
     if ($keywordFilter && $perfFilter) {
       // ranker=proximity_bm25.
       return "field_weights=(perftitleclean=110, performancetitle=120, " .
