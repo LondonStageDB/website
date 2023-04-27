@@ -463,8 +463,8 @@
       array_push($queries, $matches);
     }
     // Build the WHERE clause.
-    if (!empty($queries)) {
-      $sql .= "\nWHERE " . implode($queries, ' AND ');
+    if (!empty($queries) && count($queries) > 0) {
+      $sql .= "\nWHERE " . implode(' AND ', $queries);
     }
     // The results need to be grouped by Event to avoid redundancy
     $sql .= "\nGROUP BY eventid";
@@ -885,13 +885,15 @@
       $works = array();
       $sources = array();
       $workIds = array();
-      while ($row = mysqli_fetch_assoc($result)) {
-        $sources[] = $row['SourceResearched'];
-        $sources[] = $row['Source1'];
-        $sources[] = $row['Source2'];
-        $row['author'] = getAuthorInfo($row['WorkId']);
-        $works[] = $row;
-        $workIds[] = $row['WorkId'];
+      if ($result !== FALSE) {
+        while ($row = mysqli_fetch_assoc($result)) {
+          $sources[] = $row['SourceResearched'];
+          $sources[] = $row['Source1'];
+          $sources[] = $row['Source2'];
+          $row['author'] = getAuthorInfo($row['WorkId']);
+          $works[] = $row;
+          $workIds[] = $row['WorkId'];
+        }
       }
 
       $sources = array_filter($sources, 'strlen');
@@ -960,7 +962,7 @@
         }
         $values[] = '"' . $perf . '"';
       }
-      $values = implode($values, '|');
+      $values = implode('|', $values);
       $sql .= "\nWHERE MATCH('" . $values . "')";
 
       // Only want to show unique works, not all iterations of a given work title
@@ -982,8 +984,9 @@
       // Get Work Sources and perform same search on them
       $sources = array_filter($sources, 'strlen');
       if (!empty($sources)) {
+        $sources = wildCardQuotes($sources);
         $ssql = "SELECT WorkId, Title, Type1, Type2, Source1, Source2, SourceResearched, TitleClean, VariantName, TheTitle, PerformanceTitle \nFROM related_work";
-        $ssql .= "\nWHERE MATCH('@TitleClean \"" . implode($sources, '"|"') . "\" @PerfTitleClean \"" . implode($sources, '"|"') . "\" @NameClean \"" . implode($sources, '"|"') . "\"')";
+        $ssql .= "\nWHERE MATCH('@TitleClean \"" . implode('"|"', $sources) . "\" @PerfTitleClean \"" . implode('"|"', $sources) . "\" @NameClean \"" . implode('"|"', $sources) . "\"')";
         $ssql .= ' GROUP BY WorkId';
 
         $sresult = $sphinx_conn->query($ssql);
@@ -1000,6 +1003,19 @@
 
       return $works;
     }
+  }
+
+  /**
+   * Removes all quotes from the string and replaces them with a wildcard char.
+   *
+   * @param $str string
+   *   The string to remove quotes from.
+   *
+   * @return string
+   *   A copy of the string with all quote characters removed.
+   */
+  function wildCardQuotes($str) {
+    return str_replace(["'",'"'], '%', $str);
   }
 
 
@@ -1645,8 +1661,8 @@
     $yourSearch = '';
     if (!empty($_GET['keyword'])) $yourSearch .= '<span class="your-search-item">Keyword - ' . htmlentities($_GET['keyword']) . '</span>';
     if (!empty($_GET['performance'])) $yourSearch .= '<span class="your-search-item">Title - ' . htmlentities($_GET['performance']) . '</span>';
-    if (!empty(array_filter($_GET['actor'], 'strlen'))) $yourSearch .= '<span class="your-search-item">Actors - ' . htmlentities(implode(', ', array_filter($_GET['actor'], 'strlen'))) . '</span>';
-    if (!empty(array_filter($_GET['role'], 'strlen'))) $yourSearch .= '<span class="your-search-item">Roles - ' . htmlentities(implode(', ', array_filter($_GET['role'], 'strlen'))) . '</span>';
+    if (!empty($_GET['actor']) && !empty(array_filter($_GET['actor'], 'strlen'))) $yourSearch .= '<span class="your-search-item">Actors - ' . htmlentities(implode(', ', array_filter($_GET['actor'], 'strlen'))) . '</span>';
+    if (!empty($_GET['role']) && !empty(array_filter($_GET['role'], 'strlen'))) $yourSearch .= '<span class="your-search-item">Roles - ' . htmlentities(implode(', ', array_filter($_GET['role'], 'strlen'))) . '</span>';
     if (!empty($_GET['author'])) $yourSearch .= '<span class="your-search-item">Author - ' . htmlentities($_GET['author']) . '</span>';
 
     return (!empty($yourSearch)) ? '<span class="your-search-for"> for: </span><span class="your-search-items">' . $yourSearch . '</span>' : '';
@@ -1812,14 +1828,14 @@
   *  keyword, actor, or role search terms. This function finds the matches and
   *  returns a cast list array to output.
   *
-  * @param string $actorSearch Pipe-delimited string containing keyword and actor
-  *  search terms. Words have quotes removed.
+  * @param string $actorSearch Pipe-delimited string containing keyword and
+  *  actor search terms. Words have quotes removed.
   * @param string $roleSearch Pipe-delimited string containing keyword and role
   *  search terms. Words have quotes removed.
   * @param array $cast Array of all cast members associated with an event.
   *
-  * @return array Array of cast members that match either they keyword, actor, or
-  *  role search terms.
+  * @return array|bool Array of cast members that match either they keyword,
+  *  actor, or role search terms. False if no matches.
   */
   function isInCast($actorSearch, $roleSearch, $cast) {
     $castMatch = [];
@@ -1834,7 +1850,7 @@
     preg_match_all('~[^| ]+~', $roleSearch, $rn); // Role search terms ' ' delimited array
     $allActors = array_unique(array_merge($am[0], $an[0])); // Combine unique
     $allRoles = array_unique(array_merge($rm[0], $rn[0])); // Combine unique
-    if((!is_array($allActors) || count($allActors) === 0) && (!is_array($allRoles) || count($allRoles === 0))) {
+    if((!is_array($allActors) || count($allActors) === 0) && (!is_array($allRoles) || count($allRoles) === 0)) {
         return false;
     }
 
@@ -1861,14 +1877,16 @@
   }
 
   /**
-  * Takes a string and removes words not near a highlighted word
-  *
-  * @param string $text String to be cut down
-  *
-  * @return string
-  */
-  function cutString($string) {
-    if (strpos($string, 'highlight') === false) return $string;
+   * Takes a string and removes words not near a highlighted word
+   *
+   * @param string $text
+   *   String to be cut down
+   *
+   * @return string
+   *   The cut down string.
+   */
+  function cutString($string): string {
+    if (!str_contains($string, 'highlight')) return $string;
 
     $numChars = 25; // Number of characters around the highlighted word to keep
     $needle = 'highlight';
@@ -1877,21 +1895,21 @@
     $finalString = '';
     $startDisregard = 13; // Num chars to subtract from positions before counting the 25. (for <span class=" )
 
-  //https://stackoverflow.com/questions/1193500/truncate-text-containing-html-ignoring-tags
+    // https://stackoverflow.com/questions/1193500/truncate-text-containing-html-ignoring-tags
 
     // Make array of tag objects
     // arr[0] = {tag: 'a', tagStart: 12, tagEnd: 33};
     // Then, if 'highlight' is found between a tag start and end, +/- $numChars from its tag values unless it reaches another tagEnd first.
     // So find all tags that 'highlight' is inside. Take $numChars from the outside tag unless run into another tag first.
 
-/*    $html = mb_convert_encoding($string, "HTML-ENTITIES", 'UTF-8');
+    /*    $html = mb_convert_encoding($string, "HTML-ENTITIES", 'UTF-8');
 
- $dom = new domDocument;
- $dom->preserveWhiteSpace = false;
- $dom->loadHTML($html, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
+    $dom = new domDocument;
+    $dom->preserveWhiteSpace = false;
+    $dom->loadHTML($html, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
 
- $contents = $dom->getElementsByTagName('a');*/ // Array of Content
- // https://www.techfry.com/php-tutorial/html-basic-tags
+    $contents = $dom->getElementsByTagName('a');*/ // Array of Content
+    // https://www.techfry.com/php-tutorial/html-basic-tags
 
     while (($lastPos = strpos($string, $needle, $lastPos))!== false) {
       $positions[] = $lastPos;
