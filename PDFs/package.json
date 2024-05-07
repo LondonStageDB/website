@@ -9,7 +9,7 @@
   "dependencies": {
     "buffertools": "^2.1.6",
     "mysql": "^2.16.0",
-    "pdfjs-dist": "^2.0.466",
+    "pdfjs-dist": "^4.2.67",
     "scissors": "^0.2.3",
     "stream-to-promise": "^2.2.0"
   }
