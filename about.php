@@ -186,8 +186,7 @@
               <li>Joe Kaili, Network Administrator, College of Humanities and Social Sciences, Utah State University</li>
               <li><a href="https://devservices.uoregon.edu/">Development Services</a>, University of Oregon</li>
             </ul>
-            <p>This project would not be possible without the help of those who supported its earliest stages, including Susan Barribeau, Will Daland, Steven Dast, Erin Dix, Jack Keel, Cal Lee, Bronwen Maseman, Nick Schneider, Cindy Serikaku, Carl Stahmer,
-              Dorothea Salo, Brianna Uzuner, Steel Wagstaff, Kam Woods, Angela Zaytsev, and Irene Zimmerman.</p>
+            <p>This project would not be possible without the help of those who supported its earliest stages, including Susan Barribeau, Will Daland, Steven Dast, Erin Dix, Jack Keel, Cal Lee, Bronwen Maseman, Ben Ross Schneider III, Nick Schneider, Cindy Serikaku, Carl Stahmer, Dorothea Salo, Brianna Uzuner, Steel Wagstaff, Kam Woods, Angela Zaytsev, and Irene Zimmerman.</p>
           </div>
         </div>
         <!-- End Team -->
