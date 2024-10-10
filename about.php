@@ -122,12 +122,10 @@
         <div class="grid-x about-section">
           <div id="Funding" class="small-12" data-magellan-target="Funding">
             <h2>Funding</h2>
-            <p>This project has been made possible in part by a major grant from the <a href="http://www.neh.gov/">NEH</a> <a href="https://www.neh.gov/divisions/odh">Office of Digital
-              Humanities</a>. Any views, findings, conclusions, or recommendations expressed through this database or on this website do not necessarily represent those of the National
-              Endowment for the Humanities.</p>
-            <p>Additional support has been provided by the <a href="http://english.usu.edu/">Department of English</a>, the <a href="https://chass.usu.edu/">College of Humanities and
-              Social Sciences</a>, and the <a href="http://rgs.usu.edu/">Office of Research</a> at Utah State University, as well as the <a href="https://cas.uoregon.edu/">College of
-              Arts and Sciences</a> at the University of Oregon.</p>
+            <p>This project is made possible by grants from the <a href="http://www.neh.gov/">NEH</a> <a href="https://www.neh.gov/divisions/odh">Office of Digital
+              Humanities</a> (Awards <a href="https://apps.neh.gov/publicquery/AwardDetail.aspx?gn=HAA-258717-18">#HAA-258717-18</a> and <a href="https://www.neh.gov/sites/default/files/2024-08/NEH%20August%202024%20grants%20list%20state%20by%20state.pdf">#HAA-300527-24</a>). Any views, findings, conclusions, or recommendations expressed through this database or on this website do not necessarily represent those of the National Endowment for the Humanities.</p>
+            <p>Additional funding comes from the <a href="https://research.uoregon.edu/">Office of the Vice President for Research and Innovation</a> at the University of Oregon, as well as <a href="https://is.uoregon.edu/">UO Information Services</a>, the <a href="https://cas.uoregon.edu/">College of Arts and Sciences</a>, <a href="https://library.uoregon.edu/">UO Libraries</a>, and the <a href="">Department of English</a>.</p>
+			<p>Development work and hosting between 2018 and 2020 were supported by the <a href="http://english.usu.edu/">Department of English</a>, the <a href="https://chass.usu.edu/">College of Humanities and Social Sciences</a>, and the <a href="http://rgs.usu.edu/">Office of Research</a> at Utah State University.</p>
             <div class="logo-wrap grid-x">
               <div class="small-4 medium-6 large-3"><a href="http://www.neh.gov/"><img class="funding-logo" src="/images/NEH_h-logo_01_fullcolor.svg" alt="NEH Logo" /></a></div>
               <div class="small-4 medium-6 large-3"><a href="https://cas.uoregon.edu/"><img class="funding-logo" src="/images/UOregon-CAS-black.png" alt="University of Oregon, College of Arts and Sciences" /></a></div>
@@ -146,47 +144,55 @@
             <p>The <i>London Stage Database</i>, like any project of this scope, is the work of numerous individuals across multiple disciplines who have contributed a range of skills and expertise.</p>
             <h3>Principal Investigator and Project Director:</h3>
             <ul>
-              <li><a href="http://www.mattieburkert.com">Mattie Burkert</a>, Assistant Professor, Department of English, University of Oregon</li>
+              <li><a href="http://www.mattieburkert.com">Mattie Burkert</a>, Associate Professor, Department of English, University of Oregon</li>
             </ul>
-            <h3>Developers:</h3>
+            <h3>Informationists:</h3>
+			<ul>
+			  <li>Franny Gaede, Associate Librarian, University of Oregon</li>
+			  <li>Kate Thornhill, Associate Librarian, University of Oregon</li>
+			  <li>Erin Winter, Assistant Librarian, University of Oregon</li>
+			</ul>
+			<h3>Linked Open Data Consultant:</h3>
+			<ul>
+			  <li>Lauren Liebe, Assistant Professor of Game Design, Digital Media, Arts, and Technology, Penn State Eerie, the Behrend College</li>
+			</ul>
+			<h3>Research Assistant:</h3>
             <ul>
-              <li>Todd Hugie, Director of Library Information Technology, Merrill-Cazier Library, Utah State University</li>
-              <li>Daniel Mundra, Senior Developer, Application Services, University of Oregon</li>
-              <li>Dustin Olson, Systems Administrator, Merrill-Cazier Library, Utah State University</li>
-              <li>Cameron Seright, Analyst Programmer 2, Information Services, University of Oregon</li>
-              <li>Caden Williams, UX/UI Designer, Information Services, University of Oregon</li>
-              <li>John Zhao, Analyst Programmer 2, Information Services, University of Oregon</li>
-            </ul>
-            <h3>Research Assistant:</h3>
+              <li>Michele Pflug, Doctoral Candidate, Department of History, University of Oregon</li>
+			</ul>
+			<h3>UO Information Services Development Team:</h3>
             <ul>
-              <li>Emma Hallock, Honors Program, Department of English, Utah State University</li>
+              <li>Jesse Sedwick, Web Applications Developer and Administrator</li>
+			  <li>Tyfanie Wineriter, Software Solutions and Development Manager</li>
+			  <li>Derek Wormdahl, Senior Director of Solutions Development and Data Services</li>
+              <li>John Zhao, Analyst Programmer</li>
             </ul>
             <h3>Advisory Board:</h3>
             <ul>
-              <li>Scott Enderle, Digital Humanities Specialist, Penn Libraries, University of Pennsylvania</li>
-              <li>Michael Gamer, Professor, Department of English, University of Pennsylvania</li>
-              <li>Lauren Liebe, Doctoral Candidate, Department of English, Texas A&M University</li>
-              <li>Derek Miller, John J. Loeb Associate Professor of the Humanities, Department of English, Harvard University</li>
-              <li>Jeffrey S. Ravel, Professor and Head, Department of History, Massachusetts Institute of Technology</li>
-              <li>Doug Reside, Curator, Billy Rose Theatre Division, New York Public Library</li>
+              <li>Misty Anderson, Professor of English and James R. Cox Professor, College of Arts and Sciences, University of Tennessee</li>
+              <li>Michael Gamer, Professor of English and Comparative Literature, Department of English, University of Pennsylvania</li>
+			  <li>Michelle J. Holman, Principal Genealogist, Family History Gifts</li>
+			  <li>Todd Hugie, Director of Library Information Technology, Merrill-Cazier Library, Utah State University</li>
+			  <li>Lauren Liebe, Assistant Teaching Professor of Game Design, Digital Media, Arts, and Technology, Penn State Eerie, the Behrend College</li>
+              <li>Atsede Makonnen, Assistant Professor, Department of English, Carnegie Mellon University</li>
+			  <li>Derek Miller, Professor, Department of English, Harvard University</li>
+			  <li>Chelsea Phillips, Associate Professor of Theatre and Associate Director for Villanova Theatre, Department of Theatre and Studio Art, Villanova University</li>
+              <li>Jeffrey S. Ravel, Professor Emeritus, Department of History, Massachusetts Institute of Technology</li>
+			  <li>Fiona Ritchie, Associate Professor of Drama and Theatre, Department of English, McGill University</li>
+			  <li>Jeremy Singer-Vine, Data Editor, <i>New York Times</i></li>
               <li>Mark Vareschi, Associate Professor, Department of English, University of Wisconsin-Madison</li>
+			  <li>Jane Wessel, Associate Professor, Department of English, U.S. Naval Academy</li>
+			  <li>Kalle Westerling, Research Application Manager, Alan Turing Institute</li>
             </ul>
-            <h3>Additional Support:</h3>
-            <ul>
-              <li>James Ascher, Doctoral Candidate, Department of English, University of Virginia and Designer, <a href="https://gitlab.com/cacology/JunicodeRX">JunicodeRX font</a></li>
-              <li>Annette Cottle, Business Manager, Department of Sociology, Social Work & Anthropology, Utah State University</li>
-              <li>Katie Dana, Grant and Contract Officer, Office of Research, Utah State University</li>
-              <li>Shirley Galloway, Application Support Specialist, Information Services, University of Oregon</li>
-              <li>Clint Gillespie, Graduate, Management Information Systems, Utah State University</li>
-              <li>Garth Mikesell, Head of Information Systems, Merrill-Cazier Library, Utah State University</li>
-              <li>Angela Moore-Swafford, Rights and Permissions Manager, Southern Illinois University Press</li>
-              <li>Sam Phelps, Technical Support Specialist, Information Technology, Utah State University</li>
-              <li>Betty Rozum, Data Services Coordinator, Merrill-Cazier Library, Utah State University</li>
-              <li>Annie Strickland-Neilson, Business Manager, Department of English, Utah State University</li>
-              <li>Joe Kaili, Network Administrator, College of Humanities and Social Sciences, Utah State University</li>
-              <li><a href="https://devservices.uoregon.edu/">Development Services</a>, University of Oregon</li>
-            </ul>
-            <p>This project would not be possible without the help of those who supported its earliest stages, including Susan Barribeau, Will Daland, Steven Dast, Erin Dix, Jack Keel, Cal Lee, Bronwen Maseman, Ben Ross Schneider III, Nick Schneider, Cindy Serikaku, Carl Stahmer, Dorothea Salo, Brianna Uzuner, Steel Wagstaff, Kam Woods, Angela Zaytsev, and Irene Zimmerman.</p>
+            <h3>Past Team Members and Contributors:</h3>
+			<ul>  
+			  <li><a href="https://gitlab.com/cacology/JunicodeRX">JunicodeRX</a> Font Designer: James P. Ascher, University of Virginia</li>
+			  <li>Advisory Board Members: Scott Enderle, University of Pennsylvania Libraries; Doug Reside, New York Public Library</li>
+			  <li>Research Assistant: Emma Hallock, Utah State University ('20)</li>
+			  <li>Software Design and Development (UO): Shirley Galloway, Daniel Mundra, Cameron Seright, Caden Williams</li>
+			  <li>Software Design and Development (USU): Todd Hugie and Dustin Olson, with assistance from Clint Gillespie, Joe Kaili, Garth Mikesell, and Sam Phelps</li>
+			</ul>
+            <p>Finally, this project would not be possible without the help and support of Susan Barribeau, Melissa Bowers, Annette Cottle, Will Daland, Katie Dana, Steven Dast, Erin Dix, Mara Fields, Kathy Furrer, Clint Gillespie, Gabriele Hayden, John Karczewski, Jack Keel, Holly Lakey, Cal Lee, Christina Lujin, Bronwen Maseman, Mike Murashige, Angela Moore-Swafford, Betty Rozum, Dorothea Salo, Ben Ross Schneider III, Nick Schneider, Cindy Serikaku, Carl Stahmer, Annie Strickland-Neilson, Brianna Uzuner, Steel Wagstaff, Mark Whalan, Kam Woods, David Yorgeson, Angela Zaytsev, and Irene Zimmerman.</p>
           </div>
         </div>
         <!-- End Team -->
