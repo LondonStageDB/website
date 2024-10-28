@@ -199,7 +199,7 @@
                   <?php endif; ?>
                 </div>
                 <?php $works = getRelatedWorks($perf['PerformanceTitle']); ?>
-                <?php if(count($works) > 0) : ?>
+                <?php if(!empty($works) && count($works) > 0) : ?>
                 <div class="small-12 medium-5 large-4 related-works">
                   <h3>Related Works</h3>
                   <?php foreach ($works as $work) : ?>
