@@ -96,7 +96,7 @@
                   <div class="form-group field-theatre">
                     <label for="theatre" class="fb-select-label">Theatre</label>
                     <select class="theatre" name="theatre" id="theatre">
-                      <option disabled <?php if ((!$_GET['theatre']) || ($_GET['theatre'] && $_GET['theatre'] !== '')) echo 'selected="selected"'; ?>>
+                      <option disabled <?php if ((!isset($_GET['theatre'])) || ($_GET['theatre'] && $_GET['theatre'] !== '')) echo 'selected="selected"'; ?>>
                           Select a Theatre</option>
                       <option value="all">Any Theatre...</option>
                       <option disabled>_________</option>
@@ -392,11 +392,12 @@
                         echo '</h4>';
                         if (isset($_GET['keyword']) && isFoundIn($perf['CommentP'], cleanQuotes(cleanStr($_GET['keyword']))) ) echo '<span class="perf-comm"><span class="smcp"><b>Performance Comment: </b></span>' . highlight(namedEntityLinks($perf['CommentP'], true), cleanQuotes($_GET['keyword'])) . '</span><br>';
                         echo '<div class="perf-body">';
-                         $inCast = isInCast(cleanQuotes($_GET['keyword']) . '|' . cleanQuotes($cleanedActors), cleanQuotes(cleanStr($_GET['keyword'] || '')) . '|' . cleanQuotes($cleanedRoles), $perf['cast']);
+                        $keyword = isset($_GET['keyword']) ? $_GET['keyword'] : '';
+                         $inCast = isInCast(cleanQuotes($keyword) . '|' . cleanQuotes($cleanedActors), cleanQuotes(cleanStr($keyword)) . '|' . cleanQuotes($cleanedRoles), $perf['cast']);
                          if ($inCast !== false) {
                            echo '<div class="cast"><h5>Cast</h5>';
                            foreach ($inCast as $cast) {
-                             echo '<span class="c-role"><span class="smcp"><b>Role</b></span>: ' . highlight(linkedSearches('role[]', $cast['Role'], true), cleanQuotes($_GET['keyword']) . '|' . cleanQuotes($cleanedRoles)) . '</span> <span class="c-act"><span class="smcp"><b>Actor</b></span>: ' . highlight(linkedSearches('actor[]', $cast['Performer'], true), cleanQuotes($_GET['keyword']) . '|' . cleanQuotes($cleanedActors)) . '</span><br>';
+                             echo '<span class="c-role"><span class="smcp"><b>Role</b></span>: ' . highlight(linkedSearches('role[]', $cast['Role'], true), cleanQuotes($keyword) . '|' . cleanQuotes($cleanedRoles)) . '</span> <span class="c-act"><span class="smcp"><b>Actor</b></span>: ' . highlight(linkedSearches('actor[]', $cast['Performer'], true), cleanQuotes($keyword) . '|' . cleanQuotes($cleanedActors)) . '</span><br>';
                            }
                            echo '</div>';
                          }
@@ -408,7 +409,9 @@
                             foreach ($perf['RelatedWorks'] as $rltd) {
                               if (isset($rltd['author']) && count($rltd['author']) > 0) {
                                 foreach ($rltd['author'] as $rltdAuth) {
-                                  if (isFoundIn($rltdAuth['authname'], cleanQuotes(cleanStr($_GET['keyword'])) . '|' . cleanQuotes(cleanStr($_GET['author'])))) {
+                                  $author = isset($_GET['author']) ? $_GET['author'] : '';
+                                  $keyword = isset($_GET['keyword']) ? $_GET['keyword'] : '';
+                                  if (isFoundIn($rltdAuth['authname'], cleanQuotes(cleanStr($keyword)) . '|' . cleanQuotes(cleanStr($author)))) {
                                     $isFoundInRelated = true;
                                     if (!in_array($rltd['title'], $isFoundUnique)) {
                                       $isFoundUnique[] = $rltd['title'];
@@ -425,8 +428,8 @@
                                   echo '<div class="rltd-auth"><span class="work-wrap"><span class="smcp"><b>Related Work:</b></span> ' . $rltd2['title'] . '</span> ';
                                   echo '<span class="auth-wrap"><span class="smcp"><b>Author(s):</b></span> ';
                                   foreach ($rltd2['author'] as $rltdAuth2) {
-                                    if (isFoundIn($rltdAuth2['authname'], cleanQuotes(cleanStr($_GET['keyword'])) . '|' . cleanQuotes(cleanStr($_GET['author'])))) {
-                                      echo '<span class="auth">' . highlight($rltdAuth2['authname'], cleanQuotes($_GET['keyword']) . '|' . cleanQuotes($_GET['author'])) . '</span>';
+                                    if (isFoundIn($rltdAuth2['authname'], cleanQuotes(cleanStr($keyword)) . '|' . cleanQuotes(cleanStr($author)))) {
+                                      echo '<span class="auth">' . highlight($rltdAuth2['authname'], cleanQuotes($keyword) . '|' . cleanQuotes($author)) . '</span>';
                                     }
                                   }
                                   echo '</span></div>';
