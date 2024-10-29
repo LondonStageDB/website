@@ -390,7 +390,7 @@
                           echo '</div>';
                         }
                         if ((isset($_GET['author']) && trim($_GET['author']) !== '') || (isset($_GET['keyword']) && trim($_GET['keyword']) !== '')) {
-                          if (count($perf['relatedWorks']) > 0) {
+                          if (isset($perf['relatedWorks']) && count($perf['relatedWorks']) > 0) {
                             $isFoundInRelated = false;
                             $isFoundUnique = array(); // Track unique work names
                             $isFoundArr = array();
