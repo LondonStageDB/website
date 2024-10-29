@@ -1969,8 +1969,8 @@
     $value = trim($value);
     if ($value === '') return '';
 
-    // Clean the value string up a bit. Remove '$, |, =, *'. Change brackets to HTML entities.
-    $value = preg_replace('/[\[\]]/', '&rbrack;', strip_tags(preg_replace('/[\$|=\*\/]/', '', $value)));
+    // Clean the value string up a bit. Remove '$, |, ), =, *'. Change brackets to HTML entities.
+    $value = preg_replace('/[\[\]]/', '&rbrack;', strip_tags(preg_replace('/[\$|=\)\*\/]/', '', $value)));
     preg_match_all('~[^,]+~', $value, $m);
 
     foreach($m[0] as $k => $val) {
