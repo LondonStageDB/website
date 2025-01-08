@@ -202,7 +202,7 @@
             <p>The image collage that is displayed on the landing page and in the background of the search, results, and events pages was created by Dustin Olson, and is covered by a <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC-BY-NC-SA 4.0 license</a>.</p>
             <p>Clockwise from top left:</p>
             <ul>
-              <li><a href="https://www.bl.uk/collection-items/engraving-of-the-screen-scene-from-sheridans-the-school-for-scandal">“Scene from <i>School for Scandal</i> being performed in Drury Lane Theatre, London,”</a> 1778, © The Trustees of the British Museum, CC-BY-NC-SA 4.0 license</li>
+              <li><a href="https://www.britishmuseum.org/collection/object/P_Ee-4-80">“Scene from <i>School for Scandal</i> being performed in Drury Lane Theatre, London,”</a> 1778, © The Trustees of the British Museum, CC-BY-NC-SA 4.0 license</li>
               <li><a href="https://collections.britishart.yale.edu/vufind/Record/3653228">William Blake, “<i>Beggar’s Opera</i>, Act III,”</a> c.1790, Yale Center for British Art, Paul Mellon Collection, Public Domain</li>
               <li><a href="https://collections.britishart.yale.edu/vufind/Record/1670672">Thomas Rowlandson, “An Audience Watching a Play at Drury Lane Theatre,”</a> c.1785, Yale Center for British Art, Paul Mellon Collection, Public Domain</li>
               <li><a href="https://www.bl.uk/collection-items/playbills-for-performances-in-london-and-bristol-1774-77"> Playbill from Burney Collection, “‘Theatrical Register.’ A collection of playbills of London theatres, chiefly of Drury Lane, Covent Garden and the Haymarket,”</a>                1774-1777, British Library, Public Domain</li>
