@@ -3,7 +3,7 @@
 
 <head>
   <?php include_once('common/header.php'); ?>
-  <title>London Stage Database Team</title>
+  <title>About London Stage Database Project</title>
 </head>
 
 <body id="about">
@@ -11,18 +11,51 @@
   <div id="main" class="main grid-container">
     <div class="grid-x">
       <div class="small-12 page-heading">
-        <h1>Meet Our Team</h1>
+        <h1>Meet the Team</h1>
       </div>
+      <div class="small-12 medium-4 large-3 about-nav" id="aboutNav">
+        <nav class="show-for-small-only about-mobile-nav sticky-container" id="mobileNav" data-sticky-container>
+          <div class data-sticky data-anchor="mobileNav" data-sticky-on="small">
+            <ul class="menu" data-magellan>
+              <li><a href="#PI">Principal Investigator</a></li>
+              <li><a href="#Informationists">Informationists</a></li>
+              <li><a href="#LOD">Linked Open Data Consultant</a></li>
+              <li><a href="#IS">UO Information Services</a></li>
+              <li><a href="#RAs">Research Assistants</a></li>
+              <li><a href="#AdBoard">Advisory Board</a></li>
+              <li><a href="#PastMembers">Past Members</a>
+            </ul>
+          </div>
+        </nav>
+        <nav class="sticky-container show-for-medium" data-sticky-container>
+          <div class data-sticky data-anchor="aboutNav" data-sticky-on="medium">
+            <h2>On This Page</h2>
+            <ul class="vertical menu" data-magellan>
+              <li><a href="#PI">Principal Investigator</a></li>
+              <li><a href="#Informationists">Informationists</a></li>
+              <li><a href="#LOD">Linked Open Data Consultant</a></li>
+              <li><a href="#IS">UO Information Services</a></li>
+              <li><a href="#RAs">Research Assistants</a></li>
+              <li><a href="#AdBoard">Advisory Board</a></li>
+              <li><a href="#PastMembers">Past Members</a>
+            </ul>
+          </div>
+        </nav>
+      </div>
+      <div id="top" class="small-12 medium-8 large-9 about-content">
+        <div class="grid-x about-section">
+          <div class="small-12">
+            <p>The London Stage Database, like any project of this scope, is the work of numerous individuals across multiple disciplines and institutions who have contributed a range of skills and expertise.
+          </div>
+        </div>
         <div class="grid-x about-section">
           <div id="Team" class="small-12" data-magellan-target="Team">
-            <h2>Current Team</h2>
-<p class="has-line-data" data-line-start="2" data-line-end="3">The London Stage Database, like any project of this scope, is the work of numerous individuals across multiple disciplines and institutions who have contributed a range of skills and expertise.</p>
-<h3 class="code-line" data-line-start=4 data-line-end=5 ><a id="Principal_Investigator_and_Project_Director_4"></a>Principal Investigator and Project Director</h3>
+<h2 class="code-line" data-line-start=4 data-line-end=5 ><a id="PI"></a>Principal Investigator and Project Director</h2>
   <h4 class="code-line" data-line-start=6 data-line-end=7 ><a id="Mattie_Burkert_PhD_6"></a><strong>Mattie Burkert</strong>, PhD</h4>
   <img alt="Headshot of Mattie Burkert outside" style="float:right;padding-left:25px;width:190px;height:245.88px;" src="https://github.com/LondonStageDB/website/blob/main/images/MattieBurkert.jpeg?raw=true">
     <p class="has-line-data" data-line-start="7" data-line-end="8"><a href="https://cas.uoregon.edu/directory/english/all/mburkert">Associate Professor, Department of English, University of Oregon</a></p>
     <p class="has-line-data" data-line-start="9" data-line-end="10">As project director since 2018, <a href="https://mattieburkert.com/">Mattie Burkert</a> has overseen the transformation of an early humanities computing project into a modern relational database, the <em>London Stage Database</em>. With the support of a second grant from the National Endowment for the Humanities, Burkert now leads the next phase of the project to expand the database’s content, functionality, and sustainability, bringing a nuanced understanding of eighteenth-century theatrical culture to a broader user base. She is the author of <a href="https://www.upress.virginia.edu/title/5420/"><em>Speculative Enterprise: Public Theaters and Financial Markets in London, 1688-1763</em></a> and has published widely on the topics of digital humanities, new media studies, early modern and eighteenth-century literature, and theater and performance.</p> 
-      <h3 class="code-line" data-line-start=11 data-line-end=12 ><a id="Informationists_11"></a>Informationists</h3>
+<h2 class="code-line" data-line-start=11 data-line-end=12 ><a id="Informationists"></a>Informationists</h2>
 <h4 class="code-line" data-line-start=13 data-line-end=14 ><a id="Franny_Gaede_MSIS_13"></a><strong>Franny Gaede</strong>, MSIS</h4>
 <img alt="Headshot of Franny Gaede in front of blue-gray background" style="float:right;padding-left:25px;width:175px;height:210px;" src="https://github.com/LondonStageDB/website/blob/main/images/FrannyGaede.jpeg?raw=true">
 <p class="has-line-data" data-line-start="14" data-line-end="15"><a href="https://library.uoregon.edu/directory/gaede">Strategic Projects Librarian, University of Oregon</a></p>
@@ -34,12 +67,12 @@
   <h4 class="code-line" data-line-start=23 data-line-end=24 ><a id="Erin_Winter_MS_MSLS_23"></a><strong>Erin Winter</strong>, MS, MSLS</h4>
 <p class="has-line-data" data-line-start="24" data-line-end="25"><a href="https://library.uoregon.edu/directory/winter">Research Data Management Librarian, University of Oregon</a></p>
 <p class="has-line-data" data-line-start="26" data-line-end="27">With degrees in both Computer Science and Library Science, Winter consults with researchers on topics such as data manipulation and cleaning, version control, and project management for computational research. While Winter collaborates with faculty, staff, and students across disciplines, she has a particular interest and depth of experience in digital humanities, having worked on sponsored DH projects at the University of Wisconsin, UNC-Chapel Hill, and Duke University. Winter collaborates with other LSDB team members on the curation of new data and metadata, focusing on Linked Open Data and interoperability efforts.</p>
-<h3 class="code-line" data-line-start=29 data-line-end=30 ><a id="Linked_Open_Data_Consultant_29"></a>Linked Open Data Consultant</h3>
+<h2 class="code-line" data-line-start=29 data-line-end=30 ><a id="LOD"></a>Linked Open Data Consultant</h2>
   <h4 class="code-line" data-line-start=31 data-line-end=32 ><a id="Lauren_Liebe_PhD_31"></a><strong>Lauren Liebe</strong>, PhD</h4>
   <img alt="Headshot of Lauren Liebe in front of green background" style="float:right;padding-left:25px;width:225px;height:225px;" src="https://github.com/LondonStageDB/website/blob/main/images/LaurenLiebe.jpeg?raw=true">
 <p class="has-line-data" data-line-start="32" data-line-end="33"><a href="https://behrend.psu.edu/person/lauren-liebe">Assistant Teaching Professor of Game Design, Digital Media, Arts, and Technology, Penn State Eerie, the Behrend College</a></p>
 <p class="has-line-data" data-line-start="34" data-line-end="35">A specialist in early modern and Restoration English drama, Liebe is the project developer and general editor of Digital Restoration Drama, an open access database of seventeenth-century play texts. Previously, Liebe served as a Postdoctoral Fellow at the Center of Digital Humanities Research at Texas A &amp; M and as a Project Manager for the Advanced Research Consortium, a hub promoting DH research discovery, peer review, and data aggregation. For the LSDB, Liebe is currently working to link named entities to their VIAF identifiers, enhancing the interoperability of the site.</p>
-<h3 class="code-line" data-line-start=36 data-line-end=37 ><a id="UO_Information_Services_Team_36"></a>UO Information Services Team</h3>
+<h2 class="code-line" data-line-start=36 data-line-end=37 ><a id="IS"></a>UO Information Services Team</h2>
 <p class="has-line-data" data-line-start="38" data-line-end="39">The London Stage Database is maintained by a team of dedicated developers and programmers at UO. Currently, the software development team is working to improve site functionality, ensure long-term preservation of the project, and support the ingestion of new primary source material.  The team provides crucial technical support and oversight of the database as the LSDB continues to enhance user experience and expand the range of search capabilities.</p>
     <h4 class="code-line" data-line-start=40 data-line-end=41 ><a id="Jesse_Sedwick_BS_40"></a><strong>Jesse Sedwick</strong>, BS</h4>
     <p class="has-line-data" data-line-start="41" data-line-end="42">Web Applications Developer &amp; Administrator</p>
@@ -56,7 +89,7 @@
     <h4 class="code-line" data-line-start=60 data-line-end=61 ><a id="Dennis_Pipes_MEd_60"></a><strong>Dennis Pipes</strong>, MEd</h4>
 <p class="has-line-data" data-line-start="61" data-line-end="62">Analyst Programmer</p>
 <p class="has-line-data" data-line-start="63" data-line-end="64">Pipes has worked in both K-12 and higher education for over twenty years, serving as an instructor, support specialist, and web developer. He also has over ten years of experience in the private sector as a trainer and tech generalist.</p>
-<h3 class="code-line" data-line-start=55 data-line-end=56 ><a id="Research_Assistants_20242025_55"></a>Research Assistants 2024-2025</h3>
+<h2 class="code-line" data-line-start=55 data-line-end=56 ><a id="RAs"></a>Research Assistants 2024-2025</h2>
   <h4 class="code-line" data-line-start=57 data-line-end=58 ><a id="Michele_Pflug_MA_57"></a><strong>Michele Pflug</strong>, MA</h4>
   <img alt="Headshot of Michele Pflug outside" style="float:right;padding-left:25px;width:225px;height:225px;" src="https://github.com/LondonStageDB/website/blob/main/images/MichelePflug.jpeg?raw=true">
 <p><a id="Doctoral_Candidate_Department_of_History_University_of_Oregonhttpscasuoregonedudirectorysocialsciencesallmpflug_58"></a><a href="https://cas.uoregon.edu/directory/social-sciences/all/mpflug">Doctoral Candidate, Department of History, University of Oregon</a></p>
@@ -64,7 +97,7 @@
 <h4 class="code-line" data-line-start=72 data-line-end=73 ><a id="Emma_Kaisner_72"></a><strong>Emma Kaisner</strong><img alt="Headshot of Emma Kaisner in front of brick wall" style="float:right;padding-left:25px;width:210px;height:248.1px;" src="https://github.com/LondonStageDB/website/blob/main/images/EmmaKaisner.jpeg?raw=true"></h4>
 <p class="has-line-data" data-line-start="73" data-line-end="74"><a href="https://www.linkedin.com/in/emma-kaisner">BA Student, Economics &amp; English, University of Oregon</a></p>
 <p class="has-line-data" data-line-start="75" data-line-end="76">Kaisner is a current Senior at the University of Oregon and a student in the Robert D. Clark Honors College. As an Economics and English student, Kaisner is interested in the interactions between literature, economics, and data science. During her time as a LSDB team member, Kaisner will assist in data collection and the implementation of a communications strategy for the project. Kaisner will also develop her own line of research inquiry to further engage with her own research interests and demonstrate the impact of the LDSB.</p>
-<h3 class="code-line" data-line-start=77 data-line-end=78 ><a id="Advisory_Board_77"></a>Advisory Board</h3>
+<h2 class="code-line" data-line-start=77 data-line-end=78 ><a id="AdBoard"></a>Advisory Board</h2>
 <p class="has-line-data" data-line-start="79" data-line-end="80">The advisory board—a diverse group of digital humanities practitioners, theater researchers, teachers, dramaturgs, software engineers, data journalists, and genealogists—offers expert guidance on the current expansion of the LSDB project. Together, their areas of expertise reflect the LSDB’s goal to engage and grow user communities by making relevant data accessible and interoperable.</p>
 <h4 class="code-line" data-line-start=81 data-line-end=82 ><a id="Misty_Anderson_PhD_81"></a><strong>Misty Anderson</strong>, PhD</h4>
 <img alt="Headshot of Misty Anderson outside" style="float:right;padding-left:25px;width:178.6px;height:205.92px;" src="https://github.com/LondonStageDB/website/blob/main/images/MistyAnderson.jpeg?raw=true">
@@ -117,12 +150,11 @@
 <img alt="Headshot of Kalle Westerling in front of tan curtain" style="float:right;padding-left:25px;width:208px;height:219.4px;" src="https://github.com/LondonStageDB/website/blob/main/images/KalleWesterling.jpeg?raw=true">
 <p class="has-line-data" data-line-start="142" data-line-end="143"><a href="https://www.turing.ac.uk/people/researchers/kalle-westerling">Research Application Manager, Alan Turing Institute</a></p>
 <p class="has-line-data" data-line-start="144" data-line-end="145">An experienced Digital Humanities technologist and project manager with a particular interest in sustainability and capacity-building, Westerling previously oversaw <a href="https://www.dhinstitutes.org"><em>Digital Humanities Research Institutes: Expanding Communities of Practice</em></a>, an Institute for Advanced Topics in DH funded by two NEH grants. They also worked as a digital humanities software engineer on the <a href="https://livingwithmachines.ac.uk/team/">Living with Machines</a> project, an interdisciplinary research initiative that explores the impact of the Industrial Revolution on ordinary people. Westerling’s expertise lies at the intersection of DH and theater studies.</p>
-<h3 class="code-line" data-line-start=147 data-line-end=148 ><a id="Past_Members_147"></a>Past Members</h3>
+<h2 class="code-line" data-line-start=147 data-line-end=148 ><a id="PastMembers"></a>Past Members</h2>
 <p class="has-line-data" data-line-start="149" data-line-end="150">This project would not be possible without the help of those who supported its earlier stages, including Susan Barribeau, Will Daland, Steven Dast, Erin Dix, Jack Keel, Cal Lee, Bronwen Maseman, Ben Ross Schneider III, Nick Schneider, Cindy Serikaku, Carl Stahmer, Dorothea Salo, Brianna Uzuner, Steel Wagstaff, Kam Woods, Angela Zaytsev, Irene Zimmerman, Dustin Olson, Caden Williams, Emma Hallock, Scott Enderle, Doug Reside, James Ascher, Annette Cottle, Katie Dana, Clint Gillespie, Garth Mikesell, Angela Moore-Swafford, Sam Phelps, Betty Rozum, Annie Strickland-Neilson, Cameron Seright, and Joe Kaili.</p>
 <p class="has-line-data" data-line-start="151" data-line-end="152"></p>
           </div>
         </div>
-
       </div>
     </div>
   </div>
