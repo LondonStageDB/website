@@ -8,17 +8,21 @@
         <div class="top-bar-left">
             <a href="/" class="menu-text">London Stage Database</a>
         </div>
-        <div class="top-bar-right">
-          <ul class="dropdown menu" data-dropdown-menu>
+      <div class="top-bar-right">
+          <ul class="dropdown menu horizontal" data-dropdown-menu>
             <li><a href="/">Home</a></li>
             <li><a href="/search.php">Advanced Search</a></li>
             <li><a href="/legacy-search.php">Legacy Search</a></li>
             <li><a href="/data.php">Full Data Sets</a></li>
             <li><a href="/guide.php">User Guide</a></li>
-            <li><a href="/about.php">About</a></li>
-            <li><a href="/team.php">Team</a></li>
-            <li><a href="/history.php">History</a></li>
+            <ul class="vertical menu nested">
+              <li><a href="/about.php">About</a></li>
+              <ul class="vertical menu"><li><a href="/history.php">History</a></li>
+              <li><a href="/team.php">Team</a></li></ul>
+            </ul>
             <li><a href="/contact.php">Contact</a></li>
+</ul>
+            
           </ul>
         </div>
       </div>

@@ -32,11 +32,6 @@
         </div>
         <div class="grid-x about-section">
           <div id="Project" class="small-12" data-magellan-target="Project">
-            <p>The <i>London Stage Database</i> is the latest in a long line of projects that aim to capture and present the rich array of information available on the theatrical culture of
-              London, from the reopening of the public playhouses following the English civil wars in 1660 to the end of the eighteenth century. On a given night, in each of the city’s playhouses,
-              hundreds or even thousands of spectators gathered to experience richly varied performance events that included not only plays, but prologues and epilogues, short afterpieces and
-              farces, pantomimes, instrumental music, singing, and dancing. These events, taken together, provide a wealth of information about the rhythms of public life and the texture of
-              popular culture in long-eighteenth-century London.</p>
   <h2 class="code-line" data-line-start=5 data-line-end=6 ><a id="ProjectTimeline"></a>Project Timeline</h2>
 <h3 class="code-line" data-line-start=0 data-line-end=1 ><a id="1960__1968_The_London_Stage_Reference_Books_0"></a>1960 - 1968: The London Stage Reference Books</h3>
 In the middle of the twentieth century, a team of theater historians created a calendar of performances based on playbills and newspaper notices used to advertise performances,

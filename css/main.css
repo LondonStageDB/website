@@ -1725,6 +1725,128 @@ body#home:after {
   }
 }
 
+/****************/
+/*  History Page  */
+/****************/
+
+#history .main {
+  width: 100%;
+  position: relative;
+  padding-bottom: 3rem;
+}
+#history h3 {
+  font-size: 1.3rem;
+  /*text-transform: uppercase;*/
+  font-feature-settings: "smcp";
+  -webkit-font-feature-settings: "smcp";
+}
+#history h2 {
+  font-size: 1.9rem;
+}
+#history .history-mobile-nav {
+  position: fixed;
+  background: #6e2424;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  //height: 35px;
+}
+#history .history-mobile-nav ul {
+  display: flex;
+  flex-direction: row;
+  //height: 35px;
+  flex-wrap: wrap;
+}
+#history .history-mobile-nav ul li {
+  flex: 1 0;
+  flex: 1 0 21%;
+  height: 42px;
+}
+#history .history-mobile-nav ul li:nth-of-type(-n+4) {
+  border-bottom: 1px solid #d6d0c2;
+}
+#history .history-mobile-nav li a {
+  color: #ece7d9;
+  font-size: 0.85rem;
+}
+#history .history-mobile-nav li a:focus,
+#history .history-mobile-nav li a:active {
+  background: #c8c2b3;
+  color: #6e2424;
+}
+#history .page-heading h1 {
+  text-align: center;
+  font-size: 3rem;
+  padding: 1rem 0;
+  font-family: 'aquilinetworegular';
+  padding-bottom: 2rem;
+}
+#history .history-nav {
+  padding: 0 1rem;
+}
+#history #mobileNav a {
+  text-align: center;
+  letter-spacing: 1px;
+  padding: 0;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+#history .history-nav-sticky {
+  padding-bottom: 2rem;
+}
+#history .history-nav-sticky > div {
+  text-align: center;
+  padding-bottom: 2rem;
+}
+#history #historyNav a {
+  padding: 0.5rem 1rem;
+}
+#history .history-nav a.is-active {
+  background: #6e2424;
+  color: #ece7d9;
+}
+#history #mobileNav a.is-active {
+  background: #c8c2b3;
+  color: #6e2424;
+  font-weight: bold;
+}
+#history .history-nav h2 {
+  font-size: 1.4rem;
+  font-weight: 600;
+  font-feature-settings: "smcp";
+  -webkit-font-feature-settings: "smcp";
+  /*text-transform: uppercase;*/
+  padding-left: 1rem;
+}
+#history .history-nav .sticky {
+  padding-top: 1rem;
+}
+#history #mobileNav .sticky {
+  padding-top: 0;
+}
+#history .history-section {
+  padding: 0 1rem;
+  padding-bottom: 2rem;
+}
+@media only screen and (min-width: 640px) {
+  #history h3 {
+    font-size: 1.4rem;
+  }
+  #history h2 {
+    font-size: 2.5rem;
+  }
+  #history .history-nav-sticky > div {
+    text-align: left;
+  }
+}
+@media only screen and (min-width: 1024px) {
+  #history .history-section {
+    padding-right: 3rem;
+  }
+}
+
 
 /******************/
 /*  Contact Page  */
