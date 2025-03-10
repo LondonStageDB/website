@@ -22,3 +22,6 @@
       </div>
     </nav>
 </div>
+<div id="announcement" style="background-color:#6e2424;opacity:0.9;color:white;padding:10px;">
+<strong>The London Stage Database team will be retiring the Legacy Search on May 1, 2025.</strong> Please take a moment before that date to reproduce any pre-2021 searches and export any resulting datasets you may wish to preserve for future use. We are making this change in order to free up computational resources for new features and data, currently in development with support from the National Endowment for the Humanities. Watch this space for more updates and, coming soon, new ways to keep up with the latest project developments!
+</div>
