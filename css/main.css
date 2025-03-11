@@ -1892,7 +1892,50 @@ body#home:after {
     padding-bottom: 1rem;
   }
 }
+/******************/
+/*  About Data Page  */
+/******************/
 
+#about-data .main {
+  width: 100%;
+  min-height: calc(100vh - 54px);
+  position: relative;
+  padding-bottom: 3rem;
+}
+#about-data .about-data-wrap {
+  justify-content: center;
+}
+#about-data .page-heading {
+  padding: 0 3rem;
+}
+#about-data .page-heading h1 {
+  text-align: center;
+  font-size: 3rem;
+  padding: 1rem 0;
+  font-family: 'aquilinetworegular';
+  padding-bottom: 2rem;
+}
+#about-data .about-data-form {
+  padding: 1rem;
+}
+#about-data .about-data-desc {
+  padding: 0 1rem;
+  padding-bottom: 1rem;
+}
+#about-data .form-btn {
+  display: flex;
+  padding: 2rem;
+  justify-content: flex-end;
+}
+@media only screen and (min-width: 640px) {
+  #about-data .form-section {
+    padding: 0 2rem;
+  }
+  #about-datat .about-data-desc {
+    padding: 0 2rem;
+    padding-bottom: 1rem;
+  }
+}
 
 /******************/
 /*  Confirm Page  */
