@@ -1,6 +1,6 @@
 <head>
   <?php include_once('common/header.php'); ?>
-  <title>About London Stage Database Project</title>
+  <title>History</title>
 </head>
 
 <body id="about">
