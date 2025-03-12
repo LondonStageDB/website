@@ -3,18 +3,18 @@
 
 <head>
   <?php include_once('common/header.php'); ?>
-  <title>About London Stage Database Project</title>
+  <title>Meet the Team</title>
 </head>
 
-<body id="about">
+<body id="team">
   <?php include_once('common/nav.php'); ?>
   <div id="main" class="main grid-container">
     <div class="grid-x">
       <div class="small-12 page-heading">
         <h1>Meet the Team</h1>
       </div>
-      <div class="small-12 medium-4 large-3 about-nav" id="aboutNav">
-        <nav class="show-for-small-only about-mobile-nav sticky-container" id="mobileNav" data-sticky-container>
+      <div class="small-12 medium-4 large-3 team-nav" id="teamNav">
+        <nav class="show-for-small-only team-mobile-nav sticky-container" id="mobileNav" data-sticky-container>
           <div class data-sticky data-anchor="mobileNav" data-sticky-on="small">
             <ul class="menu" data-magellan>
               <li><a href="#PI">Principal Investigator</a></li>
@@ -28,7 +28,7 @@
           </div>
         </nav>
         <nav class="sticky-container show-for-medium" data-sticky-container>
-          <div class data-sticky data-anchor="aboutNav" data-sticky-on="medium">
+          <div class data-sticky data-anchor="teamNav" data-sticky-on="medium">
             <h2>On This Page</h2>
             <ul class="vertical menu" data-magellan>
               <li><a href="#PI">Principal Investigator</a></li>
@@ -42,13 +42,13 @@
           </div>
         </nav>
       </div>
-      <div id="top" class="small-12 medium-8 large-9 about-content">
-        <div class="grid-x about-section">
+      <div id="top" class="small-12 medium-8 large-9 team-content">
+        <div class="grid-x team-section">
           <div class="small-12">
             <p>The London Stage Database, like any project of this scope, is the work of numerous individuals across multiple disciplines and institutions who have contributed a range of skills and expertise.
           </div>
         </div>
-        <div class="grid-x about-section">
+        <div class="grid-x team-section">
           <div id="Team" class="small-12" data-magellan-target="Team">
 <h2 class="code-line" data-line-start=4 data-line-end=5 ><a id="PI"></a>Principal Investigator and Project Director</h2>
   <h4 class="code-line" data-line-start=6 data-line-end=7 ><a id="Mattie_Burkert_PhD_6"></a><strong>Mattie Burkert</strong>, PhD</h4>
@@ -96,7 +96,7 @@
 <p class="has-line-data" data-line-start="60" data-line-end="61">Pflug’s research interests lie at the intersection of the history of science, women’s studies, collections management, and media studies. Her doctoral work has been recognized with an <a href="https://www.acls.org/fellow-grantees/michele-d-pflug/">ACLS Dissertation Innovation Fellowship</a> and awards from the Bibliographic Society of America, the American Society for Eighteenth-Century Studies, and the Linda Hall Library. A former rare books curator, she has contributed to and supported the development of various digital projects hosted by galleries, libraries, museums, and archives. Along with LSDB team member Erin Winter, Pflug will develop data and metadata curation protocols that expand the range of sources available to LSDB users.</p>
 <h4 class="code-line" data-line-start=72 data-line-end=73 ><a id="Emma_Kaisner_72"></a><strong>Emma Kaisner</strong><img alt="Headshot of Emma Kaisner in front of brick wall" style="float:right;padding-left:25px;width:210px;height:248.1px;" src="https://github.com/LondonStageDB/website/blob/main/images/EmmaKaisner.jpeg?raw=true"></h4>
 <p class="has-line-data" data-line-start="73" data-line-end="74"><a href="https://www.linkedin.com/in/emma-kaisner">BA Student, Economics &amp; English, University of Oregon</a></p>
-<p class="has-line-data" data-line-start="75" data-line-end="76">Kaisner is a current Senior at the University of Oregon and a student in the Robert D. Clark Honors College. As an Economics and English student, Kaisner is interested in the interactions between literature, economics, and data science. During her time as a LSDB team member, Kaisner will assist in data collection and the implementation of a communications strategy for the project. Kaisner will also develop her own line of research inquiry to further engage with her own research interests and demonstrate the impact of the LDSB.</p>
+<p class="has-line-data" data-line-start="75" data-line-end="76">Kaisner is a current Senior at the University of Oregon and a student in the Robert D. Clark Honors College. As an Economics and English student, Kaisner is interested in the interactions between literature, economics, and data science. During her time as a LSDB team member, Kaisner will assist in data collection and the implementation of a communications strategy for the project. Kaisner will also develop her own line of research inquiry to further engage with her own research interests and demonstrate the impact of the LSDB.</p>
 <h2 class="code-line" data-line-start=77 data-line-end=78 ><a id="AdBoard"></a>Advisory Board</h2>
 <p class="has-line-data" data-line-start="79" data-line-end="80">The advisory board—a diverse group of digital humanities practitioners, theater researchers, teachers, dramaturgs, software engineers, data journalists, and genealogists—offers expert guidance on the current expansion of the LSDB project. Together, their areas of expertise reflect the LSDB’s goal to engage and grow user communities by making relevant data accessible and interoperable.</p>
 <h4 class="code-line" data-line-start=81 data-line-end=82 ><a id="Misty_Anderson_PhD_81"></a><strong>Misty Anderson</strong>, PhD</h4>
@@ -129,7 +129,7 @@
 <h4 class="code-line" data-line-start=116 data-line-end=117 ><a id="Jeffrey_S_Ravel_PhD_116"></a><strong>Jeffrey S. Ravel</strong>, PhD</h4>
 <img alt="Headshot of Jeffrey Ravel in front of window" style="float:right;padding-left:25px;width:200px;height:197.33px;" src="https://github.com/LondonStageDB/website/blob/main/images/JeffreyRavel.jpeg?raw=true">
 <p class="has-line-data" data-line-start="117" data-line-end="118"><a href="https://history.mit.edu/people/jeffrey-s-ravel/">Professor Emeritus, Department of History, Massachusetts Institute of Technology</a></p>
-<p class="has-line-data" data-line-start="119" data-line-end="120">Ravel specializes in French and European history from the seventeenth through the nineteenth centuries. He is the author of two books: <a href="https://www.cambridge.org/core/journals/law-and-history-review/article/jeffrey-s-ravel-the-wouldbe-commoner-a-tale-of-deception-murder-and-justice-in-seventeenthcentury-france-boston-and-new-york-houghton-mifflin-company-2008-pp-320-25-isbn-9780618197316/1044160B26B07D4C711A4792A7BD5F59"><em>The Would-Be Commoner: A Tale of Deception, Murder, and Justice in Seventeenth Century France</em></a>; and <a href="https://www.cornellpress.cornell.edu/book/9780801485411/the-contested-parterre/"><em>The Contested Parterre: Public Theater and French Political Culture, 1680-1791</em></a>. Since 2008, he has co-directed the <a href="https://cfregisters.org/#!/">Comédie Française Registers Project (CFRP)</a> and has contributed to several DH projects and initiatives focused on French theatre and culture. He is a powerful advocate for interdisciplinary, collaborative, data-driven approaches to theater history.</p>
+<p class="has-line-data" data-line-start="119" data-line-end="120">Ravel specializes in French and European history from the seventeenth through the nineteenth centuries. He is the author of two books: <a href="https://www.cambridge.org/core/journals/law-and-history-review/article/jeffrey-s-ravel-the-wouldbe-commoner-a-tale-of-deception-murder-and-justice-in-seventeenthcentury-france-boston-and-new-york-houghton-mifflin-company-2008-pp-320-25-isbn-9780618197316/1044160B26B07D4C711A4792A7BD5F59"><em>The Would-Be Commoner: A Tale of Deception, Murder, and Justice in Seventeenth Century France</em></a>; and <a href="https://www.cornellpress.cornell.edu/book/9780801485411/the-contested-parterre/"><em>The Contested Parterre: Public Theater and French Political Culture, 1680-1791</em></a>. Since 2008, he has co-directed the <a href="https://cfregisters.org/#!/">Comédie Française Registers Project (CFRP)</a> and has contributed to several DH projects and initiatives focused on French theatre and culture. Ravel formerly served as the president of the <a href="https://asecs.org">American Society for Eighteenth Century Studies</a>. He is a powerful advocate for interdisciplinary, collaborative, data-driven approaches to theater history.</p>
 <h4 class="code-line" data-line-start=121 data-line-end=122 ><a id="Fiona_Ritchie_PhD_121"></a><strong>Fiona Ritchie</strong>, PhD</h4>
 <img alt="Headshot of Fiona Ritchie in front of curtain" style="float:right;padding-left:25px;width:225px;height:200px;" src="https://github.com/LondonStageDB/website/blob/main/images/FionaRitchie.jpeg?raw=true">
 <p class="has-line-data" data-line-start="122" data-line-end="123"><a href="https://www.mcgill.ca/english/staff/fiona-ritchie">Associate Professor of Drama and Theatre, Department of English, McGill University</a></p>
@@ -137,7 +137,7 @@
 <h4 class="code-line" data-line-start=126 data-line-end=127 ><a id="Jeremy_SingerVine_126"></a><strong>Jeremy Singer-Vine</strong></h4>
 <img alt="Headshot of Jeremy Singer Vine in front of white background" style="float:right;padding-left:25px;width:225px;height:200px;" src="https://github.com/LondonStageDB/website/blob/main/images/JeremySingerVine.jpeg?raw=true">
 <p class="has-line-data" data-line-start="127" data-line-end="128"><a href="https://www.nytco.com/press/jeremy-singer-vine-joins-the-times-as-data-editor/">Data Editor, New York Times</a></p>
-<p class="has-line-data" data-line-start="129" data-line-end="130"><a href="https://www.jsvine.com/">Jeremy Singer-Vine</a> is an award-winning journalist, data analyst, and computer programmer who has worked for various news outlets, including BuzzFeed News, the Wall Street Journal, and The New York Times. Currently, he runs the <a href="https://www.data-liberation-project.org/">Data Liberation Project</a>, an initiative to identify, obtain, reformat, clean, document, publish, and disseminate government datasets of public interest. Singer-Vine also publishes a weekly newsletter, <a href="https://www.data-is-plural.com">Data is Plural</a>, where he shares and explains a range of pertinent datasets to a large public following. Through podcasts, newsletters, and editorial work, Singer-Vine has played a key role in bringing LSDB to the attention of the data visualization community.</p>
+<p class="has-line-data" data-line-start="129" data-line-end="130"><a href="https://www.jsvine.com/">Jeremy Singer-Vine</a> is an award-winning journalist, data analyst, and computer programmer who has worked for various news outlets, including The New York Times, BuzzFeed News, and the Wall Street Journal. From 2022 to 2024, he ran the <a href="https://www.data-liberation-project.org/">Data Liberation Project</a>, an initiative to identify, obtain, reformat, clean, document, publish, and disseminate government datasets of public interest. Singer-Vine also publishes a weekly newsletter, <a href="https://www.data-is-plural.com">Data is Plural</a>, where he shares and explains a range of pertinent datasets to a large public following. Through podcasts, newsletters, and editorial work, Singer-Vine has played a key role in bringing LSDB to the attention of the data visualization community.</p>
 <h4 class="code-line" data-line-start=131 data-line-end=132 ><a id="Mark_Vareschi_PhD_131"></a><strong>Mark Vareschi</strong>, PhD</h4>
 <img alt="Headshot of Mark Vareschi outside" style="float:right;padding-left:25px;width:225px;height:133.203px;" src="/images/MarkVareschi2.jpg">
 <p class="has-line-data" data-line-start="132" data-line-end="133"><a href="https://english.wisc.edu/staff/vareschi-mark/">Associate Professor, Department of English, University of Wisconsin-Madison</a></p>

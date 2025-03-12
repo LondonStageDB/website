@@ -19,8 +19,6 @@
             <ul class="menu" data-magellan>
               <li><a href="#Project">About</a></li>
               <li><a href="#Funding">Funding</a></li>
-              <li><a href="#Team">Team</a></li>
-              <li><a href="#Contact">Contact</a>
             </ul>
           </div>
         </nav>
@@ -28,9 +26,8 @@
           <div class data-sticky data-anchor="aboutNav" data-sticky-on="medium">
             <h2>On This Page</h2>
             <ul class="vertical menu" data-magellan>
-              <li><a href="#Project">Overview of the Project</a></li>
+              <li><a href="#Project">Overview</a></li>
               <li><a href="#Funding">Funding</a></li>
-              <li><a href="#Contact">Contact Us</a>
             </ul>
           </div>
         </nav>
@@ -39,14 +36,14 @@
         <div class="grid-x about-section">
         <div id="Overview" class="small-12" data-magellan-target="Overview">
         <h2>Overview</h2>
-          <div id="Project" class="small-12" data-magellan-target="Project">
           <p class="has-line-data" data-line-start="0" data-line-end="1">On a given night during the long eighteenth century (1660-1800), hundreds of spectators gathered to participate in an institution at the heart of public life in London: the theater. An evening at the playhouse was a far more elaborate event than we might assume today, consisting not just of full-length dramatic or operatic performances, but also myriad entertainments interspersed between the acts: prologues, epilogues, afterpieces, pantomimes, instrumental and vocal music, dancing, and more. The London Stage Database gathers together the surviving records of nearly 52,000 such performance events, making it possible to browse and filter these events by date, location, titles of plays and entertainments staged, and actors and roles represented on cast lists. And because theater was central both to British culture and to everyday life in London in this period, a database of performance records sheds light on economic, political, social, and cultural developments extending far beyond the playhouse. We hope that this database, like the eighteenth-century London theater itself, will capture the imagination of a broad and varied public, including not only scholars, students, librarians, and archivists, but also theater practitioners, data scientists, and genealogists, among others.</p>
           </div>
         </div>
+        <div id="top" class="small-12 medium-8 large-9 about-content">
         <div class="grid-x about-section">
-          <div id="Funding" class="small-12" data-magellan-target="Funding">
+        <div id="Funding" class="small-12" data-magellan-target="Funding">
             <h2>Funding</h2>
-            <p>This project is made possible by grants from the <a href="http://www.neh.gov/">NEH</a> <a href="https://www.neh.gov/divisions/odh">Office of Digital
+            <p class="has-line-data" data-line-start="0" data-line-end="1">This project is made possible by grants from the <a href="http://www.neh.gov/">NEH</a> <a href="https://www.neh.gov/divisions/odh">Office of Digital
               Humanities</a> (Awards <a href="https://apps.neh.gov/publicquery/AwardDetail.aspx?gn=HAA-258717-18">#HAA-258717-18</a> and <a href="https://www.neh.gov/sites/default/files/2024-08/NEH%20August%202024%20grants%20list%20state%20by%20state.pdf">#HAA-300527-24</a>). Any views, findings, conclusions, or recommendations expressed through this database or on this website do not necessarily represent those of the National Endowment for the Humanities.</p>
             <p>Additional funding comes from the <a href="https://research.uoregon.edu/">Office of the Vice President for Research and Innovation</a> at the University of Oregon, as well as <a href="https://is.uoregon.edu/">UO Information Services</a>, the <a href="https://cas.uoregon.edu/">College of Arts and Sciences</a>, <a href="https://library.uoregon.edu/">UO Libraries</a>, and the <a href="">Department of English</a>.</p>
 			<p>Development work and hosting between 2018 and 2020 were supported by the <a href="http://english.usu.edu/">Department of English</a>, the <a href="https://chass.usu.edu/">College of Humanities and Social Sciences</a>, and the <a href="http://rgs.usu.edu/">Office of Research</a> at Utah State University.</p>
@@ -61,13 +58,6 @@
             </div>
           </div>
         </div>
-        <div class="grid-x about-section">
-          <div id="Contact" class="small-12" data-magellan-target="Contact">
-            <h2>Contact Us</h2>
-            <p>We would love to hear from you! Feel free to <a href="mailto:londonstagedb@gmail.com">email us</a> your questions, comments, or bug reports. When reporting an issue with the site, please include as much information as possible about your operating system and web browser so that we can reproduce the problem.</p>
-          </div>
-        </div>
-        <!-- End Contact -->
       </div>
     </div>
   </div>

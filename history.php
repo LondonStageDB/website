@@ -1,39 +1,52 @@
+<!doctype html>
+<html class="no-js" lang="en">
+
 <head>
   <?php include_once('common/header.php'); ?>
   <title>History</title>
 </head>
 
-<body id="about">
+<body id="history">
   <?php include_once('common/nav.php'); ?>
   <div id="main" class="main grid-container">
     <div class="grid-x">
       <div class="small-12 page-heading">
         <h1>History</h1>
       </div>
-      <div class="small-12 medium-4 large-3 about-nav" id="aboutNav">
-        <nav class="show-for-small-only about-mobile-nav sticky-container" id="mobileNav" data-sticky-container>
+      <div class="small-12 medium-4 large-3 history-nav" id="historyNav">
+        <nav class="show-for-small-only history-mobile-nav sticky-container" id="mobileNav" data-sticky-container>
           <div class data-sticky data-anchor="mobileNav" data-sticky-on="small">
             <ul class="menu" data-magellan>
-            <li><a href="ProjectTimeline">Project Timeline</a></li>
+            <li><a href="#ProjectTimeline">Project Timeline</a></li>
+            <li><a href="#1960__1968_The_London_Stage_Reference_Books_0">1960-1968: Reference Books</a>
+            <li><a href="#1970__1983_The_London_Stage_Information_Bank_1">1970-1983: Information Bank</a></li>
+            <li><a href="#2013__2017_Lost_Database_Recovered_2">2013-2017: Database Recovery</a></li>
+            <li><a href="#2018__2019_Transformation_to_a_Modern_Relational_Database_3">2018-2019: Modern Relational Database</a></li>
+            <li><a href="#2019__2024_The_Site_Migrates_to_the_University_of_Oregon_4">2019-2024: University of Oregon Migration</a></li>
+            <li><a href="#2024__Present_Where_the_Database_Stands_5">2024-Present</a></li>
             </ul>
           </div>
         </nav>
         <nav class="sticky-container show-for-medium" data-sticky-container>
-          <div class data-sticky data-anchor="aboutNav" data-sticky-on="medium">
+          <div class data-sticky data-anchor="historyNav" data-sticky-on="medium">
             <h2>On This Page</h2>
             <ul class="vertical menu" data-magellan>
-              <li><a href="ProjectTimeline">Project Timeline</a></li>
+              <li><a href="#1960__1968_The_London_Stage_Reference_Books_0">1960-1968: Reference Books</a>
+              <li><a href="#1970__1983_The_London_Stage_Information_Bank_1">1970-1983: Information Bank</a></li>
+              <li><a href="#2013__2017_Lost_Database_Recovered_2">2013-2017: Database Recovery</a></li>
+              <li><a href="#2018__2019_Transformation_to_a_Modern_Relational_Database_3">2018-2019: Modern Relational Database</a></li>
+              <li><a href="#2019__2024_The_Site_Migrates_to_the_University_of_Oregon_4">2019-2024: UO Migration</a></li>
+              <li><a href="#2024__Present_Where_the_Database_Stands_5">2024-Present</a></li>
             </ul>
           </div>
         </nav>
       </div>
-      <div id="top" class="small-12 medium-8 large-9 about-content">
-        <div class="grid-x about-section">
+      <div id="top" class="small-12 medium-8 large-9 history-content">
+        <div class="grid-x history-section">
         </div>
-        <div class="grid-x about-section">
+        <div class="grid-x history-section">
           <div id="Project" class="small-12" data-magellan-target="Project">
-  <h2 class="code-line" data-line-start=5 data-line-end=6 ><a id="ProjectTimeline"></a>Project Timeline</h2>
-<h3 class="code-line" data-line-start=0 data-line-end=1 ><a id="1960__1968_The_London_Stage_Reference_Books_0"></a>1960 - 1968: The London Stage Reference Books</h3>
+  <h3 class="code-line" data-line-start=5 data-line-end=6 ><a id="1970__1983_The_London_Stage_Information_Bank_1"></a>1970 - 1983: The London Stage Information Bank</h3>
 In the middle of the twentieth century, a team of theater historians created a calendar of performances based on playbills and newspaper notices used to advertise performances,
               as well as theater reviews, published gossip, playhouse records, and the diaries of people who lived at the time. The result was <a href="https://catalog.hathitrust.org/Record/000200105">
               <i>The London Stage, 1660-1800: A Calendar of Plays, Entertainments & Afterpieces, Together with Casts, Box-Receipts and Contemporary Comment. Compiled from the Playbills, Newspapers
@@ -69,7 +82,7 @@ In 2020, Burkert moved to the University of Oregon and worked with developers th
               and the limitations of our work. Like any resource of its kind, the <i>London Stage Database</i> offers a useful starting point for research and teaching, but the data should not
               be taken as a full, complete, or accurate picture of performance in London over a 140-year period. Instead, we insist that it be understood as a representation of a particular
               set of archival documents, transformed many times over by collectors of theater ephemera, archivists, curators, editors, scholars, and developers.</p>
- <p> To read more about our approach to the data in this project, visit the "About the Data" page.
+ <p> To read more about our approach to the data in this project, visit the <a href="about-data.php">About the Data</a> page.
 <p class="has-line-data" data-line-start="151" data-line-end="152"></p>
           </div>
         </div>

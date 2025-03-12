@@ -3,17 +3,17 @@
 
 <head>
   <?php include_once('common/header.php'); ?>
-  <title>Contact London Stage Database Project</title>
+  <title>Authors</title>
 </head>
 
-<body id="contact">
+<body id="authors">
   <?php include_once('common/nav.php'); ?>
   <div id="main" class="main grid-container">
-    <div class="grid-x contact-wrap">
+    <div class="grid-x authors-wrap">
       <div class="small-12 page-heading">
         <h1>Authors</h1>
       </div>
-      <div method="post" class="small-12 medium-11 large-9 cell grid-x contact-form">
+      <div method="post" class="small-12 medium-11 large-9 cell grid-x authors-form">
       <div class="grid-x guide-section">
           <div id="Authors" class="small-12" data-magellan-target="Authors">
             <p>Today we think about authorship a bit differently than people did in the long eighteenth century. While we think of playwrights as having a kind of ownership over their dramatic works, this wasn't always the case; sometimes, scripts were considered the property of the playing company that bought them, and the author's name wasn't always known or advertised to the viewing public. Audiences were much more interested in knowing which star actors would be performing in a play than they were in knowing who wrote it. We might compare this to movie posters today, which are more likely to name celebrity actors than screenplay writers.</p>

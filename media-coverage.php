@@ -3,15 +3,15 @@
   <title>Media Coverage</title>
 </head>
 
-<body id="about">
+<body id="media-coverage">
   <?php include_once('common/nav.php'); ?>
   <div id="main" class="main grid-container">
     <div class="grid-x">
       <div class="small-12 page-heading">
         <h1>Media Coverage</h1>
       </div>
-      <div class="small-12 medium-4 large-3 about-nav" id="aboutNav">
-        <nav class="show-for-small-only about-mobile-nav sticky-container" id="mobileNav" data-sticky-container>
+      <div class="small-12 medium-4 large-3 media-coverage-nav" id="media-coverageNav">
+        <nav class="show-for-small-only media-coverage-mobile-nav sticky-container" id="mobileNav" data-sticky-container>
           <div class data-sticky data-anchor="mobileNav" data-sticky-on="small">
             <ul class="menu" data-magellan>
             <li><a href="MediaCoverage">Media Coverage</a></li>
@@ -19,7 +19,7 @@
           </div>
         </nav>
         <nav class="sticky-container show-for-medium" data-sticky-container>
-          <div class data-sticky data-anchor="aboutNav" data-sticky-on="medium">
+          <div class data-sticky data-anchor="media-coverageNav" data-sticky-on="medium">
             <h2>On This Page</h2>
             <ul class="vertical menu" data-magellan>
               <li><a href="MediaCoverage">Media Coverage</a></li>
@@ -27,10 +27,10 @@
           </div>
         </nav>
       </div>
-      <div id="top" class="small-12 medium-8 large-9 about-content">
-        <div class="grid-x about-section">
+      <div id="top" class="small-12 medium-8 large-9 media-coverage-content">
+        <div class="grid-x media-coverage-section">
         </div>
-        <div class="grid-x about-section">
+        <div class="grid-x media-coverage-section">
           <div id="Project" class="small-12" data-magellan-target="Project">
   <h2 class="code-line" data-line-start=5 data-line-end=6 ><a id="MediaCoverage"></a>Media Coverage</h2>
 <p class="has-line-data" data-line-start="0" data-line-end="1">Data is Plural</p>

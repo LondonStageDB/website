@@ -3,17 +3,17 @@
 
 <head>
   <?php include_once('common/header.php'); ?>
-  <title>Contact London Stage Database Project</title>
+  <title>Glossary</title>
 </head>
 
-<body id="contact">
+<body id="glossary">
   <?php include_once('common/nav.php'); ?>
   <div id="main" class="main grid-container">
-    <div class="grid-x contact-wrap">
+    <div class="grid-x glossary-wrap">
       <div class="small-12 page-heading">
         <h1>Glossary</h1>
       </div>
-      <div method="post" class="small-12 medium-11 large-9 cell grid-x contact-form">
+      <div method="post" class="small-12 medium-11 large-9 cell grid-x glossary-form">
         <p>
             <p>Users less familiar with English theater of the long eighteenth century (1660-1800) may run across a few unfamiliar words in using the site. Here is a brief glossary of some of the most frequently used terms:</p>
             <ul>
