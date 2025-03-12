@@ -16,7 +16,7 @@
     <li><a href="/data.php">Full Data Sets</a></li>
     <li><a href="/glossary.php">Glossary</a></li>
     <li>
-      <a href="/about-data.php">About the Data</a>
+      <a href="/about-data.php">Resources</a>
       <ul class="menu vertical">
         <li><a href="/about-data.php">About the Data</a></li>
         <li><a href="/cast-list.php">Cast Lists</a></li>
@@ -26,7 +26,7 @@
       </ul>
     </li>
     <li>
-      <a>Project Overview</a>
+      <a>About</a>
       <ul class="menu vertical">
         <li><a href="/about.php">About</a></li>
         <li><a href="/history.php">History</a></li>
