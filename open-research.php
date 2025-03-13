@@ -32,7 +32,15 @@
       <div id="top" class="small-12 medium-8 large-9 open-research-content">
         <div class="grid-x open-research-section">
           <div class="small-12">
-            <p>The media archaeological nature of our project informs our team's commitment to transparency about our sources, our decisions, and the limitations of our work. [Talk about open access/open source/open science values]</p>
+            <p>The media archaeological nature of our project informs our team's commitment to transparency about our sources, our decisions, and the limitations of our work.
+              
+<p class="has-line-data" data-line-start="0" data-line-end="1">Our project is built on the principles and values of open research:</p>
+<ul>
+<li class="has-line-data" data-line-start="2" data-line-end="3">Open data: We embrace the FAIR data principles (<a href="http://go-fair.org" title="smartCard-inline">http://go-fair.org</a> ) to promote the Findability, Accessibility, Interoperability, and Reusability of our data, and we reuse data from open sources wherever possible.</li>
+<li class="has-line-data" data-line-start="3" data-line-end="4">Open file formats: We use portable, open-source, non-proprietary file formats like XML, JPG, and PDF/A for preservation-friendly file management, following the latest recommendations of the Library of Congress. Our full datasets are available for export in SQL, JSON, XML, and CSV formats, encouraging interoperation with datasets in a range of other formats.</li>
+<li class="has-line-data" data-line-start="4" data-line-end="5">Open source software: Our website and database code are written in standard, open-source programming languages including PHP, Python, HTML, CSS, and JavaScript. The code base is available in full on <a href="https://github.com/LondonStageDB" title="‌">our GitHub site</a>.</li>
+<li class="has-line-data" data-line-start="5" data-line-end="6">Open access: Consistent with the <a href="https://www.neh.gov/publicaccess" title="‌">NEH public access policy</a>, we aim to publish project-related scholarly work in open-access venues whenever possible. A list of outputs and media coverage related to the first grant-funded phase of the project (2018-19) is maintained on the <a href="https://apps.neh.gov/publicquery/AwardDetail.aspx?gn=HAA-258717-18" title="‌">NEH public query site</a>, and it will be joined by a running list of <a href="https://apps.neh.gov/publicquery/AwardDetail.aspx?gn=HAA-300527-24" title="‌">associated products for the current grant</a> as they become available.</li>
+</ul></p>
           </div>
         </div>
         <div class="grid-x open-research-section">

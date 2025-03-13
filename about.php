@@ -12,7 +12,6 @@
     <div class="grid-x">
       <div class="small-12 page-heading">
         <h1>About</h1>
-        <p>https://web.archive.org/web/20250312162927/https://londonstagedatabase.uoregon.edu/about.php</p>
       </div>
       <div class="small-12 medium-4 large-3 about-nav" id="aboutNav">
         <nav class="show-for-small-only about-mobile-nav sticky-container" id="mobileNav" data-sticky-container>
@@ -32,6 +31,12 @@
             </ul>
           </div>
         </nav>
+      </div>
+      <div id="top" class="small-12 medium-8 large-9 about-content">
+        <div class="grid-x about-section">
+          <div class="small-12">
+        <p>An earlier version of this page has been archived <a href="https://web.archive.org/web/20250312162927/https://londonstagedatabase.uoregon.edu/about.php">here</a>.</p>
+          </div>
       </div>
       <div id="top" class="small-12 medium-8 large-9 about-content">
         <div class="grid-x about-section">

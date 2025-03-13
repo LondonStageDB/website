@@ -14,21 +14,20 @@
     <li><a href="/search.php">Advanced Search</a></li>
     <li><a href="/legacy-search.php">Legacy Search</a></li>
     <li><a href="/data.php">Full Data Sets</a></li>
-    <li><a href="/glossary.php">Glossary</a></li>
     <li>
-      <a href="/about-data.php">Resources</a>
+      <a href="/guide.php">User Guide</a>
       <ul class="menu vertical">
         <li><a href="/about-data.php">About the Data</a></li>
+        <li><a href="/glossary.php">Glossary</a></li>
         <li><a href="/cast-list.php">Cast Lists</a></li>
         <li><a href="/authors.php">Authors</a></li>
         <li><a href="/dates.php">Dates</a></li>
-        <li><a href="/guide.php">User Guide</a></li>
+        <li><a href="/tips.php">Search Tips</a></li>
       </ul>
     </li>
     <li>
-      <a>About</a>
+      <a href="about.php">About</a>
       <ul class="menu vertical">
-        <li><a href="/about.php">About</a></li>
         <li><a href="/history.php">History</a></li>
         <li><a href="/team.php">Team</a></li>
         <li><a href="/open-research.php">Open Research</a></li>
