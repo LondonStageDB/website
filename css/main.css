@@ -2014,24 +2014,24 @@ body#home:after {
 }
 
 /****************/
-/*  Open Research Page  */
+/*  Citation and Sharing Page  */
 /****************/
 
-#open-research .main {
+#citation .main {
   width: 100%;
   position: relative;
   padding-bottom: 3rem;
 }
-#open-research h3 {
+#citation h3 {
   font-size: 1.3rem;
   /*text-transform: uppercase;*/
   font-feature-settings: "smcp";
   -webkit-font-feature-settings: "smcp";
 }
-#open-research h2 {
+#citation h2 {
   font-size: 1.9rem;
 }
-#open-research .open-research-mobile-nav {
+#citation .citation-mobile-nav {
   position: fixed;
   background: #6e2424;
   right: 0;
@@ -2039,40 +2039,40 @@ body#home:after {
   left: 0;
   //height: 35px;
 }
-#open-research .open-research-mobile-nav ul {
+#citation .citation-mobile-nav ul {
   display: flex;
   flex-direction: row;
   //height: 35px;
   flex-wrap: wrap;
 }
-#open-research .open-research-mobile-nav ul li {
+#citation .citation-mobile-nav ul li {
   flex: 1 0;
   flex: 1 0 21%;
   height: 42px;
 }
-#open-research .open-research-mobile-nav ul li:nth-of-type(-n+4) {
+#citation .citation-mobile-nav ul li:nth-of-type(-n+4) {
   border-bottom: 1px solid #d6d0c2;
 }
-#open-research .open-research-mobile-nav li a {
+#citation .citation-mobile-nav li a {
   color: #ece7d9;
   font-size: 0.85rem;
 }
-#open-research .open-research-mobile-nav li a:focus,
-#open-research .open-research-mobile-nav li a:active {
+#citation .citation-mobile-nav li a:focus,
+#citation .citation-mobile-nav li a:active {
   background: #c8c2b3;
   color: #6e2424;
 }
-#open-research .page-heading h1 {
+#citation .page-heading h1 {
   text-align: center;
   font-size: 3rem;
   padding: 1rem 0;
   font-family: 'aquilinetworegular';
   padding-bottom: 2rem;
 }
-#open-research .open-research-nav {
+#citation .citation-nav {
   padding: 0 1rem;
 }
-#open-research #mobileNav a {
+#citation #mobileNav a {
   text-align: center;
   letter-spacing: 1px;
   padding: 0;
@@ -2081,26 +2081,26 @@ body#home:after {
   justify-content: center;
   align-items: center;
 }
-#open-research .open-research-nav-sticky {
+#citation .citation-nav-sticky {
   padding-bottom: 2rem;
 }
-#open-research .open-research-nav-sticky > div {
+#citation .citation-nav-sticky > div {
   text-align: center;
   padding-bottom: 2rem;
 }
-#open-research #open-researchNav a {
+#citation #citationNav a {
   padding: 0.5rem 1rem;
 }
-#open-research .open-research-nav a.is-active {
+#citation .citation-nav a.is-active {
   background: #6e2424;
   color: #ece7d9;
 }
-#open-research #mobileNav a.is-active {
+#citation #mobileNav a.is-active {
   background: #c8c2b3;
   color: #6e2424;
   font-weight: bold;
 }
-#open-research .open-research-nav h2 {
+#citation .citation-nav h2 {
   font-size: 1.4rem;
   font-weight: 600;
   font-feature-settings: "smcp";
@@ -2108,29 +2108,29 @@ body#home:after {
   /*text-transform: uppercase;*/
   padding-left: 1rem;
 }
-#open-research .open-research-nav .sticky {
+#citation .citation-nav .sticky {
   padding-top: 1rem;
 }
-#open-research #mobileNav .sticky {
+#citation #mobileNav .sticky {
   padding-top: 0;
 }
-#open-research .open-research-section {
+#citation .citation-section {
   padding: 0 1rem;
   padding-bottom: 2rem;
 }
 @media only screen and (min-width: 640px) {
-  #open-research h3 {
+  #citation h3 {
     font-size: 1.4rem;
   }
-  #open-research h2 {
+  #citation h2 {
     font-size: 2.5rem;
   }
-  #open-research .open-research-nav-sticky > div {
+  #citation .citation-nav-sticky > div {
     text-align: left;
   }
 }
 @media only screen and (min-width: 1024px) {
-  #open-research .open-research-section {
+  #citation .citation-section {
     padding-right: 3rem;
   }
 }
@@ -2141,48 +2141,15 @@ body#home:after {
 
 #media-coverage .main {
   width: 100%;
+  min-height: calc(100vh - 54px);
   position: relative;
   padding-bottom: 3rem;
 }
-#media-coverage h3 {
-  font-size: 1.3rem;
-  /*text-transform: uppercase;*/
-  font-feature-settings: "smcp";
-  -webkit-font-feature-settings: "smcp";
+#media-coverage .media-coverage-wrap {
+  justify-content: center;
 }
-#media-coverage h2 {
-  font-size: 1.9rem;
-}
-#media-coverage .media-coverage-mobile-nav {
-  position: fixed;
-  background: #6e2424;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  //height: 35px;
-}
-#media-coverage .media-coverage-mobile-nav ul {
-  display: flex;
-  flex-direction: row;
-  //height: 35px;
-  flex-wrap: wrap;
-}
-#media-coverage .media-coverage-mobile-nav ul li {
-  flex: 1 0;
-  flex: 1 0 21%;
-  height: 42px;
-}
-#media-coverage .media-coverage-mobile-nav ul li:nth-of-type(-n+4) {
-  border-bottom: 1px solid #d6d0c2;
-}
-#media-coverage .media-coverage-mobile-nav li a {
-  color: #ece7d9;
-  font-size: 0.85rem;
-}
-#media-coverage .media-coverage-mobile-nav li a:focus,
-#media-coverage .media-coverage-mobile-nav li a:active {
-  background: #c8c2b3;
-  color: #6e2424;
+#media-coverage .page-heading {
+  padding: 0 3rem;
 }
 #media-coverage .page-heading h1 {
   text-align: center;
@@ -2191,69 +2158,25 @@ body#home:after {
   font-family: 'aquilinetworegular';
   padding-bottom: 2rem;
 }
-#media-coverage .media-coverage-nav {
-  padding: 0 1rem;
+#media-coverage .media-coverage-form {
+  padding: 1rem;
 }
-#media-coverage #mobileNav a {
-  text-align: center;
-  letter-spacing: 1px;
-  padding: 0;
-  height: 100%;
+#media-coverage .media-coverage-desc {
+  padding: 0 1rem;
+  padding-bottom: 1rem;
+}
+#media-coverage .form-btn {
   display: flex;
-  justify-content: center;
-  align-items: center;
-}
-#media-coverage .media-coverage-nav-sticky {
-  padding-bottom: 2rem;
-}
-#media-coverage .media-coverage-nav-sticky > div {
-  text-align: center;
-  padding-bottom: 2rem;
-}
-#media-coverage #media-coverageNav a {
-  padding: 0.5rem 1rem;
-}
-#media-coverage .media-coverage-nav a.is-active {
-  background: #6e2424;
-  color: #ece7d9;
-}
-#media-coverage #mobileNav a.is-active {
-  background: #c8c2b3;
-  color: #6e2424;
-  font-weight: bold;
-}
-#media-coverage .media-coverage-nav h2 {
-  font-size: 1.4rem;
-  font-weight: 600;
-  font-feature-settings: "smcp";
-  -webkit-font-feature-settings: "smcp";
-  /*text-transform: uppercase;*/
-  padding-left: 1rem;
-}
-#media-coverage .media-coverage-nav .sticky {
-  padding-top: 1rem;
-}
-#media-coverage #mobileNav .sticky {
-  padding-top: 0;
-}
-#media-coverage .media-coverage-section {
-  padding: 0 1rem;
-  padding-bottom: 2rem;
+  padding: 2rem;
+  justify-content: flex-end;
 }
 @media only screen and (min-width: 640px) {
-  #media-coverage h3 {
-    font-size: 1.4rem;
+  #media-coverage .form-section {
+    padding: 0 2rem;
   }
-  #media-coverage h2 {
-    font-size: 2.5rem;
-  }
-  #media-coverage .media-coverage-nav-sticky > div {
-    text-align: left;
-  }
-}
-@media only screen and (min-width: 1024px) {
-  #media-coverage .media-coverage-section {
-    padding-right: 3rem;
+  #media-coverage .media-coverage-desc {
+    padding: 0 2rem;
+    padding-bottom: 1rem;
   }
 }
 

@@ -1,58 +1,73 @@
 <head>
   <?php include_once('common/header.php'); ?>
-  <title>Open Research</title>
+  <title>Citation and Sharing</title>
 </head>
 
-<body id="open-research">
+<body id="citation">
   <?php include_once('common/nav.php'); ?>
   <div id="main" class="main grid-container">
     <div class="grid-x">
       <div class="small-12 page-heading">
-        <h1>Open Research</h1>
+        <h1>Citation and Sharing</h1>
       </div>
-      <div class="small-12 medium-4 large-3 open-research-nav" id="open-researchNav">
-        <nav class="show-for-small-only open-research-mobile-nav sticky-container" id="mobileNav" data-sticky-container>
+      <div class="small-12 medium-4 large-3 citation-nav" id="citationNav">
+        <nav class="show-for-small-only citation-mobile-nav sticky-container" id="mobileNav" data-sticky-container>
           <div class data-sticky data-anchor="mobileNav" data-sticky-on="small">
             <ul class="menu" data-magellan>
-            <li><a href="Links">Links</a></li>
-            <li><a href="ImageCredits">Image Credits</a></li>
+            <li><a href="OpenResearch">Open Research</a></li>
+            <li><a href="Citing">Citing the Database</a></li>
             </ul>
           </div>
         </nav>
         <nav class="sticky-container show-for-medium" data-sticky-container>
-          <div class data-sticky data-anchor="open-researchNav" data-sticky-on="medium">
+          <div class data-sticky data-anchor="citationNav" data-sticky-on="medium">
             <h2>On This Page</h2>
             <ul class="vertical menu" data-magellan>
-              <li><a href="Links">Links</a></li>
-              <li><a href="ImageCredits">Image Credits</a></li>
+              <li><a href="OpenResearch">Open Research</a></li>
+              <li><a href="Citing">Citing the Database</a></li>
             </ul>
           </div>
         </nav>
       </div>
-      <div id="top" class="small-12 medium-8 large-9 open-research-content">
-        <div class="grid-x open-research-section">
+      <div id="top" class="small-12 medium-8 large-9 citation-content">
+        <div class="grid-x citation-section">
           <div class="small-12">
-            <p>The media archaeological nature of our project informs our team's commitment to transparency about our sources, our decisions, and the limitations of our work.
-              
-<p class="has-line-data" data-line-start="0" data-line-end="1">Our project is built on the principles and values of open research:</p>
+            <p>[new opening sentence about how we are committed to showing our work and making our work reusable and participating in advancing open science principles. We make this work freely available]</p>
+          </div>
+        </div>
+        <div class="grid-x citation-section">
+          <div id="citation" class="small-12" data-magellan-target="citation">
+            <h2><a id="OpenResearch"></a>Open Research</h2>    
+<p>Our project is built on the principles and values of open research:</p>
 <ul>
-<li class="has-line-data" data-line-start="2" data-line-end="3">Open data: We embrace the FAIR data principles (<a href="http://go-fair.org" title="smartCard-inline">http://go-fair.org</a> ) to promote the Findability, Accessibility, Interoperability, and Reusability of our data, and we reuse data from open sources wherever possible.</li>
-<li class="has-line-data" data-line-start="3" data-line-end="4">Open file formats: We use portable, open-source, non-proprietary file formats like XML, JPG, and PDF/A for preservation-friendly file management, following the latest recommendations of the Library of Congress. Our full datasets are available for export in SQL, JSON, XML, and CSV formats, encouraging interoperation with datasets in a range of other formats.</li>
-<li class="has-line-data" data-line-start="4" data-line-end="5">Open source software: Our website and database code are written in standard, open-source programming languages including PHP, Python, HTML, CSS, and JavaScript. The code base is available in full on <a href="https://github.com/LondonStageDB" title="‌">our GitHub site</a>.</li>
-<li class="has-line-data" data-line-start="5" data-line-end="6">Open access: Consistent with the <a href="https://www.neh.gov/publicaccess" title="‌">NEH public access policy</a>, we aim to publish project-related scholarly work in open-access venues whenever possible. A list of outputs and media coverage related to the first grant-funded phase of the project (2018-19) is maintained on the <a href="https://apps.neh.gov/publicquery/AwardDetail.aspx?gn=HAA-258717-18" title="‌">NEH public query site</a>, and it will be joined by a running list of <a href="https://apps.neh.gov/publicquery/AwardDetail.aspx?gn=HAA-300527-24" title="‌">associated products for the current grant</a> as they become available.</li>
+<li><b>Open data:</b> We embrace the <a href="http://go-fair.org" title="smartCard-inline">FAIR data principles</a> to promote the Findability, Accessibility, Interoperability, and Reusability of our data, and we reuse data from open sources wherever possible.</li>
+<li><b>Open file formats:</b> We use portable, open-source, non-proprietary file formats like XML, JPG, and PDF/A for preservation-friendly file management, following the latest recommendations of the Library of Congress. Our full datasets are available for export in SQL, JSON, XML, and CSV formats, encouraging interoperation with datasets in a range of other formats.</li>
+<li><b>Open source software:</b> Our website and database code are written in standard, open-source programming languages including PHP, Python, HTML, CSS, and JavaScript. The code base is available in full on <a href="https://github.com/LondonStageDB" title="‌">our GitHub site</a>.</li>
+<li><b>Open access:</b> Consistent with the <a href="https://www.neh.gov/publicaccess" title="‌">NEH public access policy</a>, we aim to publish project-related scholarly work in open-access venues whenever possible. A list of outputs and media coverage related to the first grant-funded phase of the project (2018-19) is maintained on the <a href="https://apps.neh.gov/publicquery/AwardDetail.aspx?gn=HAA-258717-18" title="‌">NEH public query site</a>, and it will be joined by a running list of <a href="https://apps.neh.gov/publicquery/AwardDetail.aspx?gn=HAA-300527-24" title="‌">associated products for the current grant</a> as they become available.</li>
 </ul></p>
           </div>
         </div>
-        <div class="grid-x open-research-section">
-          <div id="Project" class="small-12" data-magellan-target="Project">
-            <h2>Links</h2>
-            <p>Link to GitHub - Link to Zenodo - Add copy from grant - Link to NEH guidance on open research - Ask people to cite & point to citation templates on each event page [add</p>
+        <div class="grid-x citation-section">
+          <div id="citation" class="small-12" data-magellan-target="citation">
+            <h2>Citing the Database</h2>
+            <p>
+            We credit and link back to our sources and greatly appreciate your help tracking our project’s impact through citations. A suggested citation, formatted in MLA and Chicago style, can be found at the bottom of each event page and follows this template:</p>
+            <ul>
+<li>Chicago: "London Stage Event: 10 August 1682 at Dorset Garden Theatre." London Stage Database. Accessed March 10, 2025. https://londonstagedatabase.uoregon.edu/event.php?id=1494.
+
+<li>MLA: "London Stage Event: 10 August 1682 at Dorset Garden Theatre." London Stage Database, https://londonstagedatabase.uoregon.edu/event.php?id=1494.</li>
+
+</ul>
+
+
+
+            </p>
           </div>
         </div>
-<div class="grid-x open-research-section">
+<div class="grid-x citation-section">
 <div id="ImageCredits" class="small-12">
 </div>
-  <h2 class="code-line" data-line-start=5 data-line-end=6 ><a id="ImageCredits"></a>Image Credits</h2>
+  <h2><a id="ImageCredits"></a>Image Credits</h2>
             <p>The image collage that is displayed on the landing page and in the background of the search, results, and events pages was created by Dustin Olson, and is covered by a <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC-BY-NC-SA 4.0 license</a>.</p>
             <p>Clockwise from top left:</p>
             <ul>

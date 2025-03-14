@@ -30,7 +30,7 @@
       <ul class="menu vertical">
         <li><a href="/history.php">History</a></li>
         <li><a href="/team.php">Team</a></li>
-        <li><a href="/open-research.php">Open Research</a></li>
+        <li><a href="/citation.php">Citation and Sharing</a></li>
         <li><a href="/media-coverage.php">Media Coverage</a></li>
       </ul>
     </li>
