@@ -180,8 +180,43 @@ select {
 select {
   padding-right: 1.5rem;
 }
-
-
+/****************/
+/*  Dropdown  */
+/****************/
+/* Change background color for dropdown */
+.dropdown.menu .is-dropdown-submenu {
+  background-color: #E4DBCA;   /* Light background */
+}
+/* Change text color for links inside the dropdown */
+.dropdown.menu .is-dropdown-submenu a {
+  color: #5B5346;              /* brown text */
+}
+/* Change hover state colors */
+.dropdown.menu .is-dropdown-submenu a:hover {
+  background-color: #742426;   /* maroon background on hover */
+  color: #E4DBCA;           /* light color for hover */
+}
+.dropdown.menu .is-dropdown-submenu a.is-active {
+  color: #E4DBCA !important;
+}
+/* Change hover behavior for the top-level parent item */
+.is-dropdown-submenu-parent:hover > a,
+.is-dropdown-submenu-parent:focus-within > a,
+.is-dropdown-submenu-parent.is-active > a {
+  color: #E4DBCA !important;  
+}
+/* Change dropdown arrow color */
+.is-dropdown-submenu-parent > a::after {
+  border-color: #E4DBCA transparent transparent !important;
+}
+/* Change active link color */
+.is-dropdown-submenu a.is-active {
+  background-color: #742426 !important;
+  color: #E4DBCA !important;
+}
+nav .menu .is-dropdown-submenu-parent:hover > a {
+  color: #E4DBCA !important;
+}
 /****************/
 /*  Home Page  */
 /****************/
@@ -2134,10 +2169,9 @@ body#home:after {
     padding-right: 3rem;
   }
 }
-
-/****************/
+/******************/
 /*  Media Coverage Page  */
-/****************/
+/******************/
 
 #media-coverage .main {
   width: 100%;
@@ -2158,6 +2192,21 @@ body#home:after {
   font-family: 'aquilinetworegular';
   padding-bottom: 2rem;
 }
+#media-coverage .media-logo-wrap {
+  /*display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  flex-flow: row wrap;*/
+  gap: 6rem;
+  margin-top: 2rem 0;
+  padding-top: 2rem;
+}
+#media-coverage .media-logo-wrap > div {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 #media-coverage .media-coverage-form {
   padding: 1rem;
 }
@@ -2177,6 +2226,15 @@ body#home:after {
   #media-coverage .media-coverage-desc {
     padding: 0 2rem;
     padding-bottom: 1rem;
+  }
+  #media-coverage .logo-wrap > div {
+    /*margin-right: 0.6rem;*/
+    padding-right: 0.6rem;
+  }
+  #media-coverage .funding-logo {
+    /*max-width: 200px;
+    padding: 0.3rem 0;
+    margin-right: 0.6rem;*/
   }
 }
 

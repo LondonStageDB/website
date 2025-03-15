@@ -50,7 +50,7 @@
         </div>
         <div class="grid-x team-section">
           <div id="Team" class="small-12" data-magellan-target="Team">
-<h2 class="code-line" data-line-start=4 data-line-end=5 ><a id="PI"></a>Principal Investigator and Project Director</h2>
+<h2><a id="PI"></a>Principal Investigator and Project Director</h2>
   <h4 class="code-line" data-line-start=6 data-line-end=7 ><a id="Mattie_Burkert_PhD_6"></a><strong>Mattie Burkert</strong>, PhD</h4>
   <img alt="Headshot of Mattie Burkert outside" style="float:right;padding-left:25px;width:190px;height:245.88px;" src="https://github.com/LondonStageDB/website/blob/main/images/MattieBurkert.jpeg?raw=true">
     <p class="has-line-data" data-line-start="7" data-line-end="8"><a href="https://cas.uoregon.edu/directory/english/all/mburkert">Associate Professor, Department of English, University of Oregon</a></p>
