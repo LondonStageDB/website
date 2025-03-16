@@ -2,72 +2,115 @@
 <html class="no-js" lang="en">
 
 <head>
-  <?php include_once('common/header.php'); ?>
-  <title>About London Stage Database Project</title>
+    <?php include_once('common/header.php'); ?>
+    <title>About London Stage Database Project</title>
 </head>
 
 <body id="about">
-  <?php include_once('common/nav.php'); ?>
-  <div id="main" class="main grid-container">
+<?php include_once('common/nav.php'); ?>
+<div id="main" class="main grid-container">
     <div class="grid-x">
-      <div class="small-12 page-heading">
-        <h1>About</h1>
-      </div>
-      <div class="small-12 medium-4 large-3 about-nav" id="aboutNav">
-        <nav class="show-for-small-only about-mobile-nav sticky-container" id="mobileNav" data-sticky-container>
-          <div class data-sticky data-anchor="mobileNav" data-sticky-on="small">
-            <ul class="menu" data-magellan>
-              <li><a href="#Project">About</a></li>
-              <li><a href="#Funding">Funding</a></li>
-            </ul>
-          </div>
-        </nav>
-        <nav class="sticky-container show-for-medium" data-sticky-container>
-          <div class data-sticky data-anchor="aboutNav" data-sticky-on="medium">
-            <h2>On This Page</h2>
-            <ul class="vertical menu" data-magellan>
-              <li><a href="#Project">Overview</a></li>
-              <li><a href="#Funding">Funding</a></li>
-            </ul>
-          </div>
-        </nav>
-      </div>
-      <div id="top" class="small-12 medium-8 large-9 about-content">
-        <div class="grid-x about-section">
-          <div class="small-12">
-        <p>An earlier version of this page has been archived <a href="https://web.archive.org/web/20250312162927/https://londonstagedatabase.uoregon.edu/about.php">here</a>.</p>
-          </div>
-      </div>
-      <div id="top" class="small-12 medium-8 large-9 about-content">
-        <div class="grid-x about-section">
-        <div id="Overview" class="small-12" data-magellan-target="Overview">
-        <h2>Overview</h2>
-          <p class="has-line-data" data-line-start="0" data-line-end="1">On a given night during the long eighteenth century (1660-1800), hundreds of spectators gathered to participate in an institution at the heart of public life in London: the theater. An evening at the playhouse was a far more elaborate event than we might assume today, consisting not just of full-length dramatic or operatic performances, but also myriad entertainments interspersed between the acts: prologues, epilogues, afterpieces, pantomimes, instrumental and vocal music, dancing, and more. The London Stage Database gathers together the surviving records of nearly 52,000 such performance events, making it possible to browse and filter these events by date, location, titles of plays and entertainments staged, and actors and roles represented on cast lists. And because theater was central both to British culture and to everyday life in London in this period, a database of performance records sheds light on economic, political, social, and cultural developments extending far beyond the playhouse. We hope that this database, like the eighteenth-century London theater itself, will capture the imagination of a broad and varied public, including not only scholars, students, librarians, and archivists, but also theater practitioners, data scientists, and genealogists, among others.</p>
-          </div>
+        <div class="small-12 page-heading">
+            <h1>About</h1>
+        </div>
+        <div class="small-12 medium-4 large-3 about-nav" id="aboutNav">
+            <nav class="show-for-small-only about-mobile-nav sticky-container" id="mobileNav" data-sticky-container>
+                <div class data-sticky data-anchor="mobileNav" data-sticky-on="small">
+                    <ul class="menu" data-magellan>
+                        <li><a href="#Project">About</a></li>
+                        <li><a href="#Funding">Funding</a></li>
+                    </ul>
+                </div>
+            </nav>
+            <nav class="sticky-container show-for-medium" data-sticky-container>
+                <div class data-sticky data-anchor="aboutNav" data-sticky-on="medium">
+                    <h2>On This Page</h2>
+                    <ul class="vertical menu" data-magellan>
+                        <li><a href="#Project">Overview</a></li>
+                        <li><a href="#Funding">Funding</a></li>
+                    </ul>
+                </div>
+            </nav>
         </div>
         <div id="top" class="small-12 medium-8 large-9 about-content">
-        <div class="grid-x about-section">
-        <div id="Funding" class="small-12" data-magellan-target="Funding">
-            <h2>Funding</h2>
-            <p class="has-line-data" data-line-start="0" data-line-end="1">This project is made possible by grants from the <a href="http://www.neh.gov/">NEH</a> <a href="https://www.neh.gov/divisions/odh">Office of Digital
-              Humanities</a> (Awards <a href="https://apps.neh.gov/publicquery/AwardDetail.aspx?gn=HAA-258717-18">#HAA-258717-18</a> and <a href="https://www.neh.gov/sites/default/files/2024-08/NEH%20August%202024%20grants%20list%20state%20by%20state.pdf">#HAA-300527-24</a>). Any views, findings, conclusions, or recommendations expressed through this database or on this website do not necessarily represent those of the National Endowment for the Humanities.</p>
-            <p>Additional funding comes from the <a href="https://research.uoregon.edu/">Office of the Vice President for Research and Innovation</a> at the University of Oregon, as well as <a href="https://is.uoregon.edu/">UO Information Services</a>, the <a href="https://cas.uoregon.edu/">College of Arts and Sciences</a>, <a href="https://library.uoregon.edu/">UO Libraries</a>, and the <a href="">Department of English</a>.</p>
-			<p>Development work and hosting between 2018 and 2020 were supported by the <a href="http://english.usu.edu/">Department of English</a>, the <a href="https://chass.usu.edu/">College of Humanities and Social Sciences</a>, and the <a href="http://rgs.usu.edu/">Office of Research</a> at Utah State University.</p>
-            <div class="logo-wrap grid-x">
-              <div class="small-4 medium-6 large-3"><a href="http://www.neh.gov/"><img class="funding-logo" src="https://github.com/LondonStageDB/website/blob/main/images/national-endowment-vector.png?raw=true" alt="NEH Logo" /></a></div>
-              <div class="small-4 medium-6 large-3"><a href="https://cas.uoregon.edu/"><img class="funding-logo" src="/images/UOregon-CAS-black.png" alt="University of Oregon, College of Arts and Sciences" /></a></div>
+            <div class="grid-x about-section">
+                <div class="small-12">
+                    <p>An earlier version of this page has been archived <a
+                                href="https://web.archive.org/web/20250312162927/https://londonstagedatabase.uoregon.edu/about.php">here</a>.
+                    </p>
+                </div>
             </div>
-            <div class="logo-wrap grid-x">
-              <div class="small-4 medium-6 large-3"><a href="http://english.usu.edu/"><img class="funding-logo" src="/images/English-logo-bw.png" alt="USU English Logo" /></a></div>
-              <div class="small-4 medium-6 large-3"><a href="https://chass.usu.edu/"><img class="funding-logo" src="/images/CHASS-logo-black.svg" alt="CHASS Logo" /></a></div>
-              <div class="small-4 medium-6 large-3"><a href="http://rgs.usu.edu/"><img class="funding-logo" src="/images/ResearchBlackTower.png" alt="USU Research Logo" /></a></div>
+            <div id="top" class="small-12 medium-8 large-9 about-content">
+                <div class="grid-x about-section">
+                    <div id="Overview" class="small-12" data-magellan-target="Overview">
+                        <h2>Overview</h2>
+                        <p class="has-line-data" data-line-start="0" data-line-end="1">On a given night during the long
+                            eighteenth century (1660-1800), hundreds of spectators gathered to participate in an
+                            institution at the heart of public life in London: the theater. An evening at the playhouse
+                            was a far more elaborate event than we might assume today, consisting not just of
+                            full-length dramatic or operatic performances, but also myriad entertainments interspersed
+                            between the acts: prologues, epilogues, afterpieces, pantomimes, instrumental and vocal
+                            music, dancing, and more. The London Stage Database gathers together the surviving records
+                            of nearly 52,000 such performance events, making it possible to browse and filter these
+                            events by date, location, titles of plays and entertainments staged, and actors and roles
+                            represented on cast lists. And because theater was central both to British culture and to
+                            everyday life in London in this period, a database of performance records sheds light on
+                            economic, political, social, and cultural developments extending far beyond the playhouse.
+                            We hope that this database, like the eighteenth-century London theater itself, will capture
+                            the imagination of a broad and varied public, including not only scholars, students,
+                            librarians, and archivists, but also theater practitioners, data scientists, and
+                            genealogists, among others.</p>
+                    </div>
+                </div>
+                <div id="top" class="small-12 medium-8 large-9 about-content">
+                    <div class="grid-x about-section">
+                        <div id="Funding" class="small-12" data-magellan-target="Funding">
+                            <h2>Funding</h2>
+                            <p>This project is made possible by grants from the <a href="http://www.neh.gov/">NEH</a> <a
+                                        href="https://www.neh.gov/divisions/odh">Office of Digital
+                                    Humanities</a> (Awards <a
+                                        href="https://apps.neh.gov/publicquery/AwardDetail.aspx?gn=HAA-258717-18">#HAA-258717-18</a>
+                                and
+                                <a href="https://www.neh.gov/sites/default/files/2024-08/NEH%20August%202024%20grants%20list%20state%20by%20state.pdf">#HAA-300527-24</a>).
+                                Any views, findings, conclusions, or recommendations expressed through this database or
+                                on this website do not necessarily represent those of the National Endowment for the
+                                Humanities.</p>
+                            <p>Additional funding comes from the <a href="https://research.uoregon.edu/">Office of the
+                                    Vice President for Research and Innovation</a> at the University of Oregon, as well
+                                as <a href="https://is.uoregon.edu/">UO Information Services</a>, the <a
+                                        href="https://cas.uoregon.edu/">College of Arts and Sciences</a>, <a
+                                        href="https://library.uoregon.edu/">UO Libraries</a>, and the <a href="">Department
+                                    of English</a>.</p>
+                            <p>Development work and hosting between 2018 and 2020 were supported by the <a
+                                        href="http://english.usu.edu/">Department of English</a>, the <a
+                                        href="https://chass.usu.edu/">College of Humanities and Social Sciences</a>, and
+                                the <a href="http://rgs.usu.edu/">Office of Research</a> at Utah State University.</p>
+                            <div class="logo-wrap grid-x">
+                                <div class="small-4 medium-6 large-3"><a href="http://www.neh.gov/"><img
+                                                class="funding-logo"
+                                                src="https://github.com/LondonStageDB/website/blob/main/images/national-endowment-vector.png?raw=true"
+                                                alt="NEH Logo"/></a></div>
+                                <div class="small-4 medium-6 large-3"><a href="https://cas.uoregon.edu/"><img
+                                                class="funding-logo" src="/images/UOregon-CAS-black.png"
+                                                alt="University of Oregon, College of Arts and Sciences"/></a></div>
+                            </div>
+                            <div class="logo-wrap grid-x">
+                                <div class="small-4 medium-6 large-3"><a href="http://english.usu.edu/"><img
+                                                class="funding-logo" src="/images/English-logo-bw.png"
+                                                alt="USU English Logo"/></a></div>
+                                <div class="small-4 medium-6 large-3"><a href="https://chass.usu.edu/"><img
+                                                class="funding-logo" src="/images/CHASS-logo-black.svg"
+                                                alt="CHASS Logo"/></a></div>
+                                <div class="small-4 medium-6 large-3"><a href="http://rgs.usu.edu/"><img
+                                                class="funding-logo" src="/images/ResearchBlackTower.png"
+                                                alt="USU Research Logo"/></a></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-          </div>
         </div>
-      </div>
-    </div>
-  </div>
-  <?php include_once('common/footer.php'); ?>
+        <?php include_once('common/footer.php'); ?>
 </body>
 
 </html>
