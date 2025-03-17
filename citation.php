@@ -37,8 +37,15 @@
         <div id="top" class="small-12 medium-8 large-9 citation-content">
             <div class="grid-x citation-section">
                 <div class="small-12">
-                    <p>[new opening sentence about how we are committed to showing our work and making our work reusable
-                        and participating in advancing open science principles. We make this work freely available]</p>
+                    <p>Except where otherwise noted, content on this site is licensed under a <a
+                                href="https://creativecommons.org/licenses/by-nc/4.0/">Creative Commons
+                            Attribution-NonCommercial 4.0 International license</a>. You are welcome to copy,
+                        redistribute,
+                        remix, and build upon the material for non-commercial purposes, as long as you provide
+                        attribution, link to the license, and indicate the nature of your changes (if any) to the source
+                        material.</p>
+                    <p>Read on for more information about our open science commitments and practices, as well as how to
+                        access, reuse, and cite this work.</p>
                 </div>
             </div>
             <div class="grid-x citation-section">
@@ -59,7 +66,14 @@
                         <li><b>Open source software:</b> Our website and database code are written in standard,
                             open-source programming languages including PHP, Python, HTML, CSS, and JavaScript. The code
                             base is available in full on <a href="https://github.com/LondonStageDB" title="‌">our GitHub
-                                site</a>.
+                                site</a> and major release versions are automatically registered with unique DOIs
+                            through
+                            Zenodo:
+                            <ul>
+                                <li>testing testing
+
+                                </li>
+                            </ul>
                         </li>
                         <li><b>Open access:</b> Consistent with the <a href="https://www.neh.gov/publicaccess"
                                                                        title="‌">NEH public access policy</a>, we aim to

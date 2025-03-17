@@ -14,13 +14,13 @@
             <h1>About the Data</h1>
         </div>
         <div method="post" class="small-12 medium-11 large-9 cell grid-x contact-form">
-            <h2>Limitations</h2>
             <p>Like any resource of its kind, the <em>London Stage Database</em> offers a useful starting point for
                 research and teaching, but the data should not be taken as a full, complete, or accurate picture of
                 performance in London over a 140-year period. Instead, we insist that it be understood as a
                 representation of a particular set of archival documents, transformed many times over by collectors of
                 theater ephemera, archivists, curators, editors, scholars, and developers.
             </p>
+            <h2>Archival Challenges</h2>
             <p>Our collective knowledge of theater in the period is hampered by gaps in the documentary record; for
                 example, Judith Milhous and Robert Hume <a
                         href="http://www.personal.psu.edu/hb1/London%20Stage%202001/preface.pdf" title="‌">have
@@ -39,8 +39,9 @@
                 members, that contradict the cast lists printed in the daily papers, and many scholars have uncovered
                 additional gaps and inconsistencies in the data.
             </p>
-            <p>The <em>London Stage Database</em> also inherits the quirks of the damaged and incomplete data that
-                Burkert was able to recover from the Lawrence University archives. The files associated with the <em>Information
+            <p>The <em>London Stage Database</em> also inherits the quirks of the damaged and incomplete data <a
+                        href="/history.php"> recovered
+                    from the Lawrence University archives</a>. The files associated with the <em>Information
                     Bank</em> experienced significant bit rot and are characterized by numerous gaps and errors that
                 cannot be fully explained. Large sections of the data are missing from the recovered files, including
                 most or all of the performances thought to have taken place between September 1733 and September 1736;
@@ -64,6 +65,7 @@
                 particular plays and entertainments (data collected painstakingly by Research Assistant Emma Hallock).
                 In doing so, our work has no doubt introduced new forms of error and ambiguity.
             </p>
+            <h2>Interacting with Ambiguity</h2>
             <p>The user interface is designed to make the rich history of this data, as well as its many limitations,
                 intuitively clear to those who interact with the site. The “Toggle Sphinx Query” button at the top of
                 the search results page allows users to see exactly how their search results were translated into SQL

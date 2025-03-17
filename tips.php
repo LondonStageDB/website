@@ -17,9 +17,8 @@
             <nav class="show-for-small-only tips-mobile-nav sticky-container" id="mobileNav" data-sticky-container>
                 <div class data-sticky data-anchor="mobileNav" data-sticky-on="small">
                     <ul class="menu" data-magellan>
-                        <li><a href="#Search">Search</a>
-                        <li><a href="#Filters">Filters</a>
-                        <li><a href="#Queries">Queries</a>
+                        <li><a href="#Search">Keyword Search</a>
+                        <li><a href="#Filters">Advanced Filters</a>
                     </ul>
                 </div>
             </nav>
@@ -27,23 +26,37 @@
                 <div data-sticky data-anchor="tipsNav" data-sticky-on="medium">
                     <h2>On This Page</h2>
                     <ul class="vertical menu" data-magellan>
-                        <li><a href="#Search">Search</a>
-                        <li><a href="#Filters">Filters</a>
-                        <li><a href="#Queries">Queries</a>
+                        <li><a href="#Search">Keyword Search</a>
+                        <li><a href="#Filters">Advanced Filters</a>
                     </ul>
                 </div>
             </nav>
         </div>
         <div id="top" class="small-12 medium-8 large-9 tips-content">
             <div class="grid-x tips-section">
+                <p>Beginning in May 2021, the <i>London Stage Database</i> is optimized using an open-source
+                    full-text search engine called <a href="http://sphinxsearch.com/">Sphinx</a>. (From July 2019 to
+                    May 2021, searches were conducted entirely using the database programming language SQL
+                    (Structured Query Language); that earlier search ecosystem is preserved under "Advanced Search
+                    (Legacy).")</p>
+                <p>At the top left of the search results page appears a link that reads "Toggle Sphinx Query." Click
+                    this link to view the way that your search was translated into SphinxQL (Sphinx's Query
+                    Language, similar to SQL or Structured Query Language) in order to generate the results that you
+                    see. Relational databases like the <i>London Stage Database</i> are organized as a series of <b>tables</b>
+                    (imagine Excel spreadsheets) with <b>fields</b> (imagine the column labels within those
+                    spreadsheets). For example, the <i>London Stage Database</i> has a table called "Events," and
+                    within that table, it has a field called "EventDate" that holds the date for each event. When
+                    you perform a legacy search, your parameters are transformed into a series of commands that
+                    create links and interactions among our different tables (Events, Performances, Theatre, etc.).
+                    When you perform a search from the main keyword or advanced search pages, which use the Sphinx
+                    full text search server, your terms are instead searched against an index of the same relational
+                    database, allowing for much faster results.</p>
+                <p>This section of the user guide offers a few tips for making the most of your
+                    searches.</p>
+            </div>
+            <div class="grid-x tips-section">
                 <div id="Search" class="small-12" data-magellan-target="Search">
-                    <h2>Search</h2>
-                    <p>Beginning in May 2021, the <i>London Stage Database</i> is optimized using an open-source
-                        full-text search engine called <a href="http://sphinxsearch.com/">Sphinx</a>. (From July 2019 to
-                        May 2021, searches were conducted entirely using the database programming language SQL
-                        (Structured Query Language); that earlier search ecosystem is preserved under "Advanced Search
-                        (Legacy).") This section of the user guide offers a few tips for making the most of your
-                        searches.</p>
+                    <h2>Keyword Search</h2>
                     <ul>
                         <li>Search results are never case-sensitive in the <i>London Stage Database</i>. A keyword
                             search for "dryden", "Dryden", or "DRYDEN" will return the same results. Special characters,
@@ -61,23 +74,23 @@
                             titles share the word "Mode." Search results can be filtered by relevance on the results
                             page, if desired, to prioritize more exact matches with the terms you entered.
                         </li>
-                        <li>Boolean searching is possible for actors and for roles. To search for two or more actors who
-                            appear together in a single event, click the "+" button by the actor search box, and select
-                            the "AND" operation from the drop-down menu. This search will return events in which both
-                            actors appear together in the same play, as well as events in which Actor A appears in one
-                            performance (for example, the <a href='/glossary.php#mainpiece'>mainpiece</a>) and Actor B
-                            appears in another (for example, the <a href='/glossary.php#afterpiece'>afterpiece</a>). To
-                            search for events containing performances featuring either Actor A or Actor B, select the
-                            "OR" operation. Note that entering the words "AND" or "OR" into any of the search boxes will
-                            not trigger a boolean search.
-                        </li>
                     </ul>
                 </div>
             </div>
             <!-- End Search -->
             <div class="grid-x tips-section">
                 <div id="Filters" class="small-12" data-magellan-target="Filters">
-                    <h2>Filters</h2>
+                    <h2>Advanced Search and Filters</h2>
+                    <p></p>
+                    <p>Boolean searching is possible for actors and for roles. To search for two or more actors who
+                        appear together in a single event, click the "+" button by the actor search box, and select
+                        the "AND" operation from the drop-down menu. This search will return events in which both
+                        actors appear together in the same play, as well as events in which Actor A appears in one
+                        performance (for example, the <a href='/glossary.php#mainpiece'>mainpiece</a>) and Actor B
+                        appears in another (for example, the <a href='/glossary.php#afterpiece'>afterpiece</a>). To
+                        search for events containing performances featuring either Actor A or Actor B, select the
+                        "OR" operation. Note that entering the words "AND" or "OR" into any of the search boxes will
+                        not trigger a boolean search.</p>
                     <p>On the Results page, you have the option to apply a number of filters, which correspond to the
                         options on the Advanced Search page. These filters can help you narrow down your results. For
                         example, if you search for all performances of "The Beggar's Opera," you can then use the date
@@ -92,28 +105,6 @@
                         Advanced Search page. Note that filters applied to the results of legacy searches will keep the
                         user within the legacy search ecosystem, while filters applied to results arrived at from the
                         main keyword or advanced search pages will use the faster Sphinx search engine.</p>
-                </div>
-            </div>
-            <!-- End Filters -->
-            <div class="grid-x tips-section">
-                <div id="Queries" class="small-12" data-magellan-target="Queries">
-                    <h2>Queries</h2>
-                    <p>At the top left of the search results page appears a link that reads "Toggle Sphinx Query." Click
-                        this link to view the way that your search was translated into SphinxQL (Sphinx's Query
-                        Language, similar to SQL or Structured Query Language) in order to generate the results that you
-                        see. Relational databases like the <i>London Stage Database</i> are organized as a series of <b>tables</b>
-                        (imagine Excel spreadsheets) with <b>fields</b> (imagine the column labels within those
-                        spreadsheets). For example, the <i>London Stage Database</i> has a table called "Events," and
-                        within that table, it has a field called "EventDate" that holds the date for each event. When
-                        you perform a legacy search, your parameters are transformed into a series of commands that
-                        create links and interactions among our different tables (Events, Performances, Theatre, etc.).
-                        When you perform a search from the main keyword or advanced search pages, which use the Sphinx
-                        full text search server, your terms are instead searched against an index of the same relational
-                        database, allowing for much faster results.</p>
-                </div>
-            </div>
-            <div class="grid-x tips-section">
-                <div id="Export" class="small-12" data-magellan-target="Export">
                 </div>
             </div>
         </div>

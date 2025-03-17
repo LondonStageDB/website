@@ -38,8 +38,10 @@
             <div class="grid-x about-section">
                 <div class="small-12">
                     <p>
-                        An earlier version of this page has been archived
-                        <a href="https://web.archive.org/web/20250312162927/https://londonstagedatabase.uoregon.edu/about.php">here</a>.
+                        In 2025, our team updated and reorganized this content from an earlier
+                        version of this webpage (now available
+                        <a href="https://web.archive.org/web/20250312162927/https://londonstagedatabase.uoregon.edu/about.php">through
+                            the Internet Archive</a>).
                     </p>
                 </div>
             </div>
