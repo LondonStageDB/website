@@ -3,7 +3,7 @@
 
 <head>
     <?php include_once('common/header.php'); ?>
-    <title>Authors</title>
+    <title>Authors London Stage Database Project</title>
 </head>
 
 <body id="authors">
@@ -22,12 +22,14 @@
                         that bought them, and the author's name wasn't always known or advertised to the viewing public.
                         Audiences were much more interested in knowing which star actors would be performing in a play
                         than they were in knowing who wrote it. We might compare this to movie posters today, which are
-                        more likely to name celebrity actors than screenplay writers.</p>
+                        more likely to name celebrity actors than screenplay writers.
+                    </p>
                     <p>At the same time, it was not uncommon to adapt and revive old plays, sometimes in radical ways,
                         and to continue marketing them under the name of the source author—especially if the source
                         author was someone famous like William Shakespeare or John Fletcher. <i>The London Stage,
                             1660-1800</i> doesn't always make it clear which version of a play is being performed on a
-                        given night, nor is it always possible to know.</p>
+                        given night, nor is it always possible to know.
+                    </p>
                     <p>For these reasons, a straightforward "author" search returning performances of plays known to be
                         by a given author would be ill-suited to the performance culture of the period. In the <i>London
                             Stage Database</i>, searching for an author will return performances of plays with the same
@@ -41,10 +43,12 @@
                         in question, you may find a list of "Related Works" that includes one or more plays related to
                         the title performed on the evening in question. This feature may help you identify a list of
                         several potential candidates for the performance text, or it may help you identify sources for
-                        and adaptations of the play we know was performed that night.</p>
+                        and adaptations of the play we know was performed that night.
+                    </p>
                     <p>It is important to note that the attribution of "related works" to "authors" is ongoing; this
                         data was not present in the recovered <i>London Stage Information Bank</i>, and its collection
-                        is still a work in progress by the members of the <i>London Stage Database</i> team.</p>
+                        is still a work in progress by the members of the <i>London Stage Database</i> team.
+                    </p>
                 </div>
             </div>
         </div>

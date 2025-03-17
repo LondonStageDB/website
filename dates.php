@@ -1,10 +1,9 @@
-</html>
 <!doctype html>
 <html class="no-js" lang="en">
 
 <head>
     <?php include_once('common/header.php'); ?>
-    <title>Dates</title>
+    <title>Dates London Stage Database Project</title>
 </head>
 
 <body id="dates">

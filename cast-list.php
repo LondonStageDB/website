@@ -3,7 +3,7 @@
 
 <head>
     <?php include_once('common/header.php'); ?>
-    <title>Cast Lists</title>
+    <title>Cast Lists London Stage Database</title>
 </head>
 
 <body id="cast-list">
@@ -14,7 +14,6 @@
             <h1>Cast Lists</h1>
         </div>
         <div method="post" class="small-12 medium-11 large-9 cell grid-x cast-list-form">
-            <p>
             <p>For the sake of concision, the editors of <i>The London Stage, 1660-1800</i> used what they called a
                 "ladder" system to abbreviate cast lists, which were often the lengthiest part of a performance entry.
                 If the cast listed in the playbills and newspaper advertisements for a particular play stays fairly
@@ -33,7 +32,8 @@
                 "Marplot-Macklin; Sir George - Mills; Sir Francis - Griffin; Miranda - Mrs Clive; Sir Jealous - Turbutt;
                 Charles - Wright; <b>Whisper-Winstone</b>; Isabinda - Mrs Mills; Patch - Mrs Pritchard; Scentwell - Mrs
                 Bennet." Tracing these ladder cast lists without the aid of a database can be painstaking work if
-                several substitutions are made over a series of performances.</p>
+                several substitutions are made over a series of performances.
+            </p>
             <p>The <i>London Stage Database</i> attempts to reconstruct the cast list wherever the "as [date]" syntax
                 occurs for a <a href='/glossary.php#mainpiece'>mainpiece</a> or <a href='/glossary.php#afterpiece'>afterpiece</a>.
                 However, it ignores entries that follow other patterns. For example, the editors sometimes provide notes
@@ -41,13 +41,14 @@
                 invitation to comparison; it represents the editors' conjecture that these two dates' cast lists bear
                 some kind of relation. It does not, however, consistently represent a correspondence between advertised
                 casts in the same way that the "as [date]" syntax does, so we have chosen not to attempt cast lists for
-                these "see [date]" entries.</p>
+                these "see [date]" entries.
+            </p>
             <p>Note that the program that reconstructs "as [date]" cast lists ignores the roles of <a
                         href='/glossary.php#prologue-epilogue'>prologue</a> and <a
                         href='/glossary.php#prologue-epilogue'>epilogue</a>. Because these short pieces were often
                 occasional and might only be spoken at initial performances of a play (or as reflections on special
                 events, like an author or actor <a href='/glossary.php#benefit'>benefit</a>), they are not assumed to
-                carry forward through subsequent performances in the same way that other roles do.</p>
+                carry forward through subsequent performances in the same way that other roles do.
             </p>
         </div>
     </div>

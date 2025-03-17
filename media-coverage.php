@@ -3,7 +3,7 @@
 
 <head>
     <?php include_once('common/header.php'); ?>
-    <title>Media Coverage</title>
+    <title>Media Coverage London Stage Database Project</title>
 </head>
 
 <body id="media-coverage">

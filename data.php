@@ -3,7 +3,7 @@
 
 <head>
     <?php include_once('common/header.php'); ?>
-    <title>Data for London Stage Database Project</title>
+    <title>Data London Stage Database Project</title>
 </head>
 
 <body id="data">
@@ -39,7 +39,6 @@
             <p>Data for individual events can be exported from the relevant Event page.</p>
         </div>
     </div>
-</div>
 </div>
 <?php include_once('common/footer.php'); ?>
 </body>

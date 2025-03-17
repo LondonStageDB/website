@@ -3,7 +3,7 @@
 
 <head>
     <?php include_once('common/header.php'); ?>
-    <title>About the Data</title>
+    <title>About London Stage Database Project Data</title>
 </head>
 
 <body id="about-data">
@@ -19,7 +19,8 @@
                 research and teaching, but the data should not be taken as a full, complete, or accurate picture of
                 performance in London over a 140-year period. Instead, we insist that it be understood as a
                 representation of a particular set of archival documents, transformed many times over by collectors of
-                theater ephemera, archivists, curators, editors, scholars, and developers.</p>
+                theater ephemera, archivists, curators, editors, scholars, and developers.
+            </p>
             <p>Our collective knowledge of theater in the period is hampered by gaps in the documentary record; for
                 example, Judith Milhous and Robert Hume <a
                         href="http://www.personal.psu.edu/hb1/London%20Stage%202001/preface.pdf" title="‌">have
@@ -36,7 +37,8 @@
                 to gain quantitative insights into London theatrical culture before 1700. Even after 1700, the editors
                 of <em>The London Stage</em> record manuscript notations on playbills, probably made by audience
                 members, that contradict the cast lists printed in the daily papers, and many scholars have uncovered
-                additional gaps and inconsistencies in the data.</p>
+                additional gaps and inconsistencies in the data.
+            </p>
             <p>The <em>London Stage Database</em> also inherits the quirks of the damaged and incomplete data that
                 Burkert was able to recover from the Lawrence University archives. The files associated with the <em>Information
                     Bank</em> experienced significant bit rot and are characterized by numerous gaps and errors that
@@ -52,18 +54,21 @@
                 special characters, like unprintable words in a comic book (e.g. “?!*&amp;%”). Advisory Board member
                 Derek Miller discovered that this problem resulted from a systematic shift in the underlying hexadecimal
                 code. When Burkert was unable to recover the original values forensically, Miller wrote a program to
-                correct the problem algorithmically.</p>
+                correct the problem algorithmically.
+            </p>
             <p>In a variety of ways, then, the recovered data is riddled with errors and inconsistencies that the <em>London
                     Stage Database</em> team has addressed to the best of our abilities, but at the necessary cost of
                 fidelity to the 1970s project. The team has also added new features and functionality not present in the
                 <em>Information Bank</em>, such as tables linking abbreviated theater codes from the recovered data to
                 the actual names of the theaters, as well as information about the known or assumed authors of
                 particular plays and entertainments (data collected painstakingly by Research Assistant Emma Hallock).
-                In doing so, our work has no doubt introduced new forms of error and ambiguity.</p>
+                In doing so, our work has no doubt introduced new forms of error and ambiguity.
+            </p>
             <p>The user interface is designed to make the rich history of this data, as well as its many limitations,
                 intuitively clear to those who interact with the site. The “Toggle Sphinx Query” button at the top of
                 the search results page allows users to see exactly how their search results were translated into SQL
-                queries and relayed via PHP to our server (for, as <a href="https://nyupress.org/9781479837243/algorithms-of-oppression/" title="‌">Safiya Noble
+                queries and relayed via PHP to our server (for, as <a
+                        href="https://nyupress.org/9781479837243/algorithms-of-oppression/" title="‌">Safiya Noble
                     reminds us</a>, search algorithms are never intellectually or ideologically neutral). The image
                 carousel on each event page makes it possible to view the reference book pages from which the data is
                 taken, alongside the roughest form of the data (recovered from the archives at Lawrence or copied from
@@ -75,7 +80,8 @@
                 was performed on a given evening; see, for example, <a
                         href="https://digitalcommons.usu.edu/english_facpub/795/" title="‌">Vareschi and Burkert’s
                     discussion</a> of the many different versions of <em>Oroonoko</em> that coexisted in the 1760s,
-                -70s, and -80s.</p>
+                -70s, and -80s.
+            </p>
             <p>We hope that visitors to the site will find this frank acknowledgment and foregrounding of the dataset’s
                 history and limitations refreshing rather than frustrating. As <a
                         href="http://www.digitalhumanities.org/dhq/vol/5/1/000091/000091.html" title="‌">Johanna Drucker

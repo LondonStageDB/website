@@ -3,7 +3,7 @@
 
 <head>
     <?php include_once('common/header.php'); ?>
-    <title>Glossary</title>
+    <title>Glossary London Stage Database Project</title>
 </head>
 
 <body id="glossary">
@@ -82,19 +82,8 @@
                 for full-price admissions to the entire evening's entertainment, £36 2s. 6d. for half-price tickets to
                 everything after the third act of the <a href='/glossary.php#mainpiece'>mainpiece</a>, and £5 17s. in
                 reduced-price tickets for very late admissions to the show.</p>
-            </p>
         </div>
     </div>
-</div>
-<?php include_once('common/footer.php'); ?>
-</body>
-
-</html>
-
-</div>
-</div>
-<!-- End Terms -->
-
 </div>
 <?php include_once('common/footer.php'); ?>
 </body>

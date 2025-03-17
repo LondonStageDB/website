@@ -1,6 +1,9 @@
+<!doctype html>
+<html class="no-js" lang="en">
+
 <head>
     <?php include_once('common/header.php'); ?>
-    <title>Citation and Sharing</title>
+    <title>Citing the London Stage Database</title>
 </head>
 
 <body id="citation">
@@ -14,8 +17,9 @@
             <nav class="show-for-small-only citation-mobile-nav sticky-container" id="mobileNav" data-sticky-container>
                 <div class data-sticky data-anchor="mobileNav" data-sticky-on="small">
                     <ul class="menu" data-magellan>
-                        <li><a href="OpenResearch">Open Research</a></li>
-                        <li><a href="Citing">Citing the Database</a></li>
+                        <li><a href="#OpenResearch">Open Research</a></li>
+                        <li><a href="#Citing">Citing the Database</a></li>
+                        <li><a href="#ImageCredits">Image Credits</a></li>
                     </ul>
                 </div>
             </nav>
@@ -23,8 +27,9 @@
                 <div class data-sticky data-anchor="citationNav" data-sticky-on="medium">
                     <h2>On This Page</h2>
                     <ul class="vertical menu" data-magellan>
-                        <li><a href="OpenResearch">Open Research</a></li>
-                        <li><a href="Citing">Citing the Database</a></li>
+                        <li><a href="#OpenResearch">Open Research</a></li>
+                        <li><a href="#Citing">Citing the Database</a></li>
+                        <li><a href="#ImageCredits">Image Credits</a></li>
                     </ul>
                 </div>
             </nav>
@@ -37,7 +42,7 @@
                 </div>
             </div>
             <div class="grid-x citation-section">
-                <div id="citation" class="small-12" data-magellan-target="citation">
+                <div id="OpenResearch" class="small-12" data-magellan-target="citation">
                     <h2><a id="OpenResearch"></a>Open Research</h2>
                     <p>Our project is built on the principles and values of open research:</p>
                     <ul>
@@ -67,11 +72,10 @@
                                 products for the current grant</a> as they become available.
                         </li>
                     </ul>
-                    </p>
                 </div>
             </div>
             <div class="grid-x citation-section">
-                <div id="citation" class="small-12" data-magellan-target="citation">
+                <div id="Citing" class="small-12" data-magellan-target="citation">
                     <h2>Citing the Database</h2>
                     <p>
                         We credit and link back to our sources and greatly appreciate your help tracking our project’s
@@ -85,7 +89,6 @@
                             https://londonstagedatabase.uoregon.edu/event.php?id=1494.
                         </li>
                     </ul>
-                    </p>
                 </div>
             </div>
             <div class="grid-x citation-section">
@@ -151,11 +154,9 @@
         </div>
         <p class="has-line-data" data-line-start="151" data-line-end="152"></p>
     </div>
-</div>
 
 </div>
-</div>
-</div>
+
 <?php include_once('common/footer.php'); ?>
 </body>
 

@@ -3,7 +3,7 @@
 
 <head>
     <?php include_once('common/header.php'); ?>
-    <title>Search Tips</title>
+    <title>Search Tips London Stage Database Project</title>
 </head>
 
 <body id="tips">
