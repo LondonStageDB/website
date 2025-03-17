@@ -45,7 +45,7 @@
                 <div id="Project" class="small-12" data-magellan-target="Project">
                     <img alt="image of title page of The London Stage reference books"
                          style="float:right;padding-left:25px;width:225px;height:306.31px;"
-                         src="https://github.com/LondonStageDB/website/blob/main/images/timeline-image3.jpeg?raw=true">
+                         src="images/timeline-image3.jpeg?raw=true">
                     <h2><a id="1960_1968_curation"></a>1960-8: Curation</h2>
                     <p>In the middle of the twentieth century, a team of theater historians created a calendar of
                         performances based on playbills and newspaper notices used to advertise performances,
@@ -61,7 +61,7 @@
                     <hr/>
                     <img alt="newspaper photograph of editors in a classroom at work on the London State Information Bank. Caption states: Photos by Nancy. Editors MARC WEINBERGER, Ben Schneider, Joe Jacobs, can be found in MH-427 at almost any hour of the day or night."
                          style="float:left;padding-right:25px;width:275px;height:225px;"
-                         src="https://github.com/LondonStageDB/website/blob/main/images/timeline-image2.jpeg?raw=true">
+                         src="images/timeline-image2.jpeg?raw=true">
                     <h2><a id="1970_1983_digitization"></a>1970-83: Digitization</h2>
                     <p>In the 1970s, the editors of <i>The London Stage</i>
                         commissioned a computerized database of the information in their reference book. The <i>London
@@ -78,7 +78,7 @@
                     <hr/>
                     <img alt="Headline LU to house The London Stage data bank with accompanying photograph, March 1971, page 8."
                          style="float:right;padding-left:25px;width:300px;height:233.5px;"
-                         src="https://github.com/LondonStageDB/website/blob/main/images/timeline-image1.jpeg?raw=true">
+                         src="images/timeline-image1.jpeg?raw=true">
                     <h2><a id="2013_2017_recovery"></a>2013-17: Recovery</h2>
                     <p>In 2013, Mattie Burkert began investigating the history of the <i>Information Bank</i>,
                         drawing
