@@ -57,7 +57,7 @@
                             Burkert</strong>, PhD</h4>
                     <img alt="Headshot of Mattie Burkert outside"
                          style="float:right;padding-left:25px;width:190px;height:245.88px;"
-                         src="https://github.com/LondonStageDB/website/blob/main/images/MattieBurkert.jpeg?raw=true">
+                         src="/images/MattieBurkert.jpeg">
                     <p class="has-line-data" data-line-start="7" data-line-end="8"><a
                                 href="https://cas.uoregon.edu/directory/english/all/mburkert">Associate Professor,
                             Department of English, University of Oregon</a></p>
@@ -78,7 +78,7 @@
                             Gaede</strong>, MSIS</h4>
                     <img alt="Headshot of Franny Gaede in front of blue-gray background"
                          style="float:right;padding-left:25px;width:175px;height:210px;"
-                         src="https://github.com/LondonStageDB/website/blob/main/images/FrannyGaede.jpeg?raw=true">
+                         src="/images/FrannyGaede.jpeg">
                     <p><a
                                 href="https://library.uoregon.edu/directory/gaede">Strategic Projects Librarian,
                             University of Oregon</a></p>
@@ -94,7 +94,7 @@
                             Thornhill</strong>, MLS</h4>
                     <img alt="Headshot of Kate Thornhill outside"
                          style="float:right;padding-left:25px;width:180.55px;height:233.75px;"
-                         src="https://github.com/LondonStageDB/website/blob/main/images/KateThornhill.jpeg?raw=true">
+                         src="/images/KateThornhill.jpeg">
                     <p class="has-line-data" data-line-start="19" data-line-end="20"><a
                                 href="https://library.uoregon.edu/directory/thornhill">Public Scholarship Librarian,
                             University of Oregon</a></p>
@@ -126,7 +126,7 @@
                             Liebe</strong>, PhD</h4>
                     <img alt="Headshot of Lauren Liebe in front of green background"
                          style="float:right;padding-left:25px;width:225px;height:225px;"
-                         src="https://github.com/LondonStageDB/website/blob/main/images/LaurenLiebe.jpeg?raw=true">
+                         src="/images/LaurenLiebe.jpeg">
                     <p><a
                                 href="https://behrend.psu.edu/person/lauren-liebe">Assistant Teaching Professor of Game
                             Design, Digital Media, Arts, and Technology, Penn State Eerie, the Behrend College</a></p>
@@ -184,7 +184,7 @@
                             Pflug</strong>, MA</h4>
                     <img alt="Headshot of Michele Pflug outside"
                          style="float:right;padding-left:25px;width:225px;height:225px;"
-                         src="https://github.com/LondonStageDB/website/blob/main/images/MichelePflug.jpeg?raw=true">
+                         src="/images/MichelePflug.jpeg">
                     <p>
                         <a id="Doctoral_Candidate_Department_of_History_University_of_Oregonhttpscasuoregonedudirectorysocialsciencesallmpflug_58"></a><a
                                 href="https://cas.uoregon.edu/directory/social-sciences/all/mpflug">Doctoral Candidate,
@@ -202,7 +202,7 @@
                     <h4><a id="Emma_Kaisner_72"></a><strong>Emma
                             Kaisner</strong><img alt="Headshot of Emma Kaisner in front of brick wall"
                                                  style="float:right;padding-left:25px;width:210px;height:248.1px;"
-                                                 src="https://github.com/LondonStageDB/website/blob/main/images/EmmaKaisner.jpeg?raw=true">
+                                                 src="/images/EmmaKaisner.jpeg">
                     </h4>
                     <p><a
                                 href="https://www.linkedin.com/in/emma-kaisner">BA Student, Economics &amp; English,
@@ -224,7 +224,7 @@
                             Anderson</strong>, PhD</h4>
                     <img alt="Headshot of Misty Anderson outside"
                          style="float:right;padding-left:25px;width:178.6px;height:205.92px;"
-                         src="https://github.com/LondonStageDB/website/blob/main/images/MistyAnderson.jpeg?raw=true">
+                         src="/images/MistyAnderson.jpeg">
                     <p><a
                                 href="https://english.utk.edu/misty-anderson/">Professor of English, James R. Cox
                             Professor of Arts and Sciences, University of Tennessee</a></p>
@@ -242,7 +242,7 @@
                             Gamer</strong>, PhD</h4>
                     <img alt="Headshot of Michael Gamer"
                          style="float:right;padding-left:25px;width:178.6px;height:205.92px;"
-                         src="https://github.com/LondonStageDB/website/blob/main/images/MichaelGamer.jpeg?raw=true">
+                         src="/images/MichaelGamer.jpeg">
                     <p><a
                                 href="https://www.english.upenn.edu/people/michael-gamer">Professor of English and
                             Comparative Literature, University of Pennsylvania</a></p>
@@ -270,7 +270,7 @@
                             Hugie</strong>, MLIS, BS</h4>
                     <img alt="Headshot of Todd Hugie in front of dark curtain"
                          style="float:right;padding-left:25px;width:185px;height:160px;"
-                         src="https://github.com/LondonStageDB/website/blob/main/images/ToddHugie.jpeg?raw=true">
+                         src="/images/ToddHugie.jpeg">
                     <p><a
                                 href="https://library.usu.edu/about/staff_directory/staff_files/toddhugie">Director of
                             Library Information Technologies, Merrill-Cazier Library, Utah State University</a></p>
@@ -283,7 +283,7 @@
                                 id="Atesede_Makonnen_PhD_101"></a><strong>Atesede Makonnen</strong>, PhD</h4>
                     <img alt="Headshot of Atesede Makonnen in front of white background"
                          style="float:right;padding-left:25px;width:165px;height:196.112px;"
-                         src="https://github.com/LondonStageDB/website/blob/main/images/AtesedeMakonnen.jpeg?raw=true">
+                         src="/images/AtesedeMakonnen.jpeg">
                     <p><a
                                 href="https://www.cmu.edu/dietrich/english/about-us/faculty/bios/atesede-makonnen.html">Assistant
                             Professor, Department of English, Carnegie Mellon University</a></p>
@@ -298,7 +298,7 @@
                                 id="Derek_Miller_PhD_106"></a><strong>Derek Miller</strong>, PhD</h4>
                     <img alt="Black and white headshot of Derek Miller outside"
                          style="float:right;padding-left:25px;width:200px;height:175px;"
-                         src="https://github.com/LondonStageDB/website/blob/main/images/DerekMiller.jpeg?raw=true">
+                         src="/images/DerekMiller.jpeg">
                     <p><a
                                 href="https://english.fas.harvard.edu/people/derek-miller">Professor, Department of
                             English, Harvard University</a></p>
@@ -317,7 +317,7 @@
                                 id="Chelsea_Phillips_MFA_PhD_111"></a><strong>Chelsea Phillips</strong>, MFA, PhD</h4>
                     <img alt="Headshot of Chelsea Phillips in front of bookcase"
                          style="float:right;padding-left:25px;width:200px;height:262.5px;"
-                         src="https://github.com/LondonStageDB/website/blob/main/images/ChelseaPhillips.jpeg?raw=true">
+                         src="/images/ChelseaPhillips.jpeg">
                     <p><a
                                 href="https://villanovatheatre.org/chelsea-phillips/">Associate Professor, Theatre
                             Department, Villanova University</a></p>
@@ -335,7 +335,7 @@
                                 id="Jeffrey_S_Ravel_PhD_116"></a><strong>Jeffrey S. Ravel</strong>, PhD</h4>
                     <img alt="Headshot of Jeffrey Ravel in front of window"
                          style="float:right;padding-left:25px;width:200px;height:197.33px;"
-                         src="https://github.com/LondonStageDB/website/blob/main/images/JeffreyRavel.jpeg?raw=true">
+                         src="/images/JeffreyRavel.jpeg">
                     <p><a
                                 href="https://history.mit.edu/people/jeffrey-s-ravel/">Professor Emeritus, Department of
                             History, Massachusetts Institute of Technology</a></p>
@@ -357,7 +357,7 @@
                                 id="Fiona_Ritchie_PhD_121"></a><strong>Fiona Ritchie</strong>, PhD</h4>
                     <img alt="Headshot of Fiona Ritchie in front of curtain"
                          style="float:right;padding-left:25px;width:225px;height:200px;"
-                         src="https://github.com/LondonStageDB/website/blob/main/images/FionaRitchie.jpeg?raw=true">
+                         src="/images/FionaRitchie.jpeg">
                     <p><a
                                 href="https://www.mcgill.ca/english/staff/fiona-ritchie">Associate Professor of Drama
                             and Theatre, Department of English, McGill University</a></p>
@@ -376,7 +376,7 @@
                                 id="Jeremy_SingerVine_126"></a><strong>Jeremy Singer-Vine</strong></h4>
                     <img alt="Headshot of Jeremy Singer Vine in front of white background"
                          style="float:right;padding-left:25px;width:225px;height:200px;"
-                         src="https://github.com/LondonStageDB/website/blob/main/images/JeremySingerVine.jpeg?raw=true">
+                         src="/images/JeremySingerVine.jpeg">
                     <p><a
                                 href="https://www.nytco.com/press/jeremy-singer-vine-joins-the-times-as-data-editor/">Data
                             Editor, New York Times</a></p>
@@ -417,7 +417,7 @@
                             English, U.S. Naval Academy</a></p>
                     <img alt="Headshot of Jane Wessel outside"
                          style="float:right;padding-left:25px;width:225px;height:160px;"
-                         src="https://github.com/LondonStageDB/website/blob/main/images/JaneWessel.jpg?raw=true">
+                         src="/images/JaneWessel.jpg">
                     <p>Wessel specializes in
                         eighteenth-century British theater history, performance studies, and the rise of the modern
                         celebrity. Her book <a
@@ -432,7 +432,7 @@
                                 id="Kalle_Westerling_PhD_141"></a><strong>Kalle Westerling</strong>, PhD</h4>
                     <img alt="Headshot of Kalle Westerling in front of tan curtain"
                          style="float:right;padding-left:25px;width:208px;height:219.4px;"
-                         src="https://github.com/LondonStageDB/website/blob/main/images/KalleWesterling.jpeg?raw=true">
+                         src="/images/KalleWesterling.jpeg">
                     <p><a
                                 href="https://www.turing.ac.uk/people/researchers/kalle-westerling">Research Application
                             Manager, Alan Turing Institute</a></p>
