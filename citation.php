@@ -68,12 +68,13 @@
                             base is available in full on <a href="https://github.com/LondonStageDB" title="‌">our GitHub
                                 site</a> and major release versions are automatically registered with unique DOIs
                             through
-                            Zenodo:
-                            <ul>
-                                <li>testing testing
-
-                                </li>
-                            </ul>
+                            Zenodo:<br>
+                            <a href="https://doi.org/10.5281/zenodo.7328444"><img
+                                        src="https://zenodo.org/badge/140609672.svg" alt="DOI"></a><br>
+                            <a href="https://doi.org/10.5281/zenodo.7328442"><img
+                                        src="https://zenodo.org/badge/140609563.svg" alt="DOI"></a><br>
+                            <a href="https://doi.org/10.5281/zenodo.7328435"><img
+                                        src="https://zenodo.org/badge/140609156.svg" alt="DOI"></a>
                         </li>
                         <li><b>Open access:</b> Consistent with the <a href="https://www.neh.gov/publicaccess"
                                                                        title="‌">NEH public access policy</a>, we aim to
