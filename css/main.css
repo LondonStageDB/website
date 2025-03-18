@@ -2660,23 +2660,62 @@ body#home:after {
     }
 }
 
-/******************/
-/*  About Data Page  */
-/******************/
+/****************/
+/*  About-Data Page  */
+/****************/
 
 #about-data .main {
     width: 100%;
-    min-height: calc(100vh - 54px);
     position: relative;
     padding-bottom: 3rem;
 }
 
-#about-data .about-data-wrap {
-    justify-content: center;
+#about-data h3 {
+    font-size: 1.3rem;
+    /*text-transform: uppercase;*/
+    font-feature-settings: "smcp";
+    -webkit-font-feature-settings: "smcp";
 }
 
-#about-data .page-heading {
-    padding: 0 3rem;
+#about-data h2 {
+    font-size: 1.9rem;
+}
+
+#about-data .about-data-mobile-nav {
+    position: fixed;
+    background: #6e2424;
+    right: 0;
+    bottom: 0;
+    left: 0;
+/ / height: 35 px;
+}
+
+#about-data .about-data-mobile-nav ul {
+    display: flex;
+    flex-direction: row;
+/ / height: 35 px;
+    flex-wrap: wrap;
+}
+
+#about-data .about-data-mobile-nav ul li {
+    flex: 1 0;
+    flex: 1 0 21%;
+    height: 42px;
+}
+
+#about-data .about-data-mobile-nav ul li:nth-of-type(-n+4) {
+    border-bottom: 1px solid #d6d0c2;
+}
+
+#about-data .about-data-mobile-nav li a {
+    color: #ece7d9;
+    font-size: 0.85rem;
+}
+
+#about-data .about-data-mobile-nav li a:focus,
+#about-data .about-data-mobile-nav li a:active {
+    background: #c8c2b3;
+    color: #6e2424;
 }
 
 #about-data .page-heading h1 {
@@ -2687,82 +2726,83 @@ body#home:after {
     padding-bottom: 2rem;
 }
 
-#about-data .about-data-form {
-    padding: 1rem;
-}
-
-#about-data .about-data-desc {
+#about-data .about-data-nav {
     padding: 0 1rem;
-    padding-bottom: 1rem;
 }
 
-#about-data .form-btn {
-    display: flex;
-    padding: 2rem;
-    justify-content: flex-end;
-}
-
-@media only screen and (min-width: 640px) {
-    #about-data .form-section {
-        padding: 0 2rem;
-    }
-
-    #about-data .about-data-desc {
-        padding: 0 2rem;
-        padding-bottom: 1rem;
-    }
-}
-
-/******************/
-/*  Cast List Page  */
-/******************/
-
-#cast-list .main {
-    width: 100%;
-    min-height: calc(100vh - 54px);
-    position: relative;
-    padding-bottom: 3rem;
-}
-
-#cast-list .cast-list-wrap {
-    justify-content: center;
-}
-
-#cast-list .page-heading {
-    padding: 0 3rem;
-}
-
-#cast-list .page-heading h1 {
+#about-data #mobileNav a {
     text-align: center;
-    font-size: 3rem;
-    padding: 1rem 0;
-    font-family: 'aquilinetworegular';
+    letter-spacing: 1px;
+    padding: 0;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#about-data .about-data-nav-sticky {
     padding-bottom: 2rem;
 }
 
-#cast-list .cast-list-form {
-    padding: 1rem;
+#about-data .about-data-nav-sticky > div {
+    text-align: center;
+    padding-bottom: 2rem;
 }
 
-#cast-list .cast-list-desc {
+#about-data #aboutDataNav a {
+    padding: 0.5rem 1rem;
+}
+
+#about-data .about-data-nav a.is-active {
+    background: #6e2424;
+    color: #ece7d9;
+}
+
+#about-data #mobileNav a.is-active {
+    background: #c8c2b3;
+    color: #6e2424;
+    font-weight: bold;
+}
+
+#about-data .about-data-nav h2 {
+    font-size: 1.4rem;
+    font-weight: 600;
+    font-feature-settings: "smcp";
+    -webkit-font-feature-settings: "smcp";
+    /*text-transform: uppercase;*/
+    padding-left: 1rem;
+}
+
+#about-data .about-data-nav .sticky {
+    padding-top: 1rem;
+}
+
+#about-data #mobileNav .sticky {
+    padding-top: 0;
+}
+
+#about-data .about-data-section {
     padding: 0 1rem;
-    padding-bottom: 1rem;
-}
-
-#cast-list .form-btn {
-    display: flex;
-    padding: 2rem;
-    justify-content: flex-end;
+    padding-bottom: 2rem;
 }
 
 @media only screen and (min-width: 640px) {
-    #cast-list .form-section {
-        padding: 0 2rem;
+    #about-data h3 {
+        font-size: 1.4rem;
     }
 
-    #cast-list .cast-list-desc {
-        padding: 0 2rem;
-        padding-bottom: 1rem;
+    #about-data h2 {
+        font-size: 2.5rem;
+    }
+
+    #about-data .about-data-nav-sticky > div {
+        text-align: left;
+    }
+}
+
+@media only screen and (min-width: 1024px) {
+    #about-data .about-data-section {
+        padding-right: 3rem;
     }
 }
 
@@ -2875,20 +2915,62 @@ body#home:after {
 /******************/
 /*  Glossary Page  */
 /******************/
+/* ****************/
+/*  Glossary Page  */
+/* ****************/
 
 #glossary .main {
     width: 100%;
-    min-height: calc(100vh - 54px);
     position: relative;
     padding-bottom: 3rem;
 }
 
-#glossary .glossary-wrap {
-    justify-content: center;
+#glossary h3 {
+    font-size: 1.3rem;
+    /*text-transform: uppercase;*/
+    font-feature-settings: "smcp";
+    -webkit-font-feature-settings: "smcp";
 }
 
-#glossary .page-heading {
-    padding: 0 3rem;
+#glossary h2 {
+    font-size: 1.9rem;
+}
+
+#glossary .glossary-mobile-nav {
+    position: fixed;
+    background: #6e2424;
+    right: 0;
+    bottom: 0;
+    left: 0;
+/ / height: 35 px;
+}
+
+#glossary .glossary-mobile-nav ul {
+    display: flex;
+    flex-direction: row;
+/ / height: 35 px;
+    flex-wrap: wrap;
+}
+
+#glossary .glossary-mobile-nav ul li {
+    flex: 1 0;
+    flex: 1 0 21%;
+    height: 42px;
+}
+
+#glossary .glossary-mobile-nav ul li:nth-of-type(-n+4) {
+    border-bottom: 1px solid #d6d0c2;
+}
+
+#glossary .glossary-mobile-nav li a {
+    color: #ece7d9;
+    font-size: 0.85rem;
+}
+
+#glossary .glossary-mobile-nav li a:focus,
+#glossary .glossary-mobile-nav li a:active {
+    background: #c8c2b3;
+    color: #6e2424;
 }
 
 #glossary .page-heading h1 {
@@ -2899,29 +2981,83 @@ body#home:after {
     padding-bottom: 2rem;
 }
 
-#glossary .glossary-form {
-    padding: 1rem;
-}
-
-#glossary .glossary-desc {
+#glossary .glossary-nav {
     padding: 0 1rem;
-    padding-bottom: 1rem;
 }
 
-#glossary .form-btn {
+#glossary #mobileNav a {
+    text-align: center;
+    letter-spacing: 1px;
+    padding: 0;
+    height: 100%;
     display: flex;
-    padding: 2rem;
-    justify-content: flex-end;
+    justify-content: center;
+    align-items: center;
+}
+
+#glossary .glossary-nav-sticky {
+    padding-bottom: 2rem;
+}
+
+#glossary .glossary-nav-sticky > div {
+    text-align: center;
+    padding-bottom: 2rem;
+}
+
+#glossary #glossaryNav a {
+    padding: 0.5rem 1rem;
+}
+
+#glossary .glossary-nav a.is-active {
+    background: #6e2424;
+    color: #ece7d9;
+}
+
+#glossary #mobileNav a.is-active {
+    background: #c8c2b3;
+    color: #6e2424;
+    font-weight: bold;
+}
+
+#glossary .glossary-nav h2 {
+    font-size: 1.4rem;
+    font-weight: 600;
+    font-feature-settings: "smcp";
+    -webkit-font-feature-settings: "smcp";
+    /*text-transform: uppercase;*/
+    padding-left: 1rem;
+}
+
+#glossary .glossary-nav .sticky {
+    padding-top: 1rem;
+}
+
+#glossary #mobileNav .sticky {
+    padding-top: 0;
+}
+
+#glossary .glossary-section {
+    padding: 0 1rem;
+    padding-bottom: 2rem;
 }
 
 @media only screen and (min-width: 640px) {
-    #glossary .form-section {
-        padding: 0 2rem;
+    #glossary h3 {
+        font-size: 1.4rem;
     }
 
-    #glossary .glossary-desc {
-        padding: 0 2rem;
-        padding-bottom: 1rem;
+    #glossary h2 {
+        font-size: 2.5rem;
+    }
+
+    #glossary .glossary-nav-sticky > div {
+        text-align: left;
+    }
+}
+
+@media only screen and (min-width: 1024px) {
+    #glossary .glossary-section {
+        padding-right: 3rem;
     }
 }
 
@@ -2977,6 +3113,60 @@ body#home:after {
         padding-bottom: 1rem;
     }
 }
+
+/* ******************/
+/*  Cast-List Page  */
+/* ******************/
+
+#cast-list .main {
+    width: 100%;
+    min-height: calc(100vh - 54px);
+    position: relative;
+    padding-bottom: 3rem;
+}
+
+#cast-list .cast-list-wrap {
+    justify-content: center;
+}
+
+#cast-list .page-heading {
+    padding: 0 3rem;
+}
+
+#cast-list .page-heading h1 {
+    text-align: center;
+    font-size: 3rem;
+    padding: 1rem 0;
+    font-family: 'aquilinetworegular';
+    padding-bottom: 2rem;
+}
+
+#cast-list .cast-list-form {
+    padding: 1rem;
+}
+
+#cast-list .cast-list-desc {
+    padding: 0 1rem;
+    padding-bottom: 1rem;
+}
+
+#cast-list .form-btn {
+    display: flex;
+    padding: 2rem;
+    justify-content: flex-end;
+}
+
+@media only screen and (min-width: 640px) {
+    #cast-list .form-section {
+        padding: 0 2rem;
+    }
+
+    #cast-list .cast-list-desc {
+        padding: 0 2rem;
+        padding-bottom: 1rem;
+    }
+}
+
 
 /******************/
 /*  Confirm Page  */

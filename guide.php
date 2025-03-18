@@ -17,8 +17,9 @@
             <p>
                 This page links to our quick guides for interacting with and understanding the information presented in
                 the London Stage Database. In 2025, our team updated and reorganized this content from an earlier
-                version of this webpage (now available
-                <a href="https://web.archive.org/web/20240910151821/https://londonstagedatabase.uoregon.edu/guide.php">through
+                version of this webpage (now available<a
+                        href="https://web.archive.org/web/20240910151821/https://londonstagedatabase.uoregon.edu/guide.php">
+                    through
                     the Internet Archive</a>).
             </p>
             <ul>

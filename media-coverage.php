@@ -49,17 +49,17 @@
                 <div class="media-logo-wrap grid-x">
                     <div class="small-4 medium-6 large-3">
                         <img class="funding-logo"
-                             src="https://github.com/LondonStageDB/website/blob/main/images/data-is-plural-logo?raw=true"
+                             src="/images/data-is-plural-logo.jpeg"
                              alt="Data is Plural Logo"/>
                     </div>
                     <div class="small-4 medium-6 large-3">
                         <img class="funding-logo"
-                             src="https://github.com/LondonStageDB/website/blob/main/images/nightingale-logo?raw=true"
+                             src="/images/nightingale-logo.jpeg"
                              style="max-width: 300px; max-height: 112px; 100%;height: auto;" alt="Nightingale Logo"/>
                     </div>
                     <div class="small-4 medium-6 large-3">
                         <img class="funding-logo"
-                             src="https://github.com/LondonStageDB/website/blob/main/images/the-economist-logo?raw=true"
+                             src="/images/the-economist-logo.jpeg"
                              alt="The Economist Logo"/>
                     </div>
                 </div>

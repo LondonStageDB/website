@@ -51,17 +51,17 @@
                 </div>
             </div>
             <div class="grid-x team-section">
-                <div id="Team" class="small-12" data-magellan-target="Team">
-                    <h2><a id="PI"></a>Principal Investigator and Project Director</h2>
-                    <h4 class="code-line" data-line-start=6 data-line-end=7><a id="Mattie_Burkert_PhD_6"></a><strong>Mattie
-                            Burkert</strong>, PhD</h4>
+                <div id="PI" class="small-12" data-magellan-target="PI">
+                    <h2>Principal Investigator and Project Director</h2>
+                    <h3><a id="Mattie_Burkert_PhD_6"></a><strong>Mattie
+                            Burkert</strong>, PhD</h3>
                     <img alt="Headshot of Mattie Burkert outside"
                          style="float:right;padding-left:25px;width:190px;height:245.88px;"
                          src="/images/MattieBurkert.jpeg">
-                    <p class="has-line-data" data-line-start="7" data-line-end="8"><a
+                    <p><a
                                 href="https://cas.uoregon.edu/directory/english/all/mburkert">Associate Professor,
                             Department of English, University of Oregon</a></p>
-                    <p class="has-line-data" data-line-start="9" data-line-end="10">As project director since 2018, <a
+                    <p>As project director since 2018, <a
                                 href="https://mattieburkert.com/">Mattie Burkert</a> has overseen the transformation of
                         an early humanities computing project into a modern relational database, the <em>London Stage
                             Database</em>. With the support of a second grant from the National Endowment for the
@@ -72,10 +72,14 @@
                                 Theaters and Financial Markets in London, 1688-1763</em></a> and has published widely on
                         the topics of digital humanities, new media studies, early modern and eighteenth-century
                         literature, and theater and performance.</p>
-                    <h2><a id="Informationists"></a>Informationists
+                </div>
+            </div>
+            <div class="grid-x team-section">
+                <div id="Informationists" class="small-12" data-magellan-target="Informationists">
+                    <h2>Informationists
                     </h2>
-                    <h4 class="code-line" data-line-start=13 data-line-end=14><a id="Franny_Gaede_MSIS_13"></a><strong>Franny
-                            Gaede</strong>, MSIS</h4>
+                    <h3><a id="Franny_Gaede_MSIS_13"></a><strong>Franny
+                            Gaede</strong>, MSIS</h3>
                     <img alt="Headshot of Franny Gaede in front of blue-gray background"
                          style="float:right;padding-left:25px;width:175px;height:210px;"
                          src="/images/FrannyGaede.jpeg">
@@ -90,15 +94,15 @@
                             Institute</a> and as Principal Investigator on major Mellon- and IMLS-funded projects
                         promoting open digital scholarship across disciplines. As part of the LSDB team, Franny advises
                         on project sustainability, digital rights management, and intellectual property.</p>
-                    <h4><a id="Kate_Thornhill_MLS_18"></a><strong>Kate
-                            Thornhill</strong>, MLS</h4>
+                    <h3><a id="Kate_Thornhill_MLS_18"></a><strong>Kate
+                            Thornhill</strong>, MLS</h3>
                     <img alt="Headshot of Kate Thornhill outside"
                          style="float:right;padding-left:25px;width:180.55px;height:233.75px;"
                          src="/images/KateThornhill.jpeg">
-                    <p class="has-line-data" data-line-start="19" data-line-end="20"><a
+                    <p><a
                                 href="https://library.uoregon.edu/directory/thornhill">Public Scholarship Librarian,
                             University of Oregon</a></p>
-                    <p class="has-line-data" data-line-start="21" data-line-end="22"><a
+                    <p><a
                                 href="https://katethornhill.carrd.co/">Thornhill</a> specializes in the development and
                         implementation of digital projects; the promotion of ethical, open, and participatory knowledge
                         sharing; and the cultivation of information literacies within and beyond the classroom. She has
@@ -107,8 +111,8 @@
                         Just Futures Institute’s <a href="https://jfi.uoregon.edu/initiatives/afroindigenous-healing/">Afroindigenous
                             Healing Project</a>. As community engagement specialist, Thornhill leads the LSDB’s public
                         outreach efforts, with the aim to grow the project’s user communities.</p>
-                    <h4><a
-                                id="Erin_Winter_MS_MSLS_23"></a><strong>Erin Winter</strong>, MS, MSLS</h4>
+                    <h3><a
+                                id="Erin_Winter_MS_MSLS_23"></a><strong>Erin Winter</strong>, MS, MSLS</h3>
                     <p><a
                                 href="https://library.uoregon.edu/directory/winter">Research Data Management Librarian,
                             University of Oregon</a></p>
@@ -120,10 +124,12 @@
                         sponsored DH projects at the University of Wisconsin, UNC-Chapel Hill, and Duke University.
                         Winter collaborates with other LSDB team members on the curation of new data and metadata,
                         focusing on Linked Open Data and interoperability efforts.</p>
-                    <h2><a id="LOD"></a>Linked Open Data
-                        Consultant</h2>
-                    <h4><a id="Lauren_Liebe_PhD_31"></a><strong>Lauren
-                            Liebe</strong>, PhD</h4>
+                </div>
+            </div>
+            <div class="grid-x team-section">
+                <div id="LOD" class="small-12" data-magellan-target="LOD">
+                    <h2>Linked Open Data Consultant</h2>
+                    <h3><a id="Lauren_Liebe_PhD_31"></a><strong>Lauren Liebe</strong>, PhD</h3>
                     <img alt="Headshot of Lauren Liebe in front of green background"
                          style="float:right;padding-left:25px;width:225px;height:225px;"
                          src="/images/LaurenLiebe.jpeg">
@@ -137,51 +143,49 @@
                         and as a Project Manager for the Advanced Research Consortium, a hub promoting DH research
                         discovery, peer review, and data aggregation. For the LSDB, Liebe is currently working to link
                         named entities to their VIAF identifiers, enhancing the interoperability of the site.</p>
-                    <h2><a id="IS"></a>UO Information Services
-                        Team</h2>
-                    <p>The London Stage Database is
-                        maintained by a team of dedicated developers and programmers at UO. Currently, the software
+                </div>
+            </div>
+            <div class="grid-x team-section">
+                <div id="IS" class="IS" data-magellan-target="IS">
+                    <h2>UO Information Services Team</h2>
+                    <p>The London Stage Database is maintained by a team of dedicated developers and programmers at UO.
+                        Currently, the software
                         development team is working to improve site functionality, ensure long-term preservation of the
                         project, and support the ingestion of new primary source material. The team provides crucial
                         technical support and oversight of the database as the LSDB continues to enhance user experience
                         and expand the range of search capabilities.</p>
-                    <h4><a id="Jesse_Sedwick_BS_40"></a><strong>Jesse
-                            Sedwick</strong>, BS</h4>
-                    <p>Web Applications Developer &amp;
-                        Administrator</p>
-                    <p>Sedwick has over twenty years of
-                        experience in custom web application development. He has designed and implemented a wide range
-                        of web applications to streamline workflows for university schools and departments.</p>
-                    <h4 class="code-line" data-line-start=45 data-line-end=46><a
-                                id="Tyfanie_Wineriter_BS_45"></a><strong>Tyfanie Wineriter</strong>, BS</h4>
+                    <h3><a id="Jesse_Sedwick_BS_40"></a><strong>Jesse Sedwick</strong>, BS</h3>
+                    <p>Web Applications Developer &amp; Administrator</p>
+                    <p>Sedwick has over twenty years of experience in custom web application development. He has
+                        designed and implemented a wide range of web applications to streamline workflows for university
+                        schools and departments.</p>
+                    <h3><a
+                                id="Tyfanie_Wineriter_BS_45"></a><strong>Tyfanie Wineriter</strong>, BS</h3>
                     <p>Software Solutions &amp; Development Manager</p>
-                    <p>Wineriter leads the Custom Software
-                        Development team at UO, where she specializes in employee engagement, project management,
-                        resource management and planning, and development standards.</p>
-                    <h4><strong>Derek Wormdahl</strong>, BS</h4>
-                    <p>Senior Director of Solutions
-                        Development and Data Services</p>
-                    <p>Wormdahl has over 25 years of
-                        industry experience developing, hosting and maintaining software applications in both the
-                        private and public sector fields. Wormdahl now occupies a leadership role at UO, overseeing IT
-                        staff that develop and maintain several of the university’s web applications.</p>
-                    <h4><a id="John_Zhao_MS_55"></a><strong>John
-                            Zhao</strong>, MS</h4>
+                    <p>Wineriter leads the Custom Software Development team at UO, where she specializes in employee
+                        engagement, project management, resource management and planning, and development standards.</p>
+                    <h3><strong>Derek Wormdahl</strong>, BS</h3>
+                    <p>Senior Director of Solutions Development and Data Services</p>
+                    <p>Wormdahl has over 25 years of industry experience developing, hosting and maintaining software
+                        applications in both the private and public sector fields. Wormdahl now occupies a leadership
+                        role at UO, overseeing IT staff that develop and maintain several of the university’s web
+                        applications.</p>
+                    <h3><a id="John_Zhao_MS_55"></a><strong>John Zhao</strong>, MS</h3>
                     <p>Analyst Programmer</p>
-                    <p>Zhao has twenty years of experience
-                        in web and software development. He has expertise in Drupal, WordPress, and Docker, as well as
-                        several back-end technologies, such as Angular, .NET Core, Azure, and API.</p>
-                    <h4><a id="Dennis_Pipes_MEd_60"></a><strong>Dennis
-                            Pipes</strong>, MEd</h4>
+                    <p>Zhao has twenty years of experience in web and software development. He has expertise in Drupal,
+                        WordPress, and Docker, as well as several back-end technologies, such as Angular, .NET Core,
+                        Azure, and API.</p>
+                    <h3><a id="Dennis_Pipes_MEd_60"></a><strong>Dennis Pipes</strong>, MEd</h3>
                     <p>Analyst Programmer</p>
-                    <p>Pipes has worked in both K-12 and
-                        higher education for over twenty years, serving as an instructor, support specialist, and web
-                        developer. He also has over ten years of experience in the private sector as a trainer and tech
-                        generalist.</p>
-                    <h2><a id="RAs"></a>Research Assistants
-                        2024-2025</h2>
-                    <h4><a id="Michele_Pflug_MA_57"></a><strong>Michele
-                            Pflug</strong>, MA</h4>
+                    <p>Pipes has worked in both K-12 and higher education for over twenty years, serving as an
+                        instructor, support specialist, and web developer. He also has over ten years of experience in
+                        the private sector as a trainer and tech generalist.</p>
+                </div>
+            </div>
+            <div class="grid-x team-section">
+                <div id="RAs" class="small-12" data-magellan-target="RAs">
+                    <h2>Research Assistants 2024-2025</h2>
+                    <h3><a id="Michele_Pflug_MA_57"></a><strong>Michele Pflug</strong>, MA</h3>
                     <img alt="Headshot of Michele Pflug outside"
                          style="float:right;padding-left:25px;width:225px;height:225px;"
                          src="/images/MichelePflug.jpeg">
@@ -189,9 +193,8 @@
                         <a id="Doctoral_Candidate_Department_of_History_University_of_Oregonhttpscasuoregonedudirectorysocialsciencesallmpflug_58"></a><a
                                 href="https://cas.uoregon.edu/directory/social-sciences/all/mpflug">Doctoral Candidate,
                             Department of History, University of Oregon</a></p>
-                    <p>Pflug’s research interests lie at
-                        the intersection of the history of science, women’s studies, collections management, and media
-                        studies. Her doctoral work has been recognized with an <a
+                    <p>Pflug’s research interests lie at the intersection of the history of science, women’s studies,
+                        collections management, and media studies. Her doctoral work has been recognized with an <a
                                 href="https://www.acls.org/fellow-grantees/michele-d-pflug/">ACLS Dissertation
                             Innovation Fellowship</a> and awards from the Bibliographic Society of America, the American
                         Society for Eighteenth-Century Studies, and the Linda Hall Library. A former rare books curator,
@@ -199,29 +202,32 @@
                         galleries, libraries, museums, and archives. Along with LSDB team member Erin Winter, Pflug will
                         develop data and metadata curation protocols that expand the range of sources available to LSDB
                         users.</p>
-                    <h4><a id="Emma_Kaisner_72"></a><strong>Emma
+                    <h3><a id="Emma_Kaisner_72"></a><strong>Emma
                             Kaisner</strong><img alt="Headshot of Emma Kaisner in front of brick wall"
                                                  style="float:right;padding-left:25px;width:210px;height:248.1px;"
                                                  src="/images/EmmaKaisner.jpeg">
-                    </h4>
+                    </h3>
                     <p><a
                                 href="https://www.linkedin.com/in/emma-kaisner">BA Student, Economics &amp; English,
                             University of Oregon</a></p>
-                    <p>Kaisner is a current Senior at the
-                        University of Oregon and a student in the Robert D. Clark Honors College. As an Economics and
-                        English student, Kaisner is interested in the interactions between literature, economics, and
-                        data science. During her time as a LSDB team member, Kaisner will assist in data collection and
-                        the implementation of a communications strategy for the project. Kaisner will also develop her
-                        own line of research inquiry to further engage with her own research interests and demonstrate
-                        the impact of the LSDB.</p>
-                    <h2><a id="AdBoard"></a>Advisory Board</h2>
-                    <p>The advisory board—a diverse group
-                        of digital humanities practitioners, theater researchers, teachers, dramaturgs, software
-                        engineers, data journalists, and genealogists—offers expert guidance on the current expansion of
-                        the LSDB project. Together, their areas of expertise reflect the LSDB’s goal to engage and grow
-                        user communities by making relevant data accessible and interoperable.</p>
-                    <h4 class="code-line" data-line-start=81 data-line-end=82><a id="Misty_Anderson_PhD_81"></a><strong>Misty
-                            Anderson</strong>, PhD</h4>
+                    <p>Kaisner is a current Senior at the University of Oregon and a student in the Robert D. Clark
+                        Honors College. As an Economics and English student, Kaisner is interested in the interactions
+                        between literature, economics, and data science. During her time as a LSDB team member, Kaisner
+                        will assist in data collection and the implementation of a communications strategy for the
+                        project. Kaisner will also develop her own line of research inquiry to further engage with her
+                        own research interests and demonstrate the impact of the LSDB.</p>
+                </div>
+            </div>
+            <div class="grid-x team-section">
+                <div id="AdBoard" class="small-12" data-magellan-target="AdBoard">
+                    <h2>Advisory Board</h2>
+                    <p>The advisory board—a diverse group of digital humanities practitioners, theater researchers,
+                        teachers, dramaturgs, software engineers, data journalists, and genealogists—offers expert
+                        guidance on the current expansion of the LSDB project. Together, their areas of expertise
+                        reflect the LSDB’s goal to engage and grow user communities by making relevant data accessible
+                        and interoperable.</p>
+                    <h3><a id="Misty_Anderson_PhD_81"></a><strong>Misty
+                            Anderson</strong>, PhD</h3>
                     <img alt="Headshot of Misty Anderson outside"
                          style="float:right;padding-left:25px;width:178.6px;height:205.92px;"
                          src="/images/MistyAnderson.jpeg">
@@ -238,8 +244,8 @@
                         theater scholars and practitioners—she is committed to re-imagining the Restoration and
                         eighteenth-century theatrical repertoire in ways that address the deep histories of race,
                         gender, empire, sexuality, and class that have shaped the modern world.</p>
-                    <h4 class="code-line" data-line-start=86 data-line-end=87><a id="Michael_Gamer_PhD_86"></a><strong>Michael
-                            Gamer</strong>, PhD</h4>
+                    <h3 class="code-line" data-line-start=86 data-line-end=87><a id="Michael_Gamer_PhD_86"></a><strong>Michael
+                            Gamer</strong>, PhD</h3>
                     <img alt="Headshot of Michael Gamer"
                          style="float:right;padding-left:25px;width:178.6px;height:205.92px;"
                          src="/images/MichaelGamer.jpeg">
@@ -255,8 +261,8 @@
                                 and the Gothic: Genre, Reception, and Canon Formation</em></a>. He is currently working
                         on a book on melodrama and an associated digital project asking what playbills read en masse can
                         tell us.</p>
-                    <h4><a
-                                id="Michelle_J_Holman_MLIS_91"></a><strong>Michelle J. Holman</strong>, MLIS</h4>
+                    <h3><a
+                                id="Michelle_J_Holman_MLIS_91"></a><strong>Michelle J. Holman</strong>, MLIS</h3>
                     <p>Principal Genealogist, <a
                                 href="https://www.familyhistorygifts.co.uk/">Family History Gifts</a></p>
                     <p class="has-line-data" data-line-start="94" data-line-end="95">A trained genealogist, reference
@@ -266,36 +272,36 @@
                         A regular user of the London Stage Database, Holman has become an important advocate of the
                         project in genealogy and music history circles, referencing it in blog posts, podcast
                         appearances, and articles for popular outlets like <em>Family Tree Magazine</em>.</p>
-                    <h4><a id="Todd_Hugie_MLIS_BS_96"></a><strong>Todd
-                            Hugie</strong>, MLIS, BS</h4>
+                    <h3><a id="Todd_Hugie_MLIS_BS_96"></a><strong>Todd
+                            Hugie</strong>, MLIS, BS</h3>
                     <img alt="Headshot of Todd Hugie in front of dark curtain"
                          style="float:right;padding-left:25px;width:185px;height:160px;"
                          src="/images/ToddHugie.jpeg">
                     <p><a
                                 href="https://library.usu.edu/about/staff_directory/staff_files/toddhugie">Director of
                             Library Information Technologies, Merrill-Cazier Library, Utah State University</a></p>
-                    <p>Hugie manages technology projects,
-                        standards, and processes for the Merrill-Cazier Library. During the first iteration of LSDB,
-                        Hugie designed the database’s relational structure and helped recover damaged files from the
-                        London Stage Information Bank; he continues to serve as a source of institutional memory during
-                        the next phase of LSDB’s expansion.</p>
-                    <h4><a
-                                id="Atesede_Makonnen_PhD_101"></a><strong>Atesede Makonnen</strong>, PhD</h4>
+                    <p>Hugie manages technology projects, standards, and processes for the Merrill-Cazier Library.
+                        During the first iteration of LSDB, Hugie designed the database’s relational structure and
+                        helped recover damaged files from the London Stage Information Bank; he continues to serve as a
+                        source of institutional memory during the next phase of LSDB’s expansion.</p>
+                    <h3><a
+                                id="Atesede_Makonnen_PhD_101"></a><strong>Atesede Makonnen</strong>, PhD</h3>
                     <img alt="Headshot of Atesede Makonnen in front of white background"
                          style="float:right;padding-left:25px;width:165px;height:196.112px;"
                          src="/images/AtesedeMakonnen.jpeg">
                     <p><a
                                 href="https://www.cmu.edu/dietrich/english/about-us/faculty/bios/atesede-makonnen.html">Assistant
                             Professor, Department of English, Carnegie Mellon University</a></p>
-                    <p>Makonnen’s research focuses race
-                        in eighteenth and nineteenth-century Britain. Her articles have appeared in journals including
-                        <em>European Romantic Review</em>, <em>Studies in Romanticism</em>, and <em>Victorian
-                            Studies</em>, and she has contributed to the collections <em>The Cambridge Companion to
-                            Romanticism and Race</em>, and <em>The Visual Life of Romantic Theatre, 1770-1830</em>. Her
-                        current book project is titled <em>Sensing Blackness in Nineteenth-Century British Culture</em>.
+                    <p>Makonnen’s research focuses race in eighteenth and nineteenth-century Britain. Her articles have
+                        appeared in journals including <em>European Romantic Review</em>, <em>Studies in
+                            Romanticism</em>,
+                        and <em>Victorian Studies</em>, and she has contributed to the collections <em>The Cambridge
+                            Companion to Romanticism and Race</em>, and <em>The Visual Life of Romantic Theatre,
+                            1770-1830</em>. Her current book project is titled <em>Sensing Blackness in
+                            Nineteenth-Century British Culture</em>.
                     </p>
-                    <h4><a
-                                id="Derek_Miller_PhD_106"></a><strong>Derek Miller</strong>, PhD</h4>
+                    <h3><a
+                                id="Derek_Miller_PhD_106"></a><strong>Derek Miller</strong>, PhD</h3>
                     <img alt="Black and white headshot of Derek Miller outside"
                          style="float:right;padding-left:25px;width:200px;height:175px;"
                          src="/images/DerekMiller.jpeg">
@@ -313,17 +319,16 @@
                         the LSDB project from its earliest days, Miller’s forensic investigations and creative Python
                         scripting made it possible to recover data from the archival remains of its 1970s predecessor.
                     </p>
-                    <h4><a
-                                id="Chelsea_Phillips_MFA_PhD_111"></a><strong>Chelsea Phillips</strong>, MFA, PhD</h4>
+                    <h3><a
+                                id="Chelsea_Phillips_MFA_PhD_111"></a><strong>Chelsea Phillips</strong>, MFA, PhD</h3>
                     <img alt="Headshot of Chelsea Phillips in front of bookcase"
                          style="float:right;padding-left:25px;width:200px;height:262.5px;"
                          src="/images/ChelseaPhillips.jpeg">
                     <p><a
                                 href="https://villanovatheatre.org/chelsea-phillips/">Associate Professor, Theatre
                             Department, Villanova University</a></p>
-                    <p>Phillips is a professional
-                        dramaturg and theatre historian who has published widely on the topics of women and
-                        eighteenth-century theatre; her monograph, <a
+                    <p>Phillips is a professional dramaturg and theatre historian who has published widely on the topics
+                        of women and eighteenth-century theatre; her monograph, <a
                                 href="https://udpress.udel.edu/book-title/carrying-all-before-her/"><em>Carrying All
                                 Before Her: Celebrity Pregnancy and the London Stage 1689-1800</em></a> reconstructs the
                         histories of six celebrity women to investigate how pregnancy impacted theatrical culture. As a
@@ -331,17 +336,16 @@
                         the Manhattan Shakespeare Project, Uncut Pages Theatre, and the Royal Shakespeare Company. She
                         is a proud member of R/18, which provides advocacy and dramaturgical support for Restoration and
                         eighteenth-century drama in performance.</p>
-                    <h4 class="code-line" data-line-start=116 data-line-end=117><a
-                                id="Jeffrey_S_Ravel_PhD_116"></a><strong>Jeffrey S. Ravel</strong>, PhD</h4>
+                    <h3><a
+                                id="Jeffrey_S_Ravel_PhD_116"></a><strong>Jeffrey S. Ravel</strong>, PhD</h3>
                     <img alt="Headshot of Jeffrey Ravel in front of window"
                          style="float:right;padding-left:25px;width:200px;height:197.33px;"
                          src="/images/JeffreyRavel.jpeg">
                     <p><a
                                 href="https://history.mit.edu/people/jeffrey-s-ravel/">Professor Emeritus, Department of
                             History, Massachusetts Institute of Technology</a></p>
-                    <p>Ravel specializes in French and
-                        European history from the seventeenth through the nineteenth centuries. He is the author of two
-                        books: <a
+                    <p>Ravel specializes in French and European history from the seventeenth through the nineteenth
+                        centuries. He is the author of two books: <a
                                 href="https://www.cambridge.org/core/journals/law-and-history-review/article/jeffrey-s-ravel-the-wouldbe-commoner-a-tale-of-deception-murder-and-justice-in-seventeenthcentury-france-boston-and-new-york-houghton-mifflin-company-2008-pp-320-25-isbn-9780618197316/1044160B26B07D4C711A4792A7BD5F59"><em>The
                                 Would-Be Commoner: A Tale of Deception, Murder, and Justice in Seventeenth Century
                                 France</em></a>; and <a
@@ -353,8 +357,8 @@
                                 href="https://asecs.org">American Society for Eighteenth Century Studies</a>. He is a
                         powerful advocate for interdisciplinary, collaborative, data-driven approaches to theater
                         history.</p>
-                    <h4><a
-                                id="Fiona_Ritchie_PhD_121"></a><strong>Fiona Ritchie</strong>, PhD</h4>
+                    <h3><a
+                                id="Fiona_Ritchie_PhD_121"></a><strong>Fiona Ritchie</strong>, PhD</h3>
                     <img alt="Headshot of Fiona Ritchie in front of curtain"
                          style="float:right;padding-left:25px;width:225px;height:200px;"
                          src="/images/FionaRitchie.jpeg">
@@ -372,8 +376,8 @@
                         Church, University of Oxford. Ritchie served as a beta tester for the launch of LSDB and
                         provided expert commentary on the project in <em>ABO: Interactive Journal of Women in the
                             Arts</em> and the <em>Economist</em>.</p>
-                    <h4><a
-                                id="Jeremy_SingerVine_126"></a><strong>Jeremy Singer-Vine</strong></h4>
+                    <h3><a
+                                id="Jeremy_SingerVine_126"></a><strong>Jeremy Singer-Vine</strong></h3>
                     <img alt="Headshot of Jeremy Singer Vine in front of white background"
                          style="float:right;padding-left:25px;width:225px;height:200px;"
                          src="/images/JeremySingerVine.jpeg">
@@ -391,8 +395,8 @@
                         range of pertinent datasets to a large public following. Through podcasts, newsletters, and
                         editorial work, Singer-Vine has played a key role in bringing LSDB to the attention of the data
                         visualization community.</p>
-                    <h4><a
-                                id="Mark_Vareschi_PhD_131"></a><strong>Mark Vareschi</strong>, PhD</h4>
+                    <h3><a
+                                id="Mark_Vareschi_PhD_131"></a><strong>Mark Vareschi</strong>, PhD</h3>
                     <img alt="Headshot of Mark Vareschi outside"
                          style="float:right;padding-left:25px;width:225px;height:133.203px;"
                          src="/images/MarkVareschi2.jpg">
@@ -410,17 +414,16 @@
                         in the practical uses and theoretical problems of data-driven approaches to the study of
                         theatrical and print cultures, particularly in how digital resources tend to reinscribe
                         authorial attribution with vexed histories.</p>
-                    <h4><a id="Jane_Wessel_PhD_136"></a><strong>Jane
-                            Wessel</strong>, PhD</h4>
+                    <h3><a id="Jane_Wessel_PhD_136"></a><strong>Jane
+                            Wessel</strong>, PhD</h3>
                     <p><a
                                 href="https://hcommons.org/members/janewessel/">Associate Professor, Department of
                             English, U.S. Naval Academy</a></p>
                     <img alt="Headshot of Jane Wessel outside"
                          style="float:right;padding-left:25px;width:225px;height:160px;"
                          src="/images/JaneWessel.jpg">
-                    <p>Wessel specializes in
-                        eighteenth-century British theater history, performance studies, and the rise of the modern
-                        celebrity. Her book <a
+                    <p>Wessel specializes in eighteenth-century British theater history, performance studies, and the
+                        rise of the modern celebrity. Her book <a
                                 href="https://press.umich.edu/Books/O/Owning-Performance-Performing-Ownership"><em>Owning
                                 Performance | Performing Ownership: Literary Property and the Eighteenth-Century British
                                 Stage</em></a>, sheds new light on the legal and financial strategies that shaped
@@ -428,33 +431,34 @@
                         fellowships at the Folger Shakespeare Library, Chawton House, Houghton Library, and Lewis
                         Walpole Library, affording her in-depth knowledge of the key archives of eighteenth-century
                         British theater.</p>
-                    <h4><a
-                                id="Kalle_Westerling_PhD_141"></a><strong>Kalle Westerling</strong>, PhD</h4>
+                    <h3><a
+                                id="Kalle_Westerling_PhD_141"></a><strong>Kalle Westerling</strong>, PhD</h3>
                     <img alt="Headshot of Kalle Westerling in front of tan curtain"
                          style="float:right;padding-left:25px;width:208px;height:219.4px;"
                          src="/images/KalleWesterling.jpeg">
                     <p><a
                                 href="https://www.turing.ac.uk/people/researchers/kalle-westerling">Research Application
                             Manager, Alan Turing Institute</a></p>
-                    <p>An experienced Digital Humanities
-                        technologist and project manager with a particular interest in sustainability and
-                        capacity-building, Westerling previously oversaw <a href="https://www.dhinstitutes.org"><em>Digital
-                                Humanities Research Institutes: Expanding Communities of Practice</em></a>, an Institute
-                        for Advanced Topics in DH funded by two NEH grants. They also worked as a digital humanities
-                        software engineer on the <a href="https://livingwithmachines.ac.uk/team/">Living with
-                            Machines</a> project, an interdisciplinary research initiative that explores the impact of
-                        the Industrial Revolution on ordinary people. Westerling’s expertise lies at the intersection of
-                        DH and theater studies.</p>
-                    <h2><a id="PastMembers"></a>Past Members
-                    </h2>
-                    <p>This project would not be
-                        possible without the help of those who supported its earlier stages, including Susan Barribeau,
-                        Will Daland, Steven Dast, Erin Dix, Jack Keel, Cal Lee, Bronwen Maseman, Ben Ross Schneider III,
-                        Nick Schneider, Cindy Serikaku, Carl Stahmer, Dorothea Salo, Brianna Uzuner, Steel Wagstaff, Kam
-                        Woods, Angela Zaytsev, Irene Zimmerman, Dustin Olson, Caden Williams, Emma Hallock, Scott
-                        Enderle, Doug Reside, James Ascher, Annette Cottle, Katie Dana, Clint Gillespie, Garth Mikesell,
-                        Angela Moore-Swafford, Sam Phelps, Betty Rozum, Annie Strickland-Neilson, Cameron Seright, and
-                        Joe Kaili.</p>
+                    <p>An experienced Digital Humanities technologist and project manager with a particular interest in
+                        sustainability and capacity-building, Westerling previously oversaw <a
+                                href="https://www.dhinstitutes.org"><em>Digital Humanities Research Institutes:
+                                Expanding Communities of Practice</em></a>, an Institute for Advanced Topics in DH
+                        funded by two NEH grants. They also worked as a digital humanities software engineer on the <a
+                                href="https://livingwithmachines.ac.uk/team/">Living with Machines</a> project, an
+                        interdisciplinary research initiative that explores the impact of the Industrial Revolution on
+                        ordinary people. Westerling’s expertise lies at the intersection of DH and theater studies.</p>
+                </div>
+            </div>
+            <div class="grid-x team-section">
+                <div id="PastMembers" class="small-12" data-magellan-target="PastMembers">
+                    <h2>Past Members</h2>
+                    <p>This project would not be possible without the help of those who supported its earlier stages,
+                        including Susan Barribeau, Will Daland, Steven Dast, Erin Dix, Jack Keel, Cal Lee, Bronwen
+                        Maseman, Ben Ross Schneider III, Nick Schneider, Cindy Serikaku, Carl Stahmer, Dorothea Salo,
+                        Brianna Uzuner, Steel Wagstaff, Kam Woods, Angela Zaytsev, Irene Zimmerman, Dustin Olson, Caden
+                        Williams, Emma Hallock, Scott Enderle, Doug Reside, James Ascher, Annette Cottle, Katie Dana,
+                        Clint Gillespie, Garth Mikesell, Angela Moore-Swafford, Sam Phelps, Betty Rozum, Annie
+                        Strickland-Neilson, Cameron Seright, and Joe Kaili.</p>
                 </div>
             </div>
         </div>

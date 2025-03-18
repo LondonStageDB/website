@@ -81,7 +81,6 @@
             <div class="grid-x tips-section">
                 <div id="Filters" class="small-12" data-magellan-target="Filters">
                     <h2>Advanced Search and Filters</h2>
-                    <p></p>
                     <p>Boolean searching is possible for actors and for roles. To search for two or more actors who
                         appear together in a single event, click the "+" button by the actor search box, and select
                         the "AND" operation from the drop-down menu. This search will return events in which both
