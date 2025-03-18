@@ -14,12 +14,12 @@
   <div id="main" class="main grid-container">
     <div class="grid-x contact-wrap">
       <div class="small-12 page-heading">
-        <h1>Blogs</h1>
+        <h1>News</h1>
       </div>
       <div class="small-12 medium-11 large-9 cell grid-x">
         <?php
-           $feedlist = new Rss("https://blogs.uoregon.edu/newmediaculture/posts-archive/feed/");
-           echo $feedlist->display();
+           $feedlist = new Rss("https://blogs.uoregon.edu/londonstage/feed/");
+           echo $feedlist->display(5);
         ?>
       </div>
     </div>
