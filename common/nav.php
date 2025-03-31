@@ -26,7 +26,7 @@
                         </ul>
                     </li>
                     <li>
-                        <a href="about.php">About</a>
+                        <a href="/about.php">About</a>
                         <ul class="menu vertical">
                             <li><a href="/history.php">History</a></li>
                             <li><a href="/team.php">Team</a></li>
@@ -35,7 +35,7 @@
                         </ul>
                     </li>
                     <li><a href="/contact.php">Contact</a></li>
-                    <li><a href="news.php">News</a></li>
+                    <li><a href="/news.php">News</a></li>
                 </ul>
             </div>
 
