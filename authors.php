@@ -18,7 +18,7 @@
                 <div id="Authors" class="small-12" data-magellan-target="Authors">
                     <p><img alt=""
                             style="float:right;padding-left:25px;padding-bottom:25px;"
-                            src="/images/playbill.png">
+                            src="/images/lear-title-page.jpg">
                         Today we think about authorship a bit differently than people did in the long eighteenth
                         century.
                         While we think of playwrights as having a kind of ownership over their dramatic works, this
@@ -39,10 +39,11 @@
                             Stage Database</i>, searching for an author will return performances of plays with the same
                         title as those we know to be by that author, as well as performances of adaptations and related
                         plays. Searching for "Shakespeare" will turn up performances of William Davenant and John
-                        Dryden’s 1670 operatic spectacle <i>The Tempest, or, the Enchanted Island</i>; Nahum Tate’s 1681
-                        adaptation of <i>King Lear</i> that gave the tragedy a happy ending; and David Garrick’s 1754
-                        farce <i>Catherine and Petruchio</i>, which was based on <i>The Taming of the Shrew</i>. If you
-                        click through to a specific event and scroll to the <a
+                        Dryden’s 1670 operatic spectacle <i>The Tempest, or, the Enchanted Island</i>; David
+                        Garrick’s 1754
+                        farce <i>Catherine and Petruchio</i>, which was based on <i>The Taming of the Shrew</i>; and
+                        Nahum Tate’s 1681 adaptation of <i>King Lear</i> that gave the tragedy a happy ending (see
+                        image). If you click through to a specific event and scroll to the <a
                                 href='/glossary.php#mainpiece'>mainpiece</a> or <a href='/glossary.php#afterpiece'>afterpiece</a>
                         in question, you may find a list of "Related Works" that includes one or more plays related to
                         the title performed on the evening in question. This feature may help you identify a list of
@@ -53,6 +54,10 @@
                         data was not present in the recovered <i>London Stage Information Bank</i>, and its collection
                         is still a work in progress by the members of the <i>London Stage Database</i> team.
                     </p>
+                    <p><b>Image Credit:</b> Title page of <a href="https://digitalcollections.folger.edu/img119486"><i>The
+                                History of King Lear</i>, a Tragedy</a>, published in 1736 in connection with
+                        a revival of Nahum Tate's 1681 Shakespearean adaptation. Folger Shakespeare Library, CC-0 public
+                        domain license.</p>
                 </div>
             </div>
         </div>

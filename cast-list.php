@@ -14,7 +14,7 @@
             <h1>Cast Lists</h1>
         </div>
         <div method="post" class="small-12 medium-11 large-9 cell grid-x cast-list-form">
-            <p>>For the sake of concision, the editors of <i>The London Stage,
+            <p>For the sake of concision, the editors of <i>The London Stage,
                     1660-1800</i> used what they called a
                 "ladder" system to abbreviate cast lists, which were often the lengthiest part of a performance entry.
                 If the cast listed in the playbills and newspaper advertisements for a particular play stays fairly
