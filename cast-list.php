@@ -14,18 +14,25 @@
             <h1>Cast Lists</h1>
         </div>
         <div method="post" class="small-12 medium-11 large-9 cell grid-x cast-list-form">
-            <p>For the sake of concision, the editors of <i>The London Stage, 1660-1800</i> used what they called a
+            <p>>For the sake of concision, the editors of <i>The London Stage,
+                    1660-1800</i> used what they called a
                 "ladder" system to abbreviate cast lists, which were often the lengthiest part of a performance entry.
                 If the cast listed in the playbills and newspaper advertisements for a particular play stays fairly
                 consistent over the course of a season, it is reproduced in full the first time it appears with that
                 cast, and subsequent performances of the same play by the same company record the cast following the
-                syntax "As [date], but [substitutions, if any]." So, for example, a performance of <i>The Busy Body</i>
+                syntax "As [date], but [substitutions, if any]." </p>
+            <p><img alt=""
+                    style="float:right;"
+                    src="/images/cast-list-ladder.png"><br/><br/>So, for
+                example, a performance of <i>The Busy
+                    Body</i>
                 at Drury Lane on 31 May 1739 is recorded "THE BUSY BODY. As 28 Dec. 1738, but Whisper-Winstone." The
                 user of the reference book can then turn to the entry for <i>The Busy Body</i> at Drury Lane on 28
                 December 1738 and read the cast list for that date: "As 23 Sept., but Marplot-Macklin;
                 Whisper-Woodward." Turning back to September, the reader finds a full cast list: "Marplot-Cibber; Sir
                 George-Mills; Sir Francis-Griffin; Miranda-Mrs Clive; Sir Jealous-Turbutt; Charles-Wright;
-                Whisper-Macklin; Isabinda-Mrs Mills; Patch-Mrs Pritchard; Scentwell-Mrs Bennet." Making the appropriate
+                Whisper-Macklin; Isabinda-Mrs Mills; Patch-Mrs Pritchard; Scentwell-Mrs Bennet."</p>
+            <p>Making the appropriate
                 substitutions, the reader can infer that the cast list advertised for the December performance was "<b>Marplot-Macklin</b>;
                 Sir George-Mills; Sir Francis-Griffin; Miranda-Mrs Clive; Sir Jealous-Turbutt; Charles-Wright; <b>Whisper-Woodward</b>;
                 Isabinda-Mrs Mills; Patch-Mrs Pritchard; Scentwell-Mrs Bennet," and that for the May performance it was

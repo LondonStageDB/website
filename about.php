@@ -38,11 +38,29 @@
             <div class="grid-x about-section">
                 <div class="small-12">
                     <p>
-                        In 2025, our team updated and reorganized this content from an earlier
-                        version of this webpage (now available
+                        This page provides an overview of the London Stage Database project and funding. In 2025,
+                        our team updated and reorganized content from an earlier version of this webpage (now available
                         <a href="https://web.archive.org/web/20250312162927/https://londonstagedatabase.uoregon.edu/about.php">through
-                            the Internet Archive</a>).
+                            the Internet Archive</a>). Information from that earlier version may be found below and on
+                        the following pages:
                     </p>
+                    <ul>
+                        <li><a href="history.php">History</a>: Provides a timeline of the project from the 1960s to
+                            present day
+                        </li>
+                        <li><a href="team.php">Team</a>: Highlights current team members and their roles in the project
+                        </li>
+                        <li><a href="citation.php">Citation and Sharing</a>: States our commitment to open research
+                            principles, offers suggestions for how to cite the database, and includes references for
+                            the website's background images
+                        </li>
+                        <li><a href="media-coverage.php">Media Coverage</a>: Includes links to media coverage of the
+                            London Stage Database
+                        </li>
+                        <li><a href="about-data.php">About the Data</a>: Outlines the provenance and limitations of the
+                            data
+                        </li>
+                    </ul>
                 </div>
             </div>
             <div class="grid-x about-section">

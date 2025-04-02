@@ -19,8 +19,9 @@
                 more than 13,500 unique visitors. Hailed by peer reviewers as <a
                         href="https://digitalcommons.usf.edu/abo/vol10/iss2/3/">field-changing</a>, it has become a
                 resource of central importance to theater and performance historians, librarians, and archivists. Beyond
-                academe, LSDB has made its way into magazines for data visualizers, family genealogists, and the
-                international business community. Visit the links below to hear from some of these audiences.</p>
+                academe, LSDB has made its way into magazines for data scientists and communicators, family
+                genealogists, and the international business community. Visit the links below to hear from some of these
+                audiences.</p>
             <ul>
                 <li>
                     <a href="https://podcast.data-is-plural.com/2159594/episodes/12535551"><strong>The Data is Plural

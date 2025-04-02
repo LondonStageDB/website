@@ -50,7 +50,8 @@
                     <p>Our collective knowledge of theater in the period is hampered by gaps in the documentary record;
                         for
                         example, Judith Milhous and Robert Hume <a
-                                href="http://www.personal.psu.edu/hb1/London%20Stage%202001/preface.pdf" title="‌">have
+                                href="https://web.archive.org/web/20101122110649/http://www.personal.psu.edu:80/hb1/London%20Stage%202001/preface.pdf"
+                                title="‌">have
                             calculated that</a> the information available for the years 1660-1700—before newspapers
                         began printing daily advertisements for the major theaters—represents perhaps 7% of the
                         performances that actually took place in London. The <em>London Stage Database</em> inherits not
@@ -127,7 +128,7 @@
                         people at particular places and times. The <em>London Stage Database</em> participates in a long
                         history of capturing partial histories of performance. This does not mean it should not be as
                         accurate and useful as possible, and we encourage you to <a
-                                href="https://londonstagedatabase.uoregon.edu/about.php#Contact" title="‌">be
+                                href="/contact.php" title="‌">be
                             in touch</a> about errors or bugs you discover. At the same time, we are committed to making
                         visible the ways in which perceived “errors” may in fact be the necessary and unavoidable
                         consequence of this information’s long history of transmission and transformation, something to

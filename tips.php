@@ -45,39 +45,28 @@
                     see. Relational databases like the <i>London Stage Database</i> are organized as a series of <b>tables</b>
                     (imagine Excel spreadsheets) with <b>fields</b> (imagine the column labels within those
                     spreadsheets). For example, the <i>London Stage Database</i> has a table called "Events," and
-                    within that table, it has a field called "EventDate" that holds the date for each event. When
-                    you perform a legacy search, your parameters are transformed into a series of commands that
-                    create links and interactions among our different tables (Events, Performances, Theatre, etc.).
-                    When you perform a search from the main keyword or advanced search pages, which use the Sphinx
-                    full text search server, your terms are instead searched against an index of the same relational
-                    database, allowing for much faster results.</p>
-                <p>This section of the user guide offers a few tips for making the most of your
-                    searches.</p>
+                    within that table, it has a field called "EventDate" that holds the date for each event.</p>
             </div>
             <div class="grid-x tips-section">
                 <div id="Search" class="small-12" data-magellan-target="Search">
                     <h2>Keyword Search</h2>
-                    <ul>
-                        <li>Search results are never case-sensitive in the <i>London Stage Database</i>. A keyword
-                            search for "dryden", "Dryden", or "DRYDEN" will return the same results. Special characters,
-                            such as hyphens and apostrophes, are ignored, in order to accommodate the inconsistent
-                            punctuation of entries in <i>The London Stage, 1660-1800</i> and the <i>London Stage
-                                Information Bank</i>.
-                        </li>
-                        <li>To search for an exact word or phrase, you can place it in quotation marks, "like this." If
-                            you enter a multi-word search term without quotation marks, our algorithm will return
-                            entries that include any of the words in your phrase. If you enter "Marriage a la Mode" with
-                            quotation marks, you will only get hits for that play, but they will include entries in
-                            which the title is spelled "Marriage a la Mode" as well as entries in which the title is
-                            spelled "Marriage a-la-Mode." If you enter the same term without quotation marks, you will
-                            also get hits for performances of <i>The Man of Mode</i>, for example, because the two
-                            titles share the word "Mode." Search results can be filtered by relevance on the results
-                            page, if desired, to prioritize more exact matches with the terms you entered.
-                        </li>
-                    </ul>
+                    <p>Search results are never case-sensitive in the <i>London Stage Database</i>. A keyword
+                        search for "dryden", "Dryden", or "DRYDEN" will return the same results. Special characters,
+                        such as hyphens and apostrophes, are ignored, in order to accommodate the inconsistent
+                        punctuation of entries in <i>The London Stage, 1660-1800</i> and the <i>London Stage
+                            Information Bank</i>.</p>
+                    <p>To search for an exact word or phrase, you can place it in quotation marks, "like this." If
+                        you enter a multi-word search term without quotation marks, our algorithm will return
+                        entries that include any of the words in your phrase. If you enter "Marriage a la Mode" with
+                        quotation marks, you will only get hits for that play, but they will include entries in
+                        which the title is spelled "Marriage a la Mode" as well as entries in which the title is
+                        spelled "Marriage a-la-Mode." If you enter the same term without quotation marks, you will
+                        also get hits for performances of <i>The Man of Mode</i>, for example, because the two
+                        titles share the word "Mode." Search results can be filtered by relevance on the results
+                        page, if desired, to prioritize more exact matches with the terms you entered.
+                    </p>
                 </div>
             </div>
-            <!-- End Search -->
             <div class="grid-x tips-section">
                 <div id="Filters" class="small-12" data-magellan-target="Filters">
                     <h2>Advanced Search and Filters</h2>
@@ -101,9 +90,7 @@
                         old query. For example, if you search for performances of "The Beggar's Opera" from the Advanced
                         Search page, but then you filter by Performance Title = "Three Hours after Marriage," you will
                         get the same results as if you had simply searched for "Three Hours after Marriage" from the
-                        Advanced Search page. Note that filters applied to the results of legacy searches will keep the
-                        user within the legacy search ecosystem, while filters applied to results arrived at from the
-                        main keyword or advanced search pages will use the faster Sphinx search engine.</p>
+                        Advanced Search page.</p>
                 </div>
             </div>
         </div>

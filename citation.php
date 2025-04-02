@@ -69,12 +69,22 @@
                                 site</a> and major release versions are automatically registered with unique DOIs
                             through
                             Zenodo:<br>
-                            <a href="https://doi.org/10.5281/zenodo.7328444"><img
-                                        src="https://zenodo.org/badge/140609672.svg" alt="DOI"></a><br>
-                            <a href="https://doi.org/10.5281/zenodo.7328442"><img
-                                        src="https://zenodo.org/badge/140609563.svg" alt="DOI"></a><br>
-                            <a href="https://doi.org/10.5281/zenodo.7328435"><img
-                                        src="https://zenodo.org/badge/140609156.svg" alt="DOI"></a>
+                            <ul>
+                                <ul>
+                                    <li><a href="https://doi.org/10.5281/zenodo.7328444"><img
+                                                    src="https://zenodo.org/badge/140609672.svg" alt="DOI"></a> Data
+                                        v1.0
+                                    </li>
+                                    <li><a href="https://doi.org/10.5281/zenodo.7328442"><img
+                                                    src="https://zenodo.org/badge/140609563.svg" alt="DOI"></a>
+                                        Database Code v1.0
+                                    </li>
+                                    <li><a href="https://doi.org/10.5281/zenodo.7328435"><img
+                                                    src="https://zenodo.org/badge/140609156.svg" alt="DOI"></a>
+                                        Website v2.1
+                                    </li>
+                                </ul>
+                            </ul>
                         </li>
                         <li><b>Open access:</b> Consistent with the <a href="https://www.neh.gov/publicaccess"
                                                                        title="‌">NEH public access policy</a>, we aim to
@@ -134,7 +144,7 @@
                         </li>
                         <li><a href="https://digitalcollections.folger.edu/img21902">John Lodge, “Mr. Garrick delivering
                                 his Ode at Drury Lane Theatre on dedicating a building & erecting a statue to
-                                Shakespeare,”</a>Folger Shakespeare Library, CC-BY-SA 4.0 license
+                                Shakespeare,”</a> Folger Shakespeare Library, CC-BY-SA 4.0 license
                         </li>
                         <li>
                             <a href="https://www.britishmuseum.org/research/collection_online/collection_object_details/collection_image_gallery.aspx?assetId=1613044433&objectId=3411178&partId=1">“Riot
@@ -143,7 +153,7 @@
                             Museum, CC-BY-NC-SA 4.0 License
                         </li>
                         <li><a href="https://collections.britishart.yale.edu/catalog/tms:51853">Peter Lely, “Aphra
-                                Behn,”</a> 1670, © Yale Center for British Art, Public Domain
+                                Behn,”</a> 1670, Yale Center for British Art, Public Domain
                         </li>
                         <li>
                             <a href="https://www.bl.uk/collection-items/third-edition-of-the-beggars-opera-by-john-gay-1729">John

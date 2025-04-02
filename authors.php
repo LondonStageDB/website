@@ -16,7 +16,11 @@
         <div method="post" class="small-12 medium-11 large-9 cell grid-x authors-form">
             <div class="grid-x guide-section">
                 <div id="Authors" class="small-12" data-magellan-target="Authors">
-                    <p>Today we think about authorship a bit differently than people did in the long eighteenth century.
+                    <p><img alt=""
+                            style="float:right;padding-left:25px;padding-bottom:25px;"
+                            src="/images/playbill.png">
+                        Today we think about authorship a bit differently than people did in the long eighteenth
+                        century.
                         While we think of playwrights as having a kind of ownership over their dramatic works, this
                         wasn't always the case; sometimes, scripts were considered the property of the playing company
                         that bought them, and the author's name wasn't always known or advertised to the viewing public.

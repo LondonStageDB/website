@@ -30,7 +30,7 @@
                 <li><a href="/downloads/LondonStageJSON.zip">JSON:</a> <b>J</b>ava<b>S</b>cript <b>O</b>bject <b>N</b>otation:
                     a data-interchange format that stores data objects as text
                 </li>
-                <li><a href="/downloads/LondonStageXML.zip">XML:</a> <b>X</b>tensible <b>M</b>arkup <b>L</b>anguage, a
+                <li><a href="/downloads/LondonStageXML.zip">XML:</a> e<b>X</b>tensible <b>M</b>arkup <b>L</b>anguage, a
                     markup language similar to HTML. Data is represented as text wrapped within tags
                 </li>
                 <li><a href="/downloads/LondonStageCSV.zip">CSV:</a> <b>C</b>omma <b>S</b>eparated <b>V</b>alues, a
