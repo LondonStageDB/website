@@ -7,11 +7,35 @@
 <head>
   <?php include_once('common/header.php'); ?>
   <title>Search</title>
+  <style>
+    #main.disabled:before {
+      content: "";
+      position: fixed;
+      z-index: 1;
+      min-height: 100vh;
+      width: 100%;
+      left: 0;
+      top: 0;
+      background: rgba(0,0,0, .5);  
+    }
+    #announcement {
+      position: fixed;
+      z-index: 2;
+      border: 2px #ccc solid;
+      padding: 30px;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+    }
+  </style>
 </head>
 
 <body id="mainSearch">
   <?php include_once('common/nav.php'); ?>
-  <div id="main" class="main grid-container">
+  <div id="announcement" style="background-color:#6e2424;opacity:0.9;color:white;padding:10px;">
+    <strong>The London Stage Database team has retired the Legacy Search on May 1, 2025.</strong> Please take a moment before that date to reproduce any pre-2021 searches and export any resulting datasets you may wish to preserve for future use. We are making this change in order to free up computational resources for new features and data, currently in development with support from the National Endowment for the Humanities. Watch this space for more updates and, coming soon, new ways to keep up with the latest project developments!
+  </div>
+  <div id="main" class="main grid-container disabled">
     <h1>Legacy Search</h1>
     <div class="cell small-12 section-wrap">
       <div class="search-page-message">
@@ -19,14 +43,14 @@
       </div>
     </div>
     <form id="searchForm" class="form-accordion search-form grid-x grid-margin-x" method="get" action="results.php">
-      <input type="hidden" name="sortBy" value="relevance">
+      <input type="hidden" name="sortBy" value="relevance" disabled="disabled">
       <div class="cell small-12 section-wrap">
         <h2>Event</h2>
         <div class="grid-x acc-section">
           <div class="small-12 medium-8 large-6 cell form-section">
             <div class="form-group field-theatre">
               <label for="theatre" class="fb-select-label">Theatre</label>
-              <select class="theatre" name="theatre" id="theatre">
+              <select class="theatre" name="theatre" id="theatre" disabled="disabled">
                 <option value="" disabled selected>Select a Theatre</option>
                 <option value="all">Any Theatre...</option>
                 <option disabled>_________</option>
@@ -35,7 +59,7 @@
             </div>
             <div class="form-group field-volume">
               <label for="volume" class="fb-select-label">Volume</label>
-              <select class="volume" name="volume" id="volume">
+              <select class="volume" name="volume" id="volume" disabled="disabled">
                 <option value="" disabled selected>Select a Volume</option>
                 <option value="all">Any Volume...</option>
                 <option disabled>_________</option>
@@ -53,7 +77,7 @@
             <legend>Date Range</legend>
             <div class="date-type-label">
             <label class="hidden date-type hide" for="dateType">Date Type</label>
-            <select id="dateType" class="date-type hide" name="date-type">
+            <select id="dateType" class="date-type hide" name="date-type" disabled="disabled">
               <option value="1" <?php getSticky(2, 'date-type', '1'); ?>>Between</option>
               <option value="2" <?php getSticky(2, 'date-type', '2'); ?>>Before</option>
               <option value="3" <?php getSticky(2, 'date-type', '3'); ?>>On</option>
@@ -64,19 +88,19 @@
             <div class="year start-year">
               <span class="year-title">Start</span>
               <label class="hidden" for="startYear">Start Year</label>
-              <select class="date-year" id="startYear" name="start-year">
+              <select class="date-year" id="startYear" name="start-year" disabled="disabled">
                 <option disabled selected>Year</option>
                 <option value="">All</option>
                 <?php getYears('start'); ?>
               </select>
               <label class="hidden" for="startMonth">Start Month</label>
-              <select class="date-month" id="startMonth" name="start-month" disabled>
+              <select class="date-month" id="startMonth" name="start-month" disabled="disabled">
                 <option disabled selected>Mon</option>
                 <option value="">All</option>
                 <?php getMonths('start'); ?>
               </select>
               <label class="hidden" for="startDay">Start Day</label>
-              <select class="date-day" id="startDay" name="start-day" disabled>
+              <select class="date-day" id="startDay" name="start-day" disabled="disabled">
                 <option disabled selected>Day</option>
                 <option value="">All</option>
                 <?php getDays('start'); ?>
@@ -85,19 +109,19 @@
             <div class="year end-year">
               <span class="year-title">End</span>
               <label class="hidden" for="endYear">End Year</label>
-              <select class="date-year" id="endYear" name="end-year">
+              <select class="date-year" id="endYear" name="end-year" disabled="disabled">
                 <option disabled selected>Year</option>
                 <option value="">All</option>
                 <?php getYears('end'); ?>
               </select>
               <label class="hidden" for="endMonth">End Month</label>
-              <select class="date-month" id="endMonth" name="end-month" disabled>
+              <select class="date-month" id="endMonth" name="end-month" disabled="disabled">
                 <option disabled selected>Mon</option>
                 <option value="">All</option>
                 <?php getMonths('end'); ?>
               </select>
               <label class="hidden" for="endDay">End Day</label>
-              <select class="date-day" id="endDay" name="end-day" disabled>
+              <select class="date-day" id="endDay" name="end-day" disabled="disabled">
                 <option disabled selected>Day</option>
                 <option value="">All</option>
                 <?php getDays('end'); ?>
@@ -116,17 +140,17 @@
           <div class="small-12 medium-8 large-6 cell form-section">
             <div class="form-group field-performance">
               <label for="performance" class="fb-text-label">Title</label>
-              <input type="text" class="performance" name="performance" id="performance" onKeyPress="checkEnter(event)">
+              <input type="text" class="performance" name="performance" id="performance" onKeyPress="checkEnter(event)" disabled="disabled">
             </div>
             <div class="form-group field-author inline-label">
               <label for="author" class="fb-select-label">Author</label>
               <span data-tooltip class="top l-tooltip" tabindex="2" title="Searches not only for performances of plays known to be by this author, but also performances of associated titles, including adaptations.">?</span>
-              <input type="text" class="author" name="author" id="author" value="<?php getSticky(1, 'author'); ?>" onKeyPress="checkEnter(event)">
+              <input type="text" class="author" name="author" id="author" value="<?php getSticky(1, 'author'); ?>" onKeyPress="checkEnter(event)" disabled="disabled">
             </div>
           </div>
           <div class="small-12 medium-8 large-6 cell form-section">
             <div class="form-group field-ptype">
-              <fieldset class="ptype-contain">
+              <fieldset class="ptype-contain" disabled="disabled">
                 <div class="ptype-legend"><legend>Filter by Performance Type</legend></div>
                 <div class="ptype">
                 <span class="a-ptype"><input type="checkbox" name="ptype[]" value="p" id="mainpiece" <?php getSticky(3, 'ptype', 'p'); ?>><label for="mainpiece">Mainpiece</label></span>
@@ -162,7 +186,7 @@
                 </select>
               </span>
               <span id="actors">
-                <input type="text" class="actor actor-search" name="actor[]" id="actor" onKeyPress="checkEnter(event)">
+                <input type="text" class="actor actor-search" name="actor[]" id="actor" onKeyPress="checkEnter(event)" disabled="disabled">
               </span>
               <div class="addActor"><a id="addActor" class="addCast" title="Add an actor">+</a></div>
             </div>
@@ -178,7 +202,7 @@
                 </select>
               </span>
               <span id="roles">
-                <input type="text" class="role role-search" name="role[]" id="role" onKeyPress="checkEnter(event)">
+                <input type="text" class="role role-search" name="role[]" id="role" onKeyPress="checkEnter(event)" disabled="disabled">
               </span>
               <div class="addRole"><a id="addRole" class="addCast" title="Add a role">+</a></div>
             </div>
@@ -193,18 +217,18 @@
             <div class="form-group field-keyword inline-label">
               <label for="keyword" class="fb-text-label">Keyword </label>
               <span data-tooltip class="top l-tooltip" tabindex="2" title="Keyword searches event comments, performance titles, performance comments, roles, actors, and author names.">?</span>
-              <input type="text" class="keyword" name="keyword" id="keyword" onKeyPress="checkEnter(event)">
+              <input type="text" class="keyword" name="keyword" id="keyword" onKeyPress="checkEnter(event)" disabled="disabled">
             </div>
           </div>
         </div>
       </div>
       <div class="cell small-12 submit-wrap">
-        <input type="submit" class="search-submit button" value="Search">
+        <input type="submit" class="search-submit button" value="Search" disabled="disabled">
       </div>
     </form>
   </div>
   <?php include_once('common/footer.php'); ?>
   <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-  <script src="/js/search.js"></script>
+  <!-- <script src="/js/search.js"></script> -->
 </body>
 </html>
