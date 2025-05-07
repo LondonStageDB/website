@@ -1,4 +1,10 @@
 <?php
+  /**
+   * 2025 May 1st, retired legacy search
+   */
+  header("Location: /search.php");
+  die();
+
   $time = microtime();
   $time = explode(' ', $time);
   $time = $time[1] + $time[0];
