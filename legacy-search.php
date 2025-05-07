@@ -27,13 +27,16 @@
       top: 50%;
       transform: translate(-50%, -50%);
     }
+    #announcement a {
+      color: white;
+    }
   </style>
 </head>
 
 <body id="mainSearch">
   <?php include_once('common/nav.php'); ?>
   <div id="announcement" style="background-color:#6e2424;opacity:0.9;color:white;padding:10px;">
-    <strong>The Legacy Search feature has been retired. To learn more, please visit our <a>blog at https://blogs.uoregon.edu/londonstage/2025/05/07/legacy/</a></strong>
+    <strong>The Legacy Search feature has been retired. To learn more, please visit our blog at <a href="https://blogs.uoregon.edu/londonstage/2025/05/07/legacy/">https://blogs.uoregon.edu/londonstage/2025/05/07/legacy/</a></strong>
   </div>
   <div id="main" class="main grid-container disabled">
     <h1>Legacy Search</h1>
