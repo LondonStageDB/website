@@ -11,9 +11,6 @@
   <div id="main" class="main">
     <div class="form-wrap">
       <h1>London Stage Database</h1>
-      <div>
-        <p><strong>Try our new faster search!</strong></p>
-      </div>
       <form id="searchForm" class="search-form grid-x grid-margin-x" method="get" action="sphinx-results.php">
         <label for="keyword" class="fb-text-label show-for-sr">Keyword</label>
         <input type="text" class="keyword input-group-field" name="keyword" id="keyword" placeholder='Search (e.g., Behn, Macbeth, harlequin, or "riot")' autofocus>
