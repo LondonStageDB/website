@@ -26,14 +26,14 @@
         <div method="post" class="small-12 medium-11 large-9 cell grid-x data-form">
             <h2>Export the Full Dataset</h2>
             <ul class="no-bullet">
-                <li><a href="/downloads/LondonStageSQL.zip">SQL:</a> <b>S</b>tructured <b>Q</b>uery <b>L</b>anguage</li>
-                <li><a href="/downloads/LondonStageJSON.zip">JSON:</a> <b>J</b>ava<b>S</b>cript <b>O</b>bject <b>N</b>otation:
+                <li><a href="https://londonstage.blob.core.windows.net/lsdb-files/downloads/London.sql.zip">SQL:</a> <b>S</b>tructured <b>Q</b>uery <b>L</b>anguage</li>
+                <li><a href="https://londonstage.blob.core.windows.net/lsdb-files/downloads/LondonStageFull.json.zip">JSON:</a> <b>J</b>ava<b>S</b>cript <b>O</b>bject <b>N</b>otation:
                     a data-interchange format that stores data objects as text
                 </li>
-                <li><a href="/downloads/LondonStageXML.zip">XML:</a> e<b>X</b>tensible <b>M</b>arkup <b>L</b>anguage, a
+                <li><a href="https://londonstage.blob.core.windows.net/lsdb-files/downloads/LondonStageFull.xml.zip">XML:</a> e<b>X</b>tensible <b>M</b>arkup <b>L</b>anguage, a
                     markup language similar to HTML. Data is represented as text wrapped within tags
                 </li>
-                <li><a href="/downloads/LondonStageCSV.zip">CSV:</a> <b>C</b>omma <b>S</b>eparated <b>V</b>alues, a
+                <li><a href="https://londonstage.blob.core.windows.net/lsdb-files/downloads/LondonStageFull.csv.zip">CSV:</a> <b>C</b>omma <b>S</b>eparated <b>V</b>alues, a
                     tabular data file format in which values are delimited using the comma character</a></li>
             </ul>
             <p>Data for individual events can be exported from the relevant Event page.</p>
