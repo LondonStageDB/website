@@ -83,8 +83,8 @@
             <li class="book-pdf2 responsive-embed2">
               <div class="responsive-embed">
               <?php if ($event['BookPDF'] && $event['BookPDF'] !== '') : ?>
-              <object data="https://pages.uoregon.edu/emwin/pdfs/<?php echo $event['BookPDF']; ?>" type="application/pdf" height="725px" width="532px">
-                <p>Your web browser doesn't have a PDF plugin. Instead, <a href="https://pages.uoregon.edu/emwin/pdfs/vol1/190.pdf<?php echo $event['BookPDF']; ?>">click here to download the PDF file</a></p>
+              <object data="https://londonstage.blob.core.windows.net/lsdb-files/pdfs/<?php echo $event['BookPDF']; ?>" type="application/pdf" height="725px" width="532px">
+                <p>Your web browser doesn't have a PDF plugin. Instead, <a href="https://londonstage.blob.core.windows.net/lsdb-files/pdfs/<?php echo $event['BookPDF']; ?>">click here to download the PDF file</a></p>
               </object>
               <?php else : ?>
               <span class="no-pdf" style="height: 720px">PDF Coming Soon</span>
