@@ -14,7 +14,10 @@
 
   // Get and sanitize 'limit' and 'p' for pagination
   $g_lim = filter_input(INPUT_GET, 'limit', FILTER_SANITIZE_NUMBER_INT);
+  // Prevent SQL injection
+  if(gettype($g_lim) == 'string') $g_lim = '';
   $g_p = filter_input(INPUT_GET, 'p', FILTER_SANITIZE_NUMBER_INT);
+  if(gettype($g_p) == 'string') $g_p = '';
   $limit      = ( $g_lim !== '' && $g_lim > 0 ) ? $g_lim : 25;
   $page       = ( $g_p !== '' && $g_p > 0 ) ? $g_p : 1;
   $links      = 3;
