@@ -655,6 +655,12 @@
     $string = str_replace('”', '"', $string);
     $string = str_replace('“', '"', $string);
 
+    if (gettype($string) == "string") {
+      $string = strip_tags($string);
+    } elseif (gettype($string) == "array") {
+      $string = array_map('strip_tags', $string);
+    }
+
     return preg_replace('/[^A-Za-z0-9 ;"]/', '', $string);
   }
 
@@ -1769,8 +1775,9 @@
 
     preg_match_all('~[^|]+~', $words, $m); // Array of | delimited phrases
     preg_match_all('~[^| ]+~', $words, $n); // Array of each word in each phrase
-    $cleaned = array_map('cleanStr', $n);
-    $allWords = array_unique(array_merge($m[0], $n[0], $cleaned[0])); // Combine unique
+    $cleanedN = array_map('cleanStr', $n[0]);
+    $cleanedM = array_map('cleanStr', $m[0]);
+    $allWords = array_unique(array_merge($cleanedM, $cleanedN)); // Combine unique
     if(!$allWords || count($allWords) === 0) {
         return $text;
     }
@@ -1848,8 +1855,8 @@
     preg_match_all('~[^| ]+~', $actorSearch, $an); // Actor search terms ' ' delimited array
     preg_match_all('~[^|]+~', $roleSearch, $rm); // Role search terms | delimited array
     preg_match_all('~[^| ]+~', $roleSearch, $rn); // Role search terms ' ' delimited array
-    $allActors = array_unique(array_merge($am[0], $an[0])); // Combine unique
-    $allRoles = array_unique(array_merge($rm[0], $rn[0])); // Combine unique
+    $allActors = array_unique(array_merge(cleanStr($am[0]), cleanStr($an[0]))); // Combine unique
+    $allRoles = array_unique(array_merge(cleanStr($rm[0]), cleanStr($rn[0]))); // Combine unique
     if((!is_array($allActors) || count($allActors) === 0) && (!is_array($allRoles) || count($allRoles) === 0)) {
         return false;
     }
