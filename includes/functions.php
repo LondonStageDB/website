@@ -386,7 +386,9 @@
             $actQry = (count($actor) > 1 && $actSwtch === "AND") ?
               getSphinxCastQuery('actor', $actor) :
               getSphinxCastQuery('actor', $actor, 'OR');
-            array_push($eventIdQueries, $actQry);
+            (empty($actQry)) ? 
+              array_merge($eventIdQueries, $actQry) :
+              array_push($eventIdQueries, $actQry);
             break;
           case 'role':
             $role = array_filter($role, 'strlen');
@@ -394,7 +396,9 @@
             $roleQry = (count($role) > 1 && $roleSwtch === "AND") ?
               getSphinxCastQuery('role', $role) :
               getSphinxCastQuery('role', $role, 'OR');
-            array_push($eventIdQueries, $roleQry);
+            (empty($roleQry)) ? 
+              array_merge($eventIdQueries, $roleQry) : 
+              array_push($eventIdQueries, $roleQry);
             break;
           case 'performance':
             $performance = mysqli_real_escape_string($sphinx_conn, $performance);
