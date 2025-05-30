@@ -973,7 +973,7 @@
         $values[] = '"' . $perf . '"';
       }
       $values = implode('|', $values);
-      $sql .= "\nWHERE MATCH('" . $values . "')";
+      if (!empty($values)) $sql .= "\nWHERE MATCH('" . $values . "')";
 
       // Only want to show unique works, not all iterations of a given work title
       $sql .= "\nGROUP BY WorkId";
