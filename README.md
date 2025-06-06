@@ -26,12 +26,18 @@ If not using Sphinx, checkout the `v1.0` git tag.
 
 ### Import the Database into MySQL
 
-Included with the repo is a compressed export of the database called London.tgz.
+Download a zipped version of the SQL database and save it to the `website` folder.
 
+You can either [download it from the GitHub interface](https://github.com/LondonStageDB/data/blob/main/London.sql.zip) by clicking **View Raw** or from the [London Stage Database website](https://londonstagedatabase.uoregon.edu/data.php).
+
+Extract the `London.sql.zip` folder.
 ``` bash
-# this will extract a file called London.sql
-tar -xzf London.tgz
+# this will extract a file called London.sql in the current directory
+unzip London.sql.zip
+```
 
+Import `London.sql` into MySQL.
+```bash
 # Replace <user> with your MySQL username.
 # After hitting enter, it will ask for your MySQL password
 mysql -u <user> -p London < London.sql
@@ -133,10 +139,6 @@ A few quick explanations for some files/folders in the project.
         Contains header, footer, and nav include files
 
 
-- /images/pdfs
-        Includes all the split up PDFs from each volume served on Event pages
-
-
 - /get_[all]_[json/csv/xml].php files
         Used to generate the exported CSV/XML/JSON for search results or events
 
@@ -157,8 +159,4 @@ A few quick explanations for some files/folders in the project.
 - /includes/db.php
         Database config file (Not included in repo. You will need to create your own - see above)
 
-
-- /PDFs
-        Files and scripts used in the process of reading the dates from and splitting up the 
-        PDFs. These files are not required to run the website and can be deleted if desired. 
 ```
