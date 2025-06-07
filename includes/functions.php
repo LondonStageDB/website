@@ -422,7 +422,7 @@
             if (is_bool($authorMatch)) {
               // When the author query returns nothing useful, there should be
               //   no matches in the main query, to match the legacy behavior.
-              array_push($queries, '0'); // Returns an empty set.
+              //array_push($queries, '0'); // Returns an empty set.
             }
             else {
               // Include the returned list of perf titles in the MATCH statement.
@@ -469,6 +469,8 @@
     // Build the WHERE clause.
     if (!empty($queries) && count($queries) > 0) {
       $sql .= "\nWHERE " . implode(' AND ', $queries);
+    } else {
+      return "";
     }
     // The results need to be grouped by Event to avoid redundancy
     $sql .= "\nGROUP BY eventid";
