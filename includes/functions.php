@@ -386,7 +386,9 @@
             $actQry = (count($actor) > 1 && $actSwtch === "AND") ?
               getSphinxCastQuery('actor', $actor) :
               getSphinxCastQuery('actor', $actor, 'OR');
-            array_push($eventIdQueries, $actQry);
+            (empty($actQry)) ? 
+              array_merge($eventIdQueries, $actQry) :
+              array_push($eventIdQueries, $actQry);
             break;
           case 'role':
             $role = array_filter($role, 'strlen');
@@ -394,7 +396,9 @@
             $roleQry = (count($role) > 1 && $roleSwtch === "AND") ?
               getSphinxCastQuery('role', $role) :
               getSphinxCastQuery('role', $role, 'OR');
-            array_push($eventIdQueries, $roleQry);
+            (empty($roleQry)) ? 
+              array_merge($eventIdQueries, $roleQry) : 
+              array_push($eventIdQueries, $roleQry);
             break;
           case 'performance':
             $performance = mysqli_real_escape_string($sphinx_conn, $performance);
@@ -418,7 +422,7 @@
             if (is_bool($authorMatch)) {
               // When the author query returns nothing useful, there should be
               //   no matches in the main query, to match the legacy behavior.
-              array_push($queries, '0'); // Returns an empty set.
+              //array_push($queries, '0'); // Returns an empty set.
             }
             else {
               // Include the returned list of perf titles in the MATCH statement.
@@ -465,6 +469,8 @@
     // Build the WHERE clause.
     if (!empty($queries) && count($queries) > 0) {
       $sql .= "\nWHERE " . implode(' AND ', $queries);
+    } else {
+      return "";
     }
     // The results need to be grouped by Event to avoid redundancy
     $sql .= "\nGROUP BY eventid";
@@ -969,7 +975,7 @@
         $values[] = '"' . $perf . '"';
       }
       $values = implode('|', $values);
-      $sql .= "\nWHERE MATCH('" . $values . "')";
+      if (!empty($values)) $sql .= "\nWHERE MATCH('" . $values . "')";
 
       // Only want to show unique works, not all iterations of a given work title
       $sql .= "\nGROUP BY WorkId";
