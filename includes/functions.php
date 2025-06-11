@@ -418,7 +418,7 @@
             if (!$authorMatch) {
               // When the author query returns nothing useful, there should be
               //  no matches in the main query, to match the legacy behavior.
-              array_push($queries, "authId != authId"); // Always false
+              array_push($queries, "authId in (-1)"); // Always false
             }
             else {
               // Include the returned list of perf titles in the MATCH statement.
