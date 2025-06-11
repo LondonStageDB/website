@@ -414,11 +414,11 @@
             //   the MATCH statement with an OR operator between each title.
             $author = trim(mysqli_real_escape_string($sphinx_conn, $author));
             $authorMatch = getSphinxAuthorQuery($author);
-            // If no authors are found, $authorMatch is false
+            // If no authors are found, $authorMatch is False
             if (!$authorMatch) {
               // When the author query returns nothing useful, there should be
               //  no matches in the main query, to match the legacy behavior.
-              array_push($queries, "authId in (-1)"); // Always false
+              array_push($queries, "authId != authId"); // Always false
             }
             else {
               // Include the returned list of perf titles in the MATCH statement.
@@ -459,7 +459,7 @@
       // If any of the eventid queries in the array are empty, the intersection will be empty
       if (empty($eventIdQueries)) {
         // If there are no event IDs, there are no valid results.
-        $eventIdQueries = 'eventid IN (-1)';
+        $eventIdQueries = 'eventid IN (-1)'; // eventid is always positive
       }
       else {
         $eventIdQueries = 'eventid IN (' . implode(', ', $eventIdQueries) . ')';
