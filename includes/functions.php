@@ -386,9 +386,7 @@
             $actQry = (count($actor) > 1 && $actSwtch === "AND") ?
               getSphinxCastQuery('actor', $actor) :
               getSphinxCastQuery('actor', $actor, 'OR');
-            (empty($actQry)) ? 
-              array_merge($eventIdQueries, $actQry) :
-              array_push($eventIdQueries, $actQry);
+            array_push($eventIdQueries, $actQry);
             break;
           case 'role':
             $role = array_filter($role, 'strlen');
@@ -396,9 +394,7 @@
             $roleQry = (count($role) > 1 && $roleSwtch === "AND") ?
               getSphinxCastQuery('role', $role) :
               getSphinxCastQuery('role', $role, 'OR');
-            (empty($roleQry)) ? 
-              array_merge($eventIdQueries, $roleQry) : 
-              array_push($eventIdQueries, $roleQry);
+            array_push($eventIdQueries, $roleQry);
             break;
           case 'performance':
             $performance = mysqli_real_escape_string($sphinx_conn, $performance);
@@ -418,11 +414,11 @@
             //   the MATCH statement with an OR operator between each title.
             $author = trim(mysqli_real_escape_string($sphinx_conn, $author));
             $authorMatch = getSphinxAuthorQuery($author);
-            // If the query generation encountered an error it will be false.
-            if (is_bool($authorMatch)) {
+            // If no authors are found, $authorMatch is false
+            if (!$authorMatch) {
               // When the author query returns nothing useful, there should be
-              //   no matches in the main query, to match the legacy behavior.
-              //array_push($queries, '0'); // Returns an empty set.
+              //  no matches in the main query, to match the legacy behavior.
+              array_push($queries, "authId in (-1)"); // Always false
             }
             else {
               // Include the returned list of perf titles in the MATCH statement.
@@ -451,14 +447,24 @@
       //   parameter added when the title filter is set should come after.
       array_unshift($matches, "(@(perftitleclean,performancetitle) $perfTitleMatches)");
     }
-    // Build eventid IN() statement with intersect of $eventIdQueries items.
+    // Build eventid IN() statement with intersection of $eventIdQueries items.
+    // If no Actor, Role, or Author are specified, $eventIdQueries is an empty array
     if (!empty($eventIdQueries)) {
-      if (is_array($eventIdQueries) && count($eventIdQueries) === 1 && is_array($eventIdQueries[0]))
+      if (is_array($eventIdQueries) && count($eventIdQueries) === 1 && is_array($eventIdQueries[0])){
         $eventIdQueries = $eventIdQueries[0];
-      elseif (is_array($eventIdQueries[0]))
+      }
+      elseif (is_array($eventIdQueries[0])){
         $eventIdQueries = call_user_func_array('array_intersect', $eventIdQueries);
-
-      $eventIdQueries = 'eventid IN (' . implode(', ', $eventIdQueries) . ')';
+      }
+      // If any of the eventid queries in the array are empty, the intersection will be empty
+      if (empty($eventIdQueries)) {
+        // If there are no event IDs, there are no valid results.
+        $eventIdQueries = 'eventid IN (-1)';
+      }
+      else {
+        $eventIdQueries = 'eventid IN (' . implode(', ', $eventIdQueries) . ')';
+      }
+      // Push intersection (or empty set) to the queries array.
       array_push($queries, $eventIdQueries);
     }
     // Build the MATCH statement and add it to the list of queries.
@@ -469,8 +475,6 @@
     // Build the WHERE clause.
     if (!empty($queries) && count($queries) > 0) {
       $sql .= "\nWHERE " . implode(' AND ', $queries);
-    } else {
-      return "";
     }
     // The results need to be grouped by Event to avoid redundancy
     $sql .= "\nGROUP BY eventid";
@@ -483,7 +487,6 @@
     } elseif ($sortBy === 'relevance') {
       $sql .= "\nORDER BY weight() desc, eventdate asc";
     }
-
     return $sql;
   }
 
@@ -975,7 +978,7 @@
         $values[] = '"' . $perf . '"';
       }
       $values = implode('|', $values);
-      if (!empty($values)) $sql .= "\nWHERE MATCH('" . $values . "')";
+      $sql .= "\nWHERE MATCH('" . $values . "')";
 
       // Only want to show unique works, not all iterations of a given work title
       $sql .= "\nGROUP BY WorkId";

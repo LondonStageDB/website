@@ -12,20 +12,16 @@ class SphinxPaginator {
     $this->_conn  = $conn;
     $this->_query = $query;
 
-    if ($query == "") {
-      $this->_total = 0;
-    } else {
-      $this->_conn->query( $this->_query ); // Execute the query.
-      // To find the total number of results with sphinx, a follow up query
-      // should be done to look up the previous query's meta info.
-      $rs = $this->_conn->query( 'SHOW META;' );
+    $this->_conn->query( $this->_query ); // Execute the query.
+    // To find the total number of results with sphinx, a follow up query
+    // should be done to look up the previous query's meta info.
+    $rs = $this->_conn->query( 'SHOW META;' );
 
-      // Search through the rows and find the total_found variable.
-      while ( $row = $rs->fetch_assoc() ) {
-        if ($row['Variable_name'] == 'total_found') {
-          $this->_total = $row['Value'];
-          break;
-        }
+    // Search through the rows and find the total_found variable.
+    while ( $row = $rs->fetch_assoc() ) {
+      if ($row['Variable_name'] == 'total_found') {
+        $this->_total = $row['Value'];
+        break;
       }
     }
   }
@@ -65,17 +61,6 @@ class SphinxPaginator {
   }
 
   public function getData( $limit = 25, $page = 1 ) {
-    $result = new stdClass();
-
-    // If where clause in query is empty, return 0 records instead of all.
-    if ($this->_query == "") {
-      $result->page   = $this->_page;
-      $result->limit  = $this->_limit;
-      $result->total  = $this->_total;
-      $result->data   = [];
-      return $result;
-    };
-
     $this->_limit   = $limit;
     $this->_page    = $page;
     // Add the rank function, and the field weights if the keyword or
