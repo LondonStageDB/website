@@ -1,18 +1,11 @@
 # London Stage Database Website
 
-This repository includes all the files needed to replicate the London Stage Database website on your server.
+This repository includes all the files needed to replicate the [**London Stage Database website**]( https://londonstagedatabase.uoregon.edu) on your own server.
 
-You can choose either **MySQL** or **Sphinx + MySQL** as the site search engine.
+## Installation Requirements
 
-The live website can be viewed here: https://londonstagedatabase.uoregon.edu
-
-*Instructions are for a Linux server*
-
-## Installation
-
-You will need a web server with MySQL and PHP installed.
-
-For faster search performance, you can install the Sphinx engine.
+To deploy a copy of the London Stage Database website, you will need a Linux web server 
+with MySQL, PHP, and the Sphinx engine. 
 
 ### Clone the Project Repo
 
@@ -20,19 +13,16 @@ For faster search performance, you can install the Sphinx engine.
 git clone https://github.com/LondonStageDB/website.git
 ```
 
-If you choose to use Sphinx, check-out the git tag `sphinx`, `v2.0`, or any tag later than `v2.0`.
-
-If not using Sphinx, checkout the `v1.0` git tag.
-
 ### Import the Database into MySQL
 
 Download a zipped version of the SQL database and save it to the `website` folder.
 
-You can either [download it from the GitHub interface](https://github.com/LondonStageDB/data/blob/main/London.sql.zip) by clicking **View Raw** or from the [London Stage Database website](https://londonstagedatabase.uoregon.edu/data.php).
+You can either download it from the [London Stage Database website](https://londonstagedatabase.uoregon.edu/data.php) 
+or from [GitHub](https://github.com/LondonStageDB/data/blob/main/London.sql.zip) by clicking **View Raw**.
 
 Extract the `London.sql.zip` folder.
 ``` bash
-# this will extract a file called London.sql in the current directory
+# This will extract a file called London.sql in the current directory
 unzip London.sql.zip
 ```
 
@@ -43,11 +33,7 @@ Import `London.sql` into MySQL.
 mysql -u <user> -p London < London.sql
 ```
 
-### Sphinx (optional)
-
-If you do not wish to use Sphinx, skip down to the section "Create the db.php file".
-
-#### Installation
+### Sphinx Installation
 
 There are two ways to install and use the Sphinx engine.
 
@@ -62,15 +48,17 @@ In the `/sphinx` directory of the repo you will find the files listed below. Aft
 
 ##### `en.pak`
 
-Copy this file to somewhere in the Sphinx installation directory structure.
+Copy this file to the Sphinx installation directory.
 
-When it has been placed, be sure to update the `lemmatizer_base` in the **common** section of the `sphinx.conf` file (not yet copied). The setting should be the path of the containing folder of the file.
+When it has been placed, be sure to update the `lemmatizer_base` in the **common** section of the `sphinx.conf` file (not yet copied). 
+The setting should be the path of the containing folder of the file.
 
 ##### `stopwords.txt`
 
-Copy this file to somewhere in the Sphinx installation directory structure.
+Copy this file to the Sphinx installation directory.
 
-When it has been placed, be sure to update the setting `stopwords` in all 3 **index** sections of the `sphinx.conf` file (not yet copied). The setting should be the full path of the file.
+When it has been placed, be sure to update the setting `stopwords` in all 3 **index** sections of the `sphinx.conf` file (not yet copied). 
+The setting should be the full path of the file.
 
 ##### `sphinx.example.conf`
 
@@ -100,9 +88,10 @@ searchd --config /path/to/sphinx/conf/sphinx.conf
 
 In the `/includes` folder, create a file named `db.php`. Use the code below as a template for the file.
 
-The Sphinx configuration is only needed if the Sphinx search engine was installed. The configuration for Sphinx may not need to change if Sphinx is installed on the web server.
+The parameters for the Sphinx engine will depend on whether Sphinx was installed locally or if it is running from a Docker container.
 
-For both the db (MySQL) and Sphinx `define()` statements, replace the host, port, user, password, and database configuration details.
+For both the MySql and Sphinx `define()` statements, populate the host, port, user, 
+password, and database configuration details.
 
 ``` php
 <?php
@@ -113,8 +102,6 @@ For both the db (MySQL) and Sphinx `define()` statements, replace the host, port
   define("DB_NAME", "London");
   define("DB_USER", "londonstagedbuser");
   define("DB_PASS", "areallysecurepassword1A!");
-
-  // Only keep the following lines if using Sphinx.
 
   $conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
 
@@ -128,11 +115,19 @@ For both the db (MySQL) and Sphinx `define()` statements, replace the host, port
 ?>
 ```
 
-Now the site is installed and configured.
+The site should now be installed and configured. 
 
-## Files
+#### Deploying the (Legacy) London Stage Database
 
-A few quick explanations for some files/folders in the project.
+If you would like to deploy the legacy version of the London Stage Database,
+which has an alternative search feature that does not require Sphinx to be installed,
+a [archived release bundled with installation instructions](https://github.com/LondonStageDB/website/releases/tag/v2.1) is available for download.
+
+As [legacy search was deprecated for performance and security reasons]
+(https://blogs.uoregon.edu/londonstage/2025/05/07/legacy/) we only
+recommend this option for users who want to precisely replicate older search behavior.
+
+## Code Structure
 
 ``` bash
 - /common
