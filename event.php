@@ -33,7 +33,7 @@
               <h2 title="<?php echo formatDate($event['EventDate'], true); ?>"><?php echo formatDate($event['EventDate']); ?></h2></div>
           </div>
         </div>
-        <div class="cell small-12 medium-6 event-info">
+        <div class="cell small-12 medium-6 large-5 event-info">
           <span>Event Information</span>
           <div class="event-theatre"><span class="info-heading">Theatre:</span>
             <?php echo getTheatreName($event['TheatreId']); ?>
@@ -68,7 +68,7 @@
             </div>
           </div>
         </div>
-        <div class="cell small-12 medium-6 phases-wrap">
+        <div class="cell small-12 medium-6 large-7 phases-wrap">
           <div id="carousel" class="flexslider">
             <span>Data Phases</span>
             <ul class="slides">
@@ -83,11 +83,11 @@
             <li class="book-pdf2 responsive-embed2">
               <div class="responsive-embed">
               <?php if ($event['BookPDF'] && $event['BookPDF'] !== '') : ?>
-              <object data="https://londonstage.blob.core.windows.net/lsdb-files/pdfs/<?php echo $event['BookPDF']; ?>" type="application/pdf" height="725px" width="532px">
+              <object data="https://londonstage.blob.core.windows.net/lsdb-files/pdfs/<?php echo $event['BookPDF']; ?>" type="application/pdf" height="550px" width="400px">
                 <p>Your web browser doesn't have a PDF plugin. Instead, <a href="https://londonstage.blob.core.windows.net/lsdb-files/pdfs/<?php echo $event['BookPDF']; ?>">click here to download the PDF file</a></p>
               </object>
               <?php else : ?>
-              <span class="no-pdf" style="height: 720px">PDF Coming Soon</span>
+              <span class="no-pdf" style="height: 550px">PDF Coming Soon</span>
               <?php endif; ?>
               </div>
             </li>
