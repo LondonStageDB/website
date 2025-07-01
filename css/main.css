@@ -708,6 +708,7 @@ body#home:after {
 #results .form-section > h2, #results .download-btns h2 {
     font-size: 1.5rem;
     padding: 0.7rem 1rem;
+    text-align: center;
 }
 
 #results .download-btns {
@@ -1678,6 +1679,7 @@ body#home:after {
 
 #event .download-buttons {
     margin-top: 2rem;
+    align-items:center;
 }
 
 #event .dwnld-btn {
