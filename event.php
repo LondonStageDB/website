@@ -221,7 +221,6 @@
                       <?php if (in_array($auth['authtype'], ['Researched', 'Primary'])) : ?>
                       <div class="auth-info"><span class="info-heading">Author: </span> 
                           <?php echo linkedSearches('author', $auth['authname'], TRUE); ?>
-                        </div>
                         <div class="grid-x"><!-- allows for two columns in one row -->
                           <!-- begin column 1 -->  
                           <div class="cell small-6"><span class="info-heading"><?php echo authDateType($auth['starttype']); ?></span>
@@ -232,7 +231,7 @@
                             <?php echo $auth['enddate']; ?>
                           </div><!--end column 2 -->
                         </div>
-                      <!-- /div // commented out code to end dark shaded block -->
+                      </div>
                       <?php endif; ?> <!-- resolves if authtype is not 'Researched', 'Primary' -->
                       <?php endforeach; ?> <!-- resolves for loop for each author -->
                       <?php else: echo "none identified"; ?> <!-- print message if work has no author -->
