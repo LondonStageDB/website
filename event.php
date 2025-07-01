@@ -167,7 +167,7 @@
           <div class="grid-x perf-info-wrap">
             <div class="small-12 perf-info">
               <div class="grid-x">
-                <div class="small-12 medium-6 large-7 perf-info-left">
+                <div class="small-12 medium-6 large-6 perf-info-left">
                   <?php if(in_array($perf['PType'], ['p', 'a'])) : ?>
                   <div class="perf-title perf-data"><span class="info-heading">Title:</span>
                     <a href="<?php echo linkedTitles($perf['PerformanceTitle'], TRUE); ?>">
@@ -201,7 +201,7 @@
                 <!-- begin related works area -->
                 <?php $works = getRelatedWorks($perf['PerformanceTitle']); ?>
                 <?php if(!empty($works) && count($works) > 0) : ?>
-                <div class="small-12 medium-6 large-5 related-works">
+                <div class="small-12 medium-6 large-6 related-works">
                   <h3>Related Works</h3>
                   <?php foreach ($works as $work) : ?>
                   <div class="work-info"><!-- begin light shaded block for work -->
