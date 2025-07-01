@@ -234,7 +234,7 @@
                                 <!-- TODO: make two columns, put text info in left column, add xml button to right column -->
                                 <div class="grid-x">
                                   <div class="cell small-6">
-                                      <span class="info-heading">Title:</span></div> <!-- TODO add title query -->
+                                      <span class="info-heading">Title:</span><span>Placeholder Title Text to Test Wrapping</span></div> <!-- TODO add title query -->
                                   <div class="cell small-6">
                                       <span>[XML Button]</span></div>
                                   <div class="cell"><span class="info-heading">Author(s):</span></div> <!-- TODO add title query -->
