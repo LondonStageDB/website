@@ -213,19 +213,19 @@
                     <div><span class="info-heading">Publish Date:</span>
                       <?php echo $work['PubDate']; ?>
                     </div>
-                      <?php if (array_filter($work['author'])) : ?>
+                    <?php if (array_filter($work['author'])) : ?>
                       <div><span class="info-heading">Associated Playwright(s):</span>
-                      <?php foreach ($work['author'] as $auth) : ?>
-                      <?php if (in_array($auth['authtype'], ['Researched', 'Primary'])) : ?>
-                      <div class="auth-info">
-                          <?php echo linkedSearches('author', $auth['authname'], TRUE); ?>
-                          <span> (<?php echo $auth['startdate'] ; ?> - <?php echo $auth['enddate'] ; ?>) </span>
-                      </div> <!-- end grey box for author-->
+                        <?php foreach ($work['author'] as $auth) : ?>
+                          <?php if (in_array($auth['authtype'], ['Researched', 'Primary'])) : ?>
+                            <div class="auth-info">
+                                <?php echo linkedSearches('author', $auth['authname'], TRUE); ?>
+                                <span> (<?php echo $auth['startdate'] ; ?> - <?php echo $auth['enddate'] ; ?>) </span>
+                            </div> <!-- end grey box for author-->
+                          <?php endif; ?> <!-- resolves if authtype is not 'Researched', 'Primary' -->
+                        <?php endforeach; ?> <!-- resolves for loop for each author -->
                       </div> <!-- end associated playwrights div -->
-                      <?php endif; ?> <!-- resolves if authtype is not 'Researched', 'Primary' -->
-                      <?php endforeach; ?> <!-- resolves for loop for each author -->
-                      <?php endif;  ?> <!-- resolves loop if work has no author -->
-                  </div> <!-- end of workinfo div, light beige shading -->
+                     <?php endif;  ?> <!-- resolves loop if work has no author -->
+                    </div> <!-- end of workinfo div, light beige shading -->
                   <?php endforeach; ?> <!-- resolves when list of related works is complete -->
                 </div> <!-- end of Related Works panel display -->
                 <?php endif; ?> <!-- resolves if there are no related works -->
