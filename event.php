@@ -48,7 +48,7 @@
             <?php echo namedEntityLinks($event['CommentC'], TRUE); ?>
           </div>
           <div class="event-btns grid-x">
-            <div class="work-nav small-12 medium-8">
+            <div class="work-nav small-12 medium-6 large-6">
               <h3>Performance List</h3>
               <ul class="no-bullet">
                 <?php foreach ($event['Performances'] as $perf) : ?>
@@ -60,7 +60,7 @@
                 <?php endforeach; ?>
               </ul>
             </div>
-            <div class="download-buttons small-12 medium-4">
+            <div class="download-buttons small-12 medium-6 large-6">
               <h3>Event Downloads</h3>
               <a href="get_json.php?id=<?php echo $event['EventId']; ?>" class="button dwnld-btn">JSON</a>
               <a href="get_xml.php?id=<?php echo $event['EventId']; ?>" class="button dwnld-btn">XML</a>
