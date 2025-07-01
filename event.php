@@ -222,8 +222,6 @@
                       <!-- div class="auth-info" // commented out code to begin dark shaded block, currently for author -->
                         <!-- <div><span class="info-heading">Author: </span> -->
                           <?php echo linkedSearches('author', $auth['authname'], TRUE); ?>
-                        <!--adding another end div here to test -->
-                        </div>
                         <!-- /div -->
                         <div class="grid-x"><!-- allows for two columns in one row -->
                           <!-- begin column 1 -->  
