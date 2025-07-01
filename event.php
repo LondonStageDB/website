@@ -218,7 +218,7 @@
                         <?php foreach ($work['author'] as $auth) : ?>
                           <?php if (in_array($auth['authtype'], ['Researched', 'Primary'])) : ?>
                             <div> 
-                                <span> &nbsp;&nbsp;&nbsp; <?php echo linkedSearches('author', $auth['authname'], TRUE); ?> 
+                                <span> &nbsp;&nbsp; <?php echo linkedSearches('author', $auth['authname'], TRUE); ?> 
                                  (<?php echo $auth['startdate'] ; ?> - <?php echo $auth['enddate'] ; ?>) </span>
                             </div> <!-- end author list item -->
                           <?php endif; ?> <!-- resolves if authtype is not 'Researched', 'Primary' -->
