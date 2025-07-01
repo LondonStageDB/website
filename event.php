@@ -234,14 +234,15 @@
                                 <div class="grid-x">  
                                 <!-- TODO: make two columns, put text info in left column, add xml button to right column -->
                                   <div class="cell small-12 medium-7 large-8">
-                                  <span class="info-heading">Title:</span><span>Placeholder Title Text to Test Wrap</span></div> <!-- TODO add title query -->
+                                  <div><span class="info-heading">Title:</span><span>Placeholder Title Text to Test Wrap</span></div> <!-- TODO add title query -->
+                                  <div><span class="info-heading">Author(s):</span><span>I. A. Writer</span></div> <!-- TODO add query -->
+                                  <div><span class="info-heading">Publication Date:</span></div> <!-- TODO add query -->
+                                    </div>
                                   <div class="cell small-12 medium-5 large-4">
                                     <a href="https://www.youtube.com/watch?v=E4WlUXrJgy4" class="button dwnld-btn">XML</a>  
                                     </div>
                                 </div> <!-- end grid -->
-                                  <div><span class="info-heading">Author(s):</span><span>I. A. Writer</span></div> <!-- TODO add query -->
-                                  <div><span class="info-heading">Publication Date:</span></div> <!-- TODO add query -->
-                                    </div>
+                                  
                                  </div>
                                 </div> <!-- end grey box for each witness -->
                           <!-- TODO end for loop -->
