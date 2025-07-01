@@ -217,10 +217,10 @@
                       <?php if (array_filter($work['author'])) : ?>
                         <?php foreach ($work['author'] as $auth) : ?>
                           <?php if (in_array($auth['authtype'], ['Researched', 'Primary'])) : ?>
-                            <div> <!-- commenting out class to see what happens //class="auth-info" -->
-                                <?php echo linkedSearches('author', $auth['authname'], TRUE); ?>
-                                <span> (<?php echo $auth['startdate'] ; ?> - <?php echo $auth['enddate'] ; ?>) </span>
-                            </div> <!-- end grey box for author-->
+                            <div> 
+                                <span> str_repeat('&nbsp;', 3) (<?php echo linkedSearches('author', $auth['authname'], TRUE); ?>) 
+                                 (<?php echo $auth['startdate'] ; ?> - <?php echo $auth['enddate'] ; ?>) </span>
+                            </div> <!-- end author list item -->
                           <?php endif; ?> <!-- resolves if authtype is not 'Researched', 'Primary' -->
                         <?php endforeach; ?> <!-- resolves for loop for each author -->
                       <?php endif;  ?> <!-- resolves loop if work has no author -->
