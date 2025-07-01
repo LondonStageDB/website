@@ -233,18 +233,18 @@
                              <div class="auth-info"> <!-- TODO consider renaming this class since using it for info other than authors -->
                                 <div class="grid-x">  
                                 <!-- TODO: make two columns, put text info in left column, add xml button to right column -->
-                                  <div class="cell small-12 medium-7 large-8">
+                                  <div class="cell small-6 medium-8 large-9">
                                   <div><span class="info-heading">Title:</span><span>Placeholder Title Text to Test Wrap</span></div> <!-- TODO add title query -->
                                   <div><span class="info-heading">Author(s):</span><span>I. A. Writer</span></div> <!-- TODO add query -->
                                   <div><span class="info-heading">Publication Date:</span></div> <!-- TODO add query -->
                                     </div>
-                                  <div class="cell small-12 medium-5 large-4">
+                                  <div class="cell small-6 medium-4 large-3">
                                     <a href="https://www.youtube.com/watch?v=E4WlUXrJgy4" class="button dwnld-btn">XML</a>  
                                     </div>
                                 </div> <!-- end grid -->
                                   
-                                 </div>
-                                </div> <!-- end grey box for each witness -->
+                                 </div> <!-- end grey box for each witness -->
+                                 
                           <!-- TODO end for loop -->
                         <!-- TO DO resolve logic check(s) -->
                     </div> <!-- end related witnesses div -->
