@@ -219,10 +219,9 @@
                       <?php if (array_filter($work['author'])) : ?>
                       <?php foreach ($work['author'] as $auth) : ?>
                       <?php if (in_array($auth['authtype'], ['Researched', 'Primary'])) : ?>
-                      <!-- div class="auth-info" // commented out code to begin dark shaded block, currently for author -->
-                        <!-- <div><span class="info-heading">Author: </span> -->
+                      <div class="auth-info"><span class="info-heading">Author: </span> 
                           <?php echo linkedSearches('author', $auth['authname'], TRUE); ?>
-                        <!-- /div -->
+                        </div>
                         <div class="grid-x"><!-- allows for two columns in one row -->
                           <!-- begin column 1 -->  
                           <div class="cell small-6"><span class="info-heading"><?php echo authDateType($auth['starttype']); ?></span>
