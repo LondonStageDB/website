@@ -238,8 +238,9 @@
                                   <div class="cell small-12 medium-5 large-4">
                                     <a href="https://www.youtube.com/watch?v=E4WlUXrJgy4" class="button dwnld-btn">XML</a>  
                                     </div>
-                                  <div><span class="info-heading">Author(s):</span> <!-- TODO add query --></div>
-                                  <div><span class="info-heading">Publication Date:</span> <!-- TODO add query -->
+                                </div> <!-- end grid -->
+                                  <span class="info-heading">Author(s):</span><span>I. A. Writer</span> <!-- TODO add query -->
+                                  <span class="info-heading">Publication Date:</span> <!-- TODO add query -->
                                     </div>
                                  </div>
                                 </div> <!-- end grey box for each witness -->
