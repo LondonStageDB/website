@@ -155,6 +155,12 @@
             <a aria-hidden="true" id="fixedBtn" class="data-toggle-btn" onclick="toggleFixed()">Cleaned Data</a>
           </div>-->
           </div>
+          <div class="download-buttons small-12 medium-4">
+              <h3>Event Downloads</h3>
+              <a href="get_json.php?id=<?php echo $event['EventId']; ?>" class="button dwnld-btn">JSON</a>
+              <a href="get_xml.php?id=<?php echo $event['EventId']; ?>" class="button dwnld-btn">XML</a>
+              <a href="get_csv.php?id=<?php echo $event['EventId']; ?>" class="button dwnld-btn">CSV</a>
+            </div>
         </div>
       </div>
       <div class="grid-x perf-section">
