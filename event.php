@@ -217,7 +217,7 @@
                       <?php if (array_filter($work['author'])) : ?>
                         <?php foreach ($work['author'] as $auth) : ?>
                           <?php if (in_array($auth['authtype'], ['Researched', 'Primary'])) : ?>
-                            <div class="auth-info">
+                            <div> <!-- commenting out class to see what happens //class="auth-info" -->
                                 <?php echo linkedSearches('author', $auth['authname'], TRUE); ?>
                                 <span> (<?php echo $auth['startdate'] ; ?> - <?php echo $auth['enddate'] ; ?>) </span>
                             </div> <!-- end grey box for author-->
@@ -233,7 +233,7 @@
                              <div class="auth-info"> <!-- TODO consider renaming this class since using it for info other than authors -->
                                 <span>Placeholder text for witness info</span> <!-- TODO print desired info about related witness -->
                             </div> <!-- end grey box for each witness -->
-                          
+                          <!-- TODO end for loop -->
                         <!-- TO DO resolve logic check(s) -->
                     </div> <!-- end related witnesses div -->
                     
