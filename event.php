@@ -223,8 +223,20 @@
                             </div> <!-- end grey box for author-->
                           <?php endif; ?> <!-- resolves if authtype is not 'Researched', 'Primary' -->
                         <?php endforeach; ?> <!-- resolves for loop for each author -->
-                      </div> <!-- end associated playwrights div -->
-                     <?php endif;  ?> <!-- resolves loop if work has no author -->
+                      <?php endif;  ?> <!-- resolves loop if work has no author -->
+                    </div> <!-- end associated playwrights div -->
+
+                    <!-- add related witnesses here, following same template as associated playwrights -->
+                     <div><span class="info-heading">Related Witness(es):</span>
+                      <!-- TODO add logic check for whether the work has related witnesses -->
+                        <!-- TODO begin for loop - for each related witness -->
+                             <div class="auth-info"> <!-- TODO consider renaming this class since using it for info other than authors -->
+                                <span>Placeholder text for witness info</span> <!-- TODO print desired info about related witness -->
+                            </div> <!-- end grey box for each witness -->
+                          
+                        <!-- TO DO resolve logic check(s) -->
+                    </div> <!-- end related witnesses div -->
+                    
                     </div> <!-- end of workinfo div, light beige shading -->
                   <?php endforeach; ?> <!-- resolves when list of related works is complete -->
                 </div> <!-- end of Related Works panel display -->
