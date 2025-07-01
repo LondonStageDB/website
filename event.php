@@ -213,8 +213,8 @@
                     <div><span class="info-heading">Publish Date:</span>
                       <?php echo $work['PubDate']; ?>
                     </div>
-                    <?php if (array_filter($work['author'])) : ?>
-                      <div><span class="info-heading">Associated Playwright(s):</span>
+                    <div><span class="info-heading">Associated Playwright(s):</span>
+                      <?php if (array_filter($work['author'])) : ?>
                         <?php foreach ($work['author'] as $auth) : ?>
                           <?php if (in_array($auth['authtype'], ['Researched', 'Primary'])) : ?>
                             <div class="auth-info">
