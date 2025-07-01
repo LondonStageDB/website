@@ -33,7 +33,7 @@
               <h2 title="<?php echo formatDate($event['EventDate'], true); ?>"><?php echo formatDate($event['EventDate']); ?></h2></div>
           </div>
         </div>
-        <div class="cell small-12 medium-7 large-8 event-info">
+        <div class="cell small-12 medium-6 event-info">
           <span>Event Information</span>
           <div class="event-theatre"><span class="info-heading">Theatre:</span>
             <?php echo getTheatreName($event['TheatreId']); ?>
@@ -68,7 +68,7 @@
             </div>
           </div>
         </div>
-        <div class="cell small-12 medium-5 large-4 phases-wrap">
+        <div class="cell small-12 medium-6 phases-wrap">
           <div id="carousel" class="flexslider">
             <span>Data Phases</span>
             <ul class="slides">
@@ -167,7 +167,7 @@
           <div class="grid-x perf-info-wrap">
             <div class="small-12 perf-info">
               <div class="grid-x">
-                <div class="small-12 medium-6 large-6 perf-info-left">
+                <div class="small-12 medium-7 large-8 perf-info-left">
                   <?php if(in_array($perf['PType'], ['p', 'a'])) : ?>
                   <div class="perf-title perf-data"><span class="info-heading">Title:</span>
                     <a href="<?php echo linkedTitles($perf['PerformanceTitle'], TRUE); ?>">
@@ -201,7 +201,7 @@
                 <!-- begin related works area -->
                 <?php $works = getRelatedWorks($perf['PerformanceTitle']); ?>
                 <?php if(!empty($works) && count($works) > 0) : ?>
-                <div class="small-12 medium-6 large-6 related-works">
+                <div class="small-12 medium-5 large-4 related-works">
                   <h3>Related Works</h3>
                   <?php foreach ($works as $work) : ?>
                   <div class="work-info"><!-- begin light shaded block for work -->
@@ -234,7 +234,7 @@
                                 <!-- TODO: make two columns, put text info in left column, add xml button to right column -->
                                 <div class="grid-x">
                                   <div class="cell small-6">
-                                      <span class="info-heading">Title:</span><span>Placeholder Title Text to Test</div> <!-- TODO add title query -->
+                                      <span class="info-heading">Title:</span><span>Placeholder Title Text to Test Wrap</div> <!-- TODO add title query -->
                                   <div class="cell small-6">
                                       <span>[XML Button]</span></div>
                                   <div class="cell"><span class="info-heading">Author(s):</span></div> <!-- TODO add title query -->
