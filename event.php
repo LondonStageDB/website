@@ -33,7 +33,7 @@
               <h2 title="<?php echo formatDate($event['EventDate'], true); ?>"><?php echo formatDate($event['EventDate']); ?></h2></div>
           </div>
         </div>
-        <div class="cell small-12 medium-6 event-info">
+        <div class="cell small-12 medium-7 large-8 event-info">
           <span>Event Information</span>
           <div class="event-theatre"><span class="info-heading">Theatre:</span>
             <?php echo getTheatreName($event['TheatreId']); ?>
@@ -68,7 +68,7 @@
             </div>
           </div>
         </div>
-        <div class="cell small-12 medium-6 phases-wrap">
+        <div class="cell small-12 medium-5 large-4 phases-wrap">
           <div id="carousel" class="flexslider">
             <span>Data Phases</span>
             <ul class="slides">
@@ -155,12 +155,6 @@
             <a aria-hidden="true" id="fixedBtn" class="data-toggle-btn" onclick="toggleFixed()">Cleaned Data</a>
           </div>-->
           </div>
-          <div class="download-buttons small-12 medium-4">
-              <h3>Event Downloads</h3>
-              <a href="get_json.php?id=<?php echo $event['EventId']; ?>" class="button dwnld-btn">JSON</a>
-              <a href="get_xml.php?id=<?php echo $event['EventId']; ?>" class="button dwnld-btn">XML</a>
-              <a href="get_csv.php?id=<?php echo $event['EventId']; ?>" class="button dwnld-btn">CSV</a>
-            </div>
         </div>
       </div>
       <div class="grid-x perf-section">
