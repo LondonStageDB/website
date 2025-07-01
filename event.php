@@ -198,12 +198,13 @@
                     </div>
                   <?php endif; ?>
                 </div>
+                <!-- begin related works area -->
                 <?php $works = getRelatedWorks($perf['PerformanceTitle']); ?>
                 <?php if(!empty($works) && count($works) > 0) : ?>
                 <div class="small-12 medium-5 large-4 related-works">
                   <h3>Related Works</h3>
                   <?php foreach ($works as $work) : ?>
-                  <div class="work-info">
+                  <div class="work-info"><!-- begin light shaded block for work -->
                     <div><span class="info-heading">Work Title:</span>
                       <a href="<?php echo linkedTitles((!empty($work['Title'])) ? $work['Title'] : $work['Title'], TRUE); ?>">
                         <?php echo (!empty($work['Title'])) ? $work['Title'] : $work['Title']; ?>
@@ -212,29 +213,35 @@
                     <div><span class="info-heading">Publish Date:</span>
                       <?php echo $work['PubDate']; ?>
                     </div>
-                    <?php if (array_filter($work['author'])) : ?>
-                    <?php foreach ($work['author'] as $auth) : ?>
-                    <?php if (in_array($auth['authtype'], ['Researched', 'Primary'])) : ?>
-                    <div class="auth-info">
-                      <div><span class="info-heading">Author: </span>
-                        <?php echo linkedSearches('author', $auth['authname'], TRUE); ?>
-                      </div>
-                      <div class="grid-x">
-                        <div class="cell small-6"><span class="info-heading"><?php echo authDateType($auth['starttype']); ?></span>
-                          <?php echo $auth['startdate']; ?>
+                    <!-- header for author not dependent on logic check of whether one is listed -->
+                    <div><span class="info-heading">Associated Playwright(s):</span>
+
+                      <?php if (array_filter($work['author'])) : ?>
+                      <?php foreach ($work['author'] as $auth) : ?>
+                      <?php if (in_array($auth['authtype'], ['Researched', 'Primary'])) : ?>
+                      <!-- div class="auth-info" // commented out code to begin dark shaded block, currently for author -->
+                        <!-- <div><span class="info-heading">Author: </span> -->
+                          <?php echo linkedSearches('author', $auth['authname'], TRUE); ?>
+                        <!-- /div -->
+                        <div class="grid-x"><!-- allows for two columns in one row -->
+                          <!-- begin column 1 -->  
+                          <div class="cell small-6"><span class="info-heading"><?php echo authDateType($auth['starttype']); ?></span>
+                            <?php echo $auth['startdate']; ?>
+                          </div><!--end column 1 -->
+                          <!-- begin column 2 -->
+                          <div class="cell small-6"><span class="info-heading"><?php echo authDateType($auth['endtype']); ?></span>
+                            <?php echo $auth['enddate']; ?>
+                          </div><!--end column 2 -->
                         </div>
-                        <div class="cell small-6"><span class="info-heading"><?php echo authDateType($auth['endtype']); ?></span>
-                          <?php echo $auth['enddate']; ?>
-                        </div>
-                      </div>
-                    </div>
-                    <?php endif; ?>
-                    <?php endforeach; ?>
-                    <?php endif; ?>
-                  </div>
-                  <?php endforeach; ?>
-                </div>
-                <?php endif; ?>
+                      <!-- /div // commented out code to end dark shaded block -->
+                      <?php endif; ?> <!-- resolves if authtype is not 'Researched', 'Primary' -->
+                      <?php endforeach; ?> <!-- resolves for loop for each author -->
+                      <?php else: echo "none identified"; ?> <!-- print message if work has no author -->
+                      <?php endif;  ?> <!-- resolves loop if work has no author -->
+                  </div> <!-- end of workinfo div, light beige shading -->
+                  <?php endforeach; ?> <!-- resolves when list of related works is complete -->
+                </div> <!-- end of Related Works panel display -->
+                <?php endif; ?> <!-- resolves if there are no related works -->
               </div>
             </div>
           </div>
