@@ -227,11 +227,14 @@
                     </div> <!-- end associated playwrights div -->
 
                     <!-- add related witnesses here, following same template as associated playwrights -->
-                     <div><span class="info-heading">Related Witness(es):</span>
+                     <div><span class="info-heading">Related Witness(es):</span> <!-- TODO: make two columns, add column header for Download -->
                       <!-- TODO add logic check for whether the work has related witnesses -->
                         <!-- TODO begin for loop - for each related witness -->
                              <div class="auth-info"> <!-- TODO consider renaming this class since using it for info other than authors -->
-                                <span>Placeholder text for witness info</span> <!-- TODO print desired info about related witness -->
+                                <!-- TODO: make two columns, put text info in left column, add xml button to right column -->
+                                <div><span class="info-heading">Title:</span></div> <!-- TODO add title query -->
+                                <div><span class="info-heading">Author(s):</span></div> <!-- TODO add title query -->
+                                <div><span class="info-heading">Publication Date:</span></div> <!-- TODO add title query -->
                             </div> <!-- end grey box for each witness -->
                           <!-- TODO end for loop -->
                         <!-- TO DO resolve logic check(s) -->
