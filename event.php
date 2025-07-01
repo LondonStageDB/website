@@ -219,18 +219,10 @@
                       <?php if (array_filter($work['author'])) : ?>
                       <?php foreach ($work['author'] as $auth) : ?>
                       <?php if (in_array($auth['authtype'], ['Researched', 'Primary'])) : ?>
-                      <div class="auth-info"><span class="info-heading">Author: </span> 
+                      <div class="auth-info">
                           <?php echo linkedSearches('author', $auth['authname'], TRUE); ?>
-                        <div class="grid-x"><!-- allows for two columns in one row -->
-                          <!-- begin column 1 -->  
-                          <div class="cell small-6"><span class="info-heading"><?php echo authDateType($auth['starttype']); ?></span>
-                            <?php echo $auth['startdate']; ?>
-                          </div><!--end column 1 -->
-                          <!-- begin column 2 -->
-                          <div class="cell small-6"><span class="info-heading"><?php echo authDateType($auth['endtype']); ?></span>
-                            <?php echo $auth['enddate']; ?>
-                          </div><!--end column 2 -->
-                        </div>
+                          <span> (<?php echo $auth['startdate'] ; ?> - <?php echo $auth['enddate'] ; ?>) </span>
+                      </div>
                       </div>
                       <?php endif; ?> <!-- resolves if authtype is not 'Researched', 'Primary' -->
                       <?php endforeach; ?> <!-- resolves for loop for each author -->
