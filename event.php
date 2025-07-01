@@ -232,14 +232,10 @@
                         <!-- TODO begin for loop - for each related witness -->
                              <div class="auth-info"> <!-- TODO consider renaming this class since using it for info other than authors -->
                                 <!-- TODO: make two columns, put text info in left column, add xml button to right column -->
-                                <div class="grid-x">
-                                  <div class="cell small-6">
-                                      <span class="info-heading">Title:</span><span>Placeholder Title Text to Test Wrap</div> <!-- TODO add title query -->
-                                  <div class="cell small-6">
-                                      <span>[XML Button]</span></div>
-                                  <div class="cell"><span class="info-heading">Author(s):</span></div> <!-- TODO add title query -->
-                                  <div class="cell"><span class="info-heading">Publication Date:</span></div> <!-- TODO add title query -->
-                                </div> <!-- end grid -->
+                                <div><span class="info-heading">Title:</span><span>Placeholder Title Text to Test Wrap</span></div> <!-- TODO add title query -->
+                                <div><span class="info-heading">Author(s):</span></div> <!-- TODO add query -->
+                                <div><span class="info-heading">Publication Date:</span></div> <!-- TODO add query -->
+                                <div class="download-buttons"><a href="https://www.youtube.com/watch?v=E4WlUXrJgy4" class="button dwnld-btn">XML</a></div>
                                 </div> <!-- end grey box for each witness -->
                           <!-- TODO end for loop -->
                         <!-- TO DO resolve logic check(s) -->
