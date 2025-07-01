@@ -159,7 +159,7 @@
       </div>
       <div class="grid-x perf-section">
         <?php foreach ($event['Performances'] as $perf) : ?>
-        <div class="cell small-12 perf">
+        <div class="cell small-12 medium-5 large-4 perf">
           <div class="grid-x perf-type-wrap">
             <div class="cell small-12 text-center perf-type" id="<?php echo $perf['PerformanceId'] ?>">
               <h2><?php echo getPType($perf['PType']) ?></h2></div>
@@ -201,7 +201,7 @@
                 <!-- begin related works area -->
                 <?php $works = getRelatedWorks($perf['PerformanceTitle']); ?>
                 <?php if(!empty($works) && count($works) > 0) : ?>
-                <div class="small-12 medium-5 large-5 related-works">
+                <div class="small-12 medium-5 large-4 related-works">
                   <h3>Related Works</h3>
                   <?php foreach ($works as $work) : ?>
                   <div class="work-info"><!-- begin light shaded block for work -->
