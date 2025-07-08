@@ -857,36 +857,84 @@
     return array();
   }
 
-  /**
-  * Returns array of works related to a given performance title
-  *
-  * Takes a given performance title [PerfTitleClean], splits it by semicolon,
-  *  and performs wildcard searches for similar titles in Performances, Works,
-  *  and WorksVariant tables
-  *
-  * @param string $perfTitle Cleaned performance title from [PerfTitleClean] column
-  *
-  * @return array Related Works
-  */
-  function getRelatedWorks($perfTitle = '') {
+  /** Returns a list of print witnesses for a given dramatic work. 
+   * 
+   * Takes the unique identifier for a dramatic work [WorkId] and returns a 
+   * list of related printed books from the Text Creation Partnership.
+   * Specifies titles, authors, publication dates and download links for 
+   * each witness.
+   *  
+   * @param string $workId unique identifier assigned to an item in the 
+   * WorksTCP table from [WorkId] column 
+   * 
+   * @return array Related Witnesses
+   * 
+   */
+  function getRelatedWitnesses ($workId = '') {
     global $conn;
-    $prefix = "or ";
-    $stopwords = ['[c|C]oncert[s]?', '[e|E]ntertainment[s]?'];
-    $perfTitle =  preg_replace('/\b(' . implode('|', $stopwords) . ')\b/', '', $perfTitle);
+    $witnesses = array();
+    if ($workId == ''){
+      // Return an empty array
+      return $witnesses; 
+    }
 
-    if ($perfTitle !== '') {
-      $titles = array_map('trim', preg_split("[;|,]", $perfTitle));
-      $sql = 'SELECT Works.*, WorksVariant.VariantName, WorkAuthMaster.Title as TheTitle, Performances.PerformanceTitle
-        FROM Works LEFT JOIN WorksVariant ON WorksVariant.WorkId = Works.WorkId JOIN WorkAuthMaster ON WorkAuthMaster.WorkId = Works.WorkId LEFT JOIN Performances ON Performances.WorkId = Works.WorkId WHERE';
+    $sql = 'SELECT WorksTCP.WorkID, WorksTCP.TCPId, TCP.File, TCP.ShortTitle, TCP.Author, TCP.CleanDate, TCP.Title
+    FROM WorksTCP     
+    LEFT JOIN TCP ON TCP.TCPId = WorksTCP.TCPId WHERE';  
+    $sql .= ' WorksTCP.WorkId = ' . $workId ;
+    
+    $result = $conn->query($sql);
 
-      $i = 1;
-      foreach($titles as $perf) {
-        $perf = cleanStr($perf);
-        if (strtolower(substr($perf, 0, strlen($prefix))) == $prefix) {
-          $perf = substr($perf, strlen($prefix));
+    if ($result !== FALSE) {
+      while ($row = mysqli_fetch_assoc($result)) {
+        $witness = array(
+        'witnessDate' => $row['CleanDate'],
+        'witnessAuth' => $row['Author'],
+        'witnessFile' => $row['File']);
+        
+        if(array_key_exists('ShortTitle', $row)){
+          $witness['witnessTitle'] = $row['ShortTitle'];
+        } 
+        else { 
+          $witness['witnessTitle'] = $row['Title'];
         }
-        if ($i < count($titles)) {
-          $sql .= ' Works.TitleClean LIKE "' . $perf . '" OR Performances.PerfTitleClean LIKE "' . $perf . '" OR WorksVariant.NameClean LIKE "' . $perf . '" OR Works.Source1 LIKE "' . $perf . '" OR Works.Source2 LIKE "' . $perf . '" OR Works.SourceResearched LIKE "' . $perf . '" OR ';
+        $witnesses[] = $witness;   
+      } 
+    
+    } 
+    return $witnesses;
+  }
+
+    /**
+    * Returns array of works related to a given performance title
+    *
+    * Takes a given performance title [PerfTitleClean], splits it by semicolon,
+    *  and performs wildcard searches for similar titles in Performances, Works,
+    *  and WorksVariant tables
+    *
+    * @param string $perfTitle Cleaned performance title from [PerfTitleClean] column
+    *
+    * @return array Related Works
+    */
+    function getRelatedWorks($perfTitle = '') {
+      global $conn;
+      $prefix = "or ";
+      $stopwords = ['[c|C]oncert[s]?', '[e|E]ntertainment[s]?'];
+      $perfTitle =  preg_replace('/\b(' . implode('|', $stopwords) . ')\b/', '', $perfTitle);
+
+      if ($perfTitle !== '') {
+        $titles = array_map('trim', preg_split("[;|,]", $perfTitle));
+        $sql = 'SELECT Works.*, WorksVariant.VariantName, WorkAuthMaster.Title as TheTitle, Performances.PerformanceTitle
+          FROM Works LEFT JOIN WorksVariant ON WorksVariant.WorkId = Works.WorkId JOIN WorkAuthMaster ON WorkAuthMaster.WorkId = Works.WorkId LEFT JOIN Performances ON Performances.WorkId = Works.WorkId WHERE';
+
+        $i = 1;
+        foreach($titles as $perf) {
+          $perf = cleanStr($perf);
+          if (strtolower(substr($perf, 0, strlen($prefix))) == $prefix) {
+            $perf = substr($perf, strlen($prefix));
+          }
+          if ($i < count($titles)) {
+            $sql .= ' Works.TitleClean LIKE "' . $perf . '" OR Performances.PerfTitleClean LIKE "' . $perf . '" OR WorksVariant.NameClean LIKE "' . $perf . '" OR Works.Source1 LIKE "' . $perf . '" OR Works.Source2 LIKE "' . $perf . '" OR Works.SourceResearched LIKE "' . $perf . '" OR ';
         } else {
           $sql .= ' Works.TitleClean LIKE "' . $perf . '" OR Performances.PerfTitleClean LIKE "' . $perf . '" OR WorksVariant.NameClean LIKE "' . $perf . '" OR Works.Source1 LIKE "' . $perf . '" OR Works.Source2 LIKE "' . $perf . '" OR Works.SourceResearched LIKE "' . $perf . '" ';
         }
@@ -917,8 +965,8 @@
       $sources = array_filter($sources, 'strlen');
       if (!empty($sources)) {
         $ssql = 'SELECT Works.*, WorksVariant.VariantName, WorkAuthMaster.Title as TheTitle, Performances.PerformanceTitle
-          FROM Works LEFT JOIN WorksVariant ON WorksVariant.WorkId = Works.WorkId JOIN WorkAuthMaster ON WorkAuthMaster.WorkId = Works.WorkId LEFT JOIN Performances ON Performances.WorkId = Works.WorkId WHERE';
-
+          FROM Works LEFT JOIN WorksVariant ON WorksVariant.WorkId = Works.WorkId JOIN WorkAuthMaster ON WorkAuthMaster.WorkId = Works.WorkId
+          LEFT JOIN Performances ON Performances.WorkId = Works.WorkId WHERE';
         $i = 1;
         foreach($sources as $source) {
           if ($i < count($sources)) {
@@ -938,7 +986,6 @@
           }
         }
       }
-
       return $works;
     }
   }
@@ -1015,7 +1062,8 @@
           }
         }
       }
-
+      print_r($works); 
+      print("getSphinxRelatedWorks"); 
       return $works;
     }
   }

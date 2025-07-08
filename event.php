@@ -228,8 +228,14 @@
 
                     <!-- add related witnesses here, following same template as associated playwrights -->
                      <div><span class="info-heading">Related Witness(es):</span> <!-- TODO: make two columns, add column header for Download -->
-                      <!-- TODO add logic check for whether the work has related witnesses -->
-                        <!-- TODO begin for loop - for each related witness -->
+                     <!-- check if work has related witnesses -->
+                      <!-- TODO create array of related witnesses in cases where there is more than one -->
+                      <?php                       
+                        $witnesses = getRelatedWitnesses($work['WorkId']); 
+                        print_r($witnesses);
+                        ?>
+                        <?php echo ($work['TCPId']); ?>
+                    
                              <div class="auth-info"> <!-- TODO consider renaming this class since using it for info other than authors -->
                                 <div class="grid-x">  
                                 <!-- TODO: make two columns, put text info in left column, add xml button to right column -->
@@ -242,11 +248,7 @@
                                     <a href="https://www.youtube.com/watch?v=E4WlUXrJgy4" class="button dwnld-btn">XML</a>  
                                     </div>
                                 </div> <!-- end grid -->
-                                  
-                                 </div> <!-- end grey box for each witness -->
-                                 
-                          <!-- TODO end for loop -->
-                        <!-- TO DO resolve logic check(s) -->
+                              </div> <!-- end grey box for each witness -->   
                     </div> <!-- end related witnesses div -->
                     
                     </div> <!-- end of workinfo div, light beige shading -->
