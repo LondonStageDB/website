@@ -225,35 +225,31 @@
                         <?php endforeach; ?> <!-- resolves for loop for each author -->
                       <?php endif;  ?> <!-- resolves loop if work has no author -->
                     </div> <!-- end associated playwrights div -->
-
-                    <!-- add related witnesses here, following same template as associated playwrights -->
-                     <div><span class="info-heading">Related Witness(es):</span> <!-- TODO: make two columns, add column header for Download -->
                      <!-- check if work has related witnesses -->
-                      <!-- TODO create array of related witnesses in cases where there is more than one -->
-                      <?php                       
-                        $witnesses = getRelatedWitnesses($work['WorkId']); 
-                        print_r($witnesses);
-                        ?>
-                        <?php echo ($work['TCPId']); ?>
-                    
-                             <div class="auth-info"> <!-- TODO consider renaming this class since using it for info other than authors -->
+                      <?php        
+                        $witnesses = getRelatedWitnesses($work['WorkId']); ?>
+                        <?php if((!empty($witnesses)) && (count($witnesses) > 0)) : ?>
+                          <?php $witnesses = getRelatedWitnesses($work['WorkId']) ; ?>
+                          <div><span class="info-heading">Related Witness(es):</span> 
+                          <?php foreach ($witnesses as $witness) : ?>
+                             <div class="auth-info"> 
                                 <div class="grid-x">  
-                                <!-- TODO: make two columns, put text info in left column, add xml button to right column -->
                                   <div class="cell small-6 medium-8 large-9">
-                                  <div><span class="info-heading">Title:</span><span>Placeholder Title Text to Test Wrap</span></div> <!-- TODO add title query -->
-                                  <div><span class="info-heading">Author(s):</span><span>I. A. Writer</span></div> <!-- TODO add query -->
-                                  <div><span class="info-heading">Publication Date:</span></div> <!-- TODO add query -->
-                                    </div>
+                                    <div><span class="info-heading">Title:</span><span><?php echo ($witness['witnessTitle']); ?></span></div> 
+                                    <div><span class="info-heading">Author(s):</span><span><?php echo ($witness['witnessAuth']); ?></span></div> 
+                                    <div><span class="info-heading">Publication Date:</span><span><?php echo ($witness['witnessDate']); ?></span></div> 
+                                  </div>
                                   <div class="cell small-6 medium-4 large-3">
-                                    <a href="https://www.youtube.com/watch?v=E4WlUXrJgy4" class="button dwnld-btn">XML</a>  
+                                    <a href="https://londonstage.blob.core.windows.net/lsdb-files/tcp/P4/<?php echo $witness['witnessFile'] ; ?>" class="button dwnld-btn">Download XML</a> 
                                     </div>
                                 </div> <!-- end grid -->
-                              </div> <!-- end grey box for each witness -->   
-                    </div> <!-- end related witnesses div -->
-                    
-                    </div> <!-- end of workinfo div, light beige shading -->
+                              </div> <!-- end witness -->
+                          <?php endforeach; ?>
+                          </div> <!-- end related witnesses -->
+                        <?php endif; ?>   
+                    </div> <!-- end work info -->
                   <?php endforeach; ?> <!-- resolves when list of related works is complete -->
-                </div> <!-- end of Related Works panel display -->
+                </div> <!-- end related works panel -->
                 <?php endif; ?> <!-- resolves if there are no related works -->
               </div>
             </div>

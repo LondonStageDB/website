@@ -888,9 +888,9 @@
     if ($result !== FALSE) {
       while ($row = mysqli_fetch_assoc($result)) {
         $witness = array(
-        'witnessDate' => $row['CleanDate'],
+        'witnessDate' => (int)$row['CleanDate'], 
         'witnessAuth' => $row['Author'],
-        'witnessFile' => $row['File']);
+        'witnessFile' => $row['File']) ;
         
         if(array_key_exists('ShortTitle', $row)){
           $witness['witnessTitle'] = $row['ShortTitle'];
