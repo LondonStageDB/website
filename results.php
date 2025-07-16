@@ -454,7 +454,7 @@
   </form>
   </div>
   <?php include_once('common/footer.php'); ?>
-  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+  <script src="https://code.jquery.com/ui/1.14.1/jquery-ui.js"></script>
   <script src="/js/search.js"></script>
   <!--
 
