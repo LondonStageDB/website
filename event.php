@@ -221,7 +221,7 @@
                                 <span> &nbsp;&nbsp; <?php echo linkedSearches('author', $auth['authname'], TRUE); ?> 
                                  (<?php echo $auth['startdate'] ; ?> - <?php echo $auth['enddate'] ; ?>) </span>
                             </div> <!-- end author list item -->
-                          <?php endif; ?> <!-- resolves if authtype is not 'Researched', 'Primary' -->
+                          <!-- ?php endif; ?> // resolves if authtype is not 'Researched', 'Primary' -->
                         <?php endforeach; ?> <!-- resolves for loop for each author -->
                       <?php endif;  ?> <!-- resolves loop if work has no author -->
                     </div> <!-- end associated playwrights div -->
