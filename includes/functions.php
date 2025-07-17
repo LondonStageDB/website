@@ -1039,7 +1039,6 @@
         $sources[] = $row['sourceresearched'];
         $sources[] = $row['source1'];
         $sources[] = $row['source2'];
-        $row['date'] = $row['pubdate']
         $row['author'] = getAuthorInfo($row['workid']);
         $works[] = $row;
         $workIds[] = $row['workid'];
