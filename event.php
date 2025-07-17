@@ -250,7 +250,6 @@
                     </div> <!-- end work info -->
                   <?php endforeach; ?> <!-- resolves when list of related works is complete -->
                 </div> <!-- end related works panel -->
-                <?php endif; ?> <!-- resolves if there are no related works -->
               </div>
             </div>
           </div>
