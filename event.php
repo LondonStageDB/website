@@ -201,12 +201,14 @@
                 <!-- begin related works area -->
                 <?php $works = getSphinxRelatedWorks($perf['PerformanceTitle']); ?>
                 <?php if(!empty($works) && count($works) > 0) : ?>
+                  <?php foreach ($works as $work) : ?>
+                    
                 <div class="small-12 medium-6 large-5 related-works">
                   <h3>Related Works</h3>
                   <?php foreach ($works as $work) : ?>
                   <div class="work-info"><!-- begin light shaded block for work -->
                     <div><span class="info-heading">Work Title:</span>
-                      <a href="<?php echo linkedTitles((!empty($work['Title'])) ? $work['Title'] : $work['Title'], TRUE); ?>">
+                      <!--a href="?php echo linkedTitles((!empty($work['Title'])) ? $work['Title'] : $work['Title'], TRUE);"-->
                         <?php echo (!empty($work['Title'])) ? $work['Title'] : $work['Title']; ?>
                       </a>
                     </div>
