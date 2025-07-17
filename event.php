@@ -216,7 +216,7 @@
                     <div><span class="info-heading">Associated Playwright(s):</span>
                       <?php if (array_filter($work['author'])) : ?>
                         <?php foreach ($work['author'] as $auth) : ?>
-                          <?php if (in_array($auth['authtype'], ['Researched', 'Primary'])) : ?>
+                          <!-- ?php if (in_array($auth['authtype'], ['Researched', 'Primary'])) : ?> -->
                             <div> 
                                 <span> &nbsp;&nbsp; <?php echo linkedSearches('author', $auth['authname'], TRUE); ?> 
                                  (<?php echo $auth['startdate'] ; ?> - <?php echo $auth['enddate'] ; ?>) </span>
