@@ -982,6 +982,7 @@
         while ($srow = mysqli_fetch_assoc($sresult)) {
           if (!in_array($srow['WorkId'], $workIds)) {
             $srow['author'] = getAuthorInfo($srow['WorkId']);
+            $srow['date'] = $srow['PubDate'];
             $works[] = $srow;
           }
         }
@@ -1038,6 +1039,7 @@
         $sources[] = $row['sourceresearched'];
         $sources[] = $row['source1'];
         $sources[] = $row['source2'];
+        $sources[] = $row['pubdate'];
         $row['author'] = getAuthorInfo($row['workid']);
         $works[] = $row;
         $workIds[] = $row['workid'];
@@ -1047,7 +1049,7 @@
       $sources = array_filter($sources, 'strlen');
       if (!empty($sources)) {
         $sources = wildCardQuotes($sources);
-        $ssql = "SELECT WorkId, Title, Type1, Type2, Source1, Source2, SourceResearched, PubDate, TitleClean, VariantName, TheTitle, PerformanceTitle \nFROM related_work";
+        $ssql = "SELECT WorkId, Title, Type1, Type2, Source1, Source2, SourceResearched, TitleClean, VariantName, TheTitle, PerformanceTitle \nFROM related_work";
         $ssql .= "\nWHERE MATCH('@TitleClean \"" . implode('"|"', $sources) . "\" @PerfTitleClean \"" . implode('"|"', $sources) . "\" @NameClean \"" . implode('"|"', $sources) . "\"')";
         $ssql .= ' GROUP BY WorkId';
 
