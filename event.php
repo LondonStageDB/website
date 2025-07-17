@@ -201,55 +201,54 @@
                 <!-- begin related works area -->
                 <?php $works = getSphinxRelatedWorks($perf['PerformanceTitle']); ?>
                 <?php if(!empty($works) && count($works) > 0) : ?>
-                  <?php foreach ($works as $work) : ?>
-                    
-                <div class="small-12 medium-6 large-5 related-works">
-                  <h3>Related Works</h3>
-                  <?php foreach ($works as $work) : ?>
-                  <div class="work-info"><!-- begin light shaded block for work -->
-                    <div><span class="info-heading">Work Title:</span>
-                      <?php echo $work['Title']; ?>
-                    </div>
-                    <div><span class="info-heading">Associated Date:</span>
-                      <?php echo $work['PubDate']; ?>
-                    </div>
-                    <div><span class="info-heading">Associated Playwright(s):</span>
-                      <?php if (array_filter($work['author'])) : ?>
-                        <?php foreach ($work['author'] as $auth) : ?>
-                          <?php if (in_array($auth['authtype'], ['Researched', 'Primary'])) : ?>
-                            <div> 
-                                <span> &nbsp;&nbsp; <?php echo $auth['authname'] ?> 
-                                 (<?php echo $auth['startdate'] ; ?> - <?php echo $auth['enddate'] ; ?>) </span>
-                            </div> <!-- end author list item -->
-                          <?php endif; ?> <!--resolves if authtype is not 'Researched', 'Primary' -->
-                        <?php endforeach; ?> <!-- resolves for loop for each author -->
-                      <?php endif; ?> <!-- resolves loop if work has no author -->
-                    </div> <!-- end associated playwrights div -->
-                     <!-- check if work has related witnesses -->
-                      <?php        
-                        $witnesses = getRelatedWitnesses($work['WorkId']); ?>
-                        <?php if((!empty($witnesses)) && (count($witnesses) > 0)) : ?>
-                          <?php $witnesses = getRelatedWitnesses($work['WorkId']) ; ?>
-                          <div><span class="info-heading">Related Witness(es):</span> 
-                          <?php foreach ($witnesses as $witness) : ?>
-                             <div class="auth-info"> 
-                                <div class="grid-x">  
-                                  <div class="cell small-6 medium-8 large-9">
-                                    <div><span class="info-heading">Title:</span><span><?php echo ($witness['witnessTitle']); ?></span></div> 
-                                    <div><span class="info-heading">Author(s):</span><span><?php echo ($witness['witnessAuth']); ?></span></div> 
-                                    <div><span class="info-heading">Publication Date:</span><span><?php echo ($witness['witnessDate']); ?></span></div> 
-                                  </div>
-                                  <div class="cell small-6 medium-4 large-3">
-                                    <a href="https://londonstage.blob.core.windows.net/lsdb-files/tcp/P4/<?php echo $witness['witnessFile'] ; ?>" class="button dwnld-btn">Download XML</a> 
-                                    </div>
-                                </div> <!-- end grid -->
-                              </div> <!-- end witness -->
-                          <?php endforeach; ?>
-                          </div> <!-- end related witnesses -->
-                        <?php endif; ?>   
-                    </div> <!-- end work info -->
-                  <?php endforeach; ?> <!-- resolves when list of related works is complete -->
+                    <div class="small-12 medium-6 large-5 related-works">
+                      <h3>Related Works</h3>
+                      <?php foreach ($works as $work) : ?>
+                      <div class="work-info"><!-- begin light shaded block for work -->
+                        <div><span class="info-heading">Work Title:</span>
+                          <?php echo $work['Title']; ?>
+                        </div>
+                        <div><span class="info-heading">Associated Date:</span>
+                          <?php echo $work['PubDate']; ?>
+                        </div>
+                        <div><span class="info-heading">Associated Playwright(s):</span>
+                          <?php if (array_filter($work['author'])) : ?>
+                            <?php foreach ($work['author'] as $auth) : ?>
+                              <?php if (in_array($auth['authtype'], ['Researched', 'Primary'])) : ?>
+                                <div> 
+                                    <span> &nbsp;&nbsp; <?php echo $auth['authname'] ?> 
+                                    (<?php echo $auth['startdate'] ; ?> - <?php echo $auth['enddate'] ; ?>) </span>
+                                </div> <!-- end author list item -->
+                              <?php endif; ?> <!--resolves if authtype is not 'Researched', 'Primary' -->
+                            <?php endforeach; ?> <!-- resolves for loop for each author -->
+                          <?php endif; ?> <!-- resolves loop if work has no author -->
+                        </div> <!-- end associated playwrights div -->
+                        <!-- check if work has related witnesses -->
+                          <?php        
+                            $witnesses = getRelatedWitnesses($work['WorkId']); ?>
+                            <?php if((!empty($witnesses)) && (count($witnesses) > 0)) : ?>
+                              <?php $witnesses = getRelatedWitnesses($work['WorkId']) ; ?>
+                              <div><span class="info-heading">Related Witness(es):</span> 
+                              <?php foreach ($witnesses as $witness) : ?>
+                                <div class="auth-info"> 
+                                    <div class="grid-x">  
+                                      <div class="cell small-6 medium-8 large-9">
+                                        <div><span class="info-heading">Title:</span><span><?php echo ($witness['witnessTitle']); ?></span></div> 
+                                        <div><span class="info-heading">Author(s):</span><span><?php echo ($witness['witnessAuth']); ?></span></div> 
+                                        <div><span class="info-heading">Publication Date:</span><span><?php echo ($witness['witnessDate']); ?></span></div> 
+                                      </div>
+                                      <div class="cell small-6 medium-4 large-3">
+                                        <a href="https://londonstage.blob.core.windows.net/lsdb-files/tcp/P4/<?php echo $witness['witnessFile'] ; ?>" class="button dwnld-btn">Download XML</a> 
+                                        </div>
+                                    </div> <!-- end grid -->
+                                  </div> <!-- end witness -->
+                              <?php endforeach; ?>
+                              </div> <!-- end related witnesses -->
+                            <?php endif; ?>   
+                        </div> <!-- end work info -->
+                      <?php endforeach; ?> <!-- resolves when list of related works is complete -->
                 </div> <!-- end related works panel -->
+                <?php endif; ?> <!-- resolves if there are no related works -->
               </div>
             </div>
           </div>
