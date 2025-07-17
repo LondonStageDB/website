@@ -871,7 +871,7 @@
    * 
    */
   function getRelatedWitnesses ($workId = '') {
-    global $sphinx_conn;
+    global $conn;
     $witnesses = array();
     if ($workId == ''){
       // Return an empty array
@@ -1047,7 +1047,7 @@
       $sources = array_filter($sources, 'strlen');
       if (!empty($sources)) {
         $sources = wildCardQuotes($sources);
-        $ssql = "SELECT WorkId, Title, Type1, Type2, Source1, Source2, SourceResearched, TitleClean, VariantName, TheTitle, PerformanceTitle \nFROM related_work";
+        $ssql = "SELECT WorkId, Title, Type1, Type2, Source1, Source2, SourceResearched, PubDate, TitleClean, VariantName, TheTitle, PerformanceTitle \nFROM related_work";
         $ssql .= "\nWHERE MATCH('@TitleClean \"" . implode('"|"', $sources) . "\" @PerfTitleClean \"" . implode('"|"', $sources) . "\" @NameClean \"" . implode('"|"', $sources) . "\"')";
         $ssql .= ' GROUP BY WorkId';
 
