@@ -986,6 +986,8 @@
           }
         }
       }
+      print_r($works); 
+      print("getRelatedWorks"); 
       return $works;
     }
   }
