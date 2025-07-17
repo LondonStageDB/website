@@ -871,7 +871,7 @@
    * 
    */
   function getRelatedWitnesses ($workId = '') {
-    global $conn;
+    global $sphinx_conn;
     $witnesses = array();
     if ($workId == ''){
       // Return an empty array
@@ -986,8 +986,6 @@
           }
         }
       }
-      print_r($works); 
-      print("getRelatedWorks"); 
       return $works;
     }
   }
