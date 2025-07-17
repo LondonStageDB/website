@@ -1057,7 +1057,7 @@
           while ($srow = mysqli_fetch_assoc($sresult)) {
             if (!in_array($srow['workid'], $workIds)) {
               $srow['author'] = getAuthorInfo($srow['workid']);
-              $srow['date'] = $srow['PubDate'];
+              $srow['date'] = $srow['pubdate'];
               $works[] = $srow;
             }
           }
