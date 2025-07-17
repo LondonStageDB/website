@@ -206,10 +206,10 @@
                       <?php foreach ($works as $work) : ?>
                       <div class="work-info"><!-- begin light shaded block for work -->
                         <div><span class="info-heading">Work Title:</span>
-                          <?php echo $work['title']; ?>
+                          <?php echo $work['titleclean']; ?>
                         </div>
                         <div><span class="info-heading">Associated Date:</span>
-                          <?php echo $work['PubDate']; ?>
+                          <?php echo $work['pubdate']; ?>
                         </div>
                         <div><span class="info-heading">Associated Playwright(s):</span>
                           <?php if (array_filter($work['author'])) : ?>
