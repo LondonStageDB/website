@@ -206,7 +206,7 @@
                       <?php foreach ($works as $work) : ?>
                       <div class="work-info"><!-- begin light shaded block for work -->
                         <div><span class="info-heading">Work Title:</span>
-                          <?php echo $work['Title']; ?>
+                          <?php echo $work['title']; ?>
                         </div>
                         <div><span class="info-heading">Associated Date:</span>
                           <?php echo $work['PubDate']; ?>
