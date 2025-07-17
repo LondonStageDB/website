@@ -208,24 +208,22 @@
                   <?php foreach ($works as $work) : ?>
                   <div class="work-info"><!-- begin light shaded block for work -->
                     <div><span class="info-heading">Work Title:</span>
-                      <!--a href="?php echo linkedTitles((!empty($work['Title'])) ? $work['Title'] : $work['Title'], TRUE);"-->
-                        <?php echo (!empty($work['Title'])) ? $work['Title'] : $work['Title']; ?>
-                      </a>
+                      <?php echo $work['Title']; ?>
                     </div>
-                    <div><span class="info-heading">Publish Date:</span>
+                    <div><span class="info-heading">Associated Date:</span>
                       <?php echo $work['PubDate']; ?>
                     </div>
                     <div><span class="info-heading">Associated Playwright(s):</span>
                       <?php if (array_filter($work['author'])) : ?>
                         <?php foreach ($work['author'] as $auth) : ?>
-                          <!-- ?php if (in_array($auth['authtype'], ['Researched', 'Primary'])) : ?> -->
+                          <?php if (in_array($auth['authtype'], ['Researched', 'Primary'])) : ?>
                             <div> 
-                                <span> &nbsp;&nbsp; <?php echo linkedSearches('author', $auth['authname'], TRUE); ?> 
+                                <span> &nbsp;&nbsp; <?php echo $auth['authname'] ?> 
                                  (<?php echo $auth['startdate'] ; ?> - <?php echo $auth['enddate'] ; ?>) </span>
                             </div> <!-- end author list item -->
-                          <!-- ?php endif; ?> // resolves if authtype is not 'Researched', 'Primary' -->
+                          <?php endif; ?> <!--resolves if authtype is not 'Researched', 'Primary' -->
                         <?php endforeach; ?> <!-- resolves for loop for each author -->
-                      <?php endif;  ?> <!-- resolves loop if work has no author -->
+                      <?php endif; ?> <!-- resolves loop if work has no author -->
                     </div> <!-- end associated playwrights div -->
                      <!-- check if work has related witnesses -->
                       <?php        
