@@ -199,7 +199,7 @@
                   <?php endif; ?>
                 </div>
                 <!-- begin related works area -->
-                <?php $works = getRelatedWorks($perf['PerformanceTitle']); ?>
+                <?php $works = getSphinxRelatedWorks($perf['PerformanceTitle']); ?>
                 <?php if(!empty($works) && count($works) > 0) : ?>
                 <div class="small-12 medium-6 large-5 related-works">
                   <h3>Related Works</h3>
