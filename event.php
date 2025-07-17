@@ -209,7 +209,7 @@
                           <?php echo $work['titleclean']; ?>
                         </div>
                         <div><span class="info-heading">Associated Date:</span>
-                          <?php echo $work['pubdate']; ?>
+                          <?php echo $work['date']; ?>
                         </div>
                         <div><span class="info-heading">Associated Playwright(s):</span>
                           <?php if (array_filter($work['author'])) : ?>
