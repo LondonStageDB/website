@@ -238,7 +238,7 @@
                                       </div>
                                       <div class="cell small-6 medium-4 large-3">
                                         <a href="https://londonstage.blob.core.windows.net/lsdb-files/tcp/P4/<?php echo $witness['witnessFile'] ; ?>" 
-                                        class="button dwnld-btn" download>Download XML</a> 
+                                        class="button xml-dwnld-btn" download>XML</a> 
                                         </div>
                                     </div> <!-- end grid -->
                                   </div> <!-- end witness -->

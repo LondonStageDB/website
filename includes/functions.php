@@ -1039,7 +1039,6 @@
         $sources[] = $row['source1'];
         $sources[] = $row['source2'];
         $row['author'] = getAuthorInfo($row['workid']);
-        // TODO(mattieburker) Does this look OK? - Erin
         if ($row['pubdate'] == 0){
           $row['pubdate'] = '';
         }

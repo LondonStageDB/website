@@ -1682,7 +1682,12 @@ body#home:after {
 }
 
 #event .dwnld-btn {
-/ / background-color: #ff6a5c;
+    background-color: #943939;
+}
+
+#event .xml-dwnld-btn {
+    background-color: #943939;
+    margin: 1rem;
 }
 
 #event .work-info {
