@@ -878,7 +878,7 @@
       return $witnesses; 
     }
 
-    $sql = 'SELECT WorksTCP.WorkID, WorksTCP.TCPId, TCP.File, TCP.ShortTitle, TCP.Author, TCP.CleanDate, TCP.Title
+    $sql = 'SELECT WorksTCP.WorkID, WorksTCP.TCPId, TCP.File, TCP.ShortTitleClean, TCP.Author, TCP.CleanDate, TCP.Title
     FROM WorksTCP     
     LEFT JOIN TCP ON TCP.TCPId = WorksTCP.TCPId WHERE';  
     $sql .= ' WorksTCP.WorkId = ' . $workId ;
@@ -892,8 +892,8 @@
         'witnessAuth' => $row['Author'],
         'witnessFile' => $row['File']) ;
         
-        if(array_key_exists('ShortTitle', $row)){
-          $witness['witnessTitle'] = $row['ShortTitle'];
+        if(array_key_exists('ShortTitleClean', $row)){
+          $witness['witnessTitle'] = $row['ShortTitleClean'];
         } 
         else { 
           $witness['witnessTitle'] = $row['Title'];
@@ -1039,6 +1039,10 @@
         $sources[] = $row['source1'];
         $sources[] = $row['source2'];
         $row['author'] = getAuthorInfo($row['workid']);
+        // TODO(mattieburker) Does this look OK? - Erin
+        if ($row['pubdate'] == 0){
+          $row['pubdate'] = '';
+        }
         $works[] = $row;
         $workIds[] = $row['workid'];
       }
@@ -1063,8 +1067,6 @@
           }
         }
       }
-      print_r($works); 
-      print("getSphinxRelatedWorks"); 
       return $works;
     }
   }

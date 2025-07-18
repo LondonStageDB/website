@@ -209,7 +209,7 @@
                           <?php echo $work['titleclean']; ?>
                         </div>
                         <div><span class="info-heading">Associated Date:</span>
-                          <?php echo $work['date']; ?>
+                          <?php echo $work['pubdate']; ?>
                         </div>
                         <div><span class="info-heading">Associated Playwright(s):</span>
                           <?php if (array_filter($work['author'])) : ?>
@@ -225,9 +225,8 @@
                         </div> <!-- end associated playwrights div -->
                         <!-- check if work has related witnesses -->
                           <?php        
-                            $witnesses = getRelatedWitnesses($work['WorkId']); ?>
+                            $witnesses = getRelatedWitnesses($work['workid']); ?>
                             <?php if((!empty($witnesses)) && (count($witnesses) > 0)) : ?>
-                              <?php $witnesses = getRelatedWitnesses($work['WorkId']) ; ?>
                               <div><span class="info-heading">Related Witness(es):</span> 
                               <?php foreach ($witnesses as $witness) : ?>
                                 <div class="auth-info"> 
@@ -238,7 +237,8 @@
                                         <div><span class="info-heading">Publication Date:</span><span><?php echo ($witness['witnessDate']); ?></span></div> 
                                       </div>
                                       <div class="cell small-6 medium-4 large-3">
-                                        <a href="https://londonstage.blob.core.windows.net/lsdb-files/tcp/P4/<?php echo $witness['witnessFile'] ; ?>" class="button dwnld-btn">Download XML</a> 
+                                        <a href="https://londonstage.blob.core.windows.net/lsdb-files/tcp/P4/<?php echo $witness['witnessFile'] ; ?>" 
+                                        class="button dwnld-btn" download>Download XML</a> 
                                         </div>
                                     </div> <!-- end grid -->
                                   </div> <!-- end witness -->
