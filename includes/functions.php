@@ -1029,7 +1029,6 @@
 
       // Only want to show unique works, not all iterations of a given work title
       $sql .= "\nGROUP BY WorkId";
-
       $result = $sphinx_conn->query($sql);
       $works = array();
       $sources = array();

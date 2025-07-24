@@ -237,8 +237,7 @@
                                         <div><span class="info-heading">Publication Date:</span><span><?php echo ($witness['witnessDate']); ?></span></div> 
                                       </div>
                                       <div class="cell small-6 medium-4 large-3">
-                                        <a href="https://londonstage.blob.core.windows.net/lsdb-files/tcp/P4/<?php echo $witness['witnessFile'] ; ?>" 
-                                        class="button xml-dwnld-btn" download>XML</a> 
+                                          <a href="get_tcp.php?fn=<?php echo $witness['witnessFile']; ?>" class="button xml-dwnld-btn" download>XML</a>
                                         </div>
                                     </div> <!-- end grid -->
                                   </div> <!-- end witness -->

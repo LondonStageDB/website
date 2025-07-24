@@ -1686,8 +1686,13 @@ body#home:after {
 }
 
 #event .xml-dwnld-btn {
-    background-color: #943939;
-    margin: 1rem;
+  background-color: #943939;
+  margin-left: 1rem;
+  margin-right: 1rem;
+  position: relative;
+  top: 50%;
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
 }
 
 #event .work-info {
