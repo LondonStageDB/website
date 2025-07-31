@@ -1033,16 +1033,20 @@
       $works = array();
       $sources = array();
       $workIds = array();
-      while ($row = mysqli_fetch_assoc($result)) {
-        $sources[] = $row['sourceresearched'];
-        $sources[] = $row['source1'];
-        $sources[] = $row['source2'];
-        $row['author'] = getAuthorInfo($row['workid']);
-        if ($row['pubdate'] == 0){
-          $row['pubdate'] = '';
+      while ($row = mysqli_fetch_assoc($result)){
+        // Not perfect but a start
+        if ($row['notes'] != 'This title is originally a source'){
+          print_r($row);
+          $sources[] = $row['sourceresearched'];
+          $sources[] = $row['source1'];
+          $sources[] = $row['source2'];
+          $row['author'] = getAuthorInfo($row['workid']);
+          if ($row['pubdate'] == 0){
+            $row['pubdate'] = '';
+          }
+          $works[] = $row;
+          $workIds[] = $row['workid'];
         }
-        $works[] = $row;
-        $workIds[] = $row['workid'];
       }
 
       // Get Work Sources and perform same search on them
@@ -1057,7 +1061,8 @@
 
         if ($sresult) {
           while ($srow = mysqli_fetch_assoc($sresult)) {
-            if (!in_array($srow['workid'], $workIds)) {
+            if ((!in_array($srow['workid'], $workIds)) 
+              && ($srow['notes'] != 'This title is originally a source')){
               $srow['author'] = getAuthorInfo($srow['workid']);
               $srow['date'] = $srow['pubdate'];
               $works[] = $srow;
