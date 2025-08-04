@@ -1001,8 +1001,7 @@
   *
   * @return array Related Works
   */
-  function getSphinxRelatedWorks($perfTitle = '') {
-    // Return without looking up Related Works
+  function getSphinxRelatedWorks($workId, $perfTitle = '') {
     global $sphinx_conn;
 
     $prefix = "or ";
@@ -1024,11 +1023,13 @@
         }
         $values[] = '"' . $perf . '"';
       }
+
       $values = implode('|', $values);
       $sql .= "\nWHERE MATCH('" . $values . "')";
 
       // Only want to show unique works, not all iterations of a given work title
       $sql .= "\nGROUP BY WorkId";
+
       $result = $sphinx_conn->query($sql);
       $works = array();
       $sources = array();
@@ -1050,10 +1051,9 @@
       $sources = array_filter($sources, 'strlen');
       if (!empty($sources)) {
         $sources = wildCardQuotes($sources);
-        $ssql = "SELECT WorkId, Title, Type1, Type2, Source1, Source2, SourceResearched, TitleClean, VariantName, TheTitle, PerformanceTitle \nFROM related_work";
+        $ssql = "SELECT WorkId, Title, Type1, Type2, Source1, Source2, SourceResearched, TitleClean, VariantName, PerformanceTitle \nFROM related_work";
         $ssql .= "\nWHERE MATCH('@TitleClean \"" . implode('"|"', $sources) . "\" @PerfTitleClean \"" . implode('"|"', $sources) . "\" @NameClean \"" . implode('"|"', $sources) . "\"')";
         $ssql .= ' GROUP BY WorkId';
-
         $sresult = $sphinx_conn->query($ssql);
 
         if ($sresult) {
