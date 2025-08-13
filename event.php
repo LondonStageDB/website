@@ -199,17 +199,17 @@
                   <?php endif; ?>
                 </div>
                 <!-- begin related works area -->
-                <?php $works = getSphinxRelatedWorks($perf['WorkId'], $perf['PerformanceTitle']); ?>
+                <?php $works = getSphinxRelatedWorks($perf['PerformanceTitle'], $perf['WorkId']); ?>
                 <?php if(!empty($works) && count($works) > 0) : ?>
                     <div class="small-12 medium-6 large-5 related-works">
                       <h3>Related Works</h3>
                       <?php foreach ($works as $work) : ?>
                       <div class="work-info"><!-- begin light shaded block for work -->
                         <div><span class="info-heading">Work Title:</span>
-                          <?php echo $work['titleclean']; ?>
+                          <?php echo $work['title']; ?>
                         </div>
                         <div><span class="info-heading">Associated Date:</span>
-                          <?php echo $work['pubdate']; ?>
+                          <?php if ($work['pubdate'] > 0) echo $work['pubdate']; ?>
                         </div>
                         <div><span class="info-heading">Associated Playwright(s):</span>
                           <?php if (array_filter($work['author'])) : ?>
