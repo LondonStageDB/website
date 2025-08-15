@@ -1078,9 +1078,15 @@
       $sql .= "\nWHERE MATCH('@title " . $values . " |  @performancetitle " . $values . " | @variantname " . $values . "')";
       $sql .= " GROUP BY workid, authid"; // One row per work
 
-      // Get results from Sphinx, merge results with the related works array
+      // Get results from Sphinx
       $tr = $sphinx_conn->query($sql);
-      $works = $works +  relatedWorksFromArray($tr->fetch_all(MYSQLI_ASSOC));
+      $titles = relatedWorksFromArray($tr->fetch_all(MYSQLI_ASSOC));
+
+      // Sort works in order of ascending date
+      array_multisort (array_column($titles, 'pubdate'), SORT_ASC, $titles);
+      $titles = array_column($titles, null, 'workid');
+
+      $works = $works +  $titles;
     }
 
     // Search for works with titles matching known sources
@@ -1095,8 +1101,18 @@
 
       // Get results from Sphinx, merge results with the related works array
       $sresult = $sphinx_conn->query($ssql);
-      $works = $works +  relatedWorksFromArray($sresult->fetch_all(MYSQLI_ASSOC));
+      $sources = relatedWorksFromArray($sresult->fetch_all(MYSQLI_ASSOC));
+
+      // Sort sources in order of ascending date
+      array_multisort (array_column($sources, 'pubdate'), SORT_ASC, $sources);
+      $sources = array_column($sources, null, 'workid');
+
+      $works = $works +  $sources;
     }
+
+    // TODO(wintere): Remove after the Works table has been cleaned out
+    // Manually inspect for suspiciously similar works with distinct ids
+    print_r($works);
     return $works;
   }
 

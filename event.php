@@ -199,7 +199,13 @@
                   <?php endif; ?>
                 </div>
                 <!-- begin related works area -->
-                <?php $works = getSphinxRelatedWorks($perf['PerformanceTitle'], $perf['WorkId']); ?>
+                  <?php
+                  // Hide related works for dances, comments
+                  if ($perf['PType'] == 'd'){
+                      $works = array();
+                  } else{
+                      $works = getSphinxRelatedWorks($perf['PerformanceTitle'], $perf['WorkId']);
+                  }?>
                 <?php if(!empty($works) && count($works) > 0) : ?>
                     <div class="small-12 medium-6 large-5 related-works">
                       <h3>Related Works</h3>
@@ -224,7 +230,7 @@
                           <?php endif; ?> <!-- resolves loop if work has no author -->
                         </div> <!-- end associated playwrights div -->
                         <!-- check if work has related witnesses -->
-                          <?php        
+                          <?php
                             $witnesses = getRelatedWitnesses($work['workid']); ?>
                             <?php if((!empty($witnesses)) && (count($witnesses) > 0)) : ?>
                               <div><span class="info-heading">Related Witness(es):</span> 
