@@ -1540,7 +1540,7 @@
       if ($row['title'] && $row['title'] !== '')
         $workTitles[] = $row['title'];
       if ($row['variantname'] && $row['variantname'] !== '')
-        $workTitles[] = $row['nameclean'];
+        $workTitles[] = $row['variantname'];
       if ($row['performancetitle'] && $row['performancetitle'] !== '')
         $workTitles[] = $row['performancetitle'];
     }
@@ -1556,10 +1556,10 @@
       $titleArr = array_map('trim', explode(';', $title));
       foreach ($titleArr as $titl) {
         if (strtolower(substr($titl, 0, strlen($prefix))) == $prefix) {
-          $titl = substr($titl, strlen($prefix));
+          $titl = substr($titl, strlen($prefix)); //remove quotes from titles
         }
-        // Add each title within double quotes.
-        $processedTitles[] = '"' . $titl . '"';
+        // Add each title within double quotes, with special characters escaped.
+        $processedTitles[] = '"' . mysqli_real_escape_string($sphinx_conn, $titl) . '"';
       }
     }
     // Return the MATCH statement for the performance title field with all
