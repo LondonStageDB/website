@@ -915,79 +915,79 @@
     *
     * @return array Related Works
     */
-    function getRelatedWorks($perfTitle = '') {
-      global $conn;
-      $prefix = "or ";
-      $stopwords = ['[c|C]oncert[s]?', '[e|E]ntertainment[s]?'];
-      $perfTitle =  preg_replace('/\b(' . implode('|', $stopwords) . ')\b/', '', $perfTitle);
-
-      if ($perfTitle !== '') {
-        $titles = array_map('trim', preg_split("[;|,]", $perfTitle));
-        $sql = 'SELECT Works.*, WorksVariant.VariantName, WorkAuthMaster.Title as TheTitle, Performances.PerformanceTitle
-          FROM Works LEFT JOIN WorksVariant ON WorksVariant.WorkId = Works.WorkId JOIN WorkAuthMaster ON WorkAuthMaster.WorkId = Works.WorkId LEFT JOIN Performances ON Performances.WorkId = Works.WorkId WHERE';
-
-        $i = 1;
-        foreach($titles as $perf) {
-          $perf = cleanStr($perf);
-          if (strtolower(substr($perf, 0, strlen($prefix))) == $prefix) {
-            $perf = substr($perf, strlen($prefix));
-          }
-          if ($i < count($titles)) {
-            $sql .= ' Works.TitleClean LIKE "' . $perf . '" OR Performances.PerfTitleClean LIKE "' . $perf . '" OR WorksVariant.NameClean LIKE "' . $perf . '" OR Works.Source1 LIKE "' . $perf . '" OR Works.Source2 LIKE "' . $perf . '" OR Works.SourceResearched LIKE "' . $perf . '" OR ';
-        } else {
-          $sql .= ' Works.TitleClean LIKE "' . $perf . '" OR Performances.PerfTitleClean LIKE "' . $perf . '" OR WorksVariant.NameClean LIKE "' . $perf . '" OR Works.Source1 LIKE "' . $perf . '" OR Works.Source2 LIKE "' . $perf . '" OR Works.SourceResearched LIKE "' . $perf . '" ';
-        }
-        $i++;
-      }
-
-      // Only want to show unique works, not all iterations of a given work title
-      $sql .= ' GROUP BY Works.WorkId';
-
-      $result = $conn->query($sql);
-      $works = array();
-      $sources = array();
-      $workIds = array();
-      if ($result !== FALSE) {
-        while ($row = mysqli_fetch_assoc($result)) {
-          $sources[] = $row['SourceResearched'];
-          $sources[] = $row['Source1'];
-          $sources[] = $row['Source2'];
-          $row['author'] = getAuthorInfo($row['WorkId']);
-          $works[] = $row;
-          $workIds[] = $row['WorkId'];
-        }
-      }
-
-      $sources = array_filter($sources, 'strlen');
-
-      // Get Work Sources and perform same search on them
-      $sources = array_filter($sources, 'strlen');
-      if (!empty($sources)) {
-        $ssql = 'SELECT Works.*, WorksVariant.VariantName, WorkAuthMaster.Title as TheTitle, Performances.PerformanceTitle
-          FROM Works LEFT JOIN WorksVariant ON WorksVariant.WorkId = Works.WorkId JOIN WorkAuthMaster ON WorkAuthMaster.WorkId = Works.WorkId
-          LEFT JOIN Performances ON Performances.WorkId = Works.WorkId WHERE';
-        $i = 1;
-        foreach($sources as $source) {
-          if ($i < count($sources)) {
-            $ssql .= ' Works.TitleClean LIKE "' . $source . '" OR Performances.PerfTitleClean LIKE "' . $source . '" OR WorksVariant.NameClean LIKE "' . $perf . '" OR ';
-          } else {
-            $ssql .= ' Works.TitleClean LIKE "' . $source . '" OR Performances.PerfTitleClean LIKE "' . $source . '" OR WorksVariant.NameClean LIKE "' . $perf . '" ';
-          }
-          $i++;
-        }
-        $ssql .= ' GROUP BY Works.WorkId';
-        $sresult = $conn->query($ssql);
-
-        while ($srow = mysqli_fetch_assoc($sresult)) {
-          if (!in_array($srow['WorkId'], $workIds)) {
-            $srow['author'] = getAuthorInfo($srow['WorkId']);
-            $works[] = $srow;
-          }
-        }
-      }
-      return $works;
-    }
-  }
+//    function getRelatedWorks($perfTitle = '') {
+//      global $conn;
+//      $prefix = "or ";
+//      $stopwords = ['[c|C]oncert[s]?', '[e|E]ntertainment[s]?'];
+//      $perfTitle =  preg_replace('/\b(' . implode('|', $stopwords) . ')\b/', '', $perfTitle);
+//
+//      if ($perfTitle !== '') {
+//        $titles = array_map('trim', preg_split("[;|,]", $perfTitle));
+//        $sql = 'SELECT Works.*, WorksVariant.VariantName, WorkAuthMaster.Title as TheTitle, Performances.PerformanceTitle
+//          FROM Works LEFT JOIN WorksVariant ON WorksVariant.WorkId = Works.WorkId JOIN WorkAuthMaster ON WorkAuthMaster.WorkId = Works.WorkId LEFT JOIN Performances ON Performances.WorkId = Works.WorkId WHERE';
+//
+//        $i = 1;
+//        foreach($titles as $perf) {
+//          $perf = cleanStr($perf);
+//          if (strtolower(substr($perf, 0, strlen($prefix))) == $prefix) {
+//            $perf = substr($perf, strlen($prefix));
+//          }
+//          if ($i < count($titles)) {
+//            $sql .= ' Works.TitleClean LIKE "' . $perf . '" OR Performances.PerfTitleClean LIKE "' . $perf . '" OR WorksVariant.NameClean LIKE "' . $perf . '" OR Works.Source1 LIKE "' . $perf . '" OR Works.Source2 LIKE "' . $perf . '" OR Works.SourceResearched LIKE "' . $perf . '" OR ';
+//        } else {
+//          $sql .= ' Works.TitleClean LIKE "' . $perf . '" OR Performances.PerfTitleClean LIKE "' . $perf . '" OR WorksVariant.NameClean LIKE "' . $perf . '" OR Works.Source1 LIKE "' . $perf . '" OR Works.Source2 LIKE "' . $perf . '" OR Works.SourceResearched LIKE "' . $perf . '" ';
+//        }
+//        $i++;
+//      }
+//
+//      // Only want to show unique works, not all iterations of a given work title
+//      $sql .= ' GROUP BY Works.WorkId';
+//
+//      $result = $conn->query($sql);
+//      $works = array();
+//      $sources = array();
+//      $workIds = array();
+//      if ($result !== FALSE) {
+//        while ($row = mysqli_fetch_assoc($result)) {
+//          $sources[] = $row['SourceResearched'];
+//          $sources[] = $row['Source1'];
+//          $sources[] = $row['Source2'];
+//          $row['author'] = getAuthorInfo($row['WorkId']);
+//          $works[] = $row;
+//          $workIds[] = $row['WorkId'];
+//        }
+//      }
+//
+//      $sources = array_filter($sources, 'strlen');
+//
+//      // Get Work Sources and perform same search on them
+//      $sources = array_filter($sources, 'strlen');
+//      if (!empty($sources)) {
+//        $ssql = 'SELECT Works.*, WorksVariant.VariantName, WorkAuthMaster.Title as TheTitle, Performances.PerformanceTitle
+//          FROM Works LEFT JOIN WorksVariant ON WorksVariant.WorkId = Works.WorkId JOIN WorkAuthMaster ON WorkAuthMaster.WorkId = Works.WorkId
+//          LEFT JOIN Performances ON Performances.WorkId = Works.WorkId WHERE';
+//        $i = 1;
+//        foreach($sources as $source) {
+//          if ($i < count($sources)) {
+//            $ssql .= ' Works.TitleClean LIKE "' . $source . '" OR Performances.PerfTitleClean LIKE "' . $source . '" OR WorksVariant.NameClean LIKE "' . $perf . '" OR ';
+//          } else {
+//            $ssql .= ' Works.TitleClean LIKE "' . $source . '" OR Performances.PerfTitleClean LIKE "' . $source . '" OR WorksVariant.NameClean LIKE "' . $perf . '" ';
+//          }
+//          $i++;
+//        }
+//        $ssql .= ' GROUP BY Works.WorkId';
+//        $sresult = $conn->query($ssql);
+//
+//        while ($srow = mysqli_fetch_assoc($sresult)) {
+//          if (!in_array($srow['WorkId'], $workIds)) {
+//            $srow['author'] = getAuthorInfo($srow['WorkId']);
+//            $works[] = $srow;
+//          }
+//        }
+//      }
+//      return $works;
+//    }
+//  }
 
 /**
  * Returns array of works related to a given performance title
@@ -1521,13 +1521,12 @@
     if ($author === '') return FALSE;
     global $sphinx_conn;
 
-    $author = cleanStr($author);
-    $authorClean = mysqli_real_escape_string($sphinx_conn, cleanQuotes($author));
+    $authorClean = mysqli_real_escape_string($sphinx_conn, $author);
     // Find the author's works in the Related Works index.
     $authorWorksSql =
         "SELECT *
          FROM related_work
-         WHERE MATCH('@authnameclean \"$authorClean\"')
+         WHERE MATCH('@authname \"$authorClean\"')
          GROUP BY workid
          LIMIT 1000";
     // Run the query.
@@ -1538,12 +1537,12 @@
     $workTitles = [];
     while ($row = mysqli_fetch_assoc($workResult)) {
       // Add contents of whatever work name fields have a value in the record.
-      if ($row['titleclean'] && $row['titleclean'] !== '')
-        $workTitles[] = $row['titleclean'];
-      if ($row['nameclean'] && $row['nameclean'] !== '')
+      if ($row['title'] && $row['title'] !== '')
+        $workTitles[] = $row['title'];
+      if ($row['variantname'] && $row['variantname'] !== '')
         $workTitles[] = $row['nameclean'];
-      if ($row['perftitleclean'] && $row['perftitleclean'] !== '')
-        $workTitles[] = $row['perftitleclean'];
+      if ($row['performancetitle'] && $row['performancetitle'] !== '')
+        $workTitles[] = $row['performancetitle'];
     }
     if (empty($workTitles)) return FALSE;
     // Unique list of all titles.

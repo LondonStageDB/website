@@ -375,7 +375,7 @@
                       <h3>Performances</h3>
                       <?php foreach ($results->data[$i]['Performances'] as $perf) {
                         if ((isset($_GET['author']) && trim($_GET['author']) !== '') || (isset($_GET['keyword']) && trim($_GET['keyword']) !== '')) {
-                          $perf['relatedWorks'] = getRelatedWorks($perf['PerformanceTitle']);
+                          $perf['relatedWorks'] = getSphinxRelatedWorks($perf['PerformanceTitle']);
                         }
                         echo '<div class="perf">';
                         echo '<h4><span class="info-heading">' . getPType($perf['PType']) . (in_array($perf['PType'], ['a', 'p']) ? ' Title' : '') . ': </span>';
@@ -405,8 +405,8 @@
                                 foreach ($rltd['author'] as $rltdAuth) {
                                   if (isFoundIn($rltdAuth['authname'], cleanQuotes(cleanStr($_GET['keyword'])) . '|' . cleanQuotes(cleanStr($_GET['author'])))) {
                                     $isFoundInRelated = true;
-                                    if (!in_array($rltd['Title'], $isFoundUnique)) {
-                                      $isFoundUnique[] = $rltd['Title'];
+                                    if (!in_array($rltd['title'], $isFoundUnique)) {
+                                      $isFoundUnique[] = $rltd['title'];
                                       $isFoundArr[] = $rltd;
                                     }
                                     //break 2;
@@ -418,11 +418,11 @@
                               echo '<div class="rltd-wrks"><h5>Related Works</h5>';
                                 //print_r($perf['relatedWorks']);
                                 foreach ($isFoundArr as $rltd2) {
-                                  echo '<div class="rltd-auth"><span class="work-wrap"><span class="smcp"><b>Related Work:</b></span> ' . $rltd2['Title'] . '</span> ';
+                                  echo '<div class="rltd-auth"><span class="work-wrap"><span class="smcp"><b>Related Work:</b></span> ' . $rltd2['title'] . '</span> ';
                                   echo '<span class="auth-wrap"><span class="smcp"><b>Author(s):</b></span> ';
                                   foreach ($rltd2['author'] as $rltdAuth2) {
-                                    if (isFoundIn($rltdAuth2['AuthName'], cleanQuotes(cleanStr($_GET['keyword'])) . '|' . cleanQuotes(cleanStr($_GET['author'])))) {
-                                      echo '<span class="auth">' . highlight($rltdAuth2['AuthName'], cleanQuotes($_GET['keyword']) . '|' . cleanQuotes($_GET['author'])) . '</span>';
+                                    if (isFoundIn($rltdAuth2['authname'], cleanQuotes(cleanStr($_GET['keyword'])) . '|' . cleanQuotes(cleanStr($_GET['author'])))) {
+                                      echo '<span class="auth">' . highlight($rltdAuth2['authname'], cleanQuotes($_GET['keyword']) . '|' . cleanQuotes($_GET['author'])) . '</span>';
                                     }
                                   }
                                   echo '</span></div>';
