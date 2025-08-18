@@ -200,8 +200,8 @@
                 </div>
                 <!-- begin related works area -->
                   <?php
-                  // Hide related works for dances, comments
-                  if ($perf['PType'] == 'd'){
+                  // Hide (false positive) related works for dances, songs
+                  if (($perf['PType'] == 'd') | ($perf['PType'] == 's')){
                       $works = array();
                   } else{
                       $works = getSphinxRelatedWorks($perf['PerformanceTitle'], $perf['WorkId']);
@@ -223,7 +223,8 @@
                               <?php if (in_array($auth['authtype'], ['Researched', 'Primary'])) : ?>
                                 <div> 
                                     <span> &nbsp;&nbsp; <?php echo $auth['authname'] ?> 
-                                    (<?php echo $auth['startdate'] ; ?> - <?php echo $auth['enddate'] ; ?>) </span>
+                                    (<?php
+                                        echo $auth['startdate'] ; ?> - <?php echo $auth['enddate'] ; ?>) </span>
                                 </div> <!-- end author list item -->
                               <?php endif; ?> <!--resolves if authtype is not 'Researched', 'Primary' -->
                             <?php endforeach; ?> <!-- resolves for loop for each author -->

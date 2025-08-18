@@ -1053,7 +1053,7 @@
         $sources = array_filter(array_unique($sources)); // Deduplicate sources
     }
 
-    else if ($perfTitle !== '') {
+    if ($perfTitle !== '') {
       $prefix = "or ";
       $stopwords = ['[c|C]oncert[s]?', '[e|E]ntertainment[s]?'];
       $perfTitle =  preg_replace('/\b(' . implode('|', $stopwords) . ')\b/', '', $perfTitle);
