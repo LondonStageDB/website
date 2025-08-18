@@ -1042,15 +1042,6 @@
             . $workId . " GROUP BY workid, authid");
         $results = $work_query->fetch_all(MYSQLI_ASSOC);
         $works = relatedWorksFromArray($results);
-
-        // Get sources associated with the known work
-        foreach ($works[$workId] as $k => $v){
-          if (str_starts_with($k, 'source')){
-            // Add escaped source title to list
-            $sources[] = mysqli_real_escape_string($sphinx_conn,  $v);
-          }
-        }
-        $sources = array_filter(array_unique($sources)); // Deduplicate sources
     }
 
     if ($perfTitle !== '') {
@@ -1089,6 +1080,19 @@
       $works = $works +  $titles;
     }
 
+    // Get sources associated with either the known work or a work of an identical title
+    foreach ($works as $wid => $work){
+      if (($wid == $workId) | ($perfTitle == $work['title'])){
+        foreach ($work as $k => $v){
+          if (str_starts_with($k, 'source')) {
+            // Add escaped source title to list
+            $sources[] = mysqli_real_escape_string($sphinx_conn, $v);
+          }
+        }
+      }
+    }
+    $sources = array_filter(array_unique($sources)); // Deduplicate sources
+
     // Search for works with titles matching known sources
     if (!empty($sources)) {
       // Transform sources into string of the form "SourceName | SourceName2 ..."
@@ -1096,9 +1100,9 @@
 
       // Construct SphinxQL query
       $ssql = "SELECT * FROM related_work";
-      $ssql .= "\nWHERE MATCH('@title " . $squery . " |  @performancetitle " . $squery . " | @variantname " . $squery . "')";
+      $ssql .= "\nWHERE MATCH('@title " . $squery . " |  @performancetitle " . $squery . " | @variantname " . $squery .
+          " |  @source1 " . $squery . " |  @source2 " . $squery . " |  @sourceresearched " . $squery . "')";
       $ssql .= ' GROUP BY workid, authid';
-
       // Get results from Sphinx, merge results with the related works array
       $sresult = $sphinx_conn->query($ssql);
       $sources = relatedWorksFromArray($sresult->fetch_all(MYSQLI_ASSOC));

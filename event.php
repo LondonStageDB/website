@@ -222,9 +222,12 @@
                             <?php foreach ($work['author'] as $auth) : ?>
                               <?php if (in_array($auth['authtype'], ['Researched', 'Primary'])) : ?>
                                 <div> 
-                                    <span> &nbsp;&nbsp; <?php echo $auth['authname'] ?> 
-                                    (<?php
-                                        echo $auth['startdate'] ; ?> - <?php echo $auth['enddate'] ; ?>) </span>
+                                    <span> &nbsp;&nbsp; <?php echo $auth['authname'] ?>
+                                    <?php
+                                        if ((array_key_exists('startdate', $auth))
+                                            || (array_key_exists('enddate', $auth))){
+                                            // Display dates if author has at least one known date
+                                        echo "(" . $auth['startdate'] . " - " .  $auth['enddate'] .")" ; }?> </span>
                                 </div> <!-- end author list item -->
                               <?php endif; ?> <!--resolves if authtype is not 'Researched', 'Primary' -->
                             <?php endforeach; ?> <!-- resolves for loop for each author -->
