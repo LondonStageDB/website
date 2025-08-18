@@ -1046,7 +1046,7 @@
 
     if ($perfTitle !== '') {
       $prefix = "or ";
-      $stopwords = ['[c|C]oncert[s]?', '[e|E]ntertainment[s]?'];
+      $stopwords = ['[c|C]oncert[s]?', '[e|E]ntertainment[s]?', '[p|P]art[s]?'];
       $perfTitle =  preg_replace('/\b(' . implode('|', $stopwords) . ')\b/', '', $perfTitle);
 
       $titles = array_map('trim', preg_split("[;|,]", $perfTitle));
@@ -1120,7 +1120,7 @@
         if (($work['pubdate'] == 0) & // Work has no date AND
             (array_key_exists(0, $work['author'])) & // Work has no author AND
             ($wid != $workId)) { // It is not tied to the event
-          $to_be_removed[] = $wid;
+          $to_be_removed[] = $wid; // Mark for removal
         }
       }
       foreach($to_be_removed as $key) {
