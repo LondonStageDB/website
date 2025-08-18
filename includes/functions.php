@@ -1109,10 +1109,20 @@
 
       $works = $works +  $sources;
     }
-
-    // TODO(wintere): Remove after the Works table has been cleaned out
-    // Manually inspect for suspiciously similar works with distinct ids
-    print_r($works);
+    // TODO(wintere) Remove after Works table has been deduped and cleaned
+    if (count($works) > 1) { // By definition a single entry is not a duplicate
+      $to_be_removed = array();
+      foreach ($works as $wid => $work) {
+        if (($work['pubdate'] == 0) & // Work has no date AND
+            (array_key_exists(0, $work['author'])) & // Work has no author AND
+            ($wid != $workId)) { // It is not tied to the event
+          $to_be_removed[] = $wid;
+        }
+      }
+      foreach($to_be_removed as $key) {
+        unset($works[$key]);
+      }
+    }
     return $works;
   }
 
