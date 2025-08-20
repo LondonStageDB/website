@@ -209,15 +209,18 @@
                 <?php if(!empty($works) && count($works) > 0) : ?>
                     <div class="small-12 medium-6 large-5 related-works">
                       <h3>Related Works</h3>
+                      <div class="work-info">A provisional list of playtexts with a possible relationship to this performance, including sources, adaptations, and sequels. <a href="/authors.php">Read more about the data and its limitations</a>.</div>
                       <?php foreach ($works as $work) : ?>
                       <div class="work-info"><!-- begin light shaded block for work -->
                         <div><span class="info-heading">Work Title:</span>
                           <?php echo $work['title']; ?>
                         </div>
-                        <div><span class="info-heading">Associated Date:</span>
+                        <div><span class="info-heading">Associated Date<span data-tooltip class="top l-tooltip" 
+                        title="Typically the date of first publication, but sometimes the date of first known performance">?</span>:</span>
                           <?php if ($work['pubdate'] > 0) echo $work['pubdate']; ?>
                         </div>
-                        <div><span class="info-heading">Associated Playwright(s):</span>
+                        <div><span class="info-heading">Associated Playwright(s)<span data-tooltip class="top l-tooltip" 
+                        title="Includes modern attributions of what were often anonymous, collaborative, or contested works">?</span>:</span>
                           <?php if (array_filter($work['author'])) : ?>
                             <?php foreach ($work['author'] as $auth) : ?>
                               <?php if (in_array($auth['authtype'], ['Researched', 'Primary'])) : ?>
@@ -237,7 +240,7 @@
                           <?php
                             $witnesses = getRelatedWitnesses($work['workid']); ?>
                             <?php if((!empty($witnesses)) && (count($witnesses) > 0)) : ?>
-                              <div><span class="info-heading">Related Witness(es):</span> 
+                              <div><hr/><span class="info-heading">Related Witness(es)<span data-tooltip class="top l-tooltip" title="Early print editions, including in anthologies, as digitized by the Text Creation Partnership">?</span>:</span> 
                               <?php foreach ($witnesses as $witness) : ?>
                                 <div class="auth-info"> 
                                     <div class="grid-x">  
