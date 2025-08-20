@@ -1005,16 +1005,23 @@
             'source1', 'source2', 'sourceresearched'])),
         array_column($sphinx_results, null, 'workid'));
 
-    // Populate author array
+    // Populate author and variant subarrays
     foreach($sphinx_results as $row) {
-      if(!array_key_exists('authname', $row)){
-        continue;
+      // Add authors, if any
+      if(array_key_exists('authname', $row)){
+        $workid = $row['workid'];
+        $auth = array_intersect_key($row,
+            array_flip(['authid', 'authname', 'authtype', 'startdate', 'starttype', 'enddate', 'endtype']));
+        $works[$workid]['author'][$row['authid']] = array_filter($auth);
       }
-      $workid = $row['workid'];
-      $auth = array_intersect_key($row,
-          array_flip(['authid', 'authname', 'authtype', 'startdate', 'starttype', 'enddate', 'endtype']));
-      $works[$workid]['author'][$row['authid']] = array_filter($auth);
+      // Add variants, if any
+      if(array_key_exists('variantname', $row)){
+        $workid = $row['workid'];
+        if (!array_key_exists( 'variantname', $works[$workid])) $works[$workid]['variantname'] = array();
+        $works[$workid]['variantname'][] = $row['variantname'];
+      }
     }
+    // Filter out empty fields
     return array_filter($works);
   }
 
@@ -1031,61 +1038,67 @@
   */
   function getSphinxRelatedWorks(string $perfTitle = '',  int $workId = null) {
     global $sphinx_conn;
-    $works = array();
-    $sources = array();
+    $works = array(); // Nested works array, keyed by workid
+    $sources = array(); // Sources to be searched
+    $titles = array(); // Titles to be searched
 
-    $perfTitle = mysqli_real_escape_string($sphinx_conn,  $perfTitle); // Escape title quotes
+    if ($perfTitle !== '') $titles[] = $perfTitle; // Add performance title
 
-    // Get the work identified in the performance by WorkId, if any
+    // Get the structured work array identified in the performance by WorkId, if any
     if (!is_null($workId)) {
-        $work_query = $sphinx_conn->query("SELECT *  FROM related_work WHERE workid="
-            . $workId . " GROUP BY workid, authid");
-        $results = $work_query->fetch_all(MYSQLI_ASSOC);
-        $works = relatedWorksFromArray($results);
+      $work_query = $sphinx_conn->query("SELECT *  FROM related_work WHERE workid="
+          . $workId . " GROUP BY workid, authid, variantname");
+      $results = $work_query->fetch_all(MYSQLI_ASSOC);
+      $works = relatedWorksFromArray($results);
+
+      // Add known variant titles, iff they differ from the performance title
+      if (strcasecmp($works[$workId]['title'], $perfTitle) !== 0) $titles[] = $works[$workId]['title'];
+      foreach ($works[$workId]['variantname'] as $v) {
+        if (strcasecmp($v, $perfTitle) !== 0) $titles[] = $v;
+      }
     }
 
-    if ($perfTitle !== '') {
-      $prefix = "or ";
+    // If there's at least one title, look up works by title
+    if (!empty($titles)) {
       $stopwords = ['[c|C]oncert[s]?', '[e|E]ntertainment[s]?', '[p|P]art[s]?'];
-      $perfTitle =  preg_replace('/\b(' . implode('|', $stopwords) . ')\b/', '', $perfTitle);
-
-      $titles = array_map('trim', preg_split("[;|,]", $perfTitle));
-      $sql = "SELECT *\nFROM related_work";
       $values = [];
-
-      // Chunk title into subtitles
-      foreach($titles as $perf) {
-        if (strtolower(substr($perf, 0, strlen($prefix))) == $prefix) {
-          $perf = substr($perf, strlen($prefix));
+      foreach ($titles as $title) {
+        $subtitles = preg_replace('/\b(' . implode('|', $stopwords) . ')\b/', '',
+            array_map('trim', preg_split("[;|,]", $title)));
+        foreach($subtitles as $s) {
+          if (strtolower(str_starts_with($s, "or "))){ // Strip out "ors"
+            $s = substr($s, strlen("or "));
+          }
+          if (strcasecmp('or', $s) !== 0) { // Skip over titles that are only or
+            $values[] = '"' . mysqli_real_escape_string($sphinx_conn, $s) . '"';
+          }
         }
-        if (strtolower($perf) === 'or') {
-          continue;
-        }
-        $values[] = '"' . $perf . '"';
       }
-      // Merge title into string of the form "Title1 | Title2 ..."
-      $values = implode('|', $values);
+      $values = array_unique($values); // Deduplicate
+      $sphinx_titles = implode('|', $values);  // Concat to form "Title1 | Title2 ..."
 
-      $sql .= "\nWHERE MATCH('@title " . $values . " |  @performancetitle " . $values . " | @variantname " . $values . "')";
+      // Generate SphinxQL query against index
+      $sql = "SELECT *\nFROM related_work";
+      $sql .= "\nWHERE MATCH('@title " . $sphinx_titles .
+          " |  @performancetitle " . $sphinx_titles .
+          " | @variantname " . $sphinx_titles . "')";
       $sql .= " GROUP BY workid, authid"; // One row per work
 
       // Get results from Sphinx
       $tr = $sphinx_conn->query($sql);
-      $titles = relatedWorksFromArray($tr->fetch_all(MYSQLI_ASSOC));
+      $ts = relatedWorksFromArray($tr->fetch_all(MYSQLI_ASSOC));
 
       // Sort works in order of ascending date
-      array_multisort (array_column($titles, 'pubdate'), SORT_ASC, $titles);
-      $titles = array_column($titles, null, 'workid');
-
-      $works = $works +  $titles;
+      array_multisort (array_column($ts, 'pubdate'), SORT_ASC, $ts);
+      $ts = array_column($ts, null, 'workid');
+      $works = $works +  $ts; // Add unique entries
     }
 
     // Get sources associated with either the known work or a work of an identical title
     foreach ($works as $wid => $work){
       if (($wid == $workId) | ($perfTitle == $work['title'])){
         foreach ($work as $k => $v){
-          if (str_starts_with($k, 'source')) {
-            // Add escaped source title to list
+          if (str_starts_with($k, 'source')){
             $sources[] = mysqli_real_escape_string($sphinx_conn, $v);
           }
         }
@@ -1099,20 +1112,20 @@
       $squery = '"' . implode('|', $sources) . '"';
 
       // Construct SphinxQL query
-      $ssql = "SELECT * FROM related_work";
-      $ssql .= "\nWHERE MATCH('@title " . $squery . " |  @performancetitle " . $squery . " | @variantname " . $squery .
+      $sql = "SELECT * FROM related_work";
+      $sql .= "\nWHERE MATCH('@title " . $squery . " |  @performancetitle " . $squery . " | @variantname " . $squery .
           " |  @source1 " . $squery . " |  @source2 " . $squery . " |  @sourceresearched " . $squery . "')";
-      $ssql .= ' GROUP BY workid, authid';
+      $sql .= ' GROUP BY workid, authid';
       // Get results from Sphinx, merge results with the related works array
-      $sresult = $sphinx_conn->query($ssql);
-      $sources = relatedWorksFromArray($sresult->fetch_all(MYSQLI_ASSOC));
+      $result = $sphinx_conn->query($sql);
+      $sources = relatedWorksFromArray($result->fetch_all(MYSQLI_ASSOC));
 
-      // Sort sources in order of ascending date
+      // Sort sources in order of ascending date, add to works array
       array_multisort (array_column($sources, 'pubdate'), SORT_ASC, $sources);
       $sources = array_column($sources, null, 'workid');
-
       $works = $works +  $sources;
     }
+
     // TODO(wintere) Remove after Works table has been deduped and cleaned
     if (count($works) > 1) { // By definition a single entry is not a duplicate
       $to_be_removed = array();
