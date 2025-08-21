@@ -14,7 +14,7 @@
     // Take action based on the score returned:
     if ($responseData->success && $responseData->score >= 0.5) {
       // Verified, start downloading
-      
+
       global $sphinx_conn;
 
       $qResults = [];
@@ -34,6 +34,8 @@
 
       // Send IDs array to get all event info, returns JSON Doc
       getResultsJSON($ids);
+
+      die();
     }
   }
 

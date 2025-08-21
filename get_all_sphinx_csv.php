@@ -34,6 +34,8 @@
 
       // Send IDs array to get all event info, returns CSV Doc
       getResultsCSV($ids);
+
+      die();
     }
   }
 

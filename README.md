@@ -89,7 +89,7 @@ To prevent bots which do not respect robots.txt and protect DDOS attackig on dow
  - First, follow this guide to create your reCAPTCHA in Google Cloud platform: [reCAPTCHA v3 Guides](https://developers.google.com/recaptcha/docs/v3).
  - Then, provide site key and secret key in the `db.php` file.
 
-If you **do not** want the reCAPTCHA, Please remove code `line 4 to line 17`, and `line 37 to line 88` from following files:
+If you **do not** want the reCAPTCHA, Please remove code `line 4 to line 17`, and `line 37 to line 90` from following files:
 
  - get_all_sphinx_csv.php
  - get_all_sphinx_json.php
