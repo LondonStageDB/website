@@ -42,7 +42,7 @@
 ?>
 <html>
 <head>
-<title>Download CSV</title>
+<title>Download XML</title>
 
 <script
   src="https://www.google.com/recaptcha/api.js?render=<?php echo ReCaptcha::GOOGLE_RECAPTCHA_SITE_KEY; ?>">
