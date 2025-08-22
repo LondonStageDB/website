@@ -83,6 +83,11 @@ Now start serving requests.
 ```bash
 searchd --config /path/to/sphinx/conf/sphinx.conf
 ```
+### (optional) Google reCAPTCHA v3
+
+To prevent bots which do not respect robots.txt and protect DDOS attackig on downloading, you can set up **Google reCAPTCHA v3** for your site.
+ - First, follow this guide to create your reCAPTCHA in Google Cloud platform: [reCAPTCHA v3 Guides](https://developers.google.com/recaptcha/docs/v3).
+ - Then, provide site key and secret key in the `db.php` file.
 
 ### Create the `db.php` File
 
@@ -112,6 +117,10 @@ password, and database configuration details.
   define("SPHINX_PORT", "9306");
 
   $sphinx_conn = new mysqli(SPHINX_HOST, SPHINX_USER, SPHINX_PASS, SPHINX_NAME, SPHINX_PORT);
+
+  define("GOOGLE_RECAPTCHA_SITE_KEY", "");
+  define("GOOGLE_RECAPTCHA_SECRET_KEY", "");
+
 ?>
 ```
 
