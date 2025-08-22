@@ -1051,11 +1051,8 @@
       $results = $work_query->fetch_all(MYSQLI_ASSOC);
       $works = relatedWorksFromArray($results);
 
-      // Add known variant titles, iff they differ from the performance title
+      // Add work title, if it differs from the performance title
       if (strcasecmp($works[$workId]['title'], $perfTitle) !== 0) $titles[] = $works[$workId]['title'];
-      foreach ($works[$workId]['variantname'] as $v) {
-        if (strcasecmp($v, $perfTitle) !== 0) $titles[] = $v;
-      }
     }
 
     // If there's at least one title, look up works by title
@@ -1069,7 +1066,7 @@
           if (strtolower(str_starts_with($s, "or "))){ // Strip out "ors"
             $s = substr($s, strlen("or "));
           }
-          if (strcasecmp('or', $s) !== 0) { // Skip over titles that are only or
+          if ((strcasecmp('or', $s) !== 0) and (strlen($s) > 3)){ // Skip over or/
             $values[] = '"' . mysqli_real_escape_string($sphinx_conn, $s) . '"';
           }
         }
@@ -1081,7 +1078,10 @@
       $sql = "SELECT *\nFROM related_work";
       $sql .= "\nWHERE MATCH('@title " . $sphinx_titles .
           " |  @performancetitle " . $sphinx_titles .
-          " | @variantname " . $sphinx_titles . "')";
+          " | @variantname " . $sphinx_titles . 
+          " | @source1 " . $sphinx_titles .
+          " | @source2 " . $sphinx_titles .
+          " | @sourceresearched " . $sphinx_titles . "')";
       $sql .= " GROUP BY workid, authid"; // One row per work
 
       // Get results from Sphinx
