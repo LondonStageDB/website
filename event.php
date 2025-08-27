@@ -200,8 +200,8 @@
                 </div>
                 <!-- begin related works area -->
                   <?php
-                  // Hide (false positive) related works for dances, songs
-                  if (($perf['PType'] == 'd') | ($perf['PType'] == 's')){
+                  // Hide false positive related works for dances, songs, music, tricks
+                  if (in_array($perf['PType'], ['d', 's', 'm', 't'])){
                       $works = array();
                   } else{
                       $works = getSphinxRelatedWorks($perf['PerformanceTitle'], $perf['WorkId']);
@@ -209,7 +209,8 @@
                 <?php if(!empty($works) && count($works) > 0) : ?>
                     <div class="small-12 medium-6 large-5 related-works">
                       <h3>Related Works</h3>
-                      <div class="work-info">A provisional list of playtexts with a possible relationship to this performance, including sources, adaptations, and sequels. <a href="/authors.php">Read more about the data and its limitations</a>.</div>
+                      <div class="work-info">A provisional list of playtexts with a possible relationship to this performance,
+                          including sources, adaptations, and sequels. <a href="/authors.php">Read more about the data and its limitations</a>.</div>
                       <?php foreach ($works as $work) : ?>
                       <div class="work-info"><!-- begin light shaded block for work -->
                         <div><span class="info-heading">Work Title:</span>

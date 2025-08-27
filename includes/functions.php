@@ -1051,60 +1051,68 @@
       $results = $work_query->fetch_all(MYSQLI_ASSOC);
       $works = relatedWorksFromArray($results);
 
-      // Add work title, if it differs from the performance title
-      if (strcasecmp($works[$workId]['title'], $perfTitle) !== 0) $titles[] = $works[$workId]['title'];
+      // Add work and variant titles if they differ from the performance title
+      $titles[] = $works[$workId]['title'];
+      foreach ($works[$workId]['variantname'] as $v) {
+        $titles[] = $v;
+      }
     }
+
+
+    // Standardize capitalization of titles
+    $titles = array_unique(array_map('ucwords', $titles));
 
     // If there's at least one title, look up works by title
     if (!empty($titles)) {
-      $stopwords = ['[c|C]oncert[s]?', '[e|E]ntertainment[s]?', '[p|P]art[s]?'];
+      $stopwords = ['[c|C]oncert[s]?', '[e|E]ntertainment[s]?'];
       $values = [];
-      foreach ($titles as $title) {
+      foreach ($titles as $title) { // Split title into subtitles
         $subtitles = preg_replace('/\b(' . implode('|', $stopwords) . ')\b/', '',
-            array_map('trim', preg_split("[;|,]", $title)));
+            // Splits on "or[,]" ":' or ";"
+            array_map('trim', preg_split('/\s+Or[,|\s]+|[:|;]/', $title)));
+        // Strip any commas, odd punctuation
         foreach($subtitles as $s) {
-          if (strtolower(str_starts_with($s, "or "))){ // Strip out "ors"
-            $s = substr($s, strlen("or "));
-          }
-          if ((strcasecmp('or', $s) !== 0) and (strlen($s) > 3)){ // Skip over or/
+          if (strlen($s) > 3){ // Skip over numbers, other meaninglessly short strings
+            // $s = preg_replace('[\W]', ' ', $s);
             $values[] = '"' . mysqli_real_escape_string($sphinx_conn, $s) . '"';
           }
         }
       }
       $values = array_unique($values); // Deduplicate
-      $sphinx_titles = implode('|', $values);  // Concat to form "Title1 | Title2 ..."
 
       // Generate SphinxQL query against index
-      $sql = "SELECT *\nFROM related_work";
-      $sql .= "\nWHERE MATCH('@title " . $sphinx_titles .
-          " |  @performancetitle " . $sphinx_titles .
-          " | @variantname " . $sphinx_titles . 
-          " | @source1 " . $sphinx_titles .
-          " | @source2 " . $sphinx_titles .
-          " | @sourceresearched " . $sphinx_titles . "')";
-      $sql .= " GROUP BY workid, authid"; // One row per work
+      if (!empty($values)) {
+        $sphinx_titles = implode('|', $values);  // Concat to form "Title1 | Title2 ..."
+        $sql = "SELECT *\nFROM related_work";
+        $sql .= "\nWHERE MATCH('@title " . $sphinx_titles .
+            " |  @performancetitle " . $sphinx_titles .
+            " | @variantname " . $sphinx_titles .
+            " | @source1 " . $sphinx_titles .
+            " | @source2 " . $sphinx_titles .
+            " | @sourceresearched " . $sphinx_titles . "')";
+        $sql .= " GROUP BY workid, authid"; // One row per work
 
-      // Get results from Sphinx
-      $tr = $sphinx_conn->query($sql);
-      $ts = relatedWorksFromArray($tr->fetch_all(MYSQLI_ASSOC));
+        // Get results from Sphinx
+        $tr = $sphinx_conn->query($sql);
+        $ts = relatedWorksFromArray($tr->fetch_all(MYSQLI_ASSOC));
 
-      // Sort works in order of ascending date
-      array_multisort (array_column($ts, 'pubdate'), SORT_ASC, $ts);
-      $ts = array_column($ts, null, 'workid');
-      $works = $works +  $ts; // Add unique entries
+        // Sort works in order of ascending date
+        array_multisort(array_column($ts, 'pubdate'), SORT_ASC, $ts);
+        $ts = array_column($ts, null, 'workid');
+        $works = $works + $ts; // Add unique entries
+      }
     }
 
-    // Get sources associated with either the known work or a work of an identical title
-    foreach ($works as $wid => $work){
-      if (($wid == $workId) | ($perfTitle == $work['title'])){
-        foreach ($work as $k => $v){
-          if (str_starts_with($k, 'source')){
-            $sources[] = mysqli_real_escape_string($sphinx_conn, $v);
-          }
+    // Get sources associated the known work (linked workid) or works of an identical title
+    foreach ($works as $work) {
+      if (($work['title'] == $perfTitle)  or ($work['workId'] == $workId)) {
+        foreach ($work as $k => $v) {
+          if (str_starts_with($k, 'source')) $sources[] = mysqli_real_escape_string(
+              $sphinx_conn, ucwords($v));
         }
       }
     }
-    $sources = array_filter(array_unique($sources)); // Deduplicate sources
+    $sources = array_unique($sources); // Deduplicate sources
 
     // Search for works with titles matching known sources
     if (!empty($sources)) {
@@ -1116,29 +1124,33 @@
       $sql .= "\nWHERE MATCH('@title " . $squery . " |  @performancetitle " . $squery . " | @variantname " . $squery .
           " |  @source1 " . $squery . " |  @source2 " . $squery . " |  @sourceresearched " . $squery . "')";
       $sql .= ' GROUP BY workid, authid';
-      // Get results from Sphinx, merge results with the related works array
+
+      // Get results from Sphinx
       $result = $sphinx_conn->query($sql);
       $sources = relatedWorksFromArray($result->fetch_all(MYSQLI_ASSOC));
 
-      // Sort sources in order of ascending date, add to works array
-      array_multisort (array_column($sources, 'pubdate'), SORT_ASC, $sources);
+      // Add works identified by known sources to works array
       $sources = array_column($sources, null, 'workid');
       $works = $works +  $sources;
     }
 
-    // TODO(wintere) Remove after Works table has been deduped and cleaned
-    if (count($works) > 1) { // By definition a single entry is not a duplicate
-      $to_be_removed = array();
+    // TODO(wintere) Remove after Works table has been deduplicated, suppresses dupes
+    if (count($works) > 1) {
+      // Get frequencies
+      $dupes = array_count_values(array_map(function($row) {
+        return json_encode([$row['author'], $row['pubdate']]);
+      }, $works));
+
+      $tbr = array(); // Items to be removed
       foreach ($works as $wid => $work) {
-        if (($work['pubdate'] == 0) & // Work has no date AND
-            (array_key_exists(0, $work['author'])) & // Work has no author AND
-            ($wid != $workId)) { // It is not tied to the event
-          $to_be_removed[] = $wid; // Mark for removal
+        // Works with insufficient metadata
+        if (($work['pubdate'] == 0) & (array_key_exists(0, $work['author'])) & ($wid != $workId)) {
+          $tbr[] = $wid; // Mark for removal
         }
+        $metadata = json_encode([$work['author'], $work['pubdate']]);
+
       }
-      foreach($to_be_removed as $key) {
-        unset($works[$key]);
-      }
+      foreach($tbr as $k => $v) unset($works[$key]); // Remove marked dupes by wid
     }
     return $works;
   }
