@@ -198,19 +198,19 @@
                     </div>
                   <?php endif; ?>
                 </div>
-                <?php $works = getRelatedWorks($perf['PerformanceTitle']); ?>
+                <?php $works = getSphinxRelatedWorks($perf['PerformanceTitle']); ?>
                 <?php if(!empty($works) && count($works) > 0) : ?>
                 <div class="small-12 medium-5 large-4 related-works">
                   <h3>Related Works</h3>
                   <?php foreach ($works as $work) : ?>
                   <div class="work-info">
                     <div><span class="info-heading">Work Title:</span>
-                      <a href="<?php echo linkedTitles((!empty($work['Title'])) ? $work['Title'] : $work['Title'], TRUE); ?>">
-                        <?php echo (!empty($work['Title'])) ? $work['Title'] : $work['Title']; ?>
+                      <a href="<?php echo linkedTitles((!empty($work['title'])) ? $work['title'] : $work['title'], TRUE); ?>">
+                        <?php echo (!empty($work['title'])) ? $work['title'] : $work['title']; ?>
                       </a>
                     </div>
                     <div><span class="info-heading">Publish Date:</span>
-                      <?php echo $work['PubDate']; ?>
+                      <?php if($work['pubdate']) echo $work['pubdate']; ?>
                     </div>
                     <?php if (array_filter($work['author'])) : ?>
                     <?php foreach ($work['author'] as $auth) : ?>

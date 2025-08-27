@@ -1,6 +1,5 @@
 <?php
   include_once("db.php");
-
   /**
   * Build search query off of $_GET data
   *
@@ -857,168 +856,167 @@
     return array();
   }
 
-  /**
-  * Returns array of works related to a given performance title
-  *
-  * Takes a given performance title [PerfTitleClean], splits it by semicolon,
-  *  and performs wildcard searches for similar titles in Performances, Works,
-  *  and WorksVariant tables
-  *
-  * @param string $perfTitle Cleaned performance title from [PerfTitleClean] column
-  *
-  * @return array Related Works
-  */
-  function getRelatedWorks($perfTitle = '') {
-    global $conn;
-    $prefix = "or ";
-    $stopwords = ['[c|C]oncert[s]?', '[e|E]ntertainment[s]?'];
-    $perfTitle =  preg_replace('/\b(' . implode('|', $stopwords) . ')\b/', '', $perfTitle);
+/**
+ * Returns array of works related to a given performance title
+ *
+ * Takes a given performance title [PerfTitle], splits it by semicolon,
+ *  and performs wildcard searches for similar titles in Performances, Works,
+ *  and WorksVariant tables
+ * @param array $sphinx_results raw sphinxql query results
+ * @return array Related Works array keyed by WorkId
+ */
+  function relatedWorksFromArray(array $sphinx_results) {
+    // First, build the outermost array, keyed by workid
+    $works = array_map(
+        fn($x) => array_intersect_key($x, array_flip(['workid','title', 'pubdate',
+            'source1', 'source2', 'sourceresearched'])),
+        array_column($sphinx_results, null, 'workid'));
 
-    if ($perfTitle !== '') {
-      $titles = array_map('trim', preg_split("[;|,]", $perfTitle));
-      $sql = 'SELECT Works.*, WorksVariant.VariantName, WorkAuthMaster.Title as TheTitle, Performances.PerformanceTitle
-        FROM Works LEFT JOIN WorksVariant ON WorksVariant.WorkId = Works.WorkId JOIN WorkAuthMaster ON WorkAuthMaster.WorkId = Works.WorkId LEFT JOIN Performances ON Performances.WorkId = Works.WorkId WHERE';
-
-      $i = 1;
-      foreach($titles as $perf) {
-        $perf = cleanStr($perf);
-        if (strtolower(substr($perf, 0, strlen($prefix))) == $prefix) {
-          $perf = substr($perf, strlen($prefix));
-        }
-        if ($i < count($titles)) {
-          $sql .= ' Works.TitleClean LIKE "' . $perf . '" OR Performances.PerfTitleClean LIKE "' . $perf . '" OR WorksVariant.NameClean LIKE "' . $perf . '" OR Works.Source1 LIKE "' . $perf . '" OR Works.Source2 LIKE "' . $perf . '" OR Works.SourceResearched LIKE "' . $perf . '" OR ';
-        } else {
-          $sql .= ' Works.TitleClean LIKE "' . $perf . '" OR Performances.PerfTitleClean LIKE "' . $perf . '" OR WorksVariant.NameClean LIKE "' . $perf . '" OR Works.Source1 LIKE "' . $perf . '" OR Works.Source2 LIKE "' . $perf . '" OR Works.SourceResearched LIKE "' . $perf . '" ';
-        }
-        $i++;
+    // Populate author and tutke variant subarrays
+    foreach($sphinx_results as $row) {
+      // Add authors, if any
+      if(array_key_exists('authname', $row)){
+        $workid = $row['workid'];
+        $auth = array_intersect_key($row,
+            array_flip(['authid', 'authname', 'authtype', 'startdate', 'starttype', 'enddate', 'endtype']));
+        $works[$workid]['author'][$row['authid']] = array_filter($auth);
       }
-
-      // Only want to show unique works, not all iterations of a given work title
-      $sql .= ' GROUP BY Works.WorkId';
-
-      $result = $conn->query($sql);
-      $works = array();
-      $sources = array();
-      $workIds = array();
-      if ($result !== FALSE) {
-        while ($row = mysqli_fetch_assoc($result)) {
-          $sources[] = $row['SourceResearched'];
-          $sources[] = $row['Source1'];
-          $sources[] = $row['Source2'];
-          $row['author'] = getAuthorInfo($row['WorkId']);
-          $works[] = $row;
-          $workIds[] = $row['WorkId'];
-        }
+      // Add title variants, if any
+      if(array_key_exists('variantname', $row)){
+        $workid = $row['workid'];
+        if (!array_key_exists( 'variantname', $works[$workid])) $works[$workid]['variantname'] = array();
+        $works[$workid]['variantname'][] = $row['variantname'];
       }
-
-      $sources = array_filter($sources, 'strlen');
-
-      // Get Work Sources and perform same search on them
-      $sources = array_filter($sources, 'strlen');
-      if (!empty($sources)) {
-        $ssql = 'SELECT Works.*, WorksVariant.VariantName, WorkAuthMaster.Title as TheTitle, Performances.PerformanceTitle
-          FROM Works LEFT JOIN WorksVariant ON WorksVariant.WorkId = Works.WorkId JOIN WorkAuthMaster ON WorkAuthMaster.WorkId = Works.WorkId LEFT JOIN Performances ON Performances.WorkId = Works.WorkId WHERE';
-
-        $i = 1;
-        foreach($sources as $source) {
-          if ($i < count($sources)) {
-            $ssql .= ' Works.TitleClean LIKE "' . $source . '" OR Performances.PerfTitleClean LIKE "' . $source . '" OR WorksVariant.NameClean LIKE "' . $perf . '" OR ';
-          } else {
-            $ssql .= ' Works.TitleClean LIKE "' . $source . '" OR Performances.PerfTitleClean LIKE "' . $source . '" OR WorksVariant.NameClean LIKE "' . $perf . '" ';
-          }
-          $i++;
-        }
-        $ssql .= ' GROUP BY Works.WorkId';
-        $sresult = $conn->query($ssql);
-
-        while ($srow = mysqli_fetch_assoc($sresult)) {
-          if (!in_array($srow['WorkId'], $workIds)) {
-            $srow['author'] = getAuthorInfo($srow['WorkId']);
-            $works[] = $srow;
-          }
-        }
-      }
-
-      return $works;
     }
+    return array_filter($works); // Return filtered results
   }
 
-  /**
-  * Returns array of works related to a given performance title
-  *
-  * Takes a given performance title [PerfTitleClean], splits it by semicolon,
-  *  and performs wildcard searches for similar titles in Performances, Works,
-  *  and WorksVariant tables
-  *
-  * @param string $perfTitle Cleaned performance title from [PerfTitleClean] column
-  *
-  * @return array Related Works
-  */
-  function getSphinxRelatedWorks($perfTitle = '') {
-    // Return without looking up Related Works
-    global $sphinx_conn;
 
-    $prefix = "or ";
-    $stopwords = ['[c|C]oncert[s]?', '[e|E]ntertainment[s]?'];
-    $perfTitle =  preg_replace('/\b(' . implode('|', $stopwords) . ')\b/', '', $perfTitle);
+    /**
+     * Returns array of works related to a given performance title
+     *
+     * Takes a given performance title [PerfTitle], splits it by semicolon,
+     *  and performs wildcard searches for similar titles in Performances, Works,
+     *  and WorksVariant tables
+     * @param int $workId WorkId from Performance.WorkId column
+     * @param string $perfTitle Performance title from [PerfTitle] column
+     * @return array related works array keyed by WorkId
+     */
+    function getSphinxRelatedWorks(string $perfTitle = '', int $workId = null)
+    {
+        global $sphinx_conn;
+        $works = array(); // Nested works array, keyed by workid
+        $sources = array(); // Sources to be searched
+        $titles = array(); // Titles to be searched
 
-    if ($perfTitle !== '') {
-      $titles = array_map('trim', preg_split("[;|,]", $perfTitle));
-      $sql = "SELECT *\nFROM related_work";
-      $values = [];
+        if ($perfTitle !== '') $titles[] = $perfTitle; // Add performance title
 
-      foreach($titles as $perf) {
-        $perf = cleanStr($perf);
-        if (strtolower(substr($perf, 0, strlen($prefix))) == $prefix) {
-          $perf = substr($perf, strlen($prefix));
-        }
-        if (strtolower($perf) === 'or') {
-          continue;
-        }
-        $values[] = '"' . $perf . '"';
-      }
-      $values = implode('|', $values);
-      $sql .= "\nWHERE MATCH('" . $values . "')";
+        // Get the structured work array identified in the performance by WorkId, if any
+        if (!is_null($workId)) {
+            $work_query = $sphinx_conn->query("SELECT *  FROM related_work WHERE workid="
+                . $workId . " GROUP BY workid, authid, variantname");
+            $results = $work_query->fetch_all(MYSQLI_ASSOC);
+            $works = relatedWorksFromArray($results);
 
-      // Only want to show unique works, not all iterations of a given work title
-      $sql .= "\nGROUP BY WorkId";
-
-      $result = $sphinx_conn->query($sql);
-      $works = array();
-      $sources = array();
-      $workIds = array();
-      while ($row = mysqli_fetch_assoc($result)) {
-        $sources[] = $row['sourceresearched'];
-        $sources[] = $row['source1'];
-        $sources[] = $row['source2'];
-        $row['author'] = getAuthorInfo($row['workid']);
-        $works[] = $row;
-        $workIds[] = $row['workid'];
-      }
-
-      // Get Work Sources and perform same search on them
-      $sources = array_filter($sources, 'strlen');
-      if (!empty($sources)) {
-        $sources = wildCardQuotes($sources);
-        $ssql = "SELECT WorkId, Title, Type1, Type2, Source1, Source2, SourceResearched, TitleClean, VariantName, TheTitle, PerformanceTitle \nFROM related_work";
-        $ssql .= "\nWHERE MATCH('@TitleClean \"" . implode('"|"', $sources) . "\" @PerfTitleClean \"" . implode('"|"', $sources) . "\" @NameClean \"" . implode('"|"', $sources) . "\"')";
-        $ssql .= ' GROUP BY WorkId';
-
-        $sresult = $sphinx_conn->query($ssql);
-
-        if ($sresult) {
-          while ($srow = mysqli_fetch_assoc($sresult)) {
-            if (!in_array($srow['workid'], $workIds)) {
-              $srow['author'] = getAuthorInfo($srow['workid']);
-              $works[] = $srow;
+            // Add work and variant titles if they differ from the performance title
+            $titles[] = $works[$workId]['title'];
+            foreach ($works[$workId]['variantname'] as $v) {
+                $titles[] = $v;
             }
-          }
         }
-      }
 
-      return $works;
+        // Standardize capitalization of titles
+        $titles = array_unique(array_map('ucwords', $titles));
+
+        // If there's at least one title, look up works by title
+        if (!empty($titles)) {
+            $stopwords = ['[c|C]oncert[s]?', '[e|E]ntertainment[s]?'];
+            $values = [];
+            foreach ($titles as $title) { // Split title into subtitles
+                $subtitles = preg_replace('/\b(' . implode('|', $stopwords) . ')\b/', '',
+                    // Splits on "or[,]" ":' or ";"
+                    array_map('trim', preg_split('/\s+Or[,|\s]+|[:|;]/', $title)));
+                foreach ($subtitles as $s) {
+                    if (strlen($s) > 3) { // Skip over numbers, other meaninglessly short strings
+                        // $s = preg_replace('[\W]', ' ', $s);
+                        $values[] = '"' . mysqli_real_escape_string($sphinx_conn, $s) . '"';
+                    }
+                }
+            }
+            $values = array_unique($values); // Deduplicate
+
+            // Generate SphinxQL query
+            if (!empty($values)) {
+                $sphinx_titles = implode('|', $values);  // Concat "Title1 | Title2 ..."
+                $sql = "SELECT *\nFROM related_work";
+                $sql .= "\nWHERE MATCH('@title " . $sphinx_titles .
+                    " |  @performancetitle " . $sphinx_titles .
+                    " | @variantname " . $sphinx_titles .
+                    " | @source1 " . $sphinx_titles .
+                    " | @source2 " . $sphinx_titles .
+                    " | @sourceresearched " . $sphinx_titles . "')";
+                $sql .= " GROUP BY workid, authid"; // One row per work
+
+                // Get results from Sphinx
+                $tr = $sphinx_conn->query($sql);
+                $ts = relatedWorksFromArray($tr->fetch_all(MYSQLI_ASSOC));
+
+                // Sort works in order of ascending date
+                array_multisort(array_column($ts, 'pubdate'), SORT_ASC, $ts);
+                $works = $works + array_column($ts, null, 'workid');
+            }
+        }
+
+        // Get sources associated the known work (linked workid) or works of an identical title
+        foreach ($works as $work) {
+            if (($work['title'] == $perfTitle) or ($work['workId'] == $workId)) {
+                foreach ($work as $k => $v) {
+                    if (str_starts_with($k, 'source')) $sources[] = mysqli_real_escape_string(
+                        $sphinx_conn, ucwords($v));
+                }
+            }
+        }
+        $sources = array_unique($sources); // Deduplicate sources
+
+        // Search for works with titles matching known sources
+        if (!empty($sources)) {
+            // Transform sources into string of the form "SourceName | SourceName2 ..."
+            $squery = '"' . implode('|', $sources) . '"';
+
+            // Construct SphinxQL query
+            $sql = "SELECT * FROM related_work";
+            $sql .= "\nWHERE MATCH('@title " . $squery . " |  @performancetitle " . $squery . " | @variantname " . $squery .
+                " |  @source1 " . $squery . " |  @source2 " . $squery . " |  @sourceresearched " . $squery . "')";
+            $sql .= ' GROUP BY workid, authid';
+
+            // Get results from Sphinx, add works to works array
+            $result = $sphinx_conn->query($sql);
+            $sources = relatedWorksFromArray($result->fetch_all(MYSQLI_ASSOC));
+            $works = $works + array_column($sources, null, 'workid');;
+        }
+
+        // TODO(wintere) Remove after Works table has been deduplicated, suppresses dupes
+        if (count($works) > 1) {
+            $filtered = array(); // Filtered workid set
+            foreach ($works as $wid => $work) {
+                // Skip works with insufficient metadata
+                if (($work['pubdate'] == 0) & (array_key_exists(0, $work['author']))
+                    & ($wid != $workId)) {
+                    continue;
+                }
+                $metadata = json_encode([$work['author'], $work['pubdate'], $work['title']]);
+                if (array_key_exists($metadata, $filtered)){ // Check for duplicate auth/pubdates
+                    if ($wid == $workId) $filtered[$metadata] = $wid;
+                }
+                else {
+                    $filtered[$metadata] = $wid; // Always include known workid
+                }
+            }
+            // Filter works array such that there's one work per auth/pubdate/title tuple
+            $works = array_intersect_key($works, array_flip($filtered));
+        }
+        return $works;
     }
-  }
 
   /**
    * Removes all quotes from the string and replaces them with a wildcard char.
@@ -1441,13 +1439,12 @@
     if ($author === '') return FALSE;
     global $sphinx_conn;
 
-    $author = cleanStr($author);
-    $authorClean = mysqli_real_escape_string($sphinx_conn, cleanQuotes($author));
+    $authorClean = mysqli_real_escape_string($sphinx_conn, $author);
     // Find the author's works in the Related Works index.
     $authorWorksSql =
         "SELECT *
          FROM related_work
-         WHERE MATCH('@authnameclean \"$authorClean\"')
+         WHERE MATCH('@authname \"$authorClean\"')
          GROUP BY workid
          LIMIT 1000";
     // Run the query.
@@ -1458,12 +1455,12 @@
     $workTitles = [];
     while ($row = mysqli_fetch_assoc($workResult)) {
       // Add contents of whatever work name fields have a value in the record.
-      if ($row['titleclean'] && $row['titleclean'] !== '')
-        $workTitles[] = $row['titleclean'];
-      if ($row['nameclean'] && $row['nameclean'] !== '')
-        $workTitles[] = $row['nameclean'];
-      if ($row['perftitleclean'] && $row['perftitleclean'] !== '')
-        $workTitles[] = $row['perftitleclean'];
+      if ($row['title'] && $row['title'] !== '')
+        $workTitles[] = $row['title'];
+      if ($row['variantname'] && $row['variantname'] !== '')
+        $workTitles[] = $row['variantname'];
+      if ($row['performancetitle'] && $row['performancetitle'] !== '')
+        $workTitles[] = $row['performancetitle'];
     }
     if (empty($workTitles)) return FALSE;
     // Unique list of all titles.
@@ -1477,10 +1474,10 @@
       $titleArr = array_map('trim', explode(';', $title));
       foreach ($titleArr as $titl) {
         if (strtolower(substr($titl, 0, strlen($prefix))) == $prefix) {
-          $titl = substr($titl, strlen($prefix));
+          $titl = substr($titl, strlen($prefix)); //remove quotes from titles
         }
-        // Add each title within double quotes.
-        $processedTitles[] = '"' . $titl . '"';
+        // Add each title within double quotes, with special characters escaped.
+        $processedTitles[] = '"' . mysqli_real_escape_string($sphinx_conn, $titl) . '"';
       }
     }
     // Return the MATCH statement for the performance title field with all
@@ -2153,6 +2150,32 @@
 
 
   /**
+   * Prepares a TCP XML file from Azure for download on an event page.
+   * @param string $fn The name of the file to be downloaded
+   */
+  function getTCPFile(string $fn) {
+    # Initialize curl
+    $tcp_url = 'https://londonstage.blob.core.windows.net/lsdb-files/tcp/P4/' . $fn;
+    $ch = curl_init();
+    curl_setopt_array($ch, array(
+        CURLOPT_URL => $tcp_url,
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_HEADER => "Content-Type: text/xml",
+    ));
+
+    # Get XML file from Azure, close the connection
+    $xml = curl_exec($ch);
+    curl_close($ch);
+
+    # Prepare headers to indicate the the file is a download
+    header('Content-description: file transfer');
+    header('Content-disposition: attachment; filename=' . $fn);
+    header('Content-type: text/xml');
+    echo $xml;
+  }
+
+
+  /**
   * Removes unsupported UTF8 chars from string
   *
   * @param string $string String that needs to be prepared for XML conversion.
@@ -2261,7 +2284,7 @@
       $perfs = getPerformances($event['EventId']);
 
       foreach ($perfs as $perf) {
-        $perf['RelatedWorks'] = getRelatedWorks($perf['PerformanceTitle']);
+        $perf['RelatedWorks'] = getSphinxRelatedWorks($perf['PerformanceTitle']);
         $event['Performances'][] = $perf;
       }
     }
