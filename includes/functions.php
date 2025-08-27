@@ -2284,7 +2284,7 @@
       $perfs = getPerformances($event['EventId']);
 
       foreach ($perfs as $perf) {
-        $perf['RelatedWorks'] = getSphinxRelatedWorks($perf['PerformanceTitle']);
+        $perf['RelatedWorks'] = getSphinxRelatedWorks($perf['PerformanceTitle'], $perf['workId']);
         $event['Performances'][] = $perf;
       }
     }
