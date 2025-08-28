@@ -872,17 +872,16 @@
             'source1', 'source2', 'sourceresearched'])),
         array_column($sphinx_results, null, 'workid'));
 
-    // Populate author and tutke variant subarrays
+    // Populate author and title variant subarrays
     foreach($sphinx_results as $row) {
-      // Add authors, if any
-      if(array_key_exists('authname', $row)){
+      if(array_key_exists('authname', $row)){ // Author
         $workid = $row['workid'];
         $auth = array_intersect_key($row,
             array_flip(['authid', 'authname', 'authtype', 'startdate', 'starttype', 'enddate', 'endtype']));
         $works[$workid]['author'][$row['authid']] = array_filter($auth);
       }
       // Add title variants, if any
-      if(array_key_exists('variantname', $row)){
+      if(array_key_exists('variantname', $row)){ // Title variants
         $workid = $row['workid'];
         if (!array_key_exists( 'variantname', $works[$workid])) $works[$workid]['variantname'] = array();
         $works[$workid]['variantname'][] = $row['variantname'];
@@ -911,7 +910,7 @@
 
         if ($perfTitle !== '') $titles[] = $perfTitle; // Add performance title
 
-        // Get the structured work array identified in the performance by WorkId, if any
+        // Get the work identified in the performance by WorkId, if any
         if (!is_null($workId)) {
             $work_query = $sphinx_conn->query("SELECT *  FROM related_work WHERE workid="
                 . $workId . " GROUP BY workid, authid, variantname");
