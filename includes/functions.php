@@ -2147,33 +2147,6 @@
     echo $xml;
   }
 
-
-  /**
-   * Prepares a TCP XML file from Azure for download on an event page.
-   * @param string $fn The name of the file to be downloaded
-   */
-  function getTCPFile(string $fn) {
-    # Initialize curl
-    $tcp_url = 'https://londonstage.blob.core.windows.net/lsdb-files/tcp/P4/' . $fn;
-    $ch = curl_init();
-    curl_setopt_array($ch, array(
-        CURLOPT_URL => $tcp_url,
-        CURLOPT_RETURNTRANSFER => true,
-        CURLOPT_HEADER => "Content-Type: text/xml",
-    ));
-
-    # Get XML file from Azure, close the connection
-    $xml = curl_exec($ch);
-    curl_close($ch);
-
-    # Prepare headers to indicate the the file is a download
-    header('Content-description: file transfer');
-    header('Content-disposition: attachment; filename=' . $fn);
-    header('Content-type: text/xml');
-    echo $xml;
-  }
-
-
   /**
   * Removes unsupported UTF8 chars from string
   *
