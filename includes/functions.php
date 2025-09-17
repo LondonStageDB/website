@@ -1006,7 +1006,6 @@
                     " | @source2 " . $sphinx_titles .
                     " | @sourceresearched " . $sphinx_titles . "')";
                 $sql .= " GROUP BY workid, authid"; // One row per work
-                print($sql);
 
                 // Get results from Sphinx
                 $tr = $sphinx_conn->query($sql);
