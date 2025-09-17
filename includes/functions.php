@@ -982,13 +982,11 @@
         if (!empty($titles)) {
             $stopwords = ['[c|C]oncert[s]?', '[e|E]ntertainment[s]?'];
             $values = [];
-            foreach ($titles as $title) { // Split title into subtitles
+            foreach ($titles as $title) { // Split title into subtitles on "or" and "with"
                 $subtitles = preg_replace('/\b(' . implode('|', $stopwords) . ')\b/', '',
-                    // Splits on "or[,]" ":' or ";"
-                    array_map('trim', preg_split('/\s+Or[,|\s]+|[:|;]/', $title)));
+                    array_map('trim', preg_split('/\s+or(?:,|\s)+|[,:;]\s*with|[:;]/i', $title)));
                 foreach ($subtitles as $s) {
-                    if (strlen($s) > 3) { // Skip over numbers, other meaninglessly short strings
-                        // $s = preg_replace('[\W]', ' ', $s);
+                    if (strlen($s) > 3) { // Skip over meaninglessly short strings
                         $values[] = '"' . mysqli_real_escape_string($sphinx_conn, $s) . '"';
                     }
                 }
@@ -1006,7 +1004,6 @@
                     " | @source2 " . $sphinx_titles .
                     " | @sourceresearched " . $sphinx_titles . "')";
                 $sql .= " GROUP BY workid, authid"; // One row per work
-
                 // Get results from Sphinx
                 $tr = $sphinx_conn->query($sql);
                 $ts = relatedWorksFromArray($tr->fetch_all(MYSQLI_ASSOC));
@@ -1017,11 +1014,14 @@
             }
         }
 
-        // Get sources associated the known work (linked workid) or works of an identical title
+        // Get sources associated with linked work or works of a similar title
         foreach ($works as $work) {
-          foreach ($work as $k => $v) {
-              if (str_starts_with($k, 'source')) $sources[] = mysqli_real_escape_string(
-                  $sphinx_conn, ucwords($v));
+          similar_text($work['title'], $perfTitle, $perc); // Compute title similarity
+          if (($perc > 70) or ($work['workId'] == $workId)) {
+            foreach ($work as $k => $v) {
+                if (str_starts_with($k, 'source')) $sources[] = mysqli_real_escape_string(
+                    $sphinx_conn, ucwords($v));
+            }
           }
         }
         $sources = array_filter(array_unique($sources)); // Deduplicate sources
@@ -1040,7 +1040,7 @@
           // Get results from Sphinx, add works to works array
           $result = $sphinx_conn->query($sql);
           $source_results = relatedWorksFromArray($result->fetch_all(MYSQLI_ASSOC));
-          $works = $works + array_column($source_results, null, 'workid');;
+          $works = $works + array_column($source_results, null, 'workid');
         }
 
         // TODO(wintere) Remove after Works table has been deduplicated, suppresses dupes
@@ -1054,13 +1054,12 @@
               }
               $metadata = json_encode([$work['author'], $work['pubdate'], $work['title']]);
               if (array_key_exists($metadata, $filtered)){ // Check for duplicate auth/pubdates
-                  if ($wid == $workId) $filtered[$metadata] = $wid;
+                if ($wid == $workId) $filtered[$metadata] = $wid;
               }
               else {
                   $filtered[$metadata] = $wid; // Always include known workid
               }
           }
-          // Filter works array such that there's one work per auth/pubdate/title tuple
           $works = array_intersect_key($works, array_flip($filtered));
         }
         return $works;
