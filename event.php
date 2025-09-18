@@ -209,8 +209,11 @@
                 <?php if(!empty($works) && count($works) > 0) : ?>
                     <div class="small-12 medium-6 large-5 related-works">
                       <h3>Related Works</h3>
-                      <div class="work-info">A provisional list of playtexts with a possible relationship to this performance,
-                          including sources, adaptations, and sequels. <a href="/authors.php">Read more about the data and its limitations</a>.</div>
+                      <div class="work-info">Dramatic works provisionally linked to this performance, including plays 
+                        that may have been staged as well as their <a href="/authors.php">sources, adaptations, and sequels</a>. 
+                        Works are identified, where possible, with their "print witnesses:" early published editions 
+                        that have been digitized by the Text Creation Partnership. TCP metadata may overlap or conflict with 
+                        records curated by the LSDB team. <a href="https://blogs.uoregon.edu/londonstage/2025/09/18/new-feature-print-witnesses">Read more about the provenance and limitations of the data</a>. </div>
                       <?php foreach ($works as $work) : ?>
                       <div class="work-info"><!-- begin light shaded block for work -->
                         <div><span class="info-heading">Work Title:</span>
@@ -241,7 +244,7 @@
                           <?php
                             $witnesses = getRelatedWitnesses($work['workid']); ?>
                             <?php if((!empty($witnesses)) && (count($witnesses) > 0)) : ?>
-                              <div><hr/><span class="info-heading">Related Witness(es)<span data-tooltip class="top l-tooltip" title="Early print editions, including in anthologies, as digitized by the Text Creation Partnership">?</span>:</span> 
+                              <div><hr/><span class="info-heading">Print Witness(es)</span> 
                               <?php foreach ($witnesses as $witness) : ?>
                                 <div class="auth-info"> 
                                     <div class="grid-x">  
