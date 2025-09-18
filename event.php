@@ -209,12 +209,14 @@
                 <?php if(!empty($works) && count($works) > 0) : ?>
                     <div class="small-12 medium-6 large-5 related-works">
                       <h3>Related Works</h3>
-                      <div class="work-info"><span data-tooltip class="top l-tooltip" 
-                        title="Dramatic works provisionally linked to this performance, including plays 
+                      <div class="work-info">
+                        <details>
+                          <summary>What's this?</summary>
+                          <p>Dramatic works provisionally linked to this performance, including plays 
                         that may have been staged as well as their <a href="/authors.php">sources, adaptations, and sequels</a>. 
                         Works are identified, where possible, with their "print witnesses:" early published editions 
                         that have been digitized by the Text Creation Partnership. TCP metadata may overlap or conflict with 
-                        records curated by the LSDB team. <a href="https://blogs.uoregon.edu/londonstage/2025/09/18/new-feature-print-witnesses">Read more about the provenance and limitations of the data</a>">What is this?</span></div>
+                        records curated by the LSDB team. <a href="https://blogs.uoregon.edu/londonstage/2025/09/18/new-feature-print-witnesses">Read more about the provenance and limitations of the data</a>.</p></details></div>
                       <?php foreach ($works as $work) : ?>
                       <div class="work-info"><!-- begin light shaded block for work -->
                         <div><span class="info-heading">Work Title:</span>
