@@ -216,7 +216,8 @@
                         that may have been staged as well as their <a href="/authors.php">sources, adaptations, and sequels</a>. 
                         Works are identified, where possible, with their "print witnesses:" early published editions 
                         that have been digitized by the Text Creation Partnership. TCP metadata may overlap or conflict with 
-                        records curated by the LSDB team. <a href="https://blogs.uoregon.edu/londonstage/2025/09/18/new-feature-print-witnesses">Read more about the provenance and limitations of the data</a>.</p></details></div>
+                        records curated by the LSDB team. <a href="https://blogs.uoregon.edu/londonstage/2025/09/22/new-feature-print-witnesses/">
+                          Read more about the provenance and limitations of the data</a>.</p></details></div>
                       <?php foreach ($works as $work) : ?>
                       <div class="work-info"><!-- begin light shaded block for work -->
                         <div><span class="info-heading">Work Title:</span>
