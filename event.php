@@ -48,7 +48,7 @@
             <?php echo namedEntityLinks($event['CommentC'], TRUE); ?>
           </div>
           <div class="event-btns grid-x">
-            <div class="work-nav small-12 medium-8">
+            <div class="work-nav small-12 medium-6 large-6">
               <h3>Performance List</h3>
               <ul class="no-bullet">
                 <?php foreach ($event['Performances'] as $perf) : ?>
@@ -60,7 +60,7 @@
                 <?php endforeach; ?>
               </ul>
             </div>
-            <div class="download-buttons small-12 medium-4">
+            <div class="download-buttons small-12 medium-6 large 6">
               <h3>Event Downloads</h3>
               <a href="get_json.php?id=<?php echo $event['EventId']; ?>" class="button dwnld-btn">JSON</a>
               <a href="get_xml.php?id=<?php echo $event['EventId']; ?>" class="button dwnld-btn">XML</a>
@@ -167,7 +167,7 @@
           <div class="grid-x perf-info-wrap">
             <div class="small-12 perf-info">
               <div class="grid-x">
-                <div class="small-12 medium-7 large-8 perf-info-left">
+                <div class="small-12 medium-6 large-7 perf-info-left">
                   <?php if(in_array($perf['PType'], ['p', 'a'])) : ?>
                   <div class="perf-title perf-data"><span class="info-heading">Title:</span>
                     <a href="<?php echo linkedTitles($perf['PerformanceTitle'], TRUE); ?>">
@@ -198,43 +198,77 @@
                     </div>
                   <?php endif; ?>
                 </div>
-                <?php $works = getSphinxRelatedWorks($perf['PerformanceTitle']); ?>
+                <!-- begin related works area -->
+                  <?php
+                  // Hide false positive related works for dances, songs, music, tricks
+                  if (in_array($perf['PType'], ['d', 's', 'm', 't'])){
+                      $works = array();
+                  } else{
+                      $works = getSphinxRelatedWorks($perf['PerformanceTitle'], $perf['WorkId']);
+                  }?>
                 <?php if(!empty($works) && count($works) > 0) : ?>
-                <div class="small-12 medium-5 large-4 related-works">
-                  <h3>Related Works</h3>
-                  <?php foreach ($works as $work) : ?>
-                  <div class="work-info">
-                    <div><span class="info-heading">Work Title:</span>
-                      <a href="<?php echo linkedTitles((!empty($work['title'])) ? $work['title'] : $work['title'], TRUE); ?>">
-                        <?php echo (!empty($work['title'])) ? $work['title'] : $work['title']; ?>
-                      </a>
-                    </div>
-                    <div><span class="info-heading">Publish Date:</span>
-                      <?php if($work['pubdate']) echo $work['pubdate']; ?>
-                    </div>
-                    <?php if (array_filter($work['author'])) : ?>
-                    <?php foreach ($work['author'] as $auth) : ?>
-                    <?php if (in_array($auth['authtype'], ['Researched', 'Primary'])) : ?>
-                    <div class="auth-info">
-                      <div><span class="info-heading">Author: </span>
-                        <?php echo linkedSearches('author', $auth['authname'], TRUE); ?>
-                      </div>
-                      <div class="grid-x">
-                        <div class="cell small-6"><span class="info-heading"><?php echo authDateType($auth['starttype']); ?></span>
-                          <?php echo $auth['startdate']; ?>
+                    <div class="small-12 medium-6 large-5 related-works">
+                      <h3>Related Works</h3>
+                      <div class="work-info">
+                        <details>
+                          <summary>What's this?</summary>
+                          <p>Dramatic works provisionally linked to this performance, including plays 
+                        that may have been staged as well as their <a href="/authors.php">sources, adaptations, and sequels</a>. 
+                        Works are identified, where possible, with their "print witnesses:" early published editions 
+                        that have been digitized by the Text Creation Partnership. TCP metadata may overlap or conflict with 
+                        records curated by the LSDB team. <a href="https://blogs.uoregon.edu/londonstage/2025/09/22/new-feature-print-witnesses/">
+                          Read more about the provenance and limitations of the data</a>.</p></details></div>
+                      <?php foreach ($works as $work) : ?>
+                      <div class="work-info"><!-- begin light shaded block for work -->
+                        <div><span class="info-heading">Work Title:</span>
+                          <?php echo $work['title']; ?>
                         </div>
-                        <div class="cell small-6"><span class="info-heading"><?php echo authDateType($auth['endtype']); ?></span>
-                          <?php echo $auth['enddate']; ?>
+                        <div><span class="info-heading">Associated Date<span data-tooltip class="top l-tooltip" 
+                        title="Typically the date of first publication, but sometimes the date of first known performance">?</span>:</span>
+                          <?php if ($work['pubdate'] > 0) echo $work['pubdate']; ?>
                         </div>
-                      </div>
-                    </div>
-                    <?php endif; ?>
-                    <?php endforeach; ?>
-                    <?php endif; ?>
-                  </div>
-                  <?php endforeach; ?>
-                </div>
-                <?php endif; ?>
+                        <div><span class="info-heading">Associated Playwright(s)<span data-tooltip class="top l-tooltip" 
+                        title="Includes modern attributions of what were often anonymous, collaborative, or contested works">?</span>:</span>
+                          <?php if (array_filter($work['author'])) : ?>
+                            <?php foreach ($work['author'] as $auth) : ?>
+                              <?php if (in_array($auth['authtype'], ['Researched', 'Primary'])) : ?>
+                                <div> 
+                                    <span> &nbsp;&nbsp; <?php echo $auth['authname'] ?>
+                                    <?php
+                                        if ((array_key_exists('startdate', $auth))
+                                            || (array_key_exists('enddate', $auth))){
+                                            // Display dates if author has at least one known date
+                                        echo "(" . $auth['startdate'] . " - " .  $auth['enddate'] .")" ; }?> </span>
+                                </div> <!-- end author list item -->
+                              <?php endif; ?> <!--resolves if authtype is not 'Researched', 'Primary' -->
+                            <?php endforeach; ?> <!-- resolves for loop for each author -->
+                          <?php endif; ?> <!-- resolves loop if work has no author -->
+                        </div> <!-- end associated playwrights div -->
+                        <!-- check if work has related witnesses -->
+                          <?php
+                            $witnesses = getRelatedWitnesses($work['workid']); ?>
+                            <?php if((!empty($witnesses)) && (count($witnesses) > 0)) : ?>
+                              <div><hr/><span class="info-heading">Print Witness(es)</span> 
+                              <?php foreach ($witnesses as $witness) : ?>
+                                <div class="auth-info"> 
+                                    <div class="grid-x">  
+                                      <div class="cell small-6 medium-8 large-9">
+                                        <div><span class="info-heading">Title:</span><span><?php echo ($witness['witnessTitle']); ?></span></div> 
+                                        <div><span class="info-heading">Author(s):</span><span><?php echo ($witness['witnessAuth']); ?></span></div> 
+                                        <div><span class="info-heading">Publication Date:</span><span><?php echo ($witness['witnessDate']); ?></span></div> 
+                                      </div>
+                                      <div class="cell small-6 medium-4 large-3">
+                                          <a href="get_tcp.php?fn=<?php echo $witness['witnessFile']; ?>" class="button xml-dwnld-btn" download>XML</a>
+                                        </div>
+                                    </div> <!-- end grid -->
+                                  </div> <!-- end witness -->
+                              <?php endforeach; ?>
+                              </div> <!-- end related witnesses -->
+                            <?php endif; ?>   
+                        </div> <!-- end work info -->
+                      <?php endforeach; ?> <!-- resolves when list of related works is complete -->
+                </div> <!-- end related works panel -->
+                <?php endif; ?> <!-- resolves if there are no related works -->
               </div>
             </div>
           </div>

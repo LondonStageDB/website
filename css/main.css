@@ -1621,6 +1621,7 @@ body#home:after {
 
 #event .work-nav h3, #event .download-buttons h3 {
     font-size: 1.3rem;
+
 }
 
 #event .work-nav a {
@@ -1681,7 +1682,17 @@ body#home:after {
 }
 
 #event .dwnld-btn {
-/*  background-color: #ff6a5c;*/
+    background-color: #943939;
+}
+
+#event .xml-dwnld-btn {
+  background-color: #943939;
+  margin-left: 1rem;
+  margin-right: 1rem;
+  position: relative;
+  top: 50%;
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
 }
 
 #event .work-info {
@@ -1705,6 +1716,10 @@ body#home:after {
     background-color: #d6d0c2;
     padding: 0.3rem 0.6rem;
     margin-top: 0.5rem;
+}
+
+#event .work-info .auth-info .title {
+    font-style: italic;
 }
 
 #event .cite-wrap {

@@ -568,7 +568,7 @@
    */
   function getSphinxResultsByColumn($keyword) {
     global $sphinx_conn;
-    $keywrd   = mysqli_real_escape_string($sphinx_conn, $keyword);
+    $keywrd   = mysqli_real_escape_string($sphinx_conn, cleanQuotes($keyword));
     $psql     = "SELECT performanceid FROM london_stages WHERE MATCH('@perftitleclean \"$keywrd\"/1') GROUP BY performanceid";
     $asql     = "SELECT eventid FROM london_stages WHERE MATCH('@authnameclean \"$keywrd\"/1') GROUP BY eventid";
     $pcsql    = "SELECT performanceid FROM london_stages WHERE MATCH('@commentpclean \"$keywrd\"/1') GROUP BY performanceid";
@@ -856,6 +856,56 @@
     return array();
   }
 
+  /** Returns a list of print witnesses for a given dramatic work. 
+   * 
+   * Takes the unique identifier for a dramatic work [WorkId] and returns a 
+   * list of related printed books from the Text Creation Partnership.
+   * Specifies titles, authors, publication dates and download links for 
+   * each witness.
+   *  
+   * @param string $workId unique identifier assigned to an item in the 
+   * WorksTCP table from [WorkId] column 
+   * 
+   * @return array Related Witnesses
+   * 
+   */
+  function getRelatedWitnesses ($workId = '') {
+    global $conn;
+    $witnesses = array();
+    if ($workId == ''){
+      // Return an empty array
+      return $witnesses; 
+    }
+
+    $sql = 'SELECT WorksTCP.WorkID, WorksTCP.TCPId, TCP.File, TCP.ShortTitleClean, TCP.Author, TCP.CleanDate, TCP.Title
+    FROM WorksTCP     
+    LEFT JOIN TCP ON TCP.TCPId = WorksTCP.TCPId WHERE';  
+    $sql .= ' WorksTCP.WorkId = ' . $workId ;
+    
+    $result = $conn->query($sql);
+
+    if ($result !== FALSE) {
+      while ($row = mysqli_fetch_assoc($result)) {
+        $witness = array(
+        'witnessDate' => (int)$row['CleanDate'], 
+        'witnessAuth' => $row['Author'],
+        'witnessFile' => $row['File']) ;
+        
+        if(array_key_exists('ShortTitleClean', $row)){
+          $witness['witnessTitle'] = $row['ShortTitleClean'];
+        } 
+        else { 
+          $witness['witnessTitle'] = $row['Title'];
+        }
+        $witnesses[] = $witness;   
+      } 
+    
+    } 
+    return $witnesses;
+  }
+
+
+
 /**
  * Returns array of works related to a given performance title
  *
@@ -872,26 +922,27 @@
             'source1', 'source2', 'sourceresearched'])),
         array_column($sphinx_results, null, 'workid'));
 
-    // Populate author and title variant subarrays
+    // Populate author and variant subarrays
     foreach($sphinx_results as $row) {
-      if(array_key_exists('authname', $row)){ // Author
+      // Add authors, if any
+      if(array_key_exists('authname', $row)){
         $workid = $row['workid'];
         $auth = array_intersect_key($row,
             array_flip(['authid', 'authname', 'authtype', 'startdate', 'starttype', 'enddate', 'endtype']));
         $works[$workid]['author'][$row['authid']] = array_filter($auth);
       }
-      // Add title variants, if any
-      if(array_key_exists('variantname', $row)){ // Title variants
+      // Add variants, if any
+      if(array_key_exists('variantname', $row)){
         $workid = $row['workid'];
         if (!array_key_exists( 'variantname', $works[$workid])) $works[$workid]['variantname'] = array();
         $works[$workid]['variantname'][] = $row['variantname'];
       }
     }
-    return array_filter($works); // Return filtered results
+    // Filter out empty fields
+    return array_filter($works);
   }
 
-
-    /**
+/**
      * Returns array of works related to a given performance title
      *
      * Takes a given performance title [PerfTitle], splits it by semicolon,
@@ -931,13 +982,11 @@
         if (!empty($titles)) {
             $stopwords = ['[c|C]oncert[s]?', '[e|E]ntertainment[s]?'];
             $values = [];
-            foreach ($titles as $title) { // Split title into subtitles
+            foreach ($titles as $title) { // Split title into subtitles on "or" and "with"
                 $subtitles = preg_replace('/\b(' . implode('|', $stopwords) . ')\b/', '',
-                    // Splits on "or[,]" ":' or ";"
-                    array_map('trim', preg_split('/\s+Or[,|\s]+|[:|;]/', $title)));
+                    array_map('trim', preg_split('/\s+or(?:,|\s)+|[,:;]\s*with|[:;]/i', $title)));
                 foreach ($subtitles as $s) {
-                    if (strlen($s) > 3) { // Skip over numbers, other meaninglessly short strings
-                        // $s = preg_replace('[\W]', ' ', $s);
+                    if (strlen($s) > 3) { // Skip over meaninglessly short strings
                         $values[] = '"' . mysqli_real_escape_string($sphinx_conn, $s) . '"';
                     }
                 }
@@ -955,7 +1004,6 @@
                     " | @source2 " . $sphinx_titles .
                     " | @sourceresearched " . $sphinx_titles . "')";
                 $sql .= " GROUP BY workid, authid"; // One row per work
-
                 // Get results from Sphinx
                 $tr = $sphinx_conn->query($sql);
                 $ts = relatedWorksFromArray($tr->fetch_all(MYSQLI_ASSOC));
@@ -966,56 +1014,57 @@
             }
         }
 
-        // Get sources associated the known work (linked workid) or works of an identical title
+        // Get sources associated with linked work or works of a similar title
         foreach ($works as $work) {
-            if (($work['title'] == $perfTitle) or ($work['workId'] == $workId)) {
-                foreach ($work as $k => $v) {
-                    if (str_starts_with($k, 'source')) $sources[] = mysqli_real_escape_string(
-                        $sphinx_conn, ucwords($v));
-                }
+          similar_text($work['title'], $perfTitle, $perc); // Compute title similarity
+          if (($perc > 70) or ($work['workId'] == $workId)) {
+            foreach ($work as $k => $v) {
+                if (str_starts_with($k, 'source')) $sources[] = mysqli_real_escape_string(
+                    $sphinx_conn, ucwords($v));
             }
+          }
         }
-        $sources = array_unique($sources); // Deduplicate sources
+        $sources = array_filter(array_unique($sources)); // Deduplicate sources
 
         // Search for works with titles matching known sources
         if (!empty($sources)) {
-            // Transform sources into string of the form "SourceName | SourceName2 ..."
-            $squery = '"' . implode('|', $sources) . '"';
+          // Transform sources into string of the form "SourceName | SourceName2 ..."
+          $squery = implode('|', array_map(function ($src) { return '"' . $src . '"'; }, $sources));
 
-            // Construct SphinxQL query
-            $sql = "SELECT * FROM related_work";
-            $sql .= "\nWHERE MATCH('@title " . $squery . " |  @performancetitle " . $squery . " | @variantname " . $squery .
-                " |  @source1 " . $squery . " |  @source2 " . $squery . " |  @sourceresearched " . $squery . "')";
-            $sql .= ' GROUP BY workid, authid';
+          // Construct SphinxQL query
+          $sql = "SELECT * FROM related_work";
+          $sql .= "\nWHERE MATCH('@title " . $squery . " |  @performancetitle " . $squery . " | @variantname " . $squery .
+              " |  @source1 " . $squery . " |  @source2 " . $squery . " |  @sourceresearched " . $squery . "')";
+          $sql .= ' GROUP BY workid, authid';
 
-            // Get results from Sphinx, add works to works array
-            $result = $sphinx_conn->query($sql);
-            $sources = relatedWorksFromArray($result->fetch_all(MYSQLI_ASSOC));
-            $works = $works + array_column($sources, null, 'workid');;
+          // Get results from Sphinx, add works to works array
+          $result = $sphinx_conn->query($sql);
+          $source_results = relatedWorksFromArray($result->fetch_all(MYSQLI_ASSOC));
+          $works = $works + array_column($source_results, null, 'workid');
         }
 
         // TODO(wintere) Remove after Works table has been deduplicated, suppresses dupes
         if (count($works) > 1) {
-            $filtered = array(); // Filtered workid set
-            foreach ($works as $wid => $work) {
-                // Skip works with insufficient metadata
-                if (($work['pubdate'] == 0) & (array_key_exists(0, $work['author']))
-                    & ($wid != $workId)) {
-                    continue;
-                }
-                $metadata = json_encode([$work['author'], $work['pubdate'], $work['title']]);
-                if (array_key_exists($metadata, $filtered)){ // Check for duplicate auth/pubdates
-                    if ($wid == $workId) $filtered[$metadata] = $wid;
-                }
-                else {
-                    $filtered[$metadata] = $wid; // Always include known workid
-                }
-            }
-            // Filter works array such that there's one work per auth/pubdate/title tuple
-            $works = array_intersect_key($works, array_flip($filtered));
+          $filtered = array(); // Filtered workid set
+          foreach ($works as $wid => $work) {
+              // Skip works with insufficient metadata
+              if (($work['pubdate'] == 0) & (array_key_exists(0, $work['author']))
+                  & ($wid != $workId)) {
+                  continue;
+              }
+              $metadata = json_encode([$work['author'], $work['pubdate'], $work['title']]);
+              if (array_key_exists($metadata, $filtered)){ // Check for duplicate auth/pubdates
+                if ($wid == $workId) $filtered[$metadata] = $wid;
+              }
+              else {
+                  $filtered[$metadata] = $wid; // Always include known workid
+              }
+          }
+          $works = array_intersect_key($works, array_flip($filtered));
         }
         return $works;
     }
+    
 
   /**
    * Removes all quotes from the string and replaces them with a wildcard char.
@@ -2146,6 +2195,33 @@
     header('Content-type: text/xml');
     echo $xml;
   }
+
+
+  /**
+   * Prepares a TCP XML file from Azure for download on an event page.
+   * @param string $fn The name of the file to be downloaded
+   */
+  function getTCPFile(string $fn) {
+    # Initialize curl
+    $tcp_url = 'https://londonstage.blob.core.windows.net/lsdb-files/tcp/P4/' . $fn;
+    $ch = curl_init();
+    curl_setopt_array($ch, array(
+        CURLOPT_URL => $tcp_url,
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_HEADER => "Content-Type: text/xml",
+    ));
+
+    # Get XML file from Azure, close the connection
+    $xml = curl_exec($ch);
+    curl_close($ch);
+
+    # Prepare headers to indicate the the file is a download
+    header('Content-description: file transfer');
+    header('Content-disposition: attachment; filename=' . $fn);
+    header('Content-type: text/xml');
+    echo $xml;
+  }
+
 
   /**
   * Removes unsupported UTF8 chars from string
