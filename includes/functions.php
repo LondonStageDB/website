@@ -669,7 +669,7 @@
       $string = array_map('strip_tags', $string);
     }
 
-    return preg_replace('/[^A-Za-z0-9 ;"]/', '', $string);
+    return preg_replace('/[^\p{L} ;"]/u', '', $string);
   }
 
 
