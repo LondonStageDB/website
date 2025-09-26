@@ -19,7 +19,7 @@
   $g_p = filter_input(INPUT_GET, 'p', FILTER_SANITIZE_NUMBER_INT);
   // Prevent SQL injection
   if(!is_numeric($g_p)) $g_p = '';
-  $limit      = ( $g_lim !== '' && $g_lim > 0 ) ? $g_lim : 25;
+  $limit      = ( $g_lim !== '' && $g_lim > 0 && $g_lim <= 50) ? $g_lim : 25;
   $page       = ( $g_p !== '' && $g_p > 0 ) ? $g_p : 1;
   $links      = 3;
   $Paginator  = new SphinxPaginator( $sphinx_conn, $sql );
