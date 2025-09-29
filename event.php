@@ -17,7 +17,7 @@
     <link rel="stylesheet" href="/css/flexslider2-7-2.css" type="text/css" />
     <?php include_once('common/header.php'); ?>
     <title>London Stage Event: <?php echo formatDate($event['EventDate'], true) . ' at ' . getTheatreName($event['TheatreId']); ?></title>
-    <meta name="description" content="<?php echo formatDate($event['EventDate'], true); ?> performances of <?php echo implode(', ', array_column($event['Performances'], 'PerformanceTitle')); ?>" />
+    <meta name="description" content="<?php echo formatDate($event['EventDate'], true); ?> performances of <?php echo implode(', ', array_column($event['Performances'], 'PerfTitleClean')); ?>" />
   </head>
 
   <body id="event">
@@ -170,8 +170,8 @@
                 <div class="small-12 medium-6 large-7 perf-info-left">
                   <?php if(in_array($perf['PType'], ['p', 'a'])) : ?>
                   <div class="perf-title perf-data"><span class="info-heading">Title:</span>
-                    <a href="<?php echo linkedTitles($perf['PerformanceTitle'], TRUE); ?>">
-                      <?php echo cleanItalics(cleanTitle($perf['PerformanceTitle'])); ?>
+                    <a href="<?php echo linkedTitles($perf['PerfTitleClean']); ?>">
+                      <?php echo cleanItalics(cleanTitle($perf['PerfTitleClean'])); ?>
                     </a>
                   </div>
                   <div class="perf-comments perf-data"><span>Comments:</span><br />
@@ -182,9 +182,9 @@
                     <ul class="no-bullet">
                       <?php foreach ($perf['cast'] as $cast) : ?>
                       <li class="grid-x"><span class="role cell small-4"><span class="info-heading">Role:</span>
-                        <?php echo linkedSearches('role[]', $cast['Role'], TRUE); ?> </span>
+                        <?php echo linkedSearches('role[]', $cast['Role']); ?> </span>
                         <span class="actor cell small-6"><span class="info-heading">Actor:</span>
-                        <?php echo linkedSearches('actor[]', $cast['Performer'], TRUE); ?> </span>
+                        <?php echo linkedSearches('actor[]', $cast['Performer']); ?> </span>
                       </li>
                       <?php endforeach; ?>
                     </ul>
@@ -204,7 +204,7 @@
                   if (in_array($perf['PType'], ['d', 's', 'm', 't'])){
                       $works = array();
                   } else{
-                      $works = getSphinxRelatedWorks($perf['PerformanceTitle'], $perf['WorkId']);
+                      $works = getSphinxRelatedWorks($perf['PerfTitleClean'], $perf['WorkId']);
                   }?>
                 <?php if(!empty($works) && count($works) > 0) : ?>
                     <div class="small-12 medium-6 large-5 related-works">
@@ -238,7 +238,9 @@
                                         if ((array_key_exists('startdate', $auth))
                                             || (array_key_exists('enddate', $auth))){
                                             // Display dates if author has at least one known date
-                                        echo "(" . $auth['startdate'] . " - " .  $auth['enddate'] .")" ; }?> </span>
+                                            $startdate = array_key_exists('startdate', $auth) ? $auth['startdate'] : '';
+                                            $enddate = array_key_exists('enddate', $auth) ? $auth['enddate'] : '';
+                                        echo "(" . $startdate . " - " .  $enddate .")" ; }?> </span>
                                 </div> <!-- end author list item -->
                               <?php endif; ?> <!--resolves if authtype is not 'Researched', 'Primary' -->
                             <?php endforeach; ?> <!-- resolves for loop for each author -->

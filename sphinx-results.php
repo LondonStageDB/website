@@ -1,8 +1,5 @@
 <?php
-  $time = microtime();
-  $time = explode(' ', $time);
-  $time = $time[1] + $time[0];
-  $start = $time;
+  $start = microtime(True);
 
   include_once('includes/functions.php');
   require_once 'includes/SphinxPaginator.class.php';
@@ -401,7 +398,7 @@
                          if ($inCast !== false) {
                            echo '<div class="cast"><h5>Cast</h5>';
                            foreach ($inCast as $cast) {
-                             echo '<span class="c-role"><span class="smcp"><b>Role</b></span>: ' . highlight(linkedSearches('role[]', $cast['Role'], true), cleanQuotes($keyword) . '|' . cleanQuotes($cleanedRoles)) . '</span> <span class="c-act"><span class="smcp"><b>Actor</b></span>: ' . highlight(linkedSearches('actor[]', $cast['Performer'], true), cleanQuotes($keyword) . '|' . cleanQuotes($cleanedActors)) . '</span><br>';
+                             echo '<span class="c-role"><span class="smcp"><b>Role</b></span>: ' . highlight(linkedSearches('role[]', $cast['Role']), cleanQuotes($keyword) . '|' . cleanQuotes($cleanedRoles)) . '</span> <span class="c-act"><span class="smcp"><b>Actor</b></span>: ' . highlight(linkedSearches('actor[]', $cast['Performer']), cleanQuotes($keyword) . '|' . cleanQuotes($cleanedActors)) . '</span><br>';
                            }
                            echo '</div>';
                          }
@@ -415,6 +412,8 @@
                                 foreach ($rltd['author'] as $rltdAuth) {
                                   $author = isset($_GET['author']) ? $_GET['author'] : '';
                                   $keyword = isset($_GET['keyword']) ? $_GET['keyword'] : '';
+                                  // Skip over comparing search terms to authors with no known name
+                                  if (!array_key_exists('authname', $rltdAuth)) continue; 
                                   if (isFoundIn($rltdAuth['authname'], cleanQuotes(cleanStr($keyword)) . '|' . cleanQuotes(cleanStr($author)))) {
                                     $isFoundInRelated = true;
                                     if (!in_array($rltd['title'], $isFoundUnique)) {
@@ -432,6 +431,7 @@
                                   echo '<div class="rltd-auth"><span class="work-wrap"><span class="smcp"><b>Related Work:</b></span> ' . $rltd2['title'] . '</span> ';
                                   echo '<span class="auth-wrap"><span class="smcp"><b>Author(s):</b></span> ';
                                   foreach ($rltd2['author'] as $rltdAuth2) {
+                                    if (!array_key_exists('authname', $rltdAuth2)) continue; // Skip over matching keywords to anonymous works
                                     if (isFoundIn($rltdAuth2['authname'], cleanQuotes(cleanStr($keyword)) . '|' . cleanQuotes(cleanStr($author)))) {
                                       echo '<span class="auth">' . highlight($rltdAuth2['authname'], cleanQuotes($keyword) . '|' . cleanQuotes($author)) . '</span>';
                                     }
@@ -471,10 +471,7 @@
   <!--
 
   <?php
-  $time = microtime();
-  $time = explode(' ', $time);
-  $time = $time[1] + $time[0];
-  $finish = $time;
+  $finish = microtime(True);
   $total_time = round(($finish - $start), 4);
   echo "Page generated in $total_time seconds.";
   ?>

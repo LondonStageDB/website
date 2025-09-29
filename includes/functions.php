@@ -1017,7 +1017,7 @@
         // Get sources associated with linked work or works of a similar title
         foreach ($works as $work) {
           similar_text($work['title'], $perfTitle, $perc); // Compute title similarity
-          if (($perc > 70) or ($work['workId'] == $workId)) {
+          if (($perc > 70) or ($work['workid'] == $workId)) {
             foreach ($work as $k => $v) {
                 if (str_starts_with($k, 'source')) $sources[] = mysqli_real_escape_string(
                     $sphinx_conn, ucwords($v));
@@ -2026,7 +2026,7 @@
  *
  * @return string HTML Text block with values linked out to relevant searches.
  */
-  function linkedSearches($key, $value, $sphinx_results = false) {
+  function linkedSearches($key, $value) {
     $value = trim($value);
     if ($value === '') return '';
 
@@ -2039,10 +2039,7 @@
     }
 
     $re = '/' . implode('|', $m[0]) . '/i';
-    //return preg_replace($re, '<a href="results.php?'.preg_replace('/[\[\]]/', '&rbrack;', $key).'=$0">$0</a>', $value);
-    return $sphinx_results ?
-        preg_replace($re, '<a href="sphinx-results.php?'.$key.'=$0">$0</a>', $value) :
-        preg_replace($re, '<a href="results.php?'.$key.'=$0">$0</a>', $value);
+    return preg_replace($re, '<a href="sphinx-results.php?'.$key.'=$0">$0</a>', $value);
   }
 
 
@@ -2054,15 +2051,12 @@
   *
   * @return string href value.
   */
-  function linkedTitles($value, $sphinx_results = false) {
+  function linkedTitles($value) {
     $value = trim($value);
     if ($value === '') return '';
 
     $value = strip_tags(htmlentities($value));
-
-    return $sphinx_results ?
-        '/sphinx-results.php?performance=' . $value :
-        '/results.php?performance=' . $value;
+    return '/sphinx-results.php?performance=' . $value;
   }
 
 
@@ -2328,11 +2322,10 @@
     } else {
       $filename = $id;
       $event['Performances'] = array();
-      //$event['Performances'] = getPerformances($event['EventId']);
       $perfs = getPerformances($event['EventId']);
-
       foreach ($perfs as $perf) {
-        $perf['RelatedWorks'] = getSphinxRelatedWorks($perf['PerformanceTitle'], $perf['workId']);
+        $perf['RelatedWorks'] = getSphinxRelatedWorks($perf['PerformanceTitle'],
+            array_key_exists('WorkId', $perf) ? $perf['WorkId'] : null);
         $event['Performances'][] = $perf;
       }
     }
