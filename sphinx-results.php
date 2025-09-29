@@ -472,7 +472,7 @@
 
   <?php
   $finish = microtime(True);
-  $total_time = round($finish - $start, 4);
+  $total_time = round(($finish - $start), 4);
   echo "Page generated in $total_time seconds.";
   ?>
 

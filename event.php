@@ -170,8 +170,8 @@
                 <div class="small-12 medium-6 large-7 perf-info-left">
                   <?php if(in_array($perf['PType'], ['p', 'a'])) : ?>
                   <div class="perf-title perf-data"><span class="info-heading">Title:</span>
-                    <a href="<?php echo linkedTitles($perf['PerformanceTitle']); ?>">
-                      <?php echo cleanItalics(cleanTitle($perf['PerformanceTitle'])); ?>
+                    <a href="<?php echo linkedTitles($perf['PerfTitleClean']); ?>">
+                      <?php echo cleanItalics(cleanTitle($perf['PerfTitleClean'])); ?>
                     </a>
                   </div>
                   <div class="perf-comments perf-data"><span>Comments:</span><br />
