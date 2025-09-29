@@ -415,6 +415,8 @@
                                 foreach ($rltd['author'] as $rltdAuth) {
                                   $author = isset($_GET['author']) ? $_GET['author'] : '';
                                   $keyword = isset($_GET['keyword']) ? $_GET['keyword'] : '';
+                                  // Skip over comparing search terms to authors with no known name
+                                  if (!array_key_exists('authname', $rltdAuth)) continue; 
                                   if (isFoundIn($rltdAuth['authname'], cleanQuotes(cleanStr($keyword)) . '|' . cleanQuotes(cleanStr($author)))) {
                                     $isFoundInRelated = true;
                                     if (!in_array($rltd['title'], $isFoundUnique)) {
@@ -432,6 +434,7 @@
                                   echo '<div class="rltd-auth"><span class="work-wrap"><span class="smcp"><b>Related Work:</b></span> ' . $rltd2['title'] . '</span> ';
                                   echo '<span class="auth-wrap"><span class="smcp"><b>Author(s):</b></span> ';
                                   foreach ($rltd2['author'] as $rltdAuth2) {
+                                    if (!array_key_exists('authname', $rltdAuth2)) continue; // Skip over matching keywords to anonymous works
                                     if (isFoundIn($rltdAuth2['authname'], cleanQuotes(cleanStr($keyword)) . '|' . cleanQuotes(cleanStr($author)))) {
                                       echo '<span class="auth">' . highlight($rltdAuth2['authname'], cleanQuotes($keyword) . '|' . cleanQuotes($author)) . '</span>';
                                     }
