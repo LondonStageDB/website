@@ -1,8 +1,5 @@
 <?php
-  $time = microtime();
-  $time = explode(' ', $time);
-  $time = $time[1] + $time[0];
-  $start = $time;
+  $start = microtime(True);
 
   include_once('includes/functions.php');
   require_once 'includes/SphinxPaginator.class.php';
@@ -19,7 +16,7 @@
   $g_p = filter_input(INPUT_GET, 'p', FILTER_SANITIZE_NUMBER_INT);
   // Prevent SQL injection
   if(!is_numeric($g_p)) $g_p = '';
-  $limit      = ( $g_lim !== '' && $g_lim > 0 ) ? $g_lim : 25;
+  $limit      = ( $g_lim !== '' && $g_lim > 0 && $g_lim <= 50) ? $g_lim : 25;
   $page       = ( $g_p !== '' && $g_p > 0 ) ? $g_p : 1;
   $links      = 3;
   $Paginator  = new SphinxPaginator( $sphinx_conn, $sql );
@@ -401,7 +398,7 @@
                          if ($inCast !== false) {
                            echo '<div class="cast"><h5>Cast</h5>';
                            foreach ($inCast as $cast) {
-                             echo '<span class="c-role"><span class="smcp"><b>Role</b></span>: ' . highlight(linkedSearches('role[]', $cast['Role'], true), cleanQuotes($keyword) . '|' . cleanQuotes($cleanedRoles)) . '</span> <span class="c-act"><span class="smcp"><b>Actor</b></span>: ' . highlight(linkedSearches('actor[]', $cast['Performer'], true), cleanQuotes($keyword) . '|' . cleanQuotes($cleanedActors)) . '</span><br>';
+                             echo '<span class="c-role"><span class="smcp"><b>Role</b></span>: ' . highlight(linkedSearches('role[]', $cast['Role']), cleanQuotes($keyword) . '|' . cleanQuotes($cleanedRoles)) . '</span> <span class="c-act"><span class="smcp"><b>Actor</b></span>: ' . highlight(linkedSearches('actor[]', $cast['Performer']), cleanQuotes($keyword) . '|' . cleanQuotes($cleanedActors)) . '</span><br>';
                            }
                            echo '</div>';
                          }
@@ -474,10 +471,7 @@
   <!--
 
   <?php
-  $time = microtime();
-  $time = explode(' ', $time);
-  $time = $time[1] + $time[0];
-  $finish = $time;
+  $finish = microtime(True);
   $total_time = round(($finish - $start), 4);
   echo "Page generated in $total_time seconds.";
   ?>
