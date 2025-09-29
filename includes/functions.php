@@ -1017,7 +1017,7 @@
         // Get sources associated with linked work or works of a similar title
         foreach ($works as $work) {
           similar_text($work['title'], $perfTitle, $perc); // Compute title similarity
-          if (($perc > 70) or ($work['workId'] == $workId)) {
+          if (($perc > 70) or ($work['workid'] == $workId)) {
             foreach ($work as $k => $v) {
                 if (str_starts_with($k, 'source')) $sources[] = mysqli_real_escape_string(
                     $sphinx_conn, ucwords($v));
