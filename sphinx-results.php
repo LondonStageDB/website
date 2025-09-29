@@ -401,7 +401,7 @@
                          if ($inCast !== false) {
                            echo '<div class="cast"><h5>Cast</h5>';
                            foreach ($inCast as $cast) {
-                             echo '<span class="c-role"><span class="smcp"><b>Role</b></span>: ' . highlight(linkedSearches('role[]', $cast['Role'], true), cleanQuotes($keyword) . '|' . cleanQuotes($cleanedRoles)) . '</span> <span class="c-act"><span class="smcp"><b>Actor</b></span>: ' . highlight(linkedSearches('actor[]', $cast['Performer'], true), cleanQuotes($keyword) . '|' . cleanQuotes($cleanedActors)) . '</span><br>';
+                             echo '<span class="c-role"><span class="smcp"><b>Role</b></span>: ' . highlight(linkedSearches('role[]', $cast['Role']), cleanQuotes($keyword) . '|' . cleanQuotes($cleanedRoles)) . '</span> <span class="c-act"><span class="smcp"><b>Actor</b></span>: ' . highlight(linkedSearches('actor[]', $cast['Performer'], true), cleanQuotes($keyword) . '|' . cleanQuotes($cleanedActors)) . '</span><br>';
                            }
                            echo '</div>';
                          }

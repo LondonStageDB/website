@@ -170,7 +170,7 @@
                 <div class="small-12 medium-6 large-7 perf-info-left">
                   <?php if(in_array($perf['PType'], ['p', 'a'])) : ?>
                   <div class="perf-title perf-data"><span class="info-heading">Title:</span>
-                    <a href="<?php echo linkedTitles($perf['PerformanceTitle'], TRUE); ?>">
+                    <a href="<?php echo linkedTitles($perf['PerformanceTitle']); ?>">
                       <?php echo cleanItalics(cleanTitle($perf['PerformanceTitle'])); ?>
                     </a>
                   </div>
@@ -182,9 +182,9 @@
                     <ul class="no-bullet">
                       <?php foreach ($perf['cast'] as $cast) : ?>
                       <li class="grid-x"><span class="role cell small-4"><span class="info-heading">Role:</span>
-                        <?php echo linkedSearches('role[]', $cast['Role'], TRUE); ?> </span>
+                        <?php echo linkedSearches('role[]', $cast['Role']); ?> </span>
                         <span class="actor cell small-6"><span class="info-heading">Actor:</span>
-                        <?php echo linkedSearches('actor[]', $cast['Performer'], TRUE); ?> </span>
+                        <?php echo linkedSearches('actor[]', $cast['Performer']); ?> </span>
                       </li>
                       <?php endforeach; ?>
                     </ul>
@@ -238,7 +238,9 @@
                                         if ((array_key_exists('startdate', $auth))
                                             || (array_key_exists('enddate', $auth))){
                                             // Display dates if author has at least one known date
-                                        echo "(" . $auth['startdate'] . " - " .  $auth['enddate'] .")" ; }?> </span>
+                                            $startdate = array_key_exists('startdate', $auth) ? $auth['startdate'] : '';
+                                            $enddate = array_key_exists('enddate', $auth) ? $auth['enddate'] : '';
+                                        echo "(" . $startdate . " - " .  $enddate .")" ; }?> </span>
                                 </div> <!-- end author list item -->
                               <?php endif; ?> <!--resolves if authtype is not 'Researched', 'Primary' -->
                             <?php endforeach; ?> <!-- resolves for loop for each author -->

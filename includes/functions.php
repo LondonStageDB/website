@@ -2021,12 +2021,12 @@
  *  'actor' will take the value and link to a search for ?actor=value.
  *
  * @param string $key The key for which we will create a search link.
- * @param string $value The value for which to be searched.
+ * @param string $value The value for whiceh to be searched.
  * @param bool $sphinx_results When set to true, will like to sphinx results.
  *
  * @return string HTML Text block with values linked out to relevant searches.
  */
-  function linkedSearches($key, $value, $sphinx_results = false) {
+  function linkedSearches($key, $value) {
     $value = trim($value);
     if ($value === '') return '';
 
@@ -2039,10 +2039,7 @@
     }
 
     $re = '/' . implode('|', $m[0]) . '/i';
-    //return preg_replace($re, '<a href="results.php?'.preg_replace('/[\[\]]/', '&rbrack;', $key).'=$0">$0</a>', $value);
-    return $sphinx_results ?
-        preg_replace($re, '<a href="sphinx-results.php?'.$key.'=$0">$0</a>', $value) :
-        preg_replace($re, '<a href="results.php?'.$key.'=$0">$0</a>', $value);
+    return preg_replace($re, '<a href="sphinx-results.php?'.$key.'=$0">$0</a>', $value);
   }
 
 
@@ -2054,15 +2051,12 @@
   *
   * @return string href value.
   */
-  function linkedTitles($value, $sphinx_results = false) {
+  function linkedTitles($value) {
     $value = trim($value);
     if ($value === '') return '';
 
     $value = strip_tags(htmlentities($value));
-
-    return $sphinx_results ?
-        '/sphinx-results.php?performance=' . $value :
-        '/results.php?performance=' . $value;
+    return '/sphinx-results.php?performance=' . $value;
   }
 
 
@@ -2328,11 +2322,10 @@
     } else {
       $filename = $id;
       $event['Performances'] = array();
-      //$event['Performances'] = getPerformances($event['EventId']);
       $perfs = getPerformances($event['EventId']);
-
       foreach ($perfs as $perf) {
-        $perf['RelatedWorks'] = getSphinxRelatedWorks($perf['PerformanceTitle'], $perf['workId']);
+        $perf['RelatedWorks'] = getSphinxRelatedWorks($perf['PerformanceTitle'],
+            array_key_exists('workid', $perf) ? $perf['workid'] : null);
         $event['Performances'][] = $perf;
       }
     }
