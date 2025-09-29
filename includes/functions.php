@@ -2021,7 +2021,7 @@
  *  'actor' will take the value and link to a search for ?actor=value.
  *
  * @param string $key The key for which we will create a search link.
- * @param string $value The value for whiceh to be searched.
+ * @param string $value The value for which to be searched.
  * @param bool $sphinx_results When set to true, will like to sphinx results.
  *
  * @return string HTML Text block with values linked out to relevant searches.
