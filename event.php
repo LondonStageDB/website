@@ -17,7 +17,7 @@
     <link rel="stylesheet" href="/css/flexslider2-7-2.css" type="text/css" />
     <?php include_once('common/header.php'); ?>
     <title>London Stage Event: <?php echo formatDate($event['EventDate'], true) . ' at ' . getTheatreName($event['TheatreId']); ?></title>
-    <meta name="description" content="<?php echo formatDate($event['EventDate'], true); ?> performances of <?php echo implode(', ', array_column($event['Performances'], 'PerformanceTitle')); ?>" />
+    <meta name="description" content="<?php echo formatDate($event['EventDate'], true); ?> performances of <?php echo implode(', ', array_column($event['Performances'], 'PerfTitleClean')); ?>" />
   </head>
 
   <body id="event">
