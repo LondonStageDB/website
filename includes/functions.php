@@ -2128,7 +2128,7 @@
               $subnode = $xml_data->addChild($key);
               array_to_xml($value, $subnode, $key);
           } else {
-              $xml_data->addChild("$key",htmlspecialchars(utf8_for_xml("$value")));
+              $xml_data->addChild("$key",htmlspecialchars("$value"));
           }
        }
      }
@@ -2176,7 +2176,7 @@
               $subnode = $xml_data->addChild($key);
               array_to_xml($value, $subnode, $key);
           } else {
-              $xml_data->addChild("$key",htmlspecialchars(utf8_for_xml("$value")));
+              $xml_data->addChild("$key",htmlspecialchars("$value"));
           }
        }
      }
@@ -2215,19 +2215,6 @@
     header('Content-type: text/xml');
     echo $xml;
   }
-
-
-  /**
-  * Removes unsupported UTF8 chars from string
-  *
-  * @param string $string String that needs to be prepared for XML conversion.
-  *
-  * @return string
-  */
-  function utf8_for_xml($string) {
-    return preg_replace ('/[^\x{0009}\x{000a}\x{000d}\x{0020}-\x{D7FF}\x{E000}-\x{FFFD}]+/u', ' ', $string);
-  }
-
 
   /**
   * Creates CSV download for all search results
@@ -2288,7 +2275,7 @@
     $fp = fopen('php://output', 'w');
     // Set headers so file automatically downloads
     header('Content-disposition: attachment; filename=' . $filename . '.csv');
-    header('Content-type: text/csv; charset=utf-8');
+    header('Content-type: text/csv; charset=utf8mb4');
     if(empty($ids)) {
       fputcsv($fp, 'No Events Found');
     } else {
@@ -2297,9 +2284,6 @@
         if(empty($headers)) {
           $headers = array_keys($row);
           fputcsv($fp, $headers);
-        }
-        foreach($row as $key => $value) {
-          $row[$key] = utf8_for_xml($value);
         }
         fputcsv($fp, $row);
       }
@@ -2330,7 +2314,7 @@
       }
     }
 
-    $json = json_encode(utf8ize($event));
+    $json = json_encode($event);
 
     // Set headers so file automatically downloads
     header('Content-disposition: attachment; filename=' . $filename . '.json');
@@ -2357,7 +2341,7 @@
     }
 
     if (count($ids) < 2000) {
-      $json = json_encode(utf8ize($events));
+      $json = json_encode($events);
     } else {
       $json = encodeLargeArray($events);
     }
@@ -2385,7 +2369,7 @@
     $json = array();
     while (count($events) > 0) {
         $partial_array = array_slice($events, 0, $threshold);
-        $json[] = ltrim(rtrim(json_encode(utf8ize($partial_array)), "]"), "[");
+        $json[] = ltrim(rtrim(json_encode($partial_array), "]"), "[");
         $events = array_slice($events, $threshold);
     }
 
@@ -2398,20 +2382,6 @@
     }
     $jsonStr2 = '[' . $jsonStr . ']';
     return $jsonStr2;
-  }
-
-
-
-
-  function utf8ize($d) {
-    if (is_array($d)) {
-        foreach ($d as $k => $v) {
-            $d[$k] = utf8ize($v);
-        }
-    } else if (is_string ($d)) {
-        return utf8_encode($d);
-    }
-    return $d;
   }
 
 ?>
