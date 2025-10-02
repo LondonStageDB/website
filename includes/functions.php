@@ -608,7 +608,7 @@
         if ($row['Variable_name'] === 'total_found')
           $all_counts[] = ['col' => 'eccount', 'count' => $row['Value']];
 
-    if (!is_bool($result['c_meta']) && !is_bool($result['c_meta']))
+    if (!is_bool($result['c']) && !is_bool($result['c_meta']))
       while ($row = $result['c_meta']->fetch_assoc())
         if ($row['Variable_name'] === 'total_found')
           $all_counts[] = ['col' => 'ccount', 'count' => $row['Value']];
@@ -1507,12 +1507,13 @@
         $workTitles[] = $row['title'];
       if ($row['variantname'] && $row['variantname'] !== '')
         $workTitles[] = $row['variantname'];
-      if ($row['performancetitle'] && $row['performancetitle'] !== '')
-        $workTitles[] = $row['performancetitle'];
+      // TODO(emwin) Add back with unicode Sphinx index change
+      /* if ($row['perftitleclean'] !== '')
+        $workTitles[] = $row['perftitleclean']; */
     }
     if (empty($workTitles)) return FALSE;
     // Unique list of all titles.
-    $titles = array_unique($workTitles);
+    $titles = array_unique(array_map('ucwords', $workTitles));
     // Some titles actually contain multiple titles, separated by a semicolon or
     //   '; or '. We'll trim and explode out the title on the semicolon, and
     //   $prefix is used to strip out the 'or '.
@@ -2324,7 +2325,7 @@
       $event['Performances'] = array();
       $perfs = getPerformances($event['EventId']);
       foreach ($perfs as $perf) {
-        $perf['RelatedWorks'] = getSphinxRelatedWorks($perf['PerformanceTitle'],
+        $perf['RelatedWorks'] = getSphinxRelatedWorks($perf['PerfTitleClean'],
             array_key_exists('WorkId', $perf) ? $perf['WorkId'] : null);
         $event['Performances'][] = $perf;
       }
