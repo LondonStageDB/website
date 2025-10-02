@@ -386,7 +386,7 @@
                         if (in_array($perf['PType'], ['a', 'p'])) {
                             $to_highlight = isset($_GET['keyword']) ? cleanQuotes($_GET['keyword']) : '';
                             $to_highlight .= (!empty($_GET['performance'])) ? '|' . cleanQuotes($_GET['performance']) : '';
-                            echo '<i>' . highlight(cleanItalics(cleanTitle($perf['PerformanceTitle'])), !empty($to_highlight) ? $to_highlight : NULL) . '</i>';
+                            echo '<i>' . highlight(cleanItalics(cleanTitle($perf['PerfTitleClean'])), !empty($to_highlight) ? $to_highlight : NULL) . '</i>';
                         } else {
                             echo highlight(namedEntityLinks($perf['DetailedComment'], true), !empty($to_highlight) ? $to_highlight : NULL);
                         }
