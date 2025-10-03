@@ -9,8 +9,8 @@
   // If search string is over 3 chars, full wildcard search,
   // Else exact match beginning of string with wildcard at the end
   $search = strlen($searchTerm) > 3 ?
-    "SELECT *, (MATCH(PerfTitleClean) AGAINST ('\"$searchTerm\" @4' IN BOOLEAN MODE) + case when PerfTitleClean LIKE '$searchTerm' then 50 when PerfTitleClean LIKE '$searchTerm%' then 15 end) as relevance FROM `Performances` WHERE (MATCH(PerfTitleClean) AGAINST ('\"$searchTerm\" @4' IN BOOLEAN MODE) OR PerfTitleClean LIKE '%$searchTerm%') GROUP BY PerformanceTitle ORDER BY relevance DESC, PerformanceTitle LIMIT 10" :
-    "SELECT * FROM `Performances` WHERE PerfTitleClean LIKE '$searchTerm%' GROUP BY PerformanceTitle ORDER BY PerformanceTitle LIMIT 10";
+    "SELECT PerfTitleClean, (MATCH(PerfTitleClean) AGAINST ('\"$searchTerm\" @4' IN BOOLEAN MODE) + case when PerfTitleClean LIKE '$searchTerm' then 50 when PerfTitleClean LIKE '$searchTerm%' then 15 end) as relevance FROM `Performances` WHERE (MATCH(PerfTitleClean) AGAINST ('\"$searchTerm\" @4' IN BOOLEAN MODE) OR PerfTitleClean LIKE '%$searchTerm%') GROUP BY PerfTitleClean ORDER BY relevance DESC, PerfTitleClean LIMIT 10" :
+    "SELECT PerfTitleClean FROM `Performances` WHERE PerfTitleClean LIKE '$searchTerm%' GROUP BY PerfTitleClean ORDER BY PerfTitleClean LIMIT 10";
 
   $result = $conn->query($search);
 
