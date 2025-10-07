@@ -377,7 +377,7 @@
                       <h3>Performances</h3>
                       <?php foreach ($results->data[$i]['performances'] as $perf) {
                         if ((isset($_GET['author']) && trim($_GET['author']) !== '') || (isset($_GET['keyword']) && trim($_GET['keyword']) !== '')) {
-                            $perf['RelatedWorks'] = getSphinxRelatedWorks($perf['PerformanceTitle']);
+                            $perf['RelatedWorks'] = getSphinxRelatedWorks($perf['PerfTitleClean']);
                         }
                         echo '<div class="perf">';
                         echo '<h4><span class="info-heading">' . getPType($perf['PType']) . (in_array($perf['PType'], ['a', 'p']) ? ' Title' : '') . ': </span>';
@@ -386,7 +386,7 @@
                         if (in_array($perf['PType'], ['a', 'p'])) {
                             $to_highlight = isset($_GET['keyword']) ? cleanQuotes($_GET['keyword']) : '';
                             $to_highlight .= (!empty($_GET['performance'])) ? '|' . cleanQuotes($_GET['performance']) : '';
-                            echo '<i>' . highlight(cleanItalics(cleanTitle($perf['PerformanceTitle'])), !empty($to_highlight) ? $to_highlight : NULL) . '</i>';
+                            echo '<i>' . highlight(cleanItalics(cleanTitle($perf['PerfTitleClean'])), !empty($to_highlight) ? $to_highlight : NULL) . '</i>';
                         } else {
                             echo highlight(namedEntityLinks($perf['DetailedComment'], true), !empty($to_highlight) ? $to_highlight : NULL);
                         }
