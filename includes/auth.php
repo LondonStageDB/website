@@ -10,13 +10,13 @@
   // Else exact match beginning of string with wildcard at the end
   $search = strlen($searchTerm) > 3 ?
     "select authname from author where MATCH('$searchTerm*') LIMIT 10" :
-    "select authname from author where MATCH('*$searchTerm*')";
+    "select authname from author where MATCH('*$searchTerm*') LIMIT 10";
 
-  $result = $spihx_conn->query($search);
+  $result = $sphinx_conn->query($search);
 
   $data = array();
   while ($row = $result->fetch_assoc()) {
-    $data[] = trim($row['AuthName']);
+    $data[] = trim($row['authname']);
   }
 
   echo json_encode(array_unique($data));

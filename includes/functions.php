@@ -608,7 +608,7 @@
         if ($row['Variable_name'] === 'total_found')
           $all_counts[] = ['col' => 'eccount', 'count' => $row['Value']];
 
-    if (!is_bool($result['c_meta']) && !is_bool($result['c_meta']))
+    if (!is_bool($result['c']) && !is_bool($result['c_meta']))
       while ($row = $result['c_meta']->fetch_assoc())
         if ($row['Variable_name'] === 'total_found')
           $all_counts[] = ['col' => 'ccount', 'count' => $row['Value']];
@@ -975,7 +975,7 @@
             }
         }
 
-        // Standardize capitalization of titles
+        // Standardize capitalization of titles, deduplicate
         $titles = array_unique(array_map('ucwords', $titles));
 
         // If there's at least one title, look up works by title
@@ -998,7 +998,8 @@
                 $sphinx_titles = implode('|', $values);  // Concat "Title1 | Title2 ..."
                 $sql = "SELECT *\nFROM related_work";
                 $sql .= "\nWHERE MATCH('@title " . $sphinx_titles .
-                    " |  @performancetitle " . $sphinx_titles .
+                    " | @performancetitle " . $sphinx_titles .
+                    " | @perftitleclean " . $sphinx_titles .
                     " | @variantname " . $sphinx_titles .
                     " | @source1 " . $sphinx_titles .
                     " | @source2 " . $sphinx_titles .
@@ -1033,7 +1034,8 @@
 
           // Construct SphinxQL query
           $sql = "SELECT * FROM related_work";
-          $sql .= "\nWHERE MATCH('@title " . $squery . " |  @performancetitle " . $squery . " | @variantname " . $squery .
+          $sql .= "\nWHERE MATCH('@title " . $squery . " |  @performancetitle " . $squery .
+              " | @perftitleclean " . $squery . " | @variantname " . $squery .
               " |  @source1 " . $squery . " |  @source2 " . $squery . " |  @sourceresearched " . $squery . "')";
           $sql .= ' GROUP BY workid, authid';
 
@@ -1507,12 +1509,12 @@
         $workTitles[] = $row['title'];
       if ($row['variantname'] && $row['variantname'] !== '')
         $workTitles[] = $row['variantname'];
-      if ($row['performancetitle'] && $row['performancetitle'] !== '')
-        $workTitles[] = $row['performancetitle'];
+      if ($row['perftitleclean'] !== '')
+        $workTitles[] = $row['perftitleclean'];
     }
     if (empty($workTitles)) return FALSE;
     // Unique list of all titles.
-    $titles = array_unique($workTitles);
+    $titles = array_unique(array_map('ucwords', $workTitles));
     // Some titles actually contain multiple titles, separated by a semicolon or
     //   '; or '. We'll trim and explode out the title on the semicolon, and
     //   $prefix is used to strip out the 'or '.
@@ -2308,7 +2310,7 @@
       $event['Performances'] = array();
       $perfs = getPerformances($event['EventId']);
       foreach ($perfs as $perf) {
-        $perf['RelatedWorks'] = getSphinxRelatedWorks($perf['PerformanceTitle'],
+        $perf['RelatedWorks'] = getSphinxRelatedWorks($perf['PerfTitleClean'],
             array_key_exists('WorkId', $perf) ? $perf['WorkId'] : null);
         $event['Performances'][] = $perf;
       }
