@@ -411,7 +411,7 @@
             // The author filter does a lookup of all of the author's works,
             //   then adds the full list of titles and related works titles to
             //   the MATCH statement with an OR operator between each title.
-            $author = trim(mysqli_real_escape_string($sphinx_conn, $author));
+            $author = trim($author);
             $authorMatch = getSphinxAuthorQuery($author);
             // If no authors are found, $authorMatch is False
             if (!$authorMatch) {
@@ -431,7 +431,7 @@
             // search worked in the legacy search. Use it for the other fields.
             array_push(
               $matches,
-              "(@(authnameclean,perftitleclean,commentcclean,commentpclean) \"$keyword\"/1) | (@(roleclean,performerclean) \"$keyword\")"
+              "(@(authnameclean,authname,perftitleclean,commentcclean,commentpclean) \"$keyword\"/1) | (@(roleclean,performerclean) \"$keyword\")"
             );
             break;
         }
@@ -1489,12 +1489,28 @@
     if ($author === '') return FALSE;
     global $sphinx_conn;
 
-    $authorClean = mysqli_real_escape_string($sphinx_conn, $author);
+    $authorClean =
+        cleanQuotes(mysqli_real_escape_string($sphinx_conn, $author));
     // Find the author's works in the Related Works index.
+
+    // Get candidate author ids
+    $authIdQuery = "SELECT authid 
+        FROM author
+        WHERE MATCH('$authorClean') 
+        GROUP BY authid LIMIT 10";
+    $result = $sphinx_conn->query($authIdQuery);
+    if (!$result) return FALSE;
+
+    $id_rows = $result->fetch_all(MYSQLI_ASSOC);
+    $authids = array_column($id_rows, "authid");
+
+    // Return early if there are no matched authors
+    if (empty($authids)) return FALSE;
+
     $authorWorksSql =
         "SELECT *
          FROM related_work
-         WHERE MATCH('@authname \"$authorClean\"')
+         WHERE authid IN (" . implode(', ', $authids) . ")
          GROUP BY workid
          LIMIT 1000";
     // Run the query.
@@ -1530,6 +1546,7 @@
         $processedTitles[] = '"' . mysqli_real_escape_string($sphinx_conn, $titl) . '"';
       }
     }
+    $processedTitles = array_unique($processedTitles);
     // Return the MATCH statement for the performance title field with all
     //   titles in double quotes, separated by the OR operator.
     return implode(' | ' , $processedTitles);

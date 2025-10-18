@@ -9,15 +9,17 @@
   // If search string is over 3 chars, full wildcard search,
   // Else exact match beginning of string with wildcard at the end
   $search = strlen($searchTerm) > 3 ?
-    "select authname from author where MATCH('$searchTerm*') LIMIT 10" :
-    "select authname from author where MATCH('*$searchTerm*') LIMIT 10";
+    "select authname, variantname from author where MATCH('$searchTerm*') LIMIT 10" :
+    "select authname, variantname from author where MATCH('*$searchTerm*') LIMIT 10";
 
   $result = $sphinx_conn->query($search);
 
-  $data = array();
+  $names = array();
   while ($row = $result->fetch_assoc()) {
-    $data[] = trim($row['authname']);
+    $names[] = trim($row['authname']);
+    if (!empty($row['variantname'])) {
+      $names[] = $row['variantname'];
+    }
   }
-
-  echo json_encode(array_unique($data));
+  echo json_encode(array_unique($names));
 ?>
