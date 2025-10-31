@@ -1495,8 +1495,7 @@
 
     // Get candidate author ids
     $authIdQuery = "SELECT authid 
-        FROM author
-        WHERE MATCH('$authorClean') 
+        FROM author WHERE MATCH('@(authname,authnameclean) $authorClean') 
         GROUP BY authid LIMIT 10";
     $result = $sphinx_conn->query($authIdQuery);
     if (!$result) return FALSE;
@@ -1508,7 +1507,7 @@
     if (empty($authids)) return FALSE;
 
     $authorWorksSql =
-        "SELECT *
+        "SELECT title, variantname, perftitleclean
          FROM related_work
          WHERE authid IN (" . implode(', ', $authids) . ")
          GROUP BY workid
@@ -1890,6 +1889,7 @@
     $allWords = array_filter($allWords, function($werd) {
       return strlen($werd) > 2;
     });
+    $allWords = array_unique($allWords);
 
     $re = '/\\w*?' . implode('|', $allWords) . '\\w*/i';
     if(!preg_match($re, $text)) {
@@ -2021,15 +2021,13 @@
  *
  * @return string HTML Text block with named entities linked out to keyword searches
  */
-  function namedEntityLinks($text, $sphinx_results = false) {
+  function namedEntityLinks($text) {
     $text = trim($text);
     if ($text === "") return '';
 
     $re = '/(\$)([\s\S]+)(=)([^\"]*)/U'; // Matches $name=
 
-    return $sphinx_results ?
-        preg_replace($re, '<a href="/sphinx-results.php?keyword=$2">$2$4</a>', $text) :
-        preg_replace($re, '<a href="/results.php?keyword=$2">$2$4</a>', $text);
+    return preg_replace($re, '<a href="/sphinx-results.php?keyword=$2">$2$4</a>', $text);
   }
 
 

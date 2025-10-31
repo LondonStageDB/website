@@ -371,7 +371,7 @@
                   </h2>
                 </div>
                 <div class="evt-body">
-                  <?php if (isset($_GET['keyword']) && isFoundIn($results->data[$i]['commentc'], cleanQuotes(cleanStr($_GET['keyword'])))) echo '<div class="evt-info"><b>Event Comment: </b>' . highlight(namedEntityLinks($results->data[$i]['commentc'], true), cleanQuotes($_GET['keyword'])) . '</div>';?>
+                  <?php if (isset($_GET['keyword']) && isFoundIn($results->data[$i]['commentc'], cleanQuotes(cleanStr($_GET['keyword'])))) echo '<div class="evt-info"><b>Event Comment: </b>' . highlight(namedEntityLinks($results->data[$i]['commentc']), cleanQuotes($_GET['keyword'])) . '</div>';?>
                   <div class="evt-other clearfix">
                     <div class="perfs">
                       <h3>Performances</h3>
@@ -388,10 +388,10 @@
                             $to_highlight .= (!empty($_GET['performance'])) ? '|' . cleanQuotes($_GET['performance']) : '';
                             echo '<i>' . highlight(cleanItalics(cleanTitle($perf['PerformanceTitle'])), !empty($to_highlight) ? $to_highlight : NULL) . '</i>';
                         } else {
-                            echo highlight(namedEntityLinks($perf['DetailedComment'], true), !empty($to_highlight) ? $to_highlight : NULL);
+                            echo highlight(namedEntityLinks($perf['DetailedComment']), !empty($to_highlight) ? $to_highlight : NULL);
                         }
                         echo '</h4>';
-                        if (isset($_GET['keyword']) && isFoundIn($perf['CommentP'], cleanQuotes(cleanStr($_GET['keyword']))) ) echo '<span class="perf-comm"><span class="smcp"><b>Performance Comment: </b></span>' . highlight(namedEntityLinks($perf['CommentP'], true), cleanQuotes($_GET['keyword'])) . '</span><br>';
+                        if (isset($_GET['keyword']) && isFoundIn($perf['CommentP'], cleanQuotes(cleanStr($_GET['keyword']))) ) echo '<span class="perf-comm"><span class="smcp"><b>Performance Comment: </b></span>' . highlight(namedEntityLinks($perf['CommentP']), cleanQuotes($_GET['keyword'])) . '</span><br>';
                         echo '<div class="perf-body">';
                         $keyword = isset($_GET['keyword']) ? $_GET['keyword'] : '';
                          $inCast = isInCast(cleanQuotes($keyword) . '|' . cleanQuotes($cleanedActors), cleanQuotes(cleanStr($keyword)) . '|' . cleanQuotes($cleanedRoles), $perf['cast']);

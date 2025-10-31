@@ -45,7 +45,7 @@
             <?php echo $event['Volume']; ?>
           </div>
           <div class="event-comments"><span class="info-heading">Comments:</span>
-            <?php echo namedEntityLinks($event['CommentC'], TRUE); ?>
+            <?php echo namedEntityLinks($event['CommentC']); ?>
           </div>
           <div class="event-btns grid-x">
             <div class="work-nav small-12 medium-6 large-6">
@@ -175,7 +175,7 @@
                     </a>
                   </div>
                   <div class="perf-comments perf-data"><span>Comments:</span><br />
-                    <?php echo namedEntityLinks($perf['CommentP'], TRUE); ?>
+                    <?php echo namedEntityLinks($perf['CommentP']); ?>
                   </div>
                   <div class="perf-cast perf-data"><span>Cast:</span><br />
                     <?php if (count($perf['cast']) > 0) : ?>
@@ -194,7 +194,7 @@
                   </div>
                   <?php else : ?>
                     <div class="perf-comments perf-data"><span class="info-heading">Comment:</span>
-                      <?php echo namedEntityLinks($perf['DetailedComment'], TRUE); ?>
+                      <?php echo namedEntityLinks($perf['DetailedComment']); ?>
                     </div>
                   <?php endif; ?>
                 </div>
