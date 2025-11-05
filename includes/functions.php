@@ -411,7 +411,7 @@
             // The author filter does a lookup of all of the author's works,
             //   then adds the full list of titles and related works titles to
             //   the MATCH statement with an OR operator between each title.
-            $author = trim($author);
+            $author =  trim(cleanQuotes($author));
             $authorMatch = getSphinxAuthorQuery($author);
             // If no authors are found, $authorMatch is False
             if (!$authorMatch) {
@@ -669,7 +669,7 @@
       $string = array_map('strip_tags', $string);
     }
 
-    return preg_replace('/[^\p{L} ;"]/u', '', $string);
+    return preg_replace('/[^\p{L} ;\'"]/u', '', $string);
   }
 
 
@@ -683,12 +683,12 @@
   * @return string The cleaned string with double quotes removed
   */
   function cleanQuotes($str, $wrap = false) {
-    $hasQuotes = false;
-    if (strpos($str, '"') !== false) $hasQuotes = true;
+    // Return early if the string has no quotes
+    if (strpos($str, '"') !== false) return $str;
 
-    $string = str_replace('"', '', $str);
-
-    if ($wrap && $hasQuotes) {
+    // Otherwise, clean quotes
+    $string = preg_replace('/"/', '', $str);
+    if ($wrap) {
       $string = " " . $string . " ";
     }
     return $string;
@@ -1488,14 +1488,12 @@
   function getSphinxAuthorQuery($author) {
     if ($author === '') return FALSE;
     global $sphinx_conn;
-
-    $authorClean =
-        cleanQuotes(mysqli_real_escape_string($sphinx_conn, $author));
+    $author = mysqli_real_escape_string($sphinx_conn, $author);
     // Find the author's works in the Related Works index.
 
     // Get candidate author ids
     $authIdQuery = "SELECT authid 
-        FROM author WHERE MATCH('@(authname,authnameclean) $authorClean') 
+        FROM author WHERE MATCH('@(authname,authnameclean) $author') 
         GROUP BY authid LIMIT 10";
     $result = $sphinx_conn->query($authIdQuery);
     if (!$result) return FALSE;
