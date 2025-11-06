@@ -2143,7 +2143,7 @@
               $subnode = $xml_data->addChild($key);
               array_to_xml($value, $subnode, $key);
           } else {
-              $xml_data->addChild("$key",htmlspecialchars("$value"));
+              $xml_data->addChild("$key",htmlspecialchars(utf8_for_xml("$value")));
           }
        }
      }
@@ -2156,6 +2156,17 @@
     header('Content-type: text/xml');
     echo $xml;
   }
+
+/**
+ * Removes unsupported UTF8 chars from string
+ *
+ * @param string $string String that needs to be prepared for XML conversion.
+ *
+ * @return string
+ */
+function utf8_for_xml($string) {
+  return preg_replace ('/[^\x{0009}\x{000a}\x{000d}\x{0020}-\x{D7FF}\x{E000}-\x{FFFD}]+/u', ' ', $string);
+}
 
 
   /**
@@ -2191,7 +2202,7 @@
               $subnode = $xml_data->addChild($key);
               array_to_xml($value, $subnode, $key);
           } else {
-              $xml_data->addChild("$key",htmlspecialchars("$value"));
+              $xml_data->addChild("$key",htmlspecialchars(utf8_for_xml("$value")));
           }
        }
      }
