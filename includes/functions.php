@@ -568,7 +568,7 @@
    */
   function getSphinxResultsByColumn($keyword) {
     global $sphinx_conn;
-    $keywrd   = mysqli_real_escape_string($sphinx_conn, cleanQuotes($keyword));
+    $keywrd   = mysqli_real_escape_string($sphinx_conn, $keyword);
     $psql     = "SELECT performanceid FROM london_stages WHERE MATCH('@perftitleclean \"$keywrd\"/1') GROUP BY performanceid";
     $asql     = "SELECT eventid FROM london_stages WHERE MATCH('@authnameclean \"$keywrd\"/1') GROUP BY eventid";
     $pcsql    = "SELECT performanceid FROM london_stages WHERE MATCH('@commentpclean \"$keywrd\"/1') GROUP BY performanceid";
