@@ -411,7 +411,7 @@
             // The author filter does a lookup of all of the author's works,
             //   then adds the full list of titles and related works titles to
             //   the MATCH statement with an OR operator between each title.
-            $author = trim(mysqli_real_escape_string($sphinx_conn, $author));
+            $author =  trim(cleanQuotes($author));
             $authorMatch = getSphinxAuthorQuery($author);
             // If no authors are found, $authorMatch is False
             if (!$authorMatch) {
@@ -431,7 +431,7 @@
             // search worked in the legacy search. Use it for the other fields.
             array_push(
               $matches,
-              "(@(authnameclean,perftitleclean,commentcclean,commentpclean) \"$keyword\"/1) | (@(roleclean,performerclean) \"$keyword\")"
+              "(@(authnameclean,authname,perftitleclean,commentcclean,commentpclean) \"$keyword\"/1) | (@(roleclean,performerclean) \"$keyword\")"
             );
             break;
         }
@@ -568,7 +568,7 @@
    */
   function getSphinxResultsByColumn($keyword) {
     global $sphinx_conn;
-    $keywrd   = mysqli_real_escape_string($sphinx_conn, cleanQuotes($keyword));
+    $keywrd   = mysqli_real_escape_string($sphinx_conn, $keyword);
     $psql     = "SELECT performanceid FROM london_stages WHERE MATCH('@perftitleclean \"$keywrd\"/1') GROUP BY performanceid";
     $asql     = "SELECT eventid FROM london_stages WHERE MATCH('@authnameclean \"$keywrd\"/1') GROUP BY eventid";
     $pcsql    = "SELECT performanceid FROM london_stages WHERE MATCH('@commentpclean \"$keywrd\"/1') GROUP BY performanceid";
@@ -669,7 +669,7 @@
       $string = array_map('strip_tags', $string);
     }
 
-    return preg_replace('/[^A-Za-z0-9 ;"]/', '', $string);
+    return preg_replace('/[^\p{L} ;\'"]/u', '', $string);
   }
 
 
@@ -683,12 +683,12 @@
   * @return string The cleaned string with double quotes removed
   */
   function cleanQuotes($str, $wrap = false) {
-    $hasQuotes = false;
-    if (strpos($str, '"') !== false) $hasQuotes = true;
+    // Return early if the string has no quotes
+    if (strpos($str, '"') !== false) return $str;
 
-    $string = str_replace('"', '', $str);
-
-    if ($wrap && $hasQuotes) {
+    // Otherwise, clean quotes
+    $string = preg_replace('/"/', '', $str);
+    if ($wrap) {
       $string = " " . $string . " ";
     }
     return $string;
@@ -975,7 +975,7 @@
             }
         }
 
-        // Standardize capitalization of titles
+        // Standardize capitalization of titles, deduplicate
         $titles = array_unique(array_map('ucwords', $titles));
 
         // If there's at least one title, look up works by title
@@ -998,7 +998,8 @@
                 $sphinx_titles = implode('|', $values);  // Concat "Title1 | Title2 ..."
                 $sql = "SELECT *\nFROM related_work";
                 $sql .= "\nWHERE MATCH('@title " . $sphinx_titles .
-                    " |  @performancetitle " . $sphinx_titles .
+                    " | @performancetitle " . $sphinx_titles .
+                    " | @perftitleclean " . $sphinx_titles .
                     " | @variantname " . $sphinx_titles .
                     " | @source1 " . $sphinx_titles .
                     " | @source2 " . $sphinx_titles .
@@ -1033,7 +1034,8 @@
 
           // Construct SphinxQL query
           $sql = "SELECT * FROM related_work";
-          $sql .= "\nWHERE MATCH('@title " . $squery . " |  @performancetitle " . $squery . " | @variantname " . $squery .
+          $sql .= "\nWHERE MATCH('@title " . $squery . " |  @performancetitle " . $squery .
+              " | @perftitleclean " . $squery . " | @variantname " . $squery .
               " |  @source1 " . $squery . " |  @source2 " . $squery . " |  @sourceresearched " . $squery . "')";
           $sql .= ' GROUP BY workid, authid';
 
@@ -1486,13 +1488,26 @@
   function getSphinxAuthorQuery($author) {
     if ($author === '') return FALSE;
     global $sphinx_conn;
-
-    $authorClean = mysqli_real_escape_string($sphinx_conn, $author);
+    $author = mysqli_real_escape_string($sphinx_conn, $author);
     // Find the author's works in the Related Works index.
+
+    // Get candidate author ids
+    $authIdQuery = "SELECT authid 
+        FROM author WHERE MATCH('@(authname,authnameclean) $author') 
+        GROUP BY authid LIMIT 10";
+    $result = $sphinx_conn->query($authIdQuery);
+    if (!$result) return FALSE;
+
+    $id_rows = $result->fetch_all(MYSQLI_ASSOC);
+    $authids = array_column($id_rows, "authid");
+
+    // Return early if there are no matched authors
+    if (empty($authids)) return FALSE;
+
     $authorWorksSql =
-        "SELECT *
+        "SELECT title, variantname, perftitleclean
          FROM related_work
-         WHERE MATCH('@authname \"$authorClean\"')
+         WHERE authid IN (" . implode(', ', $authids) . ")
          GROUP BY workid
          LIMIT 1000";
     // Run the query.
@@ -1507,9 +1522,8 @@
         $workTitles[] = $row['title'];
       if ($row['variantname'] && $row['variantname'] !== '')
         $workTitles[] = $row['variantname'];
-      // TODO(emwin) Add back with unicode Sphinx index change
-      /* if ($row['perftitleclean'] !== '')
-        $workTitles[] = $row['perftitleclean']; */
+      if ($row['perftitleclean'] !== '')
+        $workTitles[] = $row['perftitleclean'];
     }
     if (empty($workTitles)) return FALSE;
     // Unique list of all titles.
@@ -1529,6 +1543,7 @@
         $processedTitles[] = '"' . mysqli_real_escape_string($sphinx_conn, $titl) . '"';
       }
     }
+    $processedTitles = array_unique($processedTitles);
     // Return the MATCH statement for the performance title field with all
     //   titles in double quotes, separated by the OR operator.
     return implode(' | ' , $processedTitles);
@@ -1872,6 +1887,7 @@
     $allWords = array_filter($allWords, function($werd) {
       return strlen($werd) > 2;
     });
+    $allWords = array_unique($allWords);
 
     $re = '/\\w*?' . implode('|', $allWords) . '\\w*/i';
     if(!preg_match($re, $text)) {
@@ -2003,15 +2019,13 @@
  *
  * @return string HTML Text block with named entities linked out to keyword searches
  */
-  function namedEntityLinks($text, $sphinx_results = false) {
+  function namedEntityLinks($text) {
     $text = trim($text);
     if ($text === "") return '';
 
     $re = '/(\$)([\s\S]+)(=)([^\"]*)/U'; // Matches $name=
 
-    return $sphinx_results ?
-        preg_replace($re, '<a href="/sphinx-results.php?keyword=$2">$2$4</a>', $text) :
-        preg_replace($re, '<a href="/results.php?keyword=$2">$2$4</a>', $text);
+    return preg_replace($re, '<a href="/sphinx-results.php?keyword=$2">$2$4</a>', $text);
   }
 
 
@@ -2129,7 +2143,7 @@
               $subnode = $xml_data->addChild($key);
               array_to_xml($value, $subnode, $key);
           } else {
-              $xml_data->addChild("$key",htmlspecialchars(utf8_for_xml("$value")));
+              $xml_data->addChild("$key",htmlspecialchars("$value"));
           }
        }
      }
@@ -2177,7 +2191,7 @@
               $subnode = $xml_data->addChild($key);
               array_to_xml($value, $subnode, $key);
           } else {
-              $xml_data->addChild("$key",htmlspecialchars(utf8_for_xml("$value")));
+              $xml_data->addChild("$key",htmlspecialchars("$value"));
           }
        }
      }
@@ -2216,19 +2230,6 @@
     header('Content-type: text/xml');
     echo $xml;
   }
-
-
-  /**
-  * Removes unsupported UTF8 chars from string
-  *
-  * @param string $string String that needs to be prepared for XML conversion.
-  *
-  * @return string
-  */
-  function utf8_for_xml($string) {
-    return preg_replace ('/[^\x{0009}\x{000a}\x{000d}\x{0020}-\x{D7FF}\x{E000}-\x{FFFD}]+/u', ' ', $string);
-  }
-
 
   /**
   * Creates CSV download for all search results
@@ -2289,7 +2290,7 @@
     $fp = fopen('php://output', 'w');
     // Set headers so file automatically downloads
     header('Content-disposition: attachment; filename=' . $filename . '.csv');
-    header('Content-type: text/csv; charset=utf-8');
+    header('Content-type: text/csv; charset=utf8mb4');
     if(empty($ids)) {
       fputcsv($fp, 'No Events Found');
     } else {
@@ -2298,9 +2299,6 @@
         if(empty($headers)) {
           $headers = array_keys($row);
           fputcsv($fp, $headers);
-        }
-        foreach($row as $key => $value) {
-          $row[$key] = utf8_for_xml($value);
         }
         fputcsv($fp, $row);
       }
@@ -2331,7 +2329,7 @@
       }
     }
 
-    $json = json_encode(utf8ize($event));
+    $json = json_encode($event);
 
     // Set headers so file automatically downloads
     header('Content-disposition: attachment; filename=' . $filename . '.json');
@@ -2358,7 +2356,7 @@
     }
 
     if (count($ids) < 2000) {
-      $json = json_encode(utf8ize($events));
+      $json = json_encode($events);
     } else {
       $json = encodeLargeArray($events);
     }
@@ -2386,7 +2384,7 @@
     $json = array();
     while (count($events) > 0) {
         $partial_array = array_slice($events, 0, $threshold);
-        $json[] = ltrim(rtrim(json_encode(utf8ize($partial_array)), "]"), "[");
+        $json[] = ltrim(rtrim(json_encode($partial_array), "]"), "[");
         $events = array_slice($events, $threshold);
     }
 
@@ -2399,20 +2397,6 @@
     }
     $jsonStr2 = '[' . $jsonStr . ']';
     return $jsonStr2;
-  }
-
-
-
-
-  function utf8ize($d) {
-    if (is_array($d)) {
-        foreach ($d as $k => $v) {
-            $d[$k] = utf8ize($v);
-        }
-    } else if (is_string ($d)) {
-        return utf8_encode($d);
-    }
-    return $d;
   }
 
 ?>
