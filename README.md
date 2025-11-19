@@ -132,8 +132,7 @@ If you would like to deploy the legacy version of the London Stage Database,
 which has an alternative search feature that does not require Sphinx to be installed,
 a [archived release bundled with installation instructions](https://github.com/LondonStageDB/website/releases/tag/v2.1) is available for download.
 
-As [legacy search was deprecated for performance and security reasons]
-(https://blogs.uoregon.edu/londonstage/2025/05/07/legacy/) we only
+As [legacy search was deprecated for performance and security reasons](https://blogs.uoregon.edu/londonstage/2025/05/07/legacy/) we only
 recommend this option for users who want to precisely replicate older search behavior.
 
 ## Code Structure

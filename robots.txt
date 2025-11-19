@@ -3,6 +3,7 @@ Crawl-Delay: 120
 
 User-agent: *
 Disallow: /results.php
+Disallow: /sphinx-results.php
 Disallow: /get_all_csv.php
 Disallow: /get_all_json.php
 Disallow: /get_all_xml.php
@@ -12,3 +13,4 @@ Disallow: /get_all_sphinx_xml.php
 Disallow: /get_csv.php
 Disallow: /get_json.php
 Disallow: /get_xml.php
+Disallow: /get_tcp.php
