@@ -113,6 +113,9 @@
                         outreach efforts, with the aim to grow the project’s user communities.</p>
                     <h3><a
                                 id="Erin_Winter_MS_MSLS_23"></a><strong>Erin Winter</strong>, MS, MSLS</h3>
+                                <img alt="Headshot of Erin Winter"
+                         style="float:right;padding-left:25px;width:180.55px;height:233.75px;"
+                         src="/images/ErinWinter.png">
                     <p><a
                                 href="https://library.uoregon.edu/directory/winter">Research Data Management Librarian,
                             University of Oregon</a></p>
@@ -210,12 +213,42 @@
                     <p><a
                                 href="https://www.linkedin.com/in/emma-kaisner">BA Student, Economics &amp; English,
                             University of Oregon</a></p>
-                    <p>Kaisner is a current Senior at the University of Oregon and a student in the Robert D. Clark
+                    <p>Kaisner is a current Senior at the University of Oregon and a student in the Robert D. Clark 
                         Honors College. As an Economics and English student, Kaisner is interested in the interactions
                         between literature, economics, and data science. During her time as a LSDB team member, Kaisner
                         will assist in data collection and the implementation of a communications strategy for the
                         project. Kaisner will also develop her own line of research inquiry to further engage with her
                         own research interests and demonstrate the impact of the LSDB.</p>
+
+                        <h2>Research Assistants 2025-2026</h2>
+                    <h3><a id="Rose_Ruhnke"></a><strong>Rose Leigh Ruhnke</strong></h3>
+                    <img alt="Headshot of Rose Leigh Ruhnke outside"
+                         style="float:right;padding-left:25px;width:225px;height:225px;"
+                         src="/images/RoseRuhnke.jpeg">
+                    <p><a
+                                href="https://www.linkedin.com/in/rose-leigh-ruhnke-0077a336a/">BA Student, English & 
+                                Legal Studies, University of Oregon</a></p>
+                    <p>An English major with a minor in Legal Studies, Ruhnke transferred to the University of Oregon 
+                        after completing an early college program at Portland Community College. Growing up, she spent 
+                        her weekends acting at a local arts center, where she developed a deep love for theatre history, 
+                        which prompted her to spend her first term at the University of Oregon researching John Dryden’s 
+                        Marriage A-la-Mode. While working on the London Stage Database, Ruhnke will focus on advancing 
+                        the LSDB’s public outreach. She will also spend her time performing independent biographical 
+                        research on Restoration-era actors and actresses.</p>
+                        <<h3><a id="Ceilidh_McCallum"></a><strong>Ceilidh McCallum</strong>
+                        <img alt="Headshot of Ceilidh McCallum outside"
+                                                 style="float:right;padding-left:25px;width:210px;height:248.1px;"
+                                                 src="/images/CeilidhMcCallum.jpeg">
+                    </h3>
+                    <p><a
+                                href="https://www.linkedin.com/in/ceilidhmccallum/">BS Student, Cultural Anthropology, 
+                                University of Oregon</a></p>
+                    <p>Coming to the University of Oregon as a non-traditional student, McCallum is currently a Junior 
+                        in the Cultural Anthropology program, with a focus in Digital Humanities and Game Studies. 
+                        Her background comes from arts and technology, complimenting her interests lie with Digitization 
+                        and Archiving at the intersection of media and computerization. In her time with the LSDB project, 
+                        McCallum will be specializing in metadata compliance and working to further develop interactive 
+                        tools for the database to increase functionality and accessibility. </p>
                 </div>
             </div>
             <div class="grid-x team-section">
