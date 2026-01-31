@@ -115,7 +115,7 @@
             </div>
             <div class="form-group field-author inline-label">
               <label for="author" class="fb-select-label">Author</label>
-              <span data-tooltip class="top l-tooltip" tabindex="2" title="Searches not only for performances of plays known to be by this author, but also performances of associated titles, including adaptations.">?</span>
+              <span data-tooltip class="top l-tooltip" tabindex="0" title="Searches not only for performances of plays known to be by this author, but also performances of associated titles, including adaptations.">?</span>
               <input type="text" class="author" name="author" id="author" value="<?php getSticky(1, 'author'); ?>" onKeyPress="checkEnter(event)">
             </div>
           </div>
@@ -148,7 +148,7 @@
           <div class="small-12 medium-8 large-6 cell form-section">
             <div class="form-group field-actor inline-label">
               <label for="actor" class="fb-text-label">Actor</label>
-              <span data-tooltip class="top l-tooltip" tabindex="2" title="We recommend searching by last name (for example, instead of 'Dorothy Jordan,' search 'Jordan' to return instances where she is listed as 'Mrs Jordan')">?</span>
+              <span data-tooltip class="top l-tooltip" tabindex="0" title="We recommend searching by last name (for example, instead of 'Dorothy Jordan,' search 'Jordan' to return instances where she is listed as 'Mrs Jordan')">?</span>
               <span class="cast-switch">
                 <label for="actSwitch" class="show-for-sr">Select 'AND' or 'OR' search on multiple actors.</label>
                 <select name="actSwitch" id="actSwitch" title="Select 'AND' or 'OR' search on multiple actors." disabled="disabled">
@@ -187,7 +187,7 @@
           <div class="small-12 medium-8 large-6 cell form-section">
             <div class="form-group field-keyword inline-label">
               <label for="keyword" class="fb-text-label">Keyword </label>
-              <span data-tooltip class="top l-tooltip" tabindex="2" title="Keyword searches event comments, performance titles, performance comments, roles, actors, and author names.">?</span>
+              <span data-tooltip class="top l-tooltip" tabindex="0" title="Keyword searches event comments, performance titles, performance comments, roles, actors, and author names.">?</span>
               <input type="text" class="keyword" name="keyword" id="keyword" onKeyPress="checkEnter(event)">
             </div>
           </div>
