@@ -8,12 +8,12 @@
 
 <body id="glossary">
 <?php include_once('common/nav.php'); ?>
-<div id="main" class="main grid-container">
+<main class="main grid-container">
     <div class="grid-x glossary-wrap">
         <div class="small-12 page-heading">
             <h1>Glossary</h1>
         </div>
-        <div class="small-12 medium-4 large-3 glossary-nav" id="glossaryNav">
+        <aside class="small-12 medium-4 large-3 glossary-nav" id="glossaryNav">
             <nav class="show-for-small-only glossary-mobile-nav sticky-container" id="mobileNav"
                  data-sticky-container>
                 <div class data-sticky data-anchor="mobileNav" data-sticky-on="small">
@@ -34,7 +34,7 @@
                     </ul>
                 </div>
             </nav>
-        </div>
+        </aside>
         <div id="top" class="small-12 medium-8 large-9 glossary-content">
             <div class="grid-x glossary-section">
                 <div class="small-12">
@@ -142,7 +142,7 @@
             </div>
         </div>
     </div>
-</div>
+</main>
 </div>
 <?php include_once('common/footer.php'); ?>
 </body>
