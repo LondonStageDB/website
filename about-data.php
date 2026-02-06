@@ -18,8 +18,10 @@
                  data-sticky-container>
                 <div data-sticky data-anchor="mobileNav" data-sticky-on="small">
                     <ul class="menu" data-magellan>
-                        <li><a href="#Challenges">Archival Challenges</a></li>
-                        <li><a href="#Ambiguity">Interacting with Ambiguity</a></li>
+                        <aside>
+                            <li><a href="#Challenges">Archival Challenges</a></li>
+                            <li><a href="#Ambiguity">Interacting with Ambiguity</a></li>
+                        </aside>
                     </ul>
                 </div>
             </nav>
