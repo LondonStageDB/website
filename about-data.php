@@ -32,7 +32,7 @@
                     </ul>
                 </div>
             </nav>
-</aside>
+        </aside>
         <div id="top" class="small-12 medium-8 large-9 about-data-content">
             <div class="grid-x about-data-section">
                 <div class="small-12">
