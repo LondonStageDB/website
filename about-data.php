@@ -13,15 +13,13 @@
         <div class="small-12 page-heading">
             <h1>About the Data</h1>
         </div>
-        <div class="small-12 medium-4 large-3 about-data-nav" id="about-dataNav">
+        <aside class="small-12 medium-4 large-3 about-data-nav" id="about-dataNav">
             <nav class="show-for-small-only about-data-mobile-nav sticky-container" aria-label="mobile-nav" id="mobileNav"
                  data-sticky-container>
                 <div data-sticky data-anchor="mobileNav" data-sticky-on="small">
                     <ul class="menu" data-magellan>
-                        <aside>
                             <li><a href="#Challenges">Archival Challenges</a></li>
                             <li><a href="#Ambiguity">Interacting with Ambiguity</a></li>
-                        </aside>
                     </ul>
                 </div>
             </nav>
@@ -34,7 +32,7 @@
                     </ul>
                 </div>
             </nav>
-        </div>
+</aside>
         <div id="top" class="small-12 medium-8 large-9 about-data-content">
             <div class="grid-x about-data-section">
                 <div class="small-12">
