@@ -8,7 +8,7 @@
 
 <body id="tips">
 <?php include_once('common/nav.php'); ?>
-<div id="main" class="main grid-container">
+<main class="main grid-container">
     <div class="grid-x tips-wrap">
         <div class="small-12 page-heading">
             <h1>Search Tips</h1>
@@ -95,7 +95,7 @@
             </div>
         </div>
     </div>
-</div>
+</main>
 <?php include_once('common/footer.php'); ?>
 </body>
 

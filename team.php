@@ -8,7 +8,7 @@
 
 <body id="team">
 <?php include_once('common/nav.php'); ?>
-<div id="main" class="main grid-container">
+<main class="main grid-container">
     <div class="grid-x">
         <div class="small-12 page-heading">
             <h1>Meet the Team</h1>
@@ -495,7 +495,7 @@
             </div>
         </div>
     </div>
-</div>
+</main>
 <?php include_once('common/footer.php'); ?>
 </body>
 

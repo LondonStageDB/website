@@ -8,7 +8,7 @@
 
 <body id="home" class="home-page">
   <?php include_once('common/nav.php'); ?>
-  <div id="main" class="main">
+  <main class="main">
     <div class="form-wrap">
       <h1>London Stage Database</h1>
       <form id="searchForm" class="search-form grid-x grid-margin-x" method="get" action="sphinx-results.php">
@@ -18,7 +18,7 @@
         <a href="search.php" class="adv-search">Advanced Search</a>
       </form>
     </div>
-  </div>
+</main>
 
   <?php include_once('common/footer.php'); ?>
 </body>
