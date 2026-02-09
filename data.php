@@ -8,7 +8,7 @@
 
 <body id="data">
 <?php include_once('common/nav.php'); ?>
-<div id="main" class="main grid-container">
+<main class="main grid-container">
     <div class="grid-x data-wrap">
         <div class="small-12 page-heading">
             <h1>Data Downloads</h1>
@@ -39,7 +39,7 @@
             <p>Data for individual events can be exported from the relevant Event page.</p>
         </div>
     </div>
-</div>
+</main>
 <?php include_once('common/footer.php'); ?>
 </body>
 
