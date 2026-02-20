@@ -15,7 +15,7 @@
             <h1>About</h1>
         </div>
         <div class="small-12 medium-4 large-3 about-nav" id="aboutNav">
-            <nav class="show-for-small-only about-mobile-nav sticky-container" id="mobileNav" data-sticky-container>
+            <nav class="show-for-small-only about-mobile-nav sticky-container" aria-label="mobile-nav" id="mobileNav" data-sticky-container>
                 <div data-sticky data-anchor="mobileNav" data-sticky-on="small">
                     <ul class="menu" data-magellan>
                         <li><a href="#Overview">About</a></li>
