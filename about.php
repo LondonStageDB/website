@@ -24,7 +24,7 @@
                 </div>
             </nav>
 
-            <nav class="sticky-container show-for-medium" data-sticky-container>
+            <nav class="sticky-container show-for-medium" aria-label="nav-sticky" data-sticky-container>
                 <div data-sticky data-anchor="aboutNav" data-sticky-on="medium">
                     <h2>On This Page</h2>
                     <ul class="vertical menu" data-magellan>

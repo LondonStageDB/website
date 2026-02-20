@@ -14,7 +14,7 @@
             <h1>Glossary</h1>
         </div>
         <aside class="small-12 medium-4 large-3 glossary-nav" id="glossaryNav">
-            <nav class="show-for-small-only glossary-mobile-nav sticky-container" id="mobileNav"
+            <nav class="show-for-small-only glossary-mobile-nav sticky-container" aria-label="mobile-nav" id="mobileNav"
                  data-sticky-container>
                 <div class data-sticky data-anchor="mobileNav" data-sticky-on="small">
                     <ul class="menu" data-magellan>
@@ -24,7 +24,7 @@
                     </ul>
                 </div>
             </nav>
-            <nav class="sticky-container glossary-nav-sticky show-for-medium" data-sticky-container>
+            <nav class="sticky-container glossary-nav-sticky show-for-medium" aria-label="nav-sticky" data-sticky-container>
                 <div data-sticky data-anchor="glossaryNav" data-sticky-on="medium">
                     <h2>On This Page</h2>
                     <ul class="vertical menu" data-magellan>

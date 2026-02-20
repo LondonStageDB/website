@@ -14,7 +14,7 @@
             <h1>Citation and Sharing</h1>
         </div>
         <div class="small-12 medium-4 large-3 citation-nav" id="citationNav">
-            <nav class="show-for-small-only citation-mobile-nav sticky-container" id="mobileNav" data-sticky-container>
+            <nav class="show-for-small-only citation-mobile-nav sticky-container" aria-label="mobile-nav" id="mobileNav" data-sticky-container>
                 <div class data-sticky data-anchor="mobileNav" data-sticky-on="small">
                     <ul class="menu" data-magellan>
                         <li><a href="#OpenResearch">Open Research</a></li>
@@ -23,7 +23,7 @@
                     </ul>
                 </div>
             </nav>
-            <nav class="sticky-container show-for-medium" data-sticky-container>
+            <nav class="sticky-container show-for-medium" aria-label="nav-sticky" data-sticky-container>
                 <div class data-sticky data-anchor="citationNav" data-sticky-on="medium">
                     <h2>On This Page</h2>
                     <ul class="vertical menu" data-magellan>

@@ -14,7 +14,7 @@
             <h1>Search Tips</h1>
         </div>
         <div class="small-12 medium-4 large-3 tips-nav" id="tipsNav">
-            <nav class="show-for-small-only tips-mobile-nav sticky-container" id="mobileNav" data-sticky-container>
+            <nav class="show-for-small-only tips-mobile-nav sticky-container" aria-label="mobile-nav" id="mobileNav" data-sticky-container>
                 <div class data-sticky data-anchor="mobileNav" data-sticky-on="small">
                     <ul class="menu" data-magellan>
                         <li><a href="#Search">Keyword Search</a>
@@ -22,7 +22,7 @@
                     </ul>
                 </div>
             </nav>
-            <nav class="sticky-container tips-nav-sticky show-for-medium" data-sticky-container>
+            <nav class="sticky-container tips-nav-sticky show-for-medium" aria-label="nav-sticky" data-sticky-container>
                 <div data-sticky data-anchor="tipsNav" data-sticky-on="medium">
                     <h2>On This Page</h2>
                     <ul class="vertical menu" data-magellan>
