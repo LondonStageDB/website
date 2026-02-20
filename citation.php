@@ -70,20 +70,18 @@
                             through
                             Zenodo:<br>
                             <ul>
-                                <ul>
-                                    <li><a href="https://doi.org/10.5281/zenodo.7328444"><img
-                                                    src="https://zenodo.org/badge/140609672.svg" alt="DOI"></a> Data
-                                        v1.0
-                                    </li>
-                                    <li><a href="https://doi.org/10.5281/zenodo.7328442"><img
-                                                    src="https://zenodo.org/badge/140609563.svg" alt="DOI"></a>
-                                        Database Code v1.0
-                                    </li>
-                                    <li><a href="https://doi.org/10.5281/zenodo.7328435"><img
-                                                    src="https://zenodo.org/badge/140609156.svg" alt="DOI"></a>
-                                        Website v2.1
-                                    </li>
-                                </ul>
+                                <li><a href="https://doi.org/10.5281/zenodo.7328444"><img
+                                                src="https://zenodo.org/badge/140609672.svg" alt="DOI"></a> Data
+                                    v1.0
+                                </li>
+                                <li><a href="https://doi.org/10.5281/zenodo.7328442"><img
+                                                src="https://zenodo.org/badge/140609563.svg" alt="DOI"></a>
+                                    Database Code v1.0
+                                </li>
+                                <li><a href="https://doi.org/10.5281/zenodo.7328435"><img
+                                                src="https://zenodo.org/badge/140609156.svg" alt="DOI"></a>
+                                    Website v2.1
+                                </li>
                             </ul>
                         </li>
                         <li><b>Open access:</b> Consistent with the <a href="https://www.neh.gov/publicaccess"
