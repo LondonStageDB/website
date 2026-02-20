@@ -279,7 +279,7 @@
         <?php endforeach; ?>
       </div>
       <div class="cite-wrap hide">
-        <h4>Cite this page</h4>
+        <aside aria-label="citation">Cite this page</aside>
         <div class="cite-chicago-wrap">
           <span>Chicago: </span><span id="citeChicago"></span>
         </div>
