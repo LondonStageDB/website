@@ -347,7 +347,7 @@
                   <input type="submit" class="search-submit button" value="Update">
                 </div>
               </div>
-              <nav aria-label="Pagination" class="grid-x pag-wrap">
+              <nav aria-label="Upper Pagination" class="grid-x pag-wrap">
                 <?php echo $Paginator->createLinks( $links, 'pagination pagination-sm' ); ?>
               </nav>
             </div>
@@ -452,7 +452,7 @@
               <?php endfor; ?>
             </div>
           </div>
-          <nav aria-label="Pagination" class="grid-x pag-wrap">
+          <nav aria-label="Lower Pagination" class="grid-x pag-wrap">
             <?php echo $Paginator->createLinks( $links, 'pagination pagination-sm pag-bottom' ); ?>
           </nav>
           <?php } else { ?>
