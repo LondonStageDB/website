@@ -62,7 +62,7 @@
 
 <body id="results">
   <?php include_once('common/nav.php'); ?>
-  <div id="main" class="main grid-container">
+  <main class="main grid-container">
     <div class="sql-query-wrap">
       <div class="toggle-query"><a id="toggle">Toggle Sphinx Query</a></div>
       <div class="sql-query">
@@ -462,9 +462,9 @@
           <?php } ?>
         </div>
       </div>
-  </div>
+    </div>
   </form>
-  </div>
+  </main>
   <?php include_once('common/footer.php'); ?>
   <script src="https://code.jquery.com/ui/1.14.1/jquery-ui.js"></script>
   <script src="/js/search.js"></script>

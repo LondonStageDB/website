@@ -22,7 +22,7 @@
 
   <body id="event">
     <?php include_once('common/nav.php'); ?>
-    <div id="main" class="main grid-container">
+    <main class="main grid-container">
       <div class="grid-x event-section">
         <div class="cell small-12 event-header-wrap">
           <?php if ($referer !== '') : ?>
@@ -83,7 +83,7 @@
             <li class="book-pdf2 responsive-embed2">
               <div class="responsive-embed">
               <?php if ($event['BookPDF'] && $event['BookPDF'] !== '') : ?>
-              <object data="https://londonstage.blob.core.windows.net/lsdb-files/pdfs/<?php echo $event['BookPDF']; ?>" type="application/pdf" height="725px" width="532px">
+              <object aria-label="BookPDF" data="https://londonstage.blob.core.windows.net/lsdb-files/pdfs/<?php echo $event['BookPDF']; ?>" type="application/pdf" height="725px" width="532px">
                 <p>Your web browser doesn't have a PDF plugin. Instead, <a href="https://londonstage.blob.core.windows.net/lsdb-files/pdfs/<?php echo $event['BookPDF']; ?>">click here to download the PDF file</a></p>
               </object>
               <?php else : ?>
@@ -287,7 +287,7 @@
           <span>MLA: </span><span id="citeMla"></span>
         </div>
       </div>
-    </div>
+    </main>
     <?php include_once('common/footer.php'); ?>
     <script src="/js/vendor/jquery.flexslider2-7-2-min.js"></script>
     <script>
