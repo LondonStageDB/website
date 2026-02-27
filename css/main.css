@@ -1572,7 +1572,7 @@ body#home:after {
     background: #ece7d9;
 }
 
-#event .perf-type h2 {
+#event .perf-type h1,h2 {
     padding: 0.7rem 0.3rem;
     font-size: 2.5rem;
     margin: 0;
@@ -1588,7 +1588,7 @@ body#home:after {
     -webkit-font-feature-settings: "smcp";
 }
 
-#event .perf-type h2:before {
+#event .perf-type h1:before,h2:before {
     content: '‰';
     line-height: 1px;
     height: 100%;
@@ -1598,7 +1598,7 @@ body#home:after {
     transform: scale(-1, -1);
 }
 
-#event .perf-type h2:after {
+#event .perf-type h1:after,h2:after {
     content: '‰';
     line-height: 1px;
     padding-left: 2rem;
@@ -1745,7 +1745,7 @@ body#home:after {
         padding: 2rem 0;
     }
 
-    #event .perf-type h2 {
+    #event .perf-type h1,h2 {
         font-size: 3.5rem;
     }
 
@@ -1769,7 +1769,7 @@ body#home:after {
 }
 
 @media only screen and (min-width: 1024px) {
-    #event .event-header-wrap h2 {
+    #event .event-header-wrap h1 {
         font-size: 4.5rem;
     }
 

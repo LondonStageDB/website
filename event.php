@@ -30,7 +30,7 @@
           <?php endif; ?>
           <div class="grid-x perf-type-wrap">
             <div class="cell small-12 text-center perf-type">
-              <h2 title="<?php echo formatDate($event['EventDate'], true); ?>"><?php echo formatDate($event['EventDate']); ?></h2></div>
+              <h1 title="<?php echo formatDate($event['EventDate'], true); ?>"><?php echo formatDate($event['EventDate']); ?></h1></div>
           </div>
         </div>
         <div class="cell small-12 medium-6 event-info">
