@@ -1581,7 +1581,7 @@ body#home:after {
 }
 
 #event .perf-type h1, .perf-type h2 {
-    padding: 0.7rem 0.3rem;
+    padding: 0.7rem 0.3rem; 
     font-size: 2.5rem;
     margin: 0;
     display: inline-block;
@@ -1596,7 +1596,7 @@ body#home:after {
     -webkit-font-feature-settings: "smcp";
 }
 
-#event .perf-type h1:before, .perf-type h2:before {
+#event .perf-type h1:before {
     content: '‰';
     line-height: 1px;
     height: 100%;
@@ -1606,7 +1606,7 @@ body#home:after {
     transform: scale(-1, -1);
 }
 
-#event .perf-type h1:after, .perf-type h2:after {
+#event .perf-type h1:after {
     content: '‰';
     line-height: 1px;
     padding-left: 2rem;

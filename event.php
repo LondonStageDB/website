@@ -34,7 +34,7 @@
           </div>
         </div>
         <div class="cell small-12 medium-6 event-info">
-          <span>Event Information</span>
+          <h2>Event Information</h2>
           <div class="event-theatre"><span class="info-heading">Theatre:</span>
             <?php echo getTheatreName($event['TheatreId']); ?>
           </div>
@@ -161,7 +161,7 @@
         <?php foreach ($event['Performances'] as $perf) : ?>
         <div class="cell small-12 perf">
           <div class="grid-x perf-type-wrap">
-            <div class="cell small-12 text-center perf-type" id="<?php echo $perf['PerformanceId'] ?>">
+            <div class="cell small-12 text-left perf-type" id="<?php echo $perf['PerformanceId'] ?>">
               <h2><?php echo getPType($perf['PType']) ?></h2></div>
           </div>
           <div class="grid-x perf-info-wrap">
