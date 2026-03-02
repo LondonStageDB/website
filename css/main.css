@@ -814,6 +814,14 @@ body#home:after {
     color: #5a4d3f;
 }
 
+#results .page-heading h1 {
+    text-align: center;
+    font-size: 3rem;
+    padding: 1rem 0;
+    font-family: 'aquilinetworegular';
+    padding-bottom: 2rem;
+}
+
 #results .date-type {
     font-size: 0.875rem;
     line-height: 1.2;

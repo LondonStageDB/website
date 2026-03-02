@@ -63,6 +63,9 @@
 <body id="results">
   <?php include_once('common/nav.php'); ?>
   <main class="main grid-container">
+    <div class="small-12 page-heading">
+      <h1>Search Results</h1>
+    </div>
     <div class="sql-query-wrap">
       <div class="toggle-query"><a id="toggle">Toggle Sphinx Query</a></div>
       <div class="sql-query">
