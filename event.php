@@ -49,7 +49,7 @@
           </div>
           <div class="event-btns grid-x">
             <div class="work-nav small-12 medium-6 large-6">
-              <h2>Performance List</h2>
+              <h3>Performance List</h3>
               <ul class="no-bullet">
                 <?php foreach ($event['Performances'] as $perf) : ?>
                 <li>
