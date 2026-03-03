@@ -49,7 +49,7 @@
           </div>
           <div class="event-btns grid-x">
             <div class="work-nav small-12 medium-6 large-6">
-              <h3>Performance List</h3>
+              <h2>Performance List</h2>
               <ul class="no-bullet">
                 <?php foreach ($event['Performances'] as $perf) : ?>
                 <li>
@@ -92,7 +92,7 @@
               </div>
             </li>
             <li id="orig" class="phase2 p-orig2">
-              <div class="phase-content">
+              <div class="phase-content" tabindex="0" aria-label="Original Data" role="region">
                 <h3>Original Data</h3>
                 <p class="orig-source">Source:
                   <?php if ($event['Hathi'] !== '') echo 'OCR from HathiTrust PDFs'; else echo 'London Stage Information Bank' ?>
@@ -103,7 +103,7 @@
               </div>
             </li>
             <li id="fixed" class="phase2 p-fixed2">
-              <div class="phase-content">
+              <div class="phase-content" tabindex="0" aria-label="Cleaned Data" role="region">
                 <h3>Cleaned Data</h3>
                 <div class="phase-data">
                   <?php echo htmlentities($event['Phase2']); ?>
@@ -111,7 +111,7 @@
               </div>
             </li>
             <li id="phase3" class="phase2 p-final2">
-              <div class="phase-content">
+              <div class="phase-content" tabindex="0" aria-label="Parsed Data" role="region">
                 <h3>Parsed Data</h3>
                 <div class="phase-data">
                   <?php
