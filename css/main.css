@@ -1559,8 +1559,12 @@ body#home:after {
     padding: 0.3rem 0;
 }
 
-#event .perf-section, #event .perf-info {
+#event .perf-section {
     margin-top: 2.5rem;
+}
+
+#event .perf-info {
+    margin-top: 0.5rem;
 }
 
 #event .perf-section {
@@ -1594,6 +1598,27 @@ body#home:after {
     font-feature-settings: "smcp";
     -moz-font-feature-settings: "smcp";
     -webkit-font-feature-settings: "smcp";
+}
+#event .perf-type h2{
+    padding-left: 2.5rem;
+}
+
+#event .event-info h2{
+    padding: 0.2rem;
+    padding-bottom: 0.7rem;
+    font-size: 3rem;
+    font-weight: 500;
+    margin: 0;
+    display: inline-block;
+    position: relative;
+    font-family: 'aquilinetworegular';
+    color: #efefef;
+    color: #655446;
+/*  border-top: 1 px solid #7b7b7b;
+    border-bottom: 1 px solid #7b7b7b;*/
+    font-feature-settings: "smcp";
+    -moz-font-feature-settings: "smcp";
+    -webkit-font-feature-settings: "smcp";  
 }
 
 #event .perf-type h1:before {
