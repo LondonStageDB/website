@@ -70,7 +70,7 @@
         </div>
         <div class="cell small-12 medium-6 phases-wrap">
           <div id="carousel" class="flexslider">
-            <span>Data Phases</span>
+            <span><h2>Data Phases</h2></span>
             <ul class="slides">
               <li><a href="#">PDF</a></li>
               <li><a href="#">Original</a></li>
