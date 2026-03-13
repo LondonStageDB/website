@@ -41,7 +41,7 @@
         <div id="top" class="small-12 medium-8 large-9 history-content">
             <div class="grid-x history-section">
                 <div id="curation" class="small-12" data-magellan-target="curation">
-                    <img alt="image of title page of The London Stage reference books"
+                    <img alt="title page of The London Stage reference books"
                          style="float:right;padding-left:25px;width:225px;height:306.31px;"
                          src="images/timeline-image3.jpeg">
                     <h2>1960-8: Curation</h2>
@@ -61,7 +61,7 @@
             <div class="grid-x history-section">
                 <div id="digitization" class="small-12" data-magellan-target="digitization">
                     <hr/>
-                    <img alt="newspaper photograph of editors in a classroom at work on the London State Information Bank. Caption states: Photos by Nancy. Editors MARC WEINBERGER, Ben Schneider, Joe Jacobs, can be found in MH-427 at almost any hour of the day or night."
+                    <img alt="newspaper photograph of editors Marc Weinberger, Ben Schneider, Joe Jacobs, and Cathy Boggs gathered around a computer terminal"
                          style="float:left;padding-right:25px;width:275px;height:225px;"
                          src="images/timeline-image2.jpeg">
                     <h2>1970-83: Digitization</h2>
@@ -81,7 +81,7 @@
             <div class="grid-x history-section">
                 <div id="recovery" class="small-12" data-magellan-target="recovery">
                     <hr/>
-                    <img alt="Headline LU to house The London Stage data bank with accompanying photograph, March 1971, page 8."
+                    <img alt="Lawrence Alumnus for March 1971. Headline reads: 'LU to house The London Stage data bank'"
                          style="float:right;padding-left:25px;width:300px;height:233.5px;"
                          src="images/timeline-image1.jpeg">
                     <h2>2013-17: Recovery</h2>
@@ -99,7 +99,7 @@
             <div class="grid-x history-section">
                 <div id="remediation" class="small-12" data-magellan-target="remediation">
                     <hr/>
-                    <img alt="Headline LU to house The London Stage data bank with accompanying photograph, March 1971, page 8."
+                    <img alt="NEH Office of Digital Humanities: Award details for The London Stage Database"
                          style="float:left;padding-right:25px;width:225px;height:310px;"
                          src="images/lsdb-neh-2019.jpg">
                     <h2>2018-24: Remediation and Migration</h2>

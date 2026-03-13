@@ -21,7 +21,7 @@
                 consistent over the course of a season, it is reproduced in full the first time it appears with that
                 cast, and subsequent performances of the same play by the same company record the cast following the
                 syntax "As [date], but [substitutions, if any]." </p>
-            <p><img alt=""
+            <p><img alt="Ladder system Diagram for The Busy Body"
                     style="float:right;"
                     src="/images/cast-list-ladder.png"><br/><br/>So, for
                 example, a performance of <i>The Busy

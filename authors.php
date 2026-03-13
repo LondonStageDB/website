@@ -16,7 +16,7 @@
         <div method="post" class="small-12 medium-11 large-9 cell grid-x authors-form">
             <div class="grid-x guide-section">
                 <div id="Authors" class="small-12" data-magellan-target="Authors">
-                    <p><img alt=""
+                    <p><img alt="Title page of Nahum Tate's adaptation of King Lear, 1736"
                             style="float:right;padding-left:25px;padding-bottom:25px;"
                             src="/images/lear-title-page.jpg">
                         Today we think about authorship a bit differently than people did in the long eighteenth
