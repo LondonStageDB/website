@@ -62,7 +62,10 @@
 
 <body id="results">
   <?php include_once('common/nav.php'); ?>
-  <div id="main" class="main grid-container">
+  <main class="main grid-container">
+    <div class="small-12 page-heading">
+      <h1>Search Results</h1>
+    </div>
     <div class="sql-query-wrap">
       <div class="toggle-query"><a id="toggle">Toggle Sphinx Query</a></div>
       <div class="sql-query">
@@ -347,7 +350,7 @@
                   <input type="submit" class="search-submit button" value="Update">
                 </div>
               </div>
-              <nav aria-label="Pagination" class="grid-x pag-wrap">
+              <nav aria-label="Upper Pagination" class="grid-x pag-wrap">
                 <?php echo $Paginator->createLinks( $links, 'pagination pagination-sm' ); ?>
               </nav>
             </div>
@@ -452,7 +455,7 @@
               <?php endfor; ?>
             </div>
           </div>
-          <nav aria-label="Pagination" class="grid-x pag-wrap">
+          <nav aria-label="Lower Pagination" class="grid-x pag-wrap">
             <?php echo $Paginator->createLinks( $links, 'pagination pagination-sm pag-bottom' ); ?>
           </nav>
           <?php } else { ?>
@@ -462,9 +465,9 @@
           <?php } ?>
         </div>
       </div>
-  </div>
+    </div>
   </form>
-  </div>
+  </main>
   <?php include_once('common/footer.php'); ?>
   <script src="https://code.jquery.com/ui/1.14.1/jquery-ui.js"></script>
   <script src="/js/search.js"></script>

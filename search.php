@@ -11,7 +11,7 @@
 
 <body id="mainSearch">
   <?php include_once('common/nav.php'); ?>
-  <div id="main" class="main grid-container">
+  <main class="main grid-container">
     <h1>Advanced Search</h1>
     <form id="searchForm" class="form-accordion search-form grid-x grid-margin-x" method="get" action="sphinx-results.php">
       <input type="hidden" name="sortBy" value="relevance">
@@ -197,7 +197,7 @@
         <input type="submit" class="search-submit button" value="Search">
       </div>
     </form>
-  </div>
+  </main>
   <?php include_once('common/footer.php'); ?>
   <script src="https://code.jquery.com/ui/1.14.1/jquery-ui.js"></script>
   <script src="/js/search.js"></script>

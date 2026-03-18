@@ -1,7 +1,7 @@
 <div class="header">
     <nav>
         <div class="title-bar" data-responsive-toggle="example-menu" data-hide-for="medium">
-            <button class="menu-icon" type="button" data-toggle="example-menu"></button>
+            <button class="menu-icon" type="button" data-toggle="example-menu" aria-label="Open navigation menu"></button>
             <div class="title-bar-title">Menu</div>
         </div>
         <div class="top-bar" id="example-menu">

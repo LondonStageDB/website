@@ -814,6 +814,14 @@ body#home:after {
     color: #5a4d3f;
 }
 
+#results .page-heading h1 {
+    text-align: center;
+    font-size: 3rem;
+    padding: 1rem 0;
+    font-family: 'aquilinetworegular';
+    padding-bottom: 2rem;
+}
+
 #results .date-type {
     font-size: 0.875rem;
     line-height: 1.2;
@@ -1551,8 +1559,12 @@ body#home:after {
     padding: 0.3rem 0;
 }
 
-#event .perf-section, #event .perf-info {
+#event .perf-section {
     margin-top: 2.5rem;
+}
+
+#event .perf-info {
+    margin-top: 0.5rem;
 }
 
 #event .perf-section {
@@ -1572,8 +1584,8 @@ body#home:after {
     background: #ece7d9;
 }
 
-#event .perf-type h2 {
-    padding: 0.7rem 0.3rem;
+#event .perf-type h1, .perf-type h2 {
+    padding: 0.7rem 0.3rem; 
     font-size: 2.5rem;
     margin: 0;
     display: inline-block;
@@ -1587,8 +1599,29 @@ body#home:after {
     -moz-font-feature-settings: "smcp";
     -webkit-font-feature-settings: "smcp";
 }
+#event .perf-type h2{
+    padding-left: 2.5rem;
+}
 
-#event .perf-type h2:before {
+#event .event-info h2{
+    padding: 0.2rem;
+    padding-bottom: 0.7rem;
+    font-size: 3rem;
+    font-weight: 500;
+    margin: 0;
+    display: inline-block;
+    position: relative;
+    font-family: 'aquilinetworegular';
+    color: #efefef;
+    color: #655446;
+/*  border-top: 1 px solid #7b7b7b;
+    border-bottom: 1 px solid #7b7b7b;*/
+    font-feature-settings: "smcp";
+    -moz-font-feature-settings: "smcp";
+    -webkit-font-feature-settings: "smcp";  
+}
+
+#event .perf-type h1:before {
     content: '‰';
     line-height: 1px;
     height: 100%;
@@ -1598,7 +1631,7 @@ body#home:after {
     transform: scale(-1, -1);
 }
 
-#event .perf-type h2:after {
+#event .perf-type h1:after {
     content: '‰';
     line-height: 1px;
     padding-left: 2rem;
@@ -1745,7 +1778,7 @@ body#home:after {
         padding: 2rem 0;
     }
 
-    #event .perf-type h2 {
+    #event .perf-type h1, .perf-type h2 {
         font-size: 3.5rem;
     }
 
@@ -1769,7 +1802,7 @@ body#home:after {
 }
 
 @media only screen and (min-width: 1024px) {
-    #event .event-header-wrap h2 {
+    #event .event-header-wrap h1 {
         font-size: 4.5rem;
     }
 

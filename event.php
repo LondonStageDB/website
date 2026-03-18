@@ -22,7 +22,7 @@
 
   <body id="event">
     <?php include_once('common/nav.php'); ?>
-    <div id="main" class="main grid-container">
+    <main class="main grid-container">
       <div class="grid-x event-section">
         <div class="cell small-12 event-header-wrap">
           <?php if ($referer !== '') : ?>
@@ -30,11 +30,11 @@
           <?php endif; ?>
           <div class="grid-x perf-type-wrap">
             <div class="cell small-12 text-center perf-type">
-              <h2 title="<?php echo formatDate($event['EventDate'], true); ?>"><?php echo formatDate($event['EventDate']); ?></h2></div>
+              <h1 title="<?php echo formatDate($event['EventDate'], true); ?>"><?php echo formatDate($event['EventDate']); ?></h1></div>
           </div>
         </div>
         <div class="cell small-12 medium-6 event-info">
-          <span>Event Information</span>
+          <h2>Event Information</h2>
           <div class="event-theatre"><span class="info-heading">Theatre:</span>
             <?php echo getTheatreName($event['TheatreId']); ?>
           </div>
@@ -70,7 +70,7 @@
         </div>
         <div class="cell small-12 medium-6 phases-wrap">
           <div id="carousel" class="flexslider">
-            <span>Data Phases</span>
+            <span><h2>Data Phases</h2></span>
             <ul class="slides">
               <li><a href="#">PDF</a></li>
               <li><a href="#">Original</a></li>
@@ -83,7 +83,7 @@
             <li class="book-pdf2 responsive-embed2">
               <div class="responsive-embed">
               <?php if ($event['BookPDF'] && $event['BookPDF'] !== '') : ?>
-              <object data="https://londonstage.blob.core.windows.net/lsdb-files/pdfs/<?php echo $event['BookPDF']; ?>" type="application/pdf" height="725px" width="532px">
+              <object aria-label="BookPDF" data="https://londonstage.blob.core.windows.net/lsdb-files/pdfs/<?php echo $event['BookPDF']; ?>" type="application/pdf" height="725px" width="532px">
                 <p>Your web browser doesn't have a PDF plugin. Instead, <a href="https://londonstage.blob.core.windows.net/lsdb-files/pdfs/<?php echo $event['BookPDF']; ?>">click here to download the PDF file</a></p>
               </object>
               <?php else : ?>
@@ -92,7 +92,7 @@
               </div>
             </li>
             <li id="orig" class="phase2 p-orig2">
-              <div class="phase-content">
+              <div class="phase-content" tabindex="0" aria-label="Original Data" role="region">
                 <h3>Original Data</h3>
                 <p class="orig-source">Source:
                   <?php if ($event['Hathi'] !== '') echo 'OCR from HathiTrust PDFs'; else echo 'London Stage Information Bank' ?>
@@ -103,7 +103,7 @@
               </div>
             </li>
             <li id="fixed" class="phase2 p-fixed2">
-              <div class="phase-content">
+              <div class="phase-content" tabindex="0" aria-label="Cleaned Data" role="region">
                 <h3>Cleaned Data</h3>
                 <div class="phase-data">
                   <?php echo htmlentities($event['Phase2']); ?>
@@ -111,7 +111,7 @@
               </div>
             </li>
             <li id="phase3" class="phase2 p-final2">
-              <div class="phase-content">
+              <div class="phase-content" tabindex="0" aria-label="Parsed Data" role="region">
                 <h3>Parsed Data</h3>
                 <div class="phase-data">
                   <?php
@@ -161,7 +161,7 @@
         <?php foreach ($event['Performances'] as $perf) : ?>
         <div class="cell small-12 perf">
           <div class="grid-x perf-type-wrap">
-            <div class="cell small-12 text-center perf-type" id="<?php echo $perf['PerformanceId'] ?>">
+            <div class="cell small-12 text-left perf-type" id="<?php echo $perf['PerformanceId'] ?>">
               <h2><?php echo getPType($perf['PType']) ?></h2></div>
           </div>
           <div class="grid-x perf-info-wrap">
@@ -279,7 +279,7 @@
         <?php endforeach; ?>
       </div>
       <div class="cite-wrap hide">
-        <h4>Cite this page</h4>
+        <aside aria-label="citation">Cite this page</aside>
         <div class="cite-chicago-wrap">
           <span>Chicago: </span><span id="citeChicago"></span>
         </div>
@@ -287,7 +287,7 @@
           <span>MLA: </span><span id="citeMla"></span>
         </div>
       </div>
-    </div>
+    </main>
     <?php include_once('common/footer.php'); ?>
     <script src="/js/vendor/jquery.flexslider2-7-2-min.js"></script>
     <script>

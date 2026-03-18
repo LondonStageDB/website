@@ -8,22 +8,22 @@
 
 <body id="about-data">
 <?php include_once('common/nav.php'); ?>
-<div id="main" class="main grid-container">
+<main class="main grid-container">
     <div class="grid-x about-data-wrap">
         <div class="small-12 page-heading">
             <h1>About the Data</h1>
         </div>
-        <div class="small-12 medium-4 large-3 about-data-nav" id="about-dataNav">
-            <nav class="show-for-small-only about-data-mobile-nav sticky-container" id="mobileNav"
+        <aside class="small-12 medium-4 large-3 about-data-nav" id="about-dataNav">
+            <nav class="show-for-small-only about-data-mobile-nav sticky-container" aria-label="mobile-nav" id="mobileNav"
                  data-sticky-container>
                 <div data-sticky data-anchor="mobileNav" data-sticky-on="small">
                     <ul class="menu" data-magellan>
-                        <li><a href="#Challenges">Archival Challenges</a></li>
-                        <li><a href="#Ambiguity">Interacting with Ambiguity</a></li>
+                            <li><a href="#Challenges">Archival Challenges</a></li>
+                            <li><a href="#Ambiguity">Interacting with Ambiguity</a></li>
                     </ul>
                 </div>
             </nav>
-            <nav class="sticky-container about-data-nav-sticky show-for-medium" data-sticky-container>
+            <nav class="sticky-container about-data-nav-sticky show-for-medium" aria-label="nav-sticky" data-sticky-container>
                 <div data-sticky data-anchor="about-dataNav" data-sticky-on="medium">
                     <h2>On This Page</h2>
                     <ul class="vertical menu" data-magellan>
@@ -32,7 +32,7 @@
                     </ul>
                 </div>
             </nav>
-        </div>
+        </aside>
         <div id="top" class="small-12 medium-8 large-9 about-data-content">
             <div class="grid-x about-data-section">
                 <div class="small-12">
@@ -140,7 +140,7 @@
             </div>
         </div>
     </div>
-</div>
+</main>
 <?php include_once('common/footer.php'); ?>
 </body>
 

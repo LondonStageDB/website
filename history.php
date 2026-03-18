@@ -8,13 +8,13 @@
 
 <body id="history">
 <?php include_once('common/nav.php'); ?>
-<div id="main" class="main grid-container">
+<main class="main grid-container">
     <div class="grid-x">
         <div class="small-12 page-heading">
             <h1>History</h1>
         </div>
         <div class="small-12 medium-4 large-3 history-nav" id="historyNav">
-            <nav class="show-for-small-only history-mobile-nav sticky-container" id="mobileNav" data-sticky-container>
+            <nav class="show-for-small-only history-mobile-nav sticky-container" aria-label="mobile-nav" id="mobileNav" data-sticky-container>
                 <div class data-sticky data-anchor="mobileNav" data-sticky-on="small">
                     <ul class="menu" data-magellan>
                         <li><a href="#curation">1960-8: Curation</a></li>
@@ -25,7 +25,7 @@
                     </ul>
                 </div>
             </nav>
-            <nav class="sticky-container show-for-medium" data-sticky-container>
+            <nav class="sticky-container show-for-medium" aria-label="nav-sticky" data-sticky-container>
                 <div class data-sticky data-anchor="historyNav" data-sticky-on="medium">
                     <h2>On This Page</h2>
                     <ul class="vertical menu" data-magellan>
@@ -41,7 +41,7 @@
         <div id="top" class="small-12 medium-8 large-9 history-content">
             <div class="grid-x history-section">
                 <div id="curation" class="small-12" data-magellan-target="curation">
-                    <img alt="image of title page of The London Stage reference books"
+                    <img alt="title page of The London Stage reference books"
                          style="float:right;padding-left:25px;width:225px;height:306.31px;"
                          src="images/timeline-image3.jpeg">
                     <h2>1960-8: Curation</h2>
@@ -61,7 +61,7 @@
             <div class="grid-x history-section">
                 <div id="digitization" class="small-12" data-magellan-target="digitization">
                     <hr/>
-                    <img alt="newspaper photograph of editors in a classroom at work on the London State Information Bank. Caption states: Photos by Nancy. Editors MARC WEINBERGER, Ben Schneider, Joe Jacobs, can be found in MH-427 at almost any hour of the day or night."
+                    <img alt="newspaper photograph of editors Marc Weinberger, Ben Schneider, Joe Jacobs, and Cathy Boggs gathered around a computer terminal"
                          style="float:left;padding-right:25px;width:275px;height:225px;"
                          src="images/timeline-image2.jpeg">
                     <h2>1970-83: Digitization</h2>
@@ -81,7 +81,7 @@
             <div class="grid-x history-section">
                 <div id="recovery" class="small-12" data-magellan-target="recovery">
                     <hr/>
-                    <img alt="Headline LU to house The London Stage data bank with accompanying photograph, March 1971, page 8."
+                    <img alt="Lawrence Alumnus for March 1971. Headline reads: 'LU to house The London Stage data bank'"
                          style="float:right;padding-left:25px;width:300px;height:233.5px;"
                          src="images/timeline-image1.jpeg">
                     <h2>2013-17: Recovery</h2>
@@ -99,7 +99,7 @@
             <div class="grid-x history-section">
                 <div id="remediation" class="small-12" data-magellan-target="remediation">
                     <hr/>
-                    <img alt="Headline LU to house The London Stage data bank with accompanying photograph, March 1971, page 8."
+                    <img alt="NEH Office of Digital Humanities: Award details for The London Stage Database"
                          style="float:left;padding-right:25px;width:225px;height:310px;"
                          src="images/lsdb-neh-2019.jpg">
                     <h2>2018-24: Remediation and Migration</h2>
@@ -146,7 +146,7 @@
 
         </div>
     </div>
-</div>
+</main>
 <?php include_once('common/footer.php'); ?>
 </body>
 

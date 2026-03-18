@@ -8,13 +8,13 @@
 
 <body id="citation">
 <?php include_once('common/nav.php'); ?>
-<div id="main" class="main grid-container">
+<main class="main grid-container">
     <div class="grid-x">
         <div class="small-12 page-heading">
             <h1>Citation and Sharing</h1>
         </div>
         <div class="small-12 medium-4 large-3 citation-nav" id="citationNav">
-            <nav class="show-for-small-only citation-mobile-nav sticky-container" id="mobileNav" data-sticky-container>
+            <nav class="show-for-small-only citation-mobile-nav sticky-container" aria-label="mobile-nav" id="mobileNav" data-sticky-container>
                 <div class data-sticky data-anchor="mobileNav" data-sticky-on="small">
                     <ul class="menu" data-magellan>
                         <li><a href="#OpenResearch">Open Research</a></li>
@@ -23,7 +23,7 @@
                     </ul>
                 </div>
             </nav>
-            <nav class="sticky-container show-for-medium" data-sticky-container>
+            <nav class="sticky-container show-for-medium" aria-label="nav-sticky" data-sticky-container>
                 <div class data-sticky data-anchor="citationNav" data-sticky-on="medium">
                     <h2>On This Page</h2>
                     <ul class="vertical menu" data-magellan>
@@ -70,20 +70,18 @@
                             through
                             Zenodo:<br>
                             <ul>
-                                <ul>
-                                    <li><a href="https://doi.org/10.5281/zenodo.7328444"><img
-                                                    src="https://zenodo.org/badge/140609672.svg" alt="DOI"></a> Data
-                                        v1.0
-                                    </li>
-                                    <li><a href="https://doi.org/10.5281/zenodo.7328442"><img
-                                                    src="https://zenodo.org/badge/140609563.svg" alt="DOI"></a>
-                                        Database Code v1.0
-                                    </li>
-                                    <li><a href="https://doi.org/10.5281/zenodo.7328435"><img
-                                                    src="https://zenodo.org/badge/140609156.svg" alt="DOI"></a>
-                                        Website v2.1
-                                    </li>
-                                </ul>
+                                <li><a href="https://doi.org/10.5281/zenodo.7328444"><img
+                                                src="https://zenodo.org/badge/140609672.svg" alt="DOI"></a> Data
+                                    v1.0
+                                </li>
+                                <li><a href="https://doi.org/10.5281/zenodo.7328442"><img
+                                                src="https://zenodo.org/badge/140609563.svg" alt="DOI"></a>
+                                    Database Code v1.0
+                                </li>
+                                <li><a href="https://doi.org/10.5281/zenodo.7328435"><img
+                                                src="https://zenodo.org/badge/140609156.svg" alt="DOI"></a>
+                                    Website v2.1
+                                </li>
                             </ul>
                         </li>
                         <li><b>Open access:</b> Consistent with the <a href="https://www.neh.gov/publicaccess"
@@ -181,7 +179,7 @@
             </div>
         </div>
     </div>
-</div>
+</main>
 
 <?php include_once('common/footer.php'); ?>
 </body>
