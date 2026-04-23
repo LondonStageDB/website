@@ -55,9 +55,15 @@
     // Send IDs array to get all event info, returns XML Doc
     getResultsXML($ids);
 
+    global $conn;
+    if (isset($conn) && $conn instanceof mysqli) { $conn->close(); }
+    if (isset($sphinx_conn) && $sphinx_conn instanceof mysqli) { $sphinx_conn->close(); }
+
     die();
   }
 
+  if (isset($conn) && $conn instanceof mysqli) { $conn->close(); }
+  if (isset($sphinx_conn) && $sphinx_conn instanceof mysqli) { $sphinx_conn->close(); }
 ?>
 <html>
 <head>
