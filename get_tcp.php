@@ -2,11 +2,9 @@
 include_once('includes/functions.php');
     # Strip special characters
     $fn = filter_input(INPUT_GET, 'fn', FILTER_SANITIZE_SPECIAL_CHARS);
-    if (strlen($fn) <= 18){ // Length of longest XML file in the batch
-        getTCPFile($fn);
+    if (strlen($fn) > 18){ // Length of longest XML file in the batch
+        return;
     }
-
-    if (isset($conn) && $conn instanceof mysqli) { $conn->close(); }
-    if (isset($sphinx_conn) && $sphinx_conn instanceof mysqli) { $sphinx_conn->close(); }
+    getTCPFile($fn);
 ?>
 

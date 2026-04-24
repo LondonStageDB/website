@@ -41,12 +41,3 @@
 <script src="/js/vendor/jquery-3.7.1.min.js"></script>
 <script src="/js/vendor/foundation.min.js"></script>
 <script src="/js/app.js"></script>
-
-<?php
-  if (isset($conn) && $conn instanceof mysqli) {
-    $conn->close();
-  }
-  if (isset($sphinx_conn) && $sphinx_conn instanceof mysqli) {
-    $sphinx_conn->close();
-  }
-?>
