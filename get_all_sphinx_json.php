@@ -62,8 +62,6 @@
     die();
   }
 
-  if (isset($conn) && $conn instanceof mysqli) { $conn->close(); }
-  if (isset($sphinx_conn) && $sphinx_conn instanceof mysqli) { $sphinx_conn->close(); }
 ?>
 <html>
 <head>
