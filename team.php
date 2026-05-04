@@ -216,6 +216,21 @@
                         and Archiving compliment each other at the intersection of media and computerization. In her time 
                         with the LSDB project, McCallum will be specializing in metadata compliance and working to further 
                         develop interactive tools for the database to increase functionality and accessibility. </p>
+                        <h3><a id="Quynh_Tran_Le"></a><strong>Quynh-Tran Le</strong>
+                        <img alt="Headshot of Quynh-Tran Le outside"
+                                                 style="float:right;padding-left:25px;width:210px;height:220px;"
+                                                 src="/images/QuynhTranLe.jpg">
+                    </h3>
+                    <p><a
+                                href="https://www.linkedin.com/in/qtdle/">BS Student, Data Science, 
+                                University of Oregon</a></p>
+                    <p>Le is a senior at the University of Oregon and a student in the Robert D. Clark Honors College. Studying 
+                        Data Science, Le is particularly interested in the intersection of data and business, with a focus on marketing 
+                        analytics and insights. In her work with the London Stage Database, Le focuses on data wrangling and back-end 
+                        development to enhance user experience, while also collaborating with the Transnational Stages Project to integrate 
+                        and implement data from the London Stage Database. </p>
+
+
                     <h2>Research Assistants 2024-2025</h2>
                     <h3><a id="Michele_Pflug_MA_57"></a><strong>Michele Pflug</strong>, MA</h3>
                     <img alt="Headshot of Michele Pflug outside"
@@ -231,9 +246,9 @@
                             Innovation Fellowship</a> and awards from the Bibliographic Society of America, the American
                         Society for Eighteenth-Century Studies, and the Linda Hall Library. A former rare books curator,
                         she has contributed to and supported the development of various digital projects hosted by
-                        galleries, libraries, museums, and archives. Along with LSDB team member Erin Winter, Pflug will
-                        develop data and metadata curation protocols that expand the range of sources available to LSDB
-                        users.</p>
+                        galleries, libraries, museums, and archives. Along with LSDB team member Erin Winter, Pflug
+                        developed data and metadata curation protocols that expand the range of sources available to LSDB
+                        users. Shortly after her time with the LSDB, Pflug was hired at the High Desert Museum in Bend, OR as the Curator of Natural History.</p>
                     <h3><a id="Emma_Kaisner_72"></a><strong>Emma
                             Kaisner</strong><img alt="Headshot of Emma Kaisner in front of brick wall"
                                                  style="float:right;padding-left:25px;width:210px;height:248.1px;"
@@ -242,12 +257,14 @@
                     <p><a
                                 href="https://www.linkedin.com/in/emma-kaisner">BA Student, Economics &amp; English,
                             University of Oregon</a></p>
-                    <p>Kaisner is a current Senior at the University of Oregon and a student in the Robert D. Clark 
-                        Honors College. As an Economics and English student, Kaisner is interested in the interactions
-                        between literature, economics, and data science. During her time as a LSDB team member, Kaisner
-                        will assist in data collection and the implementation of a communications strategy for the
-                        project. Kaisner will also develop her own line of research inquiry to further engage with her
-                        own research interests and demonstrate the impact of the LSDB.</p>
+                    <p> In 2025, Kaisner graduated from the University of Oregon and the Robert D. Clark 
+                        Honors College. As an Economics and English student, Kaisner was interested in the interactions
+                        between literature, economics, and data science. During her time as a LSDB team member, Kaisner assisted 
+                        in data collection and the implementation of a communications strategy for the
+                        project. Kaisner also developed her own timeline project on 
+                        <a href="https://cdn.knightlab.com/libs/timeline3/latest/embed/index.html?source=v2%3A2PACX-1vR__WboPQw_hi8VR_hRZ18sjD81RTEPQ9GadfZBxSg24sdv3yvkF5dw3zEfUcYDXvqZPaMVS0SpVmpN&font=Default&lang=en&initial_zoom=2&width=100%25&height=650"> 
+                        Rehearsal Plays</a> using database research to further engage with her own research interests. 
+                        In 2026, Kaisner took a position with the Tribeca Film Festival.</p>
                 </div>
             </div>
             <div class="grid-x team-section">
