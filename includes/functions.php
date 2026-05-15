@@ -78,7 +78,6 @@
     if ($dateQuery !== '') {
       array_push($queries, $dateQuery);
     }
-
     // Add $queries entry for each value in $getters
     if (!empty($getters)) {
       foreach ($getters as $key => $value) {
@@ -99,6 +98,7 @@
             }
             break;
           case 'actor':
+            if (!is_array($actor)) break;
             $actor = array_filter($actor, 'strlen');
             if (count($actor) < 1) break;
             $actQry = (count($actor) > 1 && $actSwtch === "AND") ?
@@ -107,6 +107,7 @@
             array_push($eventIdQueries, $actQry);
             break;
           case 'role':
+            if (!is_array($role)) break;
             $role = array_filter($role, 'strlen');
             if (count($role) < 1) break;
             $roleQry = (count($role) > 1 && $roleSwtch === "AND") ?
