@@ -28,8 +28,8 @@
   $sql       .= "\nOPTION " . $Paginator->getFieldWeights();
 
   // Validate actor and role params
-  $_GET['actor'] = $ids = filter_input(INPUT_GET, 'actor', FILTER_DEFAULT, FILTER_FORCE_ARRAY);
-  $_GET['role'] = $ids = filter_input(INPUT_GET, 'role', FILTER_DEFAULT, FILTER_FORCE_ARRAY);
+  $_GET['actor'] = filter_input(INPUT_GET, 'actor', FILTER_DEFAULT, FILTER_FORCE_ARRAY);
+  $_GET['role'] = filter_input(INPUT_GET, 'role', FILTER_DEFAULT, FILTER_FORCE_ARRAY);
 
   // Cleaned, pipe delimited strings from 'actor' and 'role' arrays
   if (!empty($_GET['actor'])) {
