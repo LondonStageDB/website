@@ -9,48 +9,84 @@
 <body id="data">
 <?php include_once('common/nav.php'); ?>
 <main class="main grid-container">
-    <div class="grid-x data-wrap">
+    <div class="small-12 medium-11 large-9 cell grid-x data-form">
         <div class="small-12 page-heading">
             <h1>Data Downloads</h1>
         </div>
-        <div class="small-12 medium-11 large-9 cell grid-x data-form">
-            <h2>Export the Full Database</h2>
-            <p>You can use any of these file formats to analyze and visualize the results that interest you. All of
-                these file types are designed to be human-readable and can be opened in a text editor, such as Notepad
-                or TextEdit. XML and JSON are best equipped for storing relational data of the kind used in the <i>London
-                    Stage Database</i>, so exporting to and using one of these file formats will allow you to retain,
-                access, and work with the most information from your results. CSV files are easier for users with less
-                technical training to work with, as they can be opened and manipulated in spreadsheet software like
-                Google Sheets or Microsoft Excel. However, CSV files are tabular rather than relational, so they do not
-                represent the complexity of the data objects and relations as fully.</p>
-            <h3>Data Formats</h3>
+        <div class="grid-x data-section">
+            <div id="full-database" class="small-12">
+                <h2>Download the Full Database</h2>
+            </div>
+            <p>
+                Users who are comfortable with SQL (Structured Query Language) can export the full relational database that powers this website. 
+                A data dictionary and a diagram of our relational schema are <a href="https://github.com/LondonStageDB/data/tree/main/docs">available on GitHub</a>. 
+            </p>
             <ul class="no-bullet">
-                <li><a href="https://londonstage.blob.core.windows.net/lsdb-files/downloads/London.sql.zip">SQL:</a> <b>S</b>tructured <b>Q</b>uery <b>L</b>anguage:
-                    the database in its original format</li>
-                <li><a href="https://londonstage.blob.core.windows.net/lsdb-files/downloads/LondonStageFull.json.zip">JSON:</a> <b>J</b>ava<b>S</b>cript <b>O</b>bject <b>N</b>otation:
-                    a data-interchange format that stores data objects as text
-                </li>
-                <li><a href="https://londonstage.blob.core.windows.net/lsdb-files/downloads/LondonStageFull.xml.zip">XML:</a> e<b>X</b>tensible <b>M</b>arkup <b>L</b>anguage, a
-                    markup language similar to HTML with a nested hierarchy
-                </li>
-                <li><a href="https://londonstage.blob.core.windows.net/lsdb-files/downloads/LondonStageFull.csv.zip">CSV:</a> <b>C</b>omma <b>S</b>eparated <b>V</b>alues, a
-                    tabular data file format in which values are delimited using the comma character</a></li>
+                <li><a href="https://londonstage.blob.core.windows.net/lsdb-files/downloads/London.sql.zip" class="button dwnld-btn">Download SQL</a></li>
             </ul>
         </div>
-        <div class="small-12 medium-11 large-9 cell grid-x data-form">
-            <h2>TCP Drama Corpus</h2>
-            <p>The <a href=https://londonstage.blob.core.windows.net/lsdb-files/downloads/LSDB_TCP_Corpus-1.0.zip>
-                    TCP Drama Corpus</a> is a subset of 935 dramatic texts from the XML files produced by
-                <a href="https://www.textpartnership.net/pages/about-the-tcp.html">Text Creation Partnership</a>
-                correlated with one or more performances on the eighteenth-century London stage.
-                These are the "Print Witnesses" on the lists of Related Works. The corpus is divided into two
-                corpora: texts that contain a single dramatic work—Plays—and texts that comprise collections of
-                texts—Collections.
+        <div class="grid-x data-section">
+            <div id="event-records" class="small-12">
+                <h2>Export Event Data</h2>
+            </div>
+            <p>
+                All 52,000+ event records are available to download and analyze in several file formats. You can open these files in a text 
+                editor, such as Notepad or TextEdit, or use more specialized software to analyze and visualize the results that interest you.
             </p>
-            <p> The XML files from the TCP are in their original form. The metadata spreadsheets that accompany each
-                corpus are populated by information extracted from the TEI headers of each file. We have not corrected
-                the metadata from its original form, though we have ensured that each file has an
-                <a href="https://datb.cerl.org/estc">ESTC identifier</a> for interoperability.</p>
+            <div id="detailed-records" class="small-12">
+                <h3>Detailed event records</h3>
+            </div>
+                <p>In creating these files, we tried to capture the most commonly requested information about LSDB events, 
+                    including performance titles, cast lists, and connections to related dramatic works. 
+                    These files represent the minimum reduction in complexity needed to present event records in two widely-used, human-readable formats:
+                    JSON (Javascript Object Notation), a data-interchange format that stores data objects as text; and XML 
+                    (eXtensible Markup Language), a hierarchical tagging language similar to HTML.</p>
+                <ul class="no-bullet">
+                    <li><a href="https://londonstage.blob.core.windows.net/lsdb-files/downloads/LondonStageFull.json.zip" class="button dwnld-btn">Download JSON</a> 
+                        </li>
+                    <li><a href="https://londonstage.blob.core.windows.net/lsdb-files/downloads/LondonStageFull.xml.zip" class="button dwnld-btn">
+                         Download XML</a>
+                    </li>
+                </ul>
+            <div id="simplified-records" class="small-12">
+                <h3>Simplified event records</h3>
+            </div>
+                <p>CSV (Comma Separated Values) files are easy to work with in spreadsheet software like Google Sheets or Microsoft Excel. 
+                Note the trade-off: this format further simplifies the data in order to present complex, relational information in a two-dimensional table.
+                </p>
+                <ul class="no-bullet">
+                    <li><a href="https://londonstage.blob.core.windows.net/lsdb-files/downloads/LondonStageFull.csv.zip" 
+                    class="button dwnld-btn">Download CSV</a>
+                    </li>
+                </ul>
+            </div>
+
+        </div>
+        <div class="small-12 medium-11 large-9 cell grid-x data-form">
+        <div id="drama-corpus" class="small-12">    
+            <h2>Drama Corpus</h2>
+        </div>
+            <p>The Drama Corpus is a subset of the TCP corpus produced by the 
+                <a href="https://www.textpartnership.net/pages/about-the-tcp.html">Text Creation Partnership</a>. 
+                Each of the 935 items in our Drama corpus is associated with one or more performances in the
+                LSDB dataset, meaning it is listed as a "Print Witness" for one or more "Related Works."</p>
+                <p><a href="https://blogs.uoregon.edu/londonstage/2025/09/22/new-feature-print-witnesses/">
+                    Read more about Related Works and Print Witnesses on our blog.</a></p>
+                <p>We have not modified the XML files; they are exact copies of those distributed
+                    through the <a href="https://github.com/textcreationpartnership">TCP's GitHub</a>. 
+                    We have simply made the files easier to work with as a coherent dataset in the following ways:</p>
+                   <ul type="bullet">
+                    <li>identified those texts in the larger TCP corpus that appear to be dramatic works relevant to the LSDB 
+                        performance data</li>
+                    <li>categorized each text as a single dramatic work or an anthology containing multiple dramatic works, 
+                        and separated the corpus accordingly into two subcorpora: Plays and Collections</li>
+                    <li>extracted cataloging information from the TEI headers of each file to create a metadata 
+                        spreadsheet for each sub-corpus</li>
+                    <li>ensured that the metadata spreadsheet includes an <a href="https://datb.cerl.org/estc">ESTC 
+                        identifier</a> for each text to support interoperability</li>
+                    </ul>
+                    <p><a href="https://londonstage.blob.core.windows.net/lsdb-files/downloads/LSDB_TCP_Corpus-1.0.zip" class="button dwnld-btn">
+                    Download the Drama Corpus</a></p>
         </div>
     </div>
 </main>
