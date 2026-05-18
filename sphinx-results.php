@@ -27,6 +27,10 @@
   // Add the ranker OPTION statements for sphinx to be output in Toggle SQL.
   $sql       .= "\nOPTION " . $Paginator->getFieldWeights();
 
+  // Validate actor and role params
+  $_GET['actor'] = filter_input(INPUT_GET, 'actor', FILTER_DEFAULT, FILTER_FORCE_ARRAY);
+  $_GET['role'] = filter_input(INPUT_GET, 'role', FILTER_DEFAULT, FILTER_FORCE_ARRAY);
+
   // Cleaned, pipe delimited strings from 'actor' and 'role' arrays
   if (!empty($_GET['actor'])) {
     $getActors = array_map(function ($act) {
