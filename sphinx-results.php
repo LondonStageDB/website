@@ -1,4 +1,7 @@
 <?php
+  // Turnstile gate: challenge unverified visitors before opening any DB connection.
+  require_once 'includes/turnstile_gate.php';
+
   $start = microtime(True);
 
   include_once('includes/functions.php');

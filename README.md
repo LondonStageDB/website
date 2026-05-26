@@ -89,6 +89,32 @@ To prevent bots which do not respect robots.txt and protect DDOS attackig on dow
  - First, follow this guide to create your reCAPTCHA in Google Cloud platform: [reCAPTCHA v3 Guides](https://developers.google.com/recaptcha/docs/v3).
  - Then, provide site key and secret key in the `db.php` file.
 
+### (optional) Cloudflare Turnstile (search results protection)
+
+High-volume bot/scraper traffic against the search results page (`sphinx-results.php`)
+can exhaust database connections, because that endpoint opens DB connections and runs a
+Sphinx query on every request. To protect it, you can put a **Cloudflare Turnstile** gate
+in front of `sphinx-results.php`.
+
+When enabled, an unverified visitor is shown a one-time Turnstile challenge and the script
+exits *before* any database connection is opened; bots that cannot solve the challenge never
+reach the query. Once a visitor passes, a session flag lets all of their subsequent searches,
+pagination, and sorting through untouched.
+
+ - Create a Turnstile widget in the Cloudflare dashboard: [Turnstile Get Started](https://developers.cloudflare.com/turnstile/get-started/).
+ - In the `/includes` folder, create a file named `turnstile_config.php` with your keys:
+
+``` php
+<?php
+  define("TURNSTILE_SITE_KEY", "your-site-key");
+  define("TURNSTILE_SECRET_KEY", "your-secret-key");
+?>
+```
+
+If the keys are left empty (or the file is absent), the gate does nothing and the site
+behaves as before. Note: because search-engine crawlers cannot solve Turnstile, enabling
+this gate stops `sphinx-results.php` pages from being indexed.
+
 ### Create the `db.php` File
 
 In the `/includes` folder, create a file named `db.php`. Use the code below as a template for the file.
