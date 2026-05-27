@@ -10,9 +10,11 @@
   // Else exact match beginning of string with wildcard at the end
   $search = strlen($searchTerm) > 3 ?
     "select roleclean from london_stages 
-                       where MATCH('@(roleclean) $searchTerm*') group by roleclean LIMIT 10":
+                       where MATCH('@(role,roleclean) $searchTerm*') group by roleclean 
+                       LIMIT 10 OPTION ranker=sph04":
     "select roleclean from london_stages 
-                       where MATCH('@(roleclean) *$searchTerm*') group by roleclean LIMIT 10";
+                       where MATCH('@(role,roleclean) *$searchTerm*') group by roleclean 
+                       LIMIT 10 OPTION ranker=sph04 ";
 
   $result = $sphinx_conn->query($search);
 

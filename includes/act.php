@@ -11,10 +11,10 @@
   $search = strlen($searchTerm) > 3 ?
     "select performerclean from london_stages 
                        where MATCH('@(performerclean,performer) $searchTerm*') group by performerclean 
-                    LIMIT 10":
+                    LIMIT 10 OPTION ranker=sph04":
     "select performerclean from london_stages 
                        where MATCH('@(performerclean,performer) *$searchTerm*') group by performerclean
-                    LIMIT 10";
+                    LIMIT 10 OPTION ranker=sph04";
 
   $result = $sphinx_conn->query($search);
 

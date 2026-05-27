@@ -12,10 +12,10 @@
   $search = strlen($searchTerm) > 3 ?
       "select perftitleclean from london_stages 
                        where MATCH('@(perftitleclean) $searchTerm*') group by perftitleclean 
-                    ORDER BY perftitleclean ASC LIMIT 10":
+                    LIMIT 10 OPTION ranker=sph04":
       "select perftitleclean from london_stages 
                        where MATCH('@(perftitleclean) *$searchTerm*') group by perftitleclean
-                    ORDER BY perftitleclean ASC LIMIT 10";
+                     LIMIT 10 OPTION ranker=sph04";
 
   $result = $sphinx_conn->query($search);
 

@@ -18,7 +18,7 @@
 
   $names = array();
   while ($row = $result->fetch_assoc()) {
-    $names[] = trim($row['authname']);
+    $names[] = $row['authname'];
     if (!empty($row['authnameclean'])) {
       $names[] = $row['authnameclean'];
     }
