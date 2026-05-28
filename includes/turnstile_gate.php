@@ -9,10 +9,15 @@
    * session flag lets every subsequent request through untouched.
    */
 
-  require_once __DIR__ . '/turnstile_config.php';
+  // Load the config if present. If the file is missing, treat it the same as
+  // empty keys: the gate does nothing and the site keeps working.
+  $turnstile_config = __DIR__ . '/turnstile_config.php';
+  if (file_exists($turnstile_config)) {
+    require_once $turnstile_config;
+  }
 
-  // Not configured (empty keys): do nothing so the site works without Turnstile.
-  if (TURNSTILE_SITE_KEY === '' || TURNSTILE_SECRET_KEY === '') {
+  if (!defined('TURNSTILE_SITE_KEY') || !defined('TURNSTILE_SECRET_KEY')
+      || TURNSTILE_SITE_KEY === '' || TURNSTILE_SECRET_KEY === '') {
     return;
   }
 
