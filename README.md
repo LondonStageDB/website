@@ -101,8 +101,8 @@ searches, pagination, sorting, and downloads through untouched.
 
 ``` php
 <?php
-  define("TURNSTILE_SITE_KEY", "your-site-key");
-  define("TURNSTILE_SECRET_KEY", "your-secret-key");
+  define("TURNSTILE_SITE_KEY", "");     // Replace "" with your Cloudflare Turnstile site key in quotes.
+  define("TURNSTILE_SECRET_KEY", "");   // Replace "" with your Cloudflare Turnstile secret key in quotes.
 ```
 
 If the file is absent, or the keys are left empty, the gate does nothing and the site

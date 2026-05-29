@@ -54,9 +54,19 @@
       header('Location: ' . $_SERVER['REQUEST_URI']);
       exit;
     }
+
+    // A token was POSTed but siteverify did not return success (Cloudflare API
+    // outage, network failure, wrong secret, expired/duplicate token, etc.).
+    // DO NOT silently re-render the auto-submitting challenge: the client widget
+    // would auto-solve again and re-POST in a tight loop, hammering siteverify
+    // until the underlying issue clears. Render a manual-retry page instead.
+    $verify_failed = true;
+  } else {
+    $verify_failed = false;
   }
 
-  // Not verified: render the challenge and stop BEFORE any DB connection is opened.
+  // Not verified: render the challenge (or the manual-retry error page) and stop
+  // BEFORE any DB connection is opened.
   $action   = htmlspecialchars($_SERVER['REQUEST_URI'], ENT_QUOTES, 'UTF-8');
   $site_key = htmlspecialchars(TURNSTILE_SITE_KEY, ENT_QUOTES, 'UTF-8');
 ?>
@@ -90,23 +100,44 @@
     .cf-turnstile {
       display: inline-block;
     }
+    .retry-btn {
+      padding: 0.6rem 1.5rem;
+      margin-top: 1rem;
+      font-size: 1rem;
+      background-color: #6e2424;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
   </style>
 </head>
 <body>
   <div class="turnstile-card">
-    <p>Please verify you are human to continue to the search results.</p>
+    <?php if ($verify_failed): ?>
+      <p><strong>Verification failed.</strong></p>
+      <p>Please solve the challenge below, then click <em>Try again</em>.</p>
+    <?php else: ?>
+      <p>Please verify you are human to continue to the search results.</p>
+    <?php endif; ?>
     <form method="POST" action="<?php echo $action; ?>" id="turnstile-form">
       <div class="cf-turnstile"
            data-sitekey="<?php echo $site_key; ?>"
-           data-callback="onTurnstileSuccess"></div>
+           data-retry="never"
+           <?php if (!$verify_failed): ?>data-callback="onTurnstileSuccess"<?php endif; ?>></div>
+      <?php if ($verify_failed): ?>
+        <p><button type="submit" class="retry-btn">Try again</button></p>
+      <?php endif; ?>
       <noscript><p>JavaScript is required to continue.</p></noscript>
     </form>
   </div>
+  <?php if (!$verify_failed): ?>
   <script>
     function onTurnstileSuccess(token) {
       document.getElementById('turnstile-form').submit();
     }
   </script>
+  <?php endif; ?>
 </body>
 </html>
 <?php
