@@ -120,7 +120,6 @@
     <form method="POST" action="<?php echo $action; ?>" id="turnstile-form">
       <div class="cf-turnstile"
            data-sitekey="<?php echo $site_key; ?>"
-           data-retry="never"
            data-error-callback="onTurnstileError"
            <?php if (!$verify_failed): ?>data-callback="onTurnstileSuccess"<?php endif; ?>></div>
       <p id="retry-button-wrap"<?php if (!$verify_failed) echo ' style="display:none"'; ?>>
