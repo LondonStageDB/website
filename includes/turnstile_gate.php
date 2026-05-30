@@ -30,37 +30,39 @@
     return;
   }
 
-  // A POST means the visitor (or the widget's auto-submit callback) is attempting
-  // to verify. Any non-success outcome — siteverify error, wrong secret, expired
-  // or duplicate token, or no token at all (widget failed to produce one, e.g.
-  // bad site key) — drops into the retry UI. We never silently re-render the
-  // auto-submitting challenge: that would loop.
-  $verify_failed = false;
-  if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    if (!empty($_POST['cf-turnstile-response'])) {
-      $context = stream_context_create([
-        'http' => [
-          'method'  => 'POST',
-          'header'  => 'Content-Type: application/x-www-form-urlencoded',
-          'content' => http_build_query([
-            'secret'   => TURNSTILE_SECRET_KEY,
-            'response' => $_POST['cf-turnstile-response'],
-            'remoteip' => $_SERVER['REMOTE_ADDR'] ?? '',
-          ]),
-          'timeout' => 10,
-        ],
-      ]);
-      $verify = @file_get_contents('https://challenges.cloudflare.com/turnstile/v0/siteverify', false, $context);
-      $data   = json_decode($verify);
+  // A challenge was just solved: verify the token server-side, then redirect back
+  // to the originally requested URL (GET) so the shareable results URL stays clean.
+  if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cf-turnstile-response'])) {
+    $context = stream_context_create([
+      'http' => [
+        'method'  => 'POST',
+        'header'  => 'Content-Type: application/x-www-form-urlencoded',
+        'content' => http_build_query([
+          'secret'   => TURNSTILE_SECRET_KEY,
+          'response' => $_POST['cf-turnstile-response'],
+          'remoteip' => $_SERVER['REMOTE_ADDR'] ?? '',
+        ]),
+        'timeout' => 10,
+      ],
+    ]);
+    $verify = @file_get_contents('https://challenges.cloudflare.com/turnstile/v0/siteverify', false, $context);
+    $data   = json_decode($verify);
 
-      if ($data && !empty($data->success)) {
-        $_SESSION['ls_turnstile_verified'] = true;
-        // REQUEST_URI is a same-origin path (header() rejects CRLF), so this is not an open redirect.
-        header('Location: ' . $_SERVER['REQUEST_URI']);
-        exit;
-      }
+    if ($data && !empty($data->success)) {
+      $_SESSION['ls_turnstile_verified'] = true;
+      // REQUEST_URI is a same-origin path (header() rejects CRLF), so this is not an open redirect.
+      header('Location: ' . $_SERVER['REQUEST_URI']);
+      exit;
     }
+
+    // A token was POSTed but siteverify did not return success (Cloudflare API
+    // outage, network failure, wrong secret, expired/duplicate token, etc.).
+    // DO NOT silently re-render the auto-submitting challenge: the client widget
+    // would auto-solve again and re-POST in a tight loop, hammering siteverify
+    // until the underlying issue clears. Render a manual-retry page instead.
     $verify_failed = true;
+  } else {
+    $verify_failed = false;
   }
 
   // Not verified: render the challenge (or the manual-retry error page) and stop
@@ -120,6 +122,7 @@
     <form method="POST" action="<?php echo $action; ?>" id="turnstile-form">
       <div class="cf-turnstile"
            data-sitekey="<?php echo $site_key; ?>"
+           data-retry="never"
            data-error-callback="onTurnstileError"
            <?php if (!$verify_failed): ?>data-callback="onTurnstileSuccess"<?php endif; ?>></div>
       <p id="retry-button-wrap"<?php if (!$verify_failed) echo ' style="display:none"'; ?>>
@@ -134,6 +137,19 @@
       document.getElementById('msg-failed').style.display = 'block';
       document.getElementById('retry-button-wrap').style.display = 'block';
     }
+    // Cloudflare Turnstile throws some errors (e.g. 400020) as uncaught
+    // exceptions rather than invoking data-error-callback. Catch them at the
+    // window level and route them into the same UI swap so the visitor still
+    // sees the Try Again button on any error, not just callback-routed ones.
+    window.addEventListener('error', function (event) {
+      var isTurnstileError =
+        (event.error && event.error.name === 'TurnstileError') ||
+        (event.message && /Cloudflare Turnstile/i.test(event.message));
+      if (isTurnstileError) {
+        onTurnstileError((event.error && event.error.message) || event.message);
+        event.preventDefault();
+      }
+    });
     <?php if (!$verify_failed): ?>
     function onTurnstileSuccess(token) {
       document.getElementById('turnstile-form').submit();
