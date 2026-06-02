@@ -30,45 +30,87 @@
     return;
   }
 
-  // A challenge was just solved: verify the token server-side, then redirect back
-  // to the originally requested URL (GET) so the shareable results URL stays clean.
-  if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cf-turnstile-response'])) {
-    $context = stream_context_create([
-      'http' => [
-        'method'  => 'POST',
-        'header'  => 'Content-Type: application/x-www-form-urlencoded',
-        'content' => http_build_query([
-          'secret'   => TURNSTILE_SECRET_KEY,
-          'response' => $_POST['cf-turnstile-response'],
-          'remoteip' => $_SERVER['REMOTE_ADDR'] ?? '',
-        ]),
-        'timeout' => 10,
-      ],
-    ]);
-    $verify = @file_get_contents('https://challenges.cloudflare.com/turnstile/v0/siteverify', false, $context);
-    $data   = json_decode($verify);
+  // Hard cap: too many failed verification attempts in this session locks the
+  // visitor out with a 403 until the session expires (or they clear cookies).
+  // A cheap server-side rate limit on top of the gate, to stop a session that's
+  // malfunctioning or actively probing from running unbounded siteverify calls.
+  $turnstile_max_failed_attempts = 5;
+  $blocked = !empty($_SESSION['turnstile_failed_attempts'])
+             && $_SESSION['turnstile_failed_attempts'] >= $turnstile_max_failed_attempts;
 
-    if ($data && !empty($data->success)) {
-      $_SESSION['ls_turnstile_verified'] = true;
-      // REQUEST_URI is a same-origin path (header() rejects CRLF), so this is not an open redirect.
-      header('Location: ' . $_SERVER['REQUEST_URI']);
-      exit;
+  // A POST is a verification attempt. Any non-success outcome (siteverify error,
+  // wrong secret, expired/duplicate/missing token, etc.) counts as a failed
+  // attempt and feeds the counter above.
+  $verify_failed = false;
+  if (!$blocked && $_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (!empty($_POST['cf-turnstile-response'])) {
+      $context = stream_context_create([
+        'http' => [
+          'method'  => 'POST',
+          'header'  => 'Content-Type: application/x-www-form-urlencoded',
+          'content' => http_build_query([
+            'secret'   => TURNSTILE_SECRET_KEY,
+            'response' => $_POST['cf-turnstile-response'],
+            'remoteip' => $_SERVER['REMOTE_ADDR'] ?? '',
+          ]),
+          'timeout' => 10,
+        ],
+      ]);
+      $verify = @file_get_contents('https://challenges.cloudflare.com/turnstile/v0/siteverify', false, $context);
+      $data   = json_decode($verify);
+
+      if ($data && !empty($data->success)) {
+        $_SESSION['ls_turnstile_verified'] = true;
+        unset($_SESSION['turnstile_failed_attempts']);
+        // REQUEST_URI is a same-origin path (header() rejects CRLF), so this is not an open redirect.
+        header('Location: ' . $_SERVER['REQUEST_URI']);
+        exit;
+      }
     }
 
-    // A token was POSTed but siteverify did not return success (Cloudflare API
-    // outage, network failure, wrong secret, expired/duplicate token, etc.).
-    // DO NOT silently re-render the auto-submitting challenge: the client widget
-    // would auto-solve again and re-POST in a tight loop, hammering siteverify
-    // until the underlying issue clears. Render a manual-retry page instead.
-    $verify_failed = true;
-  } else {
-    $verify_failed = false;
+    $_SESSION['turnstile_failed_attempts'] = ($_SESSION['turnstile_failed_attempts'] ?? 0) + 1;
+    if ($_SESSION['turnstile_failed_attempts'] >= $turnstile_max_failed_attempts) {
+      $blocked = true;
+    } else {
+      $verify_failed = true;
+    }
   }
 
-  // Not verified: render the challenge (or the manual-retry error page) and stop
-  // BEFORE any DB connection is opened.
+  // Render the appropriate page (403 lockout, retry, or fresh challenge) and
+  // stop BEFORE any DB connection is opened.
   $action   = htmlspecialchars($_SERVER['REQUEST_URI'], ENT_QUOTES, 'UTF-8');
   $site_key = htmlspecialchars(TURNSTILE_SITE_KEY, ENT_QUOTES, 'UTF-8');
+
+  if ($blocked) {
+    http_response_code(403);
+    ?>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <title>403 Forbidden</title>
+  <style>
+    body { margin: 0; min-height: 100vh; display: flex; justify-content: center;
+           align-items: center; background-color: rgb(41, 33, 18); color: #fff;
+           font-family: sans-serif; }
+    .turnstile-card { text-align: center; padding: 2rem; max-width: 30rem; }
+    .turnstile-card h1 { font-size: 2.5rem; margin: 0 0 1rem; }
+    .turnstile-card p { font-size: 1.1rem; margin-bottom: 1rem; }
+  </style>
+</head>
+<body>
+  <div class="turnstile-card">
+    <h1>403 Forbidden</h1>
+    <p>Too many failed verification attempts.</p>
+    <p>Please close your browser and try again later.</p>
+  </div>
+</body>
+</html>
+    <?php
+    exit;
+  }
 ?>
 <!doctype html>
 <html lang="en">
