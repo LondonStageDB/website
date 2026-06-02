@@ -83,11 +83,31 @@ Now start serving requests.
 ```bash
 searchd --config /path/to/sphinx/conf/sphinx.conf
 ```
-### (optional) Google reCAPTCHA v3
+### (optional) Cloudflare Turnstile
 
-To prevent bots which do not respect robots.txt and protect DDOS attackig on downloading, you can set up **Google reCAPTCHA v3** for your site.
- - First, follow this guide to create your reCAPTCHA in Google Cloud platform: [reCAPTCHA v3 Guides](https://developers.google.com/recaptcha/docs/v3).
- - Then, provide site key and secret key in the `db.php` file.
+High-volume bot/scraper traffic against the data-bearing endpoints (`sphinx-results.php`,
+`event.php`, `search.php`, and the CSV/JSON/XML download scripts) can exhaust database
+connections, because each of those endpoints opens DB connections and runs a query on every
+request. To protect them, you can put a **Cloudflare Turnstile** gate in front of every
+entry point that opens a DB connection.
+
+When enabled, an unverified visitor is shown a one-time Turnstile challenge and the script
+exits *before* any database connection is opened; bots that cannot solve the challenge
+never reach the query. Once a visitor passes, a session flag lets all of their subsequent
+searches, pagination, sorting, and downloads through untouched.
+
+ - Create a Turnstile widget in the Cloudflare dashboard: [Turnstile Get Started](https://developers.cloudflare.com/turnstile/get-started/).
+ - In the `/includes` folder, create a file named `turnstile_config.php` with your keys:
+
+``` php
+<?php
+  define("TURNSTILE_SITE_KEY", "");     // Replace "" with your Cloudflare Turnstile site key in quotes.
+  define("TURNSTILE_SECRET_KEY", "");   // Replace "" with your Cloudflare Turnstile secret key in quotes.
+```
+
+If the file is absent, or the keys are left empty, the gate does nothing and the site
+behaves as before. Note: because search-engine crawlers cannot solve Turnstile, enabling this gate stops
+the gated pages from being indexed by search engines.
 
 ### Create the `db.php` File
 
@@ -117,9 +137,6 @@ password, and database configuration details.
   define("SPHINX_PORT", "9306");
 
   $sphinx_conn = new mysqli(SPHINX_HOST, SPHINX_USER, SPHINX_PASS, SPHINX_NAME, SPHINX_PORT);
-
-  define("GOOGLE_RECAPTCHA_SITE_KEY", "");
-  define("GOOGLE_RECAPTCHA_SECRET_KEY", "");
 
 ?>
 ```
@@ -161,5 +178,15 @@ recommend this option for users who want to precisely replicate older search beh
 
 - /includes/db.php
         Database config file (Not included in repo. You will need to create your own - see above)
+
+
+- /includes/turnstile_gate.php
+        Cloudflare Turnstile gate. Included at the top of every entry point that
+        opens a DB connection; rejects unverified visitors before any connection
+        is opened. Reads its keys from turnstile_config.php.
+
+
+- /includes/turnstile_config.php
+        Cloudflare Turnstile keys (Not included in repo. You will need to create your own. Optional - see above)
 
 ```

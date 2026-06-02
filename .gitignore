@@ -1,5 +1,6 @@
 /Data
 /includes/db.php
+/includes/turnstile_config.php
 *.swp
 /PDFs/NA
 /PDFs/node_modules
