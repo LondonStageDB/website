@@ -156,7 +156,7 @@
 </head>
 <body>
   <div class="turnstile-card">
-    <p id="msg-fresh"<?php if ($verify_failed) echo ' style="display:none"'; ?>>Please verify you are human to continue to the search results.</p>
+    <p id="msg-fresh"<?php if ($verify_failed) echo ' style="display:none"'; ?>>Please verify you are human to continue.</p>
     <div id="msg-failed"<?php if (!$verify_failed) echo ' style="display:none"'; ?>>
       <p><strong>Verification failed.</strong></p>
       <p>Please solve the challenge below, then click <em>Try again</em>.</p>
