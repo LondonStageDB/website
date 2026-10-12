@@ -120,6 +120,10 @@
                             Burkert’s discussion</a> of the many different versions of <em>Oroonoko</em> that coexisted
                         in the 1760s, -70s, and -80s.
                     </p>
+                    <p>The site has since moved from Sphinx to <a href="https://manticoresearch.com/">Manticore
+                        Search</a>, the actively maintained successor to Sphinx. Manticore uses the same query
+                        language, so the query displayed by that button reads the same way.
+                    </p>
                     <p>We hope that visitors to the site will find this frank acknowledgment and foregrounding of the
                         dataset’s history and limitations refreshing rather than frustrating. As <a
                                 href="http://www.digitalhumanities.org/dhq/vol/5/1/000091/000091.html" title="‌">Johanna
