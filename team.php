@@ -94,23 +94,7 @@
                             Institute</a> and as Principal Investigator on major Mellon- and IMLS-funded projects
                         promoting open digital scholarship across disciplines. As part of the LSDB team, Franny advises
                         on project sustainability, digital rights management, and intellectual property.</p>
-                    <h3><a id="Kate_Thornhill_MLS_18"></a><strong>Kate
-                            Thornhill</strong>, MLS</h3>
-                    <img alt="Headshot of Kate Thornhill outside"
-                         style="float:right;padding-left:25px;width:180.55px;height:233.75px;"
-                         src="/images/KateThornhill.jpeg">
-                    <p><a
-                                href="https://library.uoregon.edu/directory/thornhill">Public Scholarship Librarian,
-                            University of Oregon</a></p>
-                    <p><a
-                                href="https://katethornhill.carrd.co/">Thornhill</a> specializes in the development and
-                        implementation of digital projects; the promotion of ethical, open, and participatory knowledge
-                        sharing; and the cultivation of information literacies within and beyond the classroom. She has
-                        been a key practitioner and leader in several NEH- and Mellon-funded projects that focus on
-                        community and civic outreach, including Oregon Digital, LearnStatic, PlacePress, and the PNW
-                        Just Futures Institute’s <a href="https://jfi.uoregon.edu/initiatives/afroindigenous-healing/">Afroindigenous
-                            Healing Project</a>. As community engagement specialist, Thornhill leads the LSDB’s public
-                        outreach efforts, with the aim to grow the project’s user communities.</p>
+                    
                     <h3><a
                                 id="Erin_Winter_MS_MSLS_23"></a><strong>Erin Winter</strong>, MS, MSLS</h3>
                                 <img alt="Headshot of Erin Winter"
@@ -187,6 +171,26 @@
             </div>
             <div class="grid-x team-section">
                 <div id="RAs" class="small-12" data-magellan-target="RAs">
+                    <h2>Research Assistants 2026-2027</h2>    
+                    <h3><a id="Frida_Heitland"></a><strong>Frida Heitland, MA, MSt</strong></h3>
+                    <img alt="Headshot of Frida Heitland"
+                         style="float:right;padding-left:25px;width:210px;height:225px;"
+                         src="/images/FridaHeitland.jpg">
+                         <p><a
+                                href="https://cas.uoregon.edu/directory/comics/all/fheitlan">Doctoral 
+                                Candidate, Department of English, University of Oregon</a></p>
+                    <p>Frida Heitland’s research combines comics studies and environmental humanities with a focus 
+                        on embodiment and the climate crisis. Driven towards community, they are a 
+                        <a href="https://scholars.hastac.hcommons.org/">2026 HASTAC scholar</a>
+                         and a past Executive Board member of both the 
+                         <a href="https://gradcaucus.comicsstudies.org/past-executive-committees/">Graduate 
+                             Student Caucus of the Comics Studies Society</a> and of their
+                             <a href="https://gtff3544.net/">local graduate union chapter</a>. At UO, they have been 
+                             active in the <a href="https://graduatestudies.uoregon.edu/new-media-and-culture-certificate">New 
+                             Media and Culture Certificate</a> and involved with the undergraduate <a href="https://dh.uoregon.edu">Digital 
+                             Humanities minor</a> as both a Project Assistant and a Teaching Assistant. 
+                             As the Graduate Research Assistant for LSDB in 2026-27, Frida will serve as data manager, 
+                             develop content for the website and blog, and mentor the team's undergraduate Research Assistants.</p>
                     <h2>Research Assistants 2025-2026</h2>
                     <h3><a id="Rose_Ruhnke"></a><strong>Rose Leigh Ruhnke</strong></h3>
                     <img alt="Headshot of Rose Leigh Ruhnke outside"
