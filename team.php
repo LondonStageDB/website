@@ -94,23 +94,7 @@
                             Institute</a> and as Principal Investigator on major Mellon- and IMLS-funded projects
                         promoting open digital scholarship across disciplines. As part of the LSDB team, Franny advises
                         on project sustainability, digital rights management, and intellectual property.</p>
-                    <h3><a id="Kate_Thornhill_MLS_18"></a><strong>Kate
-                            Thornhill</strong>, MLS</h3>
-                    <img alt="Headshot of Kate Thornhill outside"
-                         style="float:right;padding-left:25px;width:180.55px;height:233.75px;"
-                         src="/images/KateThornhill.jpeg">
-                    <p><a
-                                href="https://library.uoregon.edu/directory/thornhill">Public Scholarship Librarian,
-                            University of Oregon</a></p>
-                    <p><a
-                                href="https://katethornhill.carrd.co/">Thornhill</a> specializes in the development and
-                        implementation of digital projects; the promotion of ethical, open, and participatory knowledge
-                        sharing; and the cultivation of information literacies within and beyond the classroom. She has
-                        been a key practitioner and leader in several NEH- and Mellon-funded projects that focus on
-                        community and civic outreach, including Oregon Digital, LearnStatic, PlacePress, and the PNW
-                        Just Futures Institute’s <a href="https://jfi.uoregon.edu/initiatives/afroindigenous-healing/">Afroindigenous
-                            Healing Project</a>. As community engagement specialist, Thornhill leads the LSDB’s public
-                        outreach efforts, with the aim to grow the project’s user communities.</p>
+                    
                     <h3><a
                                 id="Erin_Winter_MS_MSLS_23"></a><strong>Erin Winter</strong>, MS, MSLS</h3>
                                 <img alt="Headshot of Erin Winter"
@@ -157,52 +141,48 @@
                         project, and support the ingestion of new primary source material. The team provides crucial
                         technical support and oversight of the database as the LSDB continues to enhance user experience
                         and expand the range of search capabilities.</p>
-                    <h3><a id="Jesse_Sedwick_BS_40"></a><strong>Jesse Sedwick</strong>, BS</h3>
-                    <p>Web Applications Developer &amp; Administrator</p>
-                    <p>Sedwick has over twenty years of experience in custom web application development. He has
-                        designed and implemented a wide range of web applications to streamline workflows for university
-                        schools and departments.</p>
+                        <h3><a id="Dennis_Pipes_MEd_60"></a><strong>Dennis Pipes</strong>, MEd</h3>
+                    <p>Analyst Programmer</p>
+                    <p>Pipes has worked in both K-12 and higher education for over twenty years, serving as an
+                        instructor, support specialist, and web developer. He also has over ten years of experience in
+                        the private sector as a trainer and tech generalist.</p>
                     <h3><a
                                 id="Tyfanie_Wineriter_BS_45"></a><strong>Tyfanie Wineriter</strong>, BS</h3>
                     <p>Software Solutions &amp; Development Manager</p>
                     <p>Wineriter leads the Custom Software Development team at UO, where she specializes in employee
                         engagement, project management, resource management and planning, and development standards.</p>
-                    <h3><strong>Derek Wormdahl</strong>, BS</h3>
-                    <p>Senior Director of Solutions Development and Data Services</p>
-                    <p>Wormdahl has over 25 years of industry experience developing, hosting and maintaining software
-                        applications in both the private and public sector fields. Wormdahl now occupies a leadership
-                        role at UO, overseeing IT staff that develop and maintain several of the university’s web
-                        applications.</p>
+                    
                     <h3><a id="John_Zhao_MS_55"></a><strong>John Zhao</strong>, MS</h3>
                     <p>Analyst Programmer</p>
                     <p>Zhao has twenty years of experience in web and software development. He has expertise in Drupal,
                         WordPress, and Docker, as well as several back-end technologies, such as Angular, .NET Core,
                         Azure, and API.</p>
-                    <h3><a id="Dennis_Pipes_MEd_60"></a><strong>Dennis Pipes</strong>, MEd</h3>
-                    <p>Analyst Programmer</p>
-                    <p>Pipes has worked in both K-12 and higher education for over twenty years, serving as an
-                        instructor, support specialist, and web developer. He also has over ten years of experience in
-                        the private sector as a trainer and tech generalist.</p>
                 </div>
             </div>
             <div class="grid-x team-section">
                 <div id="RAs" class="small-12" data-magellan-target="RAs">
-                    <h2>Research Assistants 2025-2026</h2>
-                    <h3><a id="Rose_Ruhnke"></a><strong>Rose Leigh Ruhnke</strong></h3>
-                    <img alt="Headshot of Rose Leigh Ruhnke outside"
+                    <h2>Current Research Assistants</h2> 
+                     </p>   
+                    <h3><a id="Frida_Heitland"></a><strong>Frida Heitland, </strong>MA, MSt</h3>
+                    <img alt="Headshot of Frida Heitland"
                          style="float:right;padding-left:25px;width:210px;height:225px;"
-                         src="/images/RoseRuhnke.jpeg">
-                    <p><a
-                                href="https://www.linkedin.com/in/rose-leigh-ruhnke-0077a336a/">BA Student, English & 
-                                Legal Studies, University of Oregon</a></p>
-                    <p>An English major with a minor in Legal Studies, Ruhnke transferred to the University of Oregon 
-                        after completing an early college program at Portland Community College. Growing up, she spent 
-                        her weekends acting at a local arts center, where she developed a deep love for theatre history, 
-                        which prompted her to spend her first term at the University of Oregon researching John Dryden’s 
-                        Marriage à la Mode. While working on the London Stage Database, Ruhnke will focus on advancing 
-                        the LSDB’s public outreach. She will also spend her time performing independent biographical 
-                        research on Restoration-era actors and actresses.</p>
-                        <h3><a id="Ceilidh_McCallum"></a><strong>Ceilidh McCallum</strong>
+                         src="/images/FridaHeitland.jpg">
+                         <p><a
+                                href="https://cas.uoregon.edu/directory/comics/all/fheitlan">Doctoral 
+                                Candidate, Department of English, University of Oregon</a></p>
+                    <p>Frida Heitland’s research combines comics studies and environmental humanities with a focus 
+                        on embodiment and the climate crisis. Driven towards community, they are a 
+                        <a href="https://scholars.hastac.hcommons.org/">2026 HASTAC scholar</a>
+                         and a past Executive Board member of both the 
+                         <a href="https://gradcaucus.comicsstudies.org/past-executive-committees/">Graduate 
+                             Student Caucus of the Comics Studies Society</a> and of their
+                             <a href="https://gtff3544.net/">local graduate union chapter</a>. At UO, they have been 
+                             active in the <a href="https://graduatestudies.uoregon.edu/new-media-and-culture-certificate">New 
+                             Media and Culture Certificate</a> and involved with the undergraduate <a href="https://dh.uoregon.edu">Digital 
+                             Humanities minor</a> as both a Project Assistant and a Teaching Assistant. 
+                             As the Graduate Research Assistant for LSDB in 2026-27, Heitland will serve as data manager, 
+                             develop content for the website and blog, and mentor the team's undergraduate Research Assistants.</p>
+                             <h3><a id="Ceilidh_McCallum"></a><strong>Ceilidh McCallum-Noval Roberts</strong>
                         <img alt="Headshot of Ceilidh McCallum outside"
                                                  style="float:right;padding-left:25px;width:210px;height:235px;"
                                                  src="/images/CeilidhMcCallum.jpeg">
@@ -210,12 +190,32 @@
                     <p><a
                                 href="https://www.linkedin.com/in/ceilidhmccallum/">BS Student, Cultural Anthropology, 
                                 University of Oregon</a></p>
-                    <p>Coming to the University of Oregon as a non-traditional student, McCallum is currently a Junior 
-                        in the Cultural Anthropology program, with a focus in Digital Humanities and Game Studies. 
-                        Her background in arts and technology combined with her interests Digitization 
-                        and Archiving compliment each other at the intersection of media and computerization. In her time 
-                        with the LSDB project, McCallum will be specializing in metadata compliance and working to further 
-                        develop interactive tools for the database to increase functionality and accessibility. </p>
+                    <p>As a Cultural Anthropology student specializing in Digital Humanities, Roberts is excited
+                         to continue working with the LSDB for another year. Her work with the LSDB in 2025-2026 touched
+                          on both the technical and research sides of the project, as she started the year with an
+                         <a href="https://blogs.uoregon.edu/londonstage/2026/05/22/meet-a11y/">Accessibility Audit</a> for the website, and data curation and research for a developing project. 
+                          Roberts also conducted independent research as part of the LSDB's blog series 
+                          <a href="https://blogs.uoregon.edu/londonstage/category/london-stage-data-sitters-club/">"The Data-Sitters Club"</a>
+                         on the <a href="https://blogs.uoregon.edu/londonstage/2026/07/09/harlequin-afterpieces-part1/">Harlequin Afterpieces</a> of 
+                         the "The Beggar's Opera". In 2026-2027, Roberts continues her specialization in data curation for internal LSDB projects, 
+                         and will assist with the implementation of new site features. 
+                    <h2>Former Research Assistants</h2>
+                        <h3><a id="Emma_Kaisner_72"></a><strong>Emma
+                            Kaisner</strong><img alt="Headshot of Emma Kaisner in front of brick wall"
+                                                 style="float:right;padding-left:25px;width:210px;height:248.1px;"
+                                                 src="/images/EmmaKaisner.jpeg">
+                    </h3>
+                    <p><a
+                                href="https://www.linkedin.com/in/emma-kaisner">BA Student, Economics &amp; English,
+                            University of Oregon</a></p>
+                    <p> In 2025, Kaisner graduated from the University of Oregon and the Robert D. Clark 
+                        Honors College. As an Economics and English student, Kaisner was interested in the interactions
+                        between literature, economics, and data science. During her time as a LSDB team member in 2024-2025, Kaisner assisted 
+                        in data collection and the implementation of a communications strategy for the
+                        project. Kaisner also developed her own timeline project on 
+                        <a href="https://cdn.knightlab.com/libs/timeline3/latest/embed/index.html?source=v2%3A2PACX-1vR__WboPQw_hi8VR_hRZ18sjD81RTEPQ9GadfZBxSg24sdv3yvkF5dw3zEfUcYDXvqZPaMVS0SpVmpN&font=Default&lang=en&initial_zoom=2&width=100%25&height=650"> 
+                        Rehearsal Plays</a> using database research to further engage with her own research interests. 
+                        In 2026, Kaisner took a position with the Tribeca Film Festival.</p>
                         <h3><a id="Quynh_Tran_Le"></a><strong>Quynh-Tran Le</strong>
                         <img alt="Headshot of Quynh-Tran Le outside"
                                                  style="float:right;padding-left:25px;width:210px;height:220px;"
@@ -226,12 +226,11 @@
                                 University of Oregon</a></p>
                     <p>Le is a senior at the University of Oregon and a student in the Robert D. Clark Honors College. Studying 
                         Data Science, Le is particularly interested in the intersection of data and business, with a focus on marketing 
-                        analytics and insights. In her work with the London Stage Database, Le focuses on data wrangling and back-end 
-                        development to enhance user experience, while also collaborating with the Transnational Stages Project to integrate 
-                        and implement data from the London Stage Database. </p>
-
-
-                    <h2>Research Assistants 2024-2025</h2>
+                        analytics and insights. Le completed an independent <a
+                                href="https://blogs.uoregon.edu/londonstage/2026/06/18/data-science-takes-the-stage/">research project</a> on data visualizationwith the London Stage Database in spring 2024. 
+                        She also liaised with Jeffrey Ravel's team at MIT to support interoperability between the LSDB and the <a
+                                href="https://blogs.uoregon.edu/londonstage/2026/08/27/transnational-stages/">Transnational 
+                        Stages project</a>.</p>
                     <h3><a id="Michele_Pflug_MA_57"></a><strong>Michele Pflug</strong>, MA</h3>
                     <img alt="Headshot of Michele Pflug outside"
                          style="float:right;padding-left:25px;width:225px;height:225px;"
@@ -246,25 +245,27 @@
                             Innovation Fellowship</a> and awards from the Bibliographic Society of America, the American
                         Society for Eighteenth-Century Studies, and the Linda Hall Library. A former rare books curator,
                         she has contributed to and supported the development of various digital projects hosted by
-                        galleries, libraries, museums, and archives. Along with LSDB team member Erin Winter, Pflug
+                        galleries, libraries, museums, and archives. In 2024-2025, Pflug and LSDB team member Erin Winter 
                         developed data and metadata curation protocols that expand the range of sources available to LSDB
-                        users. Shortly after her time with the LSDB, Pflug was hired at the High Desert Museum in Bend, OR as the Curator of Natural History.</p>
-                    <h3><a id="Emma_Kaisner_72"></a><strong>Emma
-                            Kaisner</strong><img alt="Headshot of Emma Kaisner in front of brick wall"
-                                                 style="float:right;padding-left:25px;width:210px;height:248.1px;"
-                                                 src="/images/EmmaKaisner.jpeg">
-                    </h3>
+                        users. Shortly after her time with the LSDB, Pflug was hired at the <a
+                                href="https://www.highdesertmuseum.org">High Desert Museum</a> in Bend, OR as the Curator of Natural History.</p>
+                    
+                        <h3><a id="Rose_Ruhnke"></a><strong>Rose Leigh Ruhnke</strong></h3>
+                    <img alt="Headshot of Rose Leigh Ruhnke outside"
+                         style="float:right;padding-left:25px;width:210px;height:225px;"
+                         src="/images/RoseRuhnke.jpeg">
                     <p><a
-                                href="https://www.linkedin.com/in/emma-kaisner">BA Student, Economics &amp; English,
-                            University of Oregon</a></p>
-                    <p> In 2025, Kaisner graduated from the University of Oregon and the Robert D. Clark 
-                        Honors College. As an Economics and English student, Kaisner was interested in the interactions
-                        between literature, economics, and data science. During her time as a LSDB team member, Kaisner assisted 
-                        in data collection and the implementation of a communications strategy for the
-                        project. Kaisner also developed her own timeline project on 
-                        <a href="https://cdn.knightlab.com/libs/timeline3/latest/embed/index.html?source=v2%3A2PACX-1vR__WboPQw_hi8VR_hRZ18sjD81RTEPQ9GadfZBxSg24sdv3yvkF5dw3zEfUcYDXvqZPaMVS0SpVmpN&font=Default&lang=en&initial_zoom=2&width=100%25&height=650"> 
-                        Rehearsal Plays</a> using database research to further engage with her own research interests. 
-                        In 2026, Kaisner took a position with the Tribeca Film Festival.</p>
+                                href="https://www.linkedin.com/in/rose-leigh-ruhnke-0077a336a/">BA Student, English & 
+                                Legal Studies, University of Oregon</a></p>
+                    <p>An English major with a minor in Legal Studies, Ruhnke transferred to the University of Oregon 
+                        after completing an early college program at Portland Community College. Growing up, she spent 
+                        her weekends acting at a local arts center, where she developed a deep love for theatre history, 
+                        which prompted her to spend her first term at the University of Oregon researching John Dryden’s 
+                        Marriage à la Mode. From January to June of 2026, Rose developed the <a
+                                href="https://blogs.uoregon.edu/londonstage/theater-thursday/">"Theater Thursday"</a> feature on 
+                        the LSDB blog. She won two <a
+                                href="https://blogs.uoregon.edu/londonstage/2026/06/11/epilogue-theaterthursday/">undergraduate research awards</a> for her public scholarship. working on the
+                         London Stage Database, Ruhnke focused on advancing </p>
                 </div>
             </div>
             <div class="grid-x team-section">
@@ -307,17 +308,19 @@
                                 href="https://www.cambridge.org/core/books/romanticism-selfcanonization-and-the-business-of-poetry/A4E251B28216C843A6445C2C2D56B966"><em>Romanticism,
                                 Self- Canonization, and the Business of Poetry</em></a> and <a
                                 href="https://www.cambridge.org/core/books/romanticism-and-the-gothic/26A366D2DBE3505FDD75EADAB3CF706B"><em>Romanticism
-                                and the Gothic: Genre, Reception, and Canon Formation</em></a>. He is currently working
-                        on a book on melodrama and an associated digital project asking what playbills read en masse can
-                        tell us.</p>
+                                and the Gothic: Genre, Reception, and Canon Formation</em></a>. His book
+                        on melodrama and an associated digital project asking what playbills read en masse can
+                        tell us has been <a
+                                href="https://eprints.gla.ac.uk/377093/">accepted for publication</a>.</p>
                     <h3><a
                                 id="Michelle_J_Holman_MLIS_91"></a><strong>Michelle J. Holman</strong>, MLIS</h3>
                     <p>Principal Genealogist, <a
                                 href="https://www.familyhistorygifts.co.uk/">Family History Gifts</a></p>
                     <p class="has-line-data" data-line-start="94" data-line-end="95">A trained genealogist, reference
                         librarian, and music cataloguer, Holman has a particular interest in theatrical personalities
-                        and hereditary theater families of the eighteenth century. Her current book project, <em>Recording
-                            the Nations</em>, is a study of the work and lives of nineteenth-century census enumerators.
+                        and hereditary theater families of the eighteenth century. Her 2026 book <em><a
+                                href="https://www.pen-and-sword.co.uk/Recording-the-Nations-Hardback/p/58667">Recording
+                            the Nations</a></em> is a study of the work and lives of nineteenth-century census enumerators.
                         A regular user of the London Stage Database, Holman has become an important advocate of the
                         project in genealogy and music history circles, referencing it in blog posts, podcast
                         appearances, and articles for popular outlets like <em>Family Tree Magazine</em>.</p>
@@ -507,7 +510,7 @@
                         Brianna Uzuner, Steel Wagstaff, Kam Woods, Angela Zaytsev, Irene Zimmerman, Dustin Olson, Caden
                         Williams, Emma Hallock, Scott Enderle, Doug Reside, James Ascher, Annette Cottle, Katie Dana,
                         Clint Gillespie, Garth Mikesell, Angela Moore-Swafford, Sam Phelps, Betty Rozum, Annie
-                        Strickland-Neilson, Cameron Seright, and Joe Kaili.</p>
+                        Strickland-Neilson, Cameron Seright, Joe Kaili, Jesse Sedwick, and Derek Wormdahl.</p>
                 </div>
             </div>
         </div>
