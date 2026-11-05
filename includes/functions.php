@@ -1432,7 +1432,7 @@
 
     $re = '/(\$)([\s\S]+)(=)([^\"]*)/U'; // Matches $name=
 
-    return preg_replace($re, '<a href="/manticore-results.php?keyword=$2">$2$4</a>', $text);
+    return preg_replace($re, '<a href="/sphinx-results.php?keyword=$2">$2$4</a>', $text);
   }
 
 
@@ -1461,7 +1461,7 @@
     }
 
     $re = '/' . implode('|', $m[0]) . '/i';
-    return preg_replace($re, '<a href="manticore-results.php?'.$key.'=$0">$0</a>', $value);
+    return preg_replace($re, '<a href="sphinx-results.php?'.$key.'=$0">$0</a>', $value);
   }
 
 
@@ -1478,7 +1478,7 @@
     if ($value === '') return '';
 
     $value = strip_tags(htmlentities($value));
-    return '/manticore-results.php?performance=' . $value;
+    return '/sphinx-results.php?performance=' . $value;
   }
 
 
