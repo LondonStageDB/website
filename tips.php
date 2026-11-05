@@ -46,6 +46,10 @@
                     (imagine Excel spreadsheets) with <b>fields</b> (imagine the column labels within those
                     spreadsheets). For example, the <i>London Stage Database</i> has a table called "Events," and
                     within that table, it has a field called "EventDate" that holds the date for each event.</p>
+                <p>More recently, the site has moved from Sphinx to
+                    <a href="https://manticoresearch.com/">Manticore Search</a>, the actively maintained
+                    successor to Sphinx. Manticore uses the same query language, so searches work exactly
+                    as described above.</p>
             </div>
             <div class="grid-x tips-section">
                 <div id="Search" class="small-12" data-magellan-target="Search">

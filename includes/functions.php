@@ -7,7 +7,7 @@
  * @return string the SQL query used for the search, minus pagination parameters
  */
   function buildSphinxQuery() {
-    global $sphinx_conn;
+    global $manticore_conn;
 
     $getters = array(); // Contains all search parameters
     $queries = array(); // Contains all 'WHERE' parameters
@@ -92,7 +92,7 @@
             }
             break;
           case 'volume':
-            $volume = mysqli_real_escape_string($sphinx_conn, $volume);
+            $volume = mysqli_real_escape_string($manticore_conn, $volume);
             if ($volume !== 'all' && in_array($volume, [1, 2, 3, 4, 5])) {
               array_push($queries, 'volume=' . $volume);
             }
@@ -116,7 +116,7 @@
             array_push($eventIdQueries, $roleQry);
             break;
           case 'performance':
-            $performance = mysqli_real_escape_string($sphinx_conn, $performance);
+            $performance = mysqli_real_escape_string($manticore_conn, $performance);
             if (!empty($performance) && $performance !== '') {
               array_push($perfTitleMatches, '"' . $performance . '"/1');
             }
@@ -145,7 +145,7 @@
             }
             break;
           case 'keyword':
-            $keyword = mysqli_real_escape_string($sphinx_conn, $keyword);
+            $keyword = mysqli_real_escape_string($manticore_conn, $keyword);
             // The role and performer should not use the quorum number ('/1')
             // on the entered keyword to better match the way that keyword
             // search worked in the legacy search. Use it for the other fields.
@@ -223,8 +223,8 @@
    *   Array of match counts by column.
    */
   function getSphinxResultsByColumn($keyword) {
-    global $sphinx_conn;
-    $keywrd   = mysqli_real_escape_string($sphinx_conn, $keyword);
+    global $manticore_conn;
+    $keywrd   = mysqli_real_escape_string($manticore_conn, $keyword);
     $psql     = "SELECT performanceid FROM london_stages WHERE MATCH('@perftitleclean \"$keywrd\"/1') GROUP BY performanceid";
     $asql     = "SELECT eventid FROM london_stages WHERE MATCH('@authnameclean \"$keywrd\"/1') GROUP BY eventid";
     $pcsql    = "SELECT performanceid FROM london_stages WHERE MATCH('@commentpclean \"$keywrd\"/1') GROUP BY performanceid";
@@ -232,16 +232,16 @@
     $csql     = "SELECT castid FROM london_stages WHERE MATCH('@(roleclean,performerclean) \"$keywrd\"') GROUP BY castid";
     $metasql  = "SHOW meta";
 
-    $result['p']  = $sphinx_conn->query($psql);
-    $result['p_meta']  = $sphinx_conn->query($metasql);
-    $result['a']  = $sphinx_conn->query($asql);
-    $result['a_meta']  = $sphinx_conn->query($metasql);
-    $result['pc'] = $sphinx_conn->query($pcsql);
-    $result['pc_meta'] = $sphinx_conn->query($metasql);
-    $result['ec'] = $sphinx_conn->query($ecsql);
-    $result['ec_meta'] = $sphinx_conn->query($metasql);
-    $result['c']  = $sphinx_conn->query($csql);
-    $result['c_meta']  = $sphinx_conn->query($metasql);
+    $result['p']  = $manticore_conn->query($psql);
+    $result['p_meta']  = $manticore_conn->query($metasql);
+    $result['a']  = $manticore_conn->query($asql);
+    $result['a_meta']  = $manticore_conn->query($metasql);
+    $result['pc'] = $manticore_conn->query($pcsql);
+    $result['pc_meta'] = $manticore_conn->query($metasql);
+    $result['ec'] = $manticore_conn->query($ecsql);
+    $result['ec_meta'] = $manticore_conn->query($metasql);
+    $result['c']  = $manticore_conn->query($csql);
+    $result['c_meta']  = $manticore_conn->query($metasql);
     $all_counts   = [];
 
     if (!is_bool($result['p']) && !is_bool($result['p_meta']))
@@ -610,7 +610,7 @@
      */
     function getSphinxRelatedWorks(string $perfTitle = '', int $workId = null)
     {
-        global $sphinx_conn;
+        global $manticore_conn;
         $works = array(); // Nested works array, keyed by workid
         $sources = array(); // Sources to be searched
         $titles = array(); // Titles to be searched
@@ -619,7 +619,7 @@
 
         // Get the work identified in the performance by WorkId, if any
         if (!is_null($workId)) {
-            $work_query = $sphinx_conn->query("SELECT *  FROM related_work WHERE workid="
+            $work_query = $manticore_conn->query("SELECT *  FROM related_work WHERE workid="
                 . $workId . " GROUP BY workid, authid, variantname");
             $results = $work_query->fetch_all(MYSQLI_ASSOC);
             $works = relatedWorksFromArray($results);
@@ -643,7 +643,7 @@
                     array_map('trim', preg_split('/\s+or(?:,|\s)+|[,:;]\s*with|[:;]/i', $title)));
                 foreach ($subtitles as $s) {
                     if (strlen($s) > 3) { // Skip over meaninglessly short strings
-                        $values[] = '"' . mysqli_real_escape_string($sphinx_conn, $s) . '"';
+                        $values[] = '"' . mysqli_real_escape_string($manticore_conn, $s) . '"';
                     }
                 }
             }
@@ -662,7 +662,7 @@
                     " | @sourceresearched " . $sphinx_titles . "')";
                 $sql .= " GROUP BY workid, authid"; // One row per work
                 // Get results from Sphinx
-                $tr = $sphinx_conn->query($sql);
+                $tr = $manticore_conn->query($sql);
                 $ts = relatedWorksFromArray($tr->fetch_all(MYSQLI_ASSOC));
 
                 // Sort works in order of ascending date
@@ -677,7 +677,7 @@
           if (($perc > 70) or ($work['workid'] == $workId)) {
             foreach ($work as $k => $v) {
                 if (str_starts_with($k, 'source')) $sources[] = mysqli_real_escape_string(
-                    $sphinx_conn, ucwords($v));
+                    $manticore_conn, ucwords($v));
             }
           }
         }
@@ -696,7 +696,7 @@
           $sql .= ' GROUP BY workid, authid';
 
           // Get results from Sphinx, add works to works array
-          $result = $sphinx_conn->query($sql);
+          $result = $manticore_conn->query($sql);
           $source_results = relatedWorksFromArray($result->fetch_all(MYSQLI_ASSOC));
           $works = $works + array_column($source_results, null, 'workid');
         }
@@ -732,12 +732,12 @@
   * @return array Array of author info
   */
   function getAuthorInfo($workId = '') {
-    global $sphinx_conn;
+    global $manticore_conn;
 
     if ($workId !== '') {
       $sql = "SELECT AuthId, AuthName, StartDate, StartType, EndDate, EndType, AuthType \nFROM related_work \nWHERE WorkId = " . $workId . " GROUP BY AuthId";
 
-      $result = $sphinx_conn->query($sql);
+      $result = $manticore_conn->query($sql);
       $auths = [];
       while ($row = mysqli_fetch_assoc($result)) {
         $auths[] = $row;
@@ -1004,15 +1004,15 @@
    */
   function getSphinxAuthorQuery($author) {
     if ($author === '') return FALSE;
-    global $sphinx_conn;
-    $author = mysqli_real_escape_string($sphinx_conn, $author);
+    global $manticore_conn;
+    $author = mysqli_real_escape_string($manticore_conn, $author);
     // Find the author's works in the Related Works index.
 
     // Get candidate author ids
     $authIdQuery = "SELECT authid 
         FROM author WHERE MATCH('@(authname,authnameclean) $author') 
         GROUP BY authid LIMIT 10";
-    $result = $sphinx_conn->query($authIdQuery);
+    $result = $manticore_conn->query($authIdQuery);
     if (!$result) return FALSE;
 
     $id_rows = $result->fetch_all(MYSQLI_ASSOC);
@@ -1028,7 +1028,7 @@
          GROUP BY workid
          LIMIT 1000";
     // Run the query.
-    $workResult = $sphinx_conn->query($authorWorksSql);
+    $workResult = $manticore_conn->query($authorWorksSql);
     // TRUE if there was an error returned by the query.
     if (is_bool($workResult)) return FALSE;
     // Process through the results, gather all works and similarly named works.
@@ -1057,7 +1057,7 @@
           $titl = substr($titl, strlen($prefix)); //remove quotes from titles
         }
         // Add each title within double quotes, with special characters escaped.
-        $processedTitles[] = '"' . mysqli_real_escape_string($sphinx_conn, $titl) . '"';
+        $processedTitles[] = '"' . mysqli_real_escape_string($manticore_conn, $titl) . '"';
       }
     }
     $processedTitles = array_unique($processedTitles);
