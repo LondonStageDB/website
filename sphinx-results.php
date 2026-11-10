@@ -7,7 +7,7 @@
   include_once('includes/functions.php');
   require_once 'includes/SphinxPaginator.class.php';
 
-  global $sphinx_conn;
+  global $manticore_conn;
 
   // Build query with $_GET values
   $sql = buildSphinxQuery();
@@ -22,7 +22,7 @@
   $limit      = ( $g_lim !== '' && $g_lim > 0 && $g_lim <= 50) ? $g_lim : 25;
   $page       = ( $g_p !== '' && $g_p > 0 ) ? $g_p : 1;
   $links      = 3;
-  $Paginator  = new SphinxPaginator( $sphinx_conn, $sql );
+  $Paginator  = new SphinxPaginator( $manticore_conn, $sql );
 
   // Get paginated results
   $results    = $Paginator->getData( $limit, $page );
@@ -74,7 +74,7 @@
       <h1>Search Results</h1>
     </div>
     <div class="sql-query-wrap">
-      <div class="toggle-query"><a id="toggle">Toggle Sphinx Query</a></div>
+      <div class="toggle-query"><a id="toggle">Toggle Manticore Query</a></div>
       <div class="sql-query">
         <?php echo $sql; ?>
       </div>
@@ -396,7 +396,7 @@
                         if (in_array($perf['PType'], ['a', 'p'])) {
                             $to_highlight = isset($_GET['keyword']) ? cleanQuotes($_GET['keyword']) : '';
                             $to_highlight .= (!empty($_GET['performance'])) ? '|' . cleanQuotes($_GET['performance']) : '';
-                            echo '<i>' . highlight(cleanItalics(cleanTitle($perf['PerfTitleClean'])), !empty($to_highlight) ? $to_highlight : NULL) . '</i>';
+                            echo '<i>' . highlight(cleanItalics(cleanTitle($perf['PerformanceTitle'])), !empty($to_highlight) ? $to_highlight : NULL) . '</i>';
                         } else {
                             echo highlight(namedEntityLinks($perf['DetailedComment']), !empty($to_highlight) ? $to_highlight : NULL);
                         }
