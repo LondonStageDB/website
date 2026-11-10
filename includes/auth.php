@@ -8,9 +8,9 @@
 
   // If search string is over 3 chars, full wildcard search,
   // Else exact match beginning of string with wildcard at the end
-  $search = strlen($searchTerm) > 3 ?
+  $search = strlen($searchTerm) < 4 ?
     "select authname, authnameclean from author 
-                               where MATCH('@(authname,authnameclean) $searchTerm*') LIMIT 10" :
+                               where MATCH('@(authname,authnameclean) ^$searchTerm*') LIMIT 10" :
     "select authname, authnameclean from author 
                                where MATCH('@(authname,authnameclean) *$searchTerm*') LIMIT 10";
 
