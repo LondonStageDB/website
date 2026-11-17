@@ -1,26 +1,33 @@
 <?php
   include_once('functions.php');
-  global $mnanticore_conn;
+  global $manticore_conn;
 
   $searchTerm = $_GET['term'];
   $searchTerm = cleanStr($searchTerm);
   $searchTerm = mysqli_real_escape_string($manticore_conn, $searchTerm);
 
+  // Relevance function (prioritize close matches and frequent roles)
+  $ranker = "OPTION ranker = expr('sum(exact_hit*10 + (min_hit_pos==1)*5 + exact_order*3)*10 + performer_freq')";
+  
   // If search string is over 3 chars, full wildcard search,
   // Else exact match beginning of string with wildcard at the end
-  $search = strlen($searchTerm) > 3 ?
-    "select performer from london_stages 
-                       where MATCH('@(performerclean,performer) ^$searchTerm*') group by performer 
-                    LIMIT 10":
-    "select performer from london_stages 
-                       where MATCH('@(performerclean,performer) *$searchTerm*') group by performer
-                    LIMIT 10";
+  $match = strlen($searchTerm) < 4 ?
+    "@(performer,performerclean) ^$searchTerm*" :
+    "@(performer,performerclean) (^$searchTerm* | *$searchTerm*)";
+
+  // Build search query from MATCH and ranker
+  $search = "select performerclean
+            from performer
+            where MATCH('$match')
+            limit 10
+            $ranker;";
 
   $result = $manticore_conn->query($search);
 
   $data = array();
   while ($row = $result->fetch_assoc()) {
-    $data[] = trim($row['performer']);
+    $data[] = trim($row['performerclean']);
   }
+
   echo json_encode(array_unique($data));
 ?>

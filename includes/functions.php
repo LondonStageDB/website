@@ -318,6 +318,7 @@
     $string = str_replace('_', ' ', $string);
     $string = str_replace('”', '"', $string);
     $string = str_replace('“', '"', $string);
+    $string = str_replace('@', '', $string);
 
     if (gettype($string) == "string") {
       $string = strip_tags($string);
