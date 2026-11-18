@@ -17,6 +17,9 @@
         <input type="submit" class="button input-group-button" value="Search" />
         <a href="search.php" class="adv-search">Advanced Search</a>
       </form>
+      <div class="margin-top-1rem">
+          <p>We're remodeling! Visit our <a href="https://londonstagedb.uoregon.edu">Legacy Site</a> to replicate searches conducted before November 2026.</p>
+      </div>
     </div>
 </main>
 

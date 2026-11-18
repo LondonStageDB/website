@@ -6,21 +6,19 @@
   $searchTerm = cleanStr($searchTerm);
   $searchTerm = mysqli_real_escape_string($manticore_conn, $searchTerm);
 
-  // Relevance function (prioritize close matches and frequent roles)
-  $ranker = "OPTION ranker = expr('sum(exact_hit*10 + (min_hit_pos==1)*5 + exact_order*3)*10 + performer_freq')";
-  
-  // If search string is over 3 chars, full wildcard search,
-  // Else exact match beginning of string with wildcard at the end
-  $match = strlen($searchTerm) < 4 ?
-    "@(performer,performerclean) ^$searchTerm*" :
-    "@(performer,performerclean) (^$searchTerm* | *$searchTerm*)";
+  // Algorithm: prioritize exact matches
+  $ranker = "OPTION ranker = expr('sum(exact_hit*1000 + (min_hit_pos==1)*100 + hit_count + performer_freq/100)')";
 
-  // Build search query from MATCH and ranker
-  $search = "select performerclean
-            from performer
-            where MATCH('$match')
-            limit 10
-            $ranker;";
+  $match = strlen($searchTerm) < 4 ?
+    "@(performerclean) (^$searchTerm*)" :
+    "@(performerclean) (^$searchTerm$ | ^$searchTerm* | *$searchTerm*)";
+
+  $search = "select performerclean, weight() w
+             from performer
+             where MATCH('$match')
+             order by w desc
+             limit 10
+             $ranker;";
 
   $result = $manticore_conn->query($search);
 
@@ -28,6 +26,12 @@
   while ($row = $result->fetch_assoc()) {
     $data[] = trim($row['performerclean']);
   }
+  $data = array_values(array_unique($data));
 
-  echo json_encode(array_unique($data));
+  // Makes sure exact matches come first
+  usort($data, function ($a, $b) use ($searchTerm) {
+    return (strcasecmp($b, $searchTerm) === 0) <=> (strcasecmp($a, $searchTerm) === 0);
+  });
+
+  echo json_encode($data);
 ?>
