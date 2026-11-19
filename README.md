@@ -5,7 +5,7 @@ This repository includes all the files needed to replicate the [**London Stage D
 ## Installation Requirements
 
 To deploy a copy of the London Stage Database website, you will need a Linux web server 
-with MySQL, PHP, and the Sphinx engine. 
+with MySQL, PHP, and the Manticore Search engine. 
 
 ### Clone the Project Repo
 
@@ -33,55 +33,72 @@ Import `London.sql` into MySQL.
 mysql -u <user> -p London < London.sql
 ```
 
-### Sphinx Installation
+### Manticore Search Installation
 
-There are two ways to install and use the Sphinx engine.
+The site previously used Sphinx 3.4.1. It now uses [Manticore Search](https://manticoresearch.com/),
+the actively maintained successor, which speaks the same SphinxQL query language over the
+MySQL protocol — so the PHP does not change, only the engine behind it.
 
-- Directly install the Sphinx engine on a server.
-  Please follow the official instructions on the [Sphinx Search Engine website](http://sphinxsearch.com/docs/current.html#installing-debian).
-- Use our Dockerfile to run the Sphinx container easily.
-  The Dockerfile in this compose file is hosted at: [https://hub.docker.com/r/casit/sphinxsearch](https://hub.docker.com/r/casit/sphinxsearch).
+There are two ways to install and use the Manticore engine.
+
+- Directly install Manticore on a server. Please follow the official instructions on the
+  [Manticore Search install page](https://manticoresearch.com/install/). On RHEL-family
+  systems that is the two-step repo install:
+  ```bash
+  dnf install https://repo.manticoresearch.com/manticore-repo.noarch.rpm
+  dnf install manticore manticore-language-packs
+  ```
+- Use the official Docker image, hosted at
+  [https://hub.docker.com/r/manticoresearch/manticore](https://hub.docker.com/r/manticoresearch/manticore).
+
+Note that Manticore's index files are not compatible with Sphinx 3.x index files. There is no
+in-place conversion — the tables have to be built from scratch with `indexer`, which is what
+the steps below do.
 
 #### Files
 
-In the `/sphinx` directory of the repo you will find the files listed below. After installing Sphinx, copy the files to the locations indicated to set up Sphinx.
+In the `/manticore` directory of the repo you will find the files listed below. After installing
+Manticore, copy the files to the locations indicated to set up Manticore.
 
-##### `en.pak`
+##### Lemmatizer dictionaries
 
-Copy this file to the Sphinx installation directory.
+`morphology = lemmatize_en` needs the English lemmatizer dictionary. Install the
+`manticore-language-packs` package, which puts the `.pak` files in Manticore's default
+`lemmatizer_base` of `/usr/share/manticore`. Manticore ships its own dictionaries, so no
+dictionary file needs to be copied out of this repo — do **not** reuse Sphinx's `en.pak`.
 
-When it has been placed, be sure to update the `lemmatizer_base` in the **common** section of the `sphinx.conf` file (not yet copied). 
-The setting should be the path of the containing folder of the file.
+If you install the dictionaries somewhere else, update `lemmatizer_base` in the **common**
+section of the `manticore.conf` file (not yet copied) to the path of the containing folder.
 
 ##### `stopwords.txt`
 
-Copy this file to the Sphinx installation directory.
+Copy this file to `/etc/manticoresearch/stopwords.txt`.
 
-When it has been placed, be sure to update the setting `stopwords` in all 3 **index** sections of the `sphinx.conf` file (not yet copied). 
-The setting should be the full path of the file.
+If you place it elsewhere, be sure to update the setting `stopwords` in the **table** sections
+of the `manticore.conf` file (not yet copied). The setting should be the full path of the file.
 
-##### `sphinx.example.conf`
+##### `manticore.example.conf`
 
-Copy this file to somewhere in the Sphinx installation directory structure. *Rename it `sphinx.conf`*.
+Copy this file to `/etc/manticoresearch/`. *Rename it `manticore.conf`*.
 
 Read the commented lines in the file to help while updating the settings to match your set up.
 
 Make sure the path for the `lemmatizer_base` and file location for `stopwords` are updated to match the locations of the files in the sections above.
 
-#### Run the Indexer and Start Sphinx
+#### Run the Indexer and Start Manticore
 
-Once the configuration files are placed and updated, Sphinx needs to index the database.
+Once the configuration files are placed and updated, Manticore needs to index the database.
 
-Update the `sphinx.conf` location when executing the commands below.
+Update the `manticore.conf` location when executing the commands below.
 
 ```bash
-indexer --all --rotate --config /path/to/sphinx/conf/sphinx.conf
+indexer --all --rotate --config /etc/manticoresearch/manticore.conf
 ```
 
 Now start serving requests.
 
 ```bash
-searchd --config /path/to/sphinx/conf/sphinx.conf
+searchd --config /etc/manticoresearch/manticore.conf
 ```
 ### (optional) Cloudflare Turnstile
 
@@ -113,10 +130,14 @@ the gated pages from being indexed by search engines.
 
 In the `/includes` folder, create a file named `db.php`. Use the code below as a template for the file.
 
-The parameters for the Sphinx engine will depend on whether Sphinx was installed locally or if it is running from a Docker container.
+The parameters for the search engine will depend on whether Manticore was installed locally or if it is running from a Docker container.
 
-For both the MySql and Sphinx `define()` statements, populate the host, port, user, 
+For both the MySql and Manticore `define()` statements, populate the host, port, user, 
 password, and database configuration details.
+
+`MANTICORE_PORT` must be Manticore's **SphinxQL/MySQL** listener, which is `9306` by default —
+the same port Sphinx used. Manticore's other default listener, `9308`, is the HTTP/JSON API
+and cannot be used here, because the site connects with PHP's `mysqli`.
 
 ``` php
 <?php
@@ -130,13 +151,14 @@ password, and database configuration details.
 
   $conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
 
-  define("SPHINX_HOST", "localhost");
-  define("SPHINX_NAME", "");
-  define("SPHINX_USER", "");
-  define("SPHINX_PASS", "");
-  define("SPHINX_PORT", "9306");
+  // Manticore Search connection (SphinxQL over the MySQL protocol).
+  define("MANTICORE_HOST", "localhost");
+  define("MANTICORE_NAME", "");
+  define("MANTICORE_USER", "");
+  define("MANTICORE_PASS", "");
+  define("MANTICORE_PORT", "9306");   // Manticore's SQL port, NOT the 9308 HTTP port.
 
-  $sphinx_conn = new mysqli(SPHINX_HOST, SPHINX_USER, SPHINX_PASS, SPHINX_NAME, SPHINX_PORT);
+  $manticore_conn = new mysqli(MANTICORE_HOST, MANTICORE_USER, MANTICORE_PASS, MANTICORE_NAME, MANTICORE_PORT);
 
 ?>
 ```

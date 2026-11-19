@@ -1,23 +1,37 @@
 <?php
   include_once('functions.php');
-  global $conn;
+  global $manticore_conn;
 
   $searchTerm = $_GET['term'];
   $searchTerm = cleanStr($searchTerm);
-  $searchTerm = mysqli_real_escape_string($conn, $searchTerm);
+  $searchTerm = mysqli_real_escape_string($manticore_conn, $searchTerm);
 
-  // If search string is over 3 chars, full wildcard search,
-  // Else exact match beginning of string with wildcard at the end
-  $search = strlen($searchTerm) > 3 ?
-    "SELECT *, (MATCH(RoleClean) AGAINST ('\"$searchTerm\" @4' IN BOOLEAN MODE) + case when RoleClean LIKE '$searchTerm' then 50 when RoleClean LIKE '$searchTerm%' then 15 end)  as relevance FROM `Cast` WHERE (MATCH(RoleClean) AGAINST ('\"$searchTerm\" @4' IN BOOLEAN MODE) OR RoleClean LIKE '%$searchTerm%') GROUP BY Role ORDER BY relevance DESC, Role LIMIT 10" :
-    "SELECT * FROM `Cast` WHERE RoleClean LIKE '$searchTerm%' GROUP BY Role ORDER BY Role LIMIT 10";
+  // Algorithm: prioritize exact matches
+  $ranker = "OPTION ranker = expr('sum(exact_hit*50 + (min_hit_pos==1)*15 + hit_count + role_freq)')";
 
-  $result = $conn->query($search);
+  $match = strlen($searchTerm) < 4 ?
+    "@roleclean[3] (^$searchTerm*)" :
+    "@roleclean[3] (^$searchTerm$ | ^$searchTerm* | *$searchTerm*)";
+
+  $search = "select roleclean, weight() w
+             from role
+             where MATCH('$match')
+             order by w desc
+             limit 10
+             $ranker;";
+
+  $result = $manticore_conn->query($search);
 
   $data = array();
   while ($row = $result->fetch_assoc()) {
-    $data[] = trim($row['RoleClean']);
+    $data[] = trim($row['roleclean']);
   }
+  $data = array_values(array_unique($data));
 
-  echo json_encode(array_unique($data));
+  // Makes sure exact matches come first
+  usort($data, function ($a, $b) use ($searchTerm) {
+    return (strcasecmp($b, $searchTerm) === 0) <=> (strcasecmp($a, $searchTerm) === 0);
+  });
+
+  echo json_encode($data);
 ?>

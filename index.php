@@ -17,6 +17,11 @@
         <input type="submit" class="button input-group-button" value="Search" />
         <a href="search.php" class="adv-search">Advanced Search</a>
       </form>
+      <div class="margin-top-1rem">
+          <p>The London Stage Database 
+      <a href="https://blogs.uoregon.edu/londonstage/2026/11/12/manticore/">has 
+        a new search engine</a>! Visit our <a href="https://londonstagedb.uoregon.edu">Legacy Site</a> to replicate searches conducted before November 19, 2026.</p>
+      </div>
     </div>
 </main>
 
