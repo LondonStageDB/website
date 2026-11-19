@@ -16,6 +16,11 @@
   <?php include_once('common/nav.php'); ?>
   <main class="main grid-container">
     <h1>Advanced Search</h1>
+    <div class="margin-top-1rem" style="text-align:center">The London Stage Database 
+      <a href="https://blogs.uoregon.edu/londonstage/2026/11/12/manticore/">has 
+        a new search engine</a>! Visit our <a href="https://londonstagedb.uoregon.edu/search.php">Legacy Advanced Search</a> 
+        to replicate searches conducted before November 19, 2026.
+      </div>
     <form id="searchForm" class="form-accordion search-form grid-x grid-margin-x" method="get" action="sphinx-results.php">
       <input type="hidden" name="sortBy" value="relevance">
       <div class="cell small-12 section-wrap">
