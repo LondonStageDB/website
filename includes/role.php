@@ -7,11 +7,11 @@
   $searchTerm = mysqli_real_escape_string($manticore_conn, $searchTerm);
 
   // Algorithm: prioritize exact matches
-  $ranker = "OPTION ranker = expr('sum(exact_hit*1000 + (min_hit_pos==1)*100 + hit_count + role_freq/100)')";
+  $ranker = "OPTION ranker = expr('sum(exact_hit*50 + (min_hit_pos==1)*15 + hit_count + role_freq)')";
 
   $match = strlen($searchTerm) < 4 ?
-    "@(roleclean) (^$searchTerm*)" :
-    "@(roleclean) (^$searchTerm$ | ^$searchTerm* | *$searchTerm*)";
+    "@roleclean[3] (^$searchTerm*)" :
+    "@roleclean[3] (^$searchTerm$ | ^$searchTerm* | *$searchTerm*)";
 
   $search = "select roleclean, weight() w
              from role
