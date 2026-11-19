@@ -4,12 +4,12 @@
             <button class="menu-icon" type="button" data-toggle="example-menu" aria-label="Open navigation menu"></button>
             <div class="title-bar-title">Menu</div>
         </div>
-        <div class="top-bar" id="example-menu">
+        <div class="top-bar" id="example-menu" style="background-color:#6E2424">
             <div class="top-bar-left">
                 <a href="/" class="menu-text">London Stage Database: Legacy Site</a>
             </div>
-            <div class="top-bar-right">
-                <ul class="dropdown menu" data-dropdown-menu>
+            <div class="top-bar-right" style="background-color:#6E2424">
+                <ul class="dropdown menu" style="background-color:#6E2424" data-dropdown-menu>
                     <li><a href="/">Home</a></li>
                     <li><a href="/search.php">Advanced Search</a></li>
                     <li><a href="/data.php">Full Data Sets</a></li>
