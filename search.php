@@ -15,7 +15,16 @@
 <body id="mainSearch">
   <?php include_once('common/nav.php'); ?>
   <main class="main grid-container">
-    <h1>Advanced Search</h1>
+    <h1>Advanced Search: Legacy Version</h1>
+    <div class="margin-top-1rem">
+      <p>This is the Legacy version of our Advanced Search, 
+      powered by the Sphinx search engine. On November 19, 2026, we 
+      <a href="https://blogs.uoregon.edu/londonstage/2026/11/12/manticore/">upgraded the main 
+      London Stage Database to Manticore</a>, in preparation to roll out further improvements 
+      to both the data and the search experience. If you are starting a new search and do not 
+      need to reproduce past results, please visit
+            <a href="https://londonstagedatabase.uoregon.edu/search.php">the updated Advanced Search form
+              on our main website</a>.</p></div>
     <form id="searchForm" class="form-accordion search-form grid-x grid-margin-x" method="get" action="sphinx-results.php">
       <input type="hidden" name="sortBy" value="relevance">
       <div class="cell small-12 section-wrap">

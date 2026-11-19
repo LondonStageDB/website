@@ -17,7 +17,14 @@
         <input type="submit" class="button input-group-button" value="Search" />
         <a href="search.php" class="adv-search">Advanced Search</a>
       </form>
+       <div class="margin-top-1rem">
+            
+          <p>This Legacy site allows users to reproduce results obtained before 
+            <a href="https://blogs.uoregon.edu/londonstage/2026/11/12/manticore/">a major system upgrade</a> on November 19, 2026. 
+            To begin a new search, please visit <a href="https://londonstagedatabase.uoregon.edu">our main website</a>.</p>
+      </div>
     </div>
+   
 </main>
 
   <?php include_once('common/footer.php'); ?>

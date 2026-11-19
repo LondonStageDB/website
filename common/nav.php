@@ -6,7 +6,7 @@
         </div>
         <div class="top-bar" id="example-menu">
             <div class="top-bar-left">
-                <a href="/" class="menu-text">London Stage Database</a>
+                <a href="/" class="menu-text">London Stage Database: Legacy Site</a>
             </div>
             <div class="top-bar-right">
                 <ul class="dropdown menu" data-dropdown-menu>
