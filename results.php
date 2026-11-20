@@ -5,12 +5,12 @@
   $start = microtime(True);
 
   include_once('includes/functions.php');
-  require_once 'includes/SphinxPaginator.class.php';
+  require_once 'includes/Paginator.class.php';
 
-  global $manticore_conn;
+  global $search_conn;
 
   // Build query with $_GET values
-  $sql = buildSphinxQuery();
+  $sql = buildQuery();
 
   // Get and sanitize 'limit' and 'p' for pagination
   $g_lim = filter_input(INPUT_GET, 'limit', FILTER_SANITIZE_NUMBER_INT);
@@ -22,7 +22,7 @@
   $limit      = ( $g_lim !== '' && $g_lim > 0 && $g_lim <= 50) ? $g_lim : 25;
   $page       = ( $g_p !== '' && $g_p > 0 ) ? $g_p : 1;
   $links      = 3;
-  $Paginator  = new SphinxPaginator( $manticore_conn, $sql );
+  $Paginator  = new Paginator( $search_conn, $sql );
 
   // Get paginated results
   $results    = $Paginator->getData( $limit, $page );
@@ -93,10 +93,10 @@
           <div class="download-btns">
             <h2>Result Options</h2>
             Download: <br>
-            <a href="get_all_sphinx_json.php?<?php echo $_SERVER['QUERY_STRING']; ?>" class="button dwnld-btn">JSON</a>
+            <a href="get_all_json.php?<?php echo $_SERVER['QUERY_STRING']; ?>" class="button dwnld-btn">JSON</a>
             <!--<a href="get_all_xml.php?ids=<?php //echo htmlspecialchars(json_encode($allResultIds), ENT_QUOTES); ?>" class="button dwnld-btn">Download XML</a>-->
-            <a href="get_all_sphinx_xml.php?<?php echo $_SERVER['QUERY_STRING']; ?>" class="button dwnld-btn">XML</a>
-            <a href="get_all_sphinx_csv.php?<?php echo $_SERVER['QUERY_STRING']; ?>" class="button dwnld-btn">CSV</a>
+            <a href="get_all_xml.php?<?php echo $_SERVER['QUERY_STRING']; ?>" class="button dwnld-btn">XML</a>
+            <a href="get_all_csv.php?<?php echo $_SERVER['QUERY_STRING']; ?>" class="button dwnld-btn">CSV</a>
           </div>
           <h2>Search Filters</h2>
           <div class="grid-x filter-sections-wrap form-accordion">
@@ -311,7 +311,7 @@
               <span class="num-results"><?php echo $results->total . ' results'; ?></span><?php echo yourSearch(); ?>
             </div>
             <?php if(onlyKeyword()) {
-              $resByCol = getSphinxResultsByColumn(cleanStr($_GET['keyword']));
+              $resByCol = getResultsByColumn(cleanStr($_GET['keyword']));
               $msg = "We found ";
               $resCnt = 1;
 
@@ -387,7 +387,7 @@
                       <h3>Performances</h3>
                       <?php foreach ($results->data[$i]['performances'] as $perf) {
                         if ((isset($_GET['author']) && trim($_GET['author']) !== '') || (isset($_GET['keyword']) && trim($_GET['keyword']) !== '')) {
-                            $perf['RelatedWorks'] = getSphinxRelatedWorks($perf['PerfTitleClean'], $perf['WorkId']);
+                            $perf['RelatedWorks'] = getRelatedWorks($perf['PerfTitleClean'], $perf['WorkId']);
                         }
                         echo '<div class="perf">';
                         echo '<h4><span class="info-heading">' . getPType($perf['PType']) . (in_array($perf['PType'], ['a', 'p']) ? ' Title' : '') . ': </span>';

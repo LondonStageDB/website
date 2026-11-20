@@ -1,10 +1,10 @@
 <?php
   include_once('functions.php');
-  global $manticore_conn;
+  global $search_conn;
 
   $searchTerm = $_GET['term'];
   $searchTerm = cleanStr($searchTerm);
-  $searchTerm = mysqli_real_escape_string($manticore_conn, $searchTerm);
+  $searchTerm = mysqli_real_escape_string($search_conn, $searchTerm);
 
   // Algorithm: prioritize exact matches
   $ranker = "OPTION ranker = expr('sum(exact_hit*50 + (min_hit_pos==1)*15 + hit_count + role_freq)')";
@@ -20,7 +20,7 @@
              limit 10
              $ranker;";
 
-  $result = $manticore_conn->query($search);
+  $result = $search_conn->query($search);
 
   $data = array();
   while ($row = $result->fetch_assoc()) {

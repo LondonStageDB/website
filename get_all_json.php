@@ -4,12 +4,12 @@
 
   include_once('includes/functions.php');
 
-  global $manticore_conn;
+  global $search_conn;
 
   // Use current $_GET variables to build the same query used on results page, minus the LIMIT
-  $sql  = buildSphinxQuery();
+  $sql  = buildQuery();
   $sql .= ' LIMIT 99999 OPTION max_matches=99999';
-  $result = $manticore_conn->query($sql);
+  $result = $search_conn->query($sql);
 
   $qResults = [];
   while ($row = $result->fetch_assoc()) {
@@ -19,5 +19,5 @@
   // Only care about EventIds
   $ids = array_column($qResults, 'eventid');
 
-  // Send IDs array to get all event info, returns XML Doc
-  getResultsXML($ids);
+  // Send IDs array to get all event info, returns JSON Doc
+  getResultsJSON($ids);
