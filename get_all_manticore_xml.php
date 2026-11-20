@@ -7,7 +7,7 @@
   global $manticore_conn;
 
   // Use current $_GET variables to build the same query used on results page, minus the LIMIT
-  $sql  = buildSphinxQuery();
+  $sql  = buildManticoreQuery();
   $sql .= ' LIMIT 99999 OPTION max_matches=99999';
   $result = $manticore_conn->query($sql);
 

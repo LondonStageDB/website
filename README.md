@@ -102,7 +102,7 @@ searchd --config /etc/manticoresearch/manticore.conf
 ```
 ### (optional) Cloudflare Turnstile
 
-High-volume bot/scraper traffic against the data-bearing endpoints (`sphinx-results.php`,
+High-volume bot/scraper traffic against the data-bearing endpoints (`manticore-results.php`,
 `event.php`, `search.php`, and the CSV/JSON/XML download scripts) can exhaust database
 connections, because each of those endpoints opens DB connections and runs a query on every
 request. To protect them, you can put a **Cloudflare Turnstile** gate in front of every
@@ -193,7 +193,7 @@ recommend this option for users who want to precisely replicate older search beh
         Contains all functions used on the website
 
 
-- /includes/Paginator.class.php and /includes/SphinxPaginator.class.php
+- /includes/Paginator.class.php and /includes/ManticorePaginator.class.php
         Executes the search SQL query and stores the result data. Also generates
         pagination info based on the results.
 

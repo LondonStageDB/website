@@ -21,7 +21,7 @@
         a new search engine</a>! Visit our <a href="https://londonstagedb.uoregon.edu/search.php">Legacy Advanced Search</a> 
         to replicate searches conducted before November 19, 2026.
       </div>
-    <form id="searchForm" class="form-accordion search-form grid-x grid-margin-x" method="get" action="sphinx-results.php">
+    <form id="searchForm" class="form-accordion search-form grid-x grid-margin-x" method="get" action="manticore-results.php">
       <input type="hidden" name="sortBy" value="relevance">
       <div class="cell small-12 section-wrap">
         <h2>Event</h2>

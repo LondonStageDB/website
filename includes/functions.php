@@ -6,7 +6,7 @@
  *
  * @return string the SQL query used for the search, minus pagination parameters
  */
-  function buildSphinxQuery() {
+  function buildManticoreQuery() {
     global $manticore_conn;
 
     $getters = array(); // Contains all search parameters
@@ -85,7 +85,7 @@
         switch ($key) {
           case 'theatre':
             if ($theatre === 'all') break;
-            $theatres = getSphinxTheatreNamesQuery($theatre);
+            $theatres = getManticoreTheatreNamesQuery($theatre);
             if (is_array($theatres) && count($theatres) > 0) {
               $theatres = implode(', ', $theatres);
               array_push($queries, "theatrename IN ($theatres)");
@@ -102,8 +102,8 @@
             $actor = array_filter($actor, 'strlen');
             if (count($actor) < 1) break;
             $actQry = (count($actor) > 1 && $actSwtch === "AND") ?
-              getSphinxCastQuery('actor', $actor) :
-              getSphinxCastQuery('actor', $actor, 'OR');
+              getManticoreCastQuery('actor', $actor) :
+              getManticoreCastQuery('actor', $actor, 'OR');
             array_push($eventIdQueries, $actQry);
             break;
           case 'role':
@@ -111,8 +111,8 @@
             $role = array_filter($role, 'strlen');
             if (count($role) < 1) break;
             $roleQry = (count($role) > 1 && $roleSwtch === "AND") ?
-              getSphinxCastQuery('role', $role) :
-              getSphinxCastQuery('role', $role, 'OR');
+              getManticoreCastQuery('role', $role) :
+              getManticoreCastQuery('role', $role, 'OR');
             array_push($eventIdQueries, $roleQry);
             break;
           case 'performance':
@@ -132,7 +132,7 @@
             //   then adds the full list of titles and related works titles to
             //   the MATCH statement with an OR operator between each title.
             $author =  trim(cleanQuotes($author));
-            $authorMatch = getSphinxAuthorQuery($author);
+            $authorMatch = getManticoreAuthorQuery($author);
             // If no authors are found, $authorMatch is False
             if (!$authorMatch) {
               // When the author query returns nothing useful, there should be
@@ -222,7 +222,7 @@
    * @return array
    *   Array of match counts by column.
    */
-  function getSphinxResultsByColumn($keyword) {
+  function getManticoreResultsByColumn($keyword) {
     global $manticore_conn;
     $keywrd   = mysqli_real_escape_string($manticore_conn, $keyword);
     $psql     = "SELECT performanceid FROM london_stages WHERE MATCH('@perftitleclean \"$keywrd\"/1') GROUP BY performanceid";
@@ -456,7 +456,7 @@
    * @return array
    *   Array of Theatre Names with single quotes added for the query.
    */
-  function getSphinxTheatreNamesQuery($theatreName = '') {
+  function getManticoreTheatreNamesQuery($theatreName = '') {
     global $conn;
     if ($theatreName === '') return [];
     $theatres = []; // Storage for return value.
@@ -569,18 +569,18 @@
  * Takes a given performance title [PerfTitle], splits it by semicolon,
  *  and performs wildcard searches for similar titles in Performances, Works,
  *  and WorksVariant tables
- * @param array $sphinx_results raw sphinxql query results
+ * @param array $manticore_results raw sphinxql query results
  * @return array Related Works array keyed by WorkId
  */
-  function relatedWorksFromArray(array $sphinx_results) {
+  function relatedWorksFromArray(array $manticore_results) {
     // First, build the outermost array, keyed by workid
     $works = array_map(
         fn($x) => array_intersect_key($x, array_flip(['workid','title', 'pubdate',
             'source1', 'source2', 'sourceresearched'])),
-        array_column($sphinx_results, null, 'workid'));
+        array_column($manticore_results, null, 'workid'));
 
     // Populate author and variant subarrays
-    foreach($sphinx_results as $row) {
+    foreach($manticore_results as $row) {
       // Add authors, if any
       if(array_key_exists('authname', $row)){
         $workid = $row['workid'];
@@ -609,7 +609,7 @@
      * @param string $perfTitle Performance title from [PerfTitle] column
      * @return array related works array keyed by WorkId
      */
-    function getSphinxRelatedWorks(string $perfTitle = '', int $workId = null)
+    function getManticoreRelatedWorks(string $perfTitle = '', int $workId = null)
     {
         global $manticore_conn;
         $works = array(); // Nested works array, keyed by workid
@@ -652,15 +652,15 @@
 
             // Generate SphinxQL query
             if (!empty($values)) {
-                $sphinx_titles = implode('|', $values);  // Concat "Title1 | Title2 ..."
+                $manticore_titles = implode('|', $values);  // Concat "Title1 | Title2 ..."
                 $sql = "SELECT *\nFROM related_work";
-                $sql .= "\nWHERE MATCH('@title " . $sphinx_titles .
-                    " | @performancetitle " . $sphinx_titles .
-                    " | @perftitleclean " . $sphinx_titles .
-                    " | @variantname " . $sphinx_titles .
-                    " | @source1 " . $sphinx_titles .
-                    " | @source2 " . $sphinx_titles .
-                    " | @sourceresearched " . $sphinx_titles . "')";
+                $sql .= "\nWHERE MATCH('@title " . $manticore_titles .
+                    " | @performancetitle " . $manticore_titles .
+                    " | @perftitleclean " . $manticore_titles .
+                    " | @variantname " . $manticore_titles .
+                    " | @source1 " . $manticore_titles .
+                    " | @source2 " . $manticore_titles .
+                    " | @sourceresearched " . $manticore_titles . "')";
                 $sql .= " GROUP BY workid, authid"; // One row per work
                 // Get results from Sphinx
                 $tr = $manticore_conn->query($sql);
@@ -896,13 +896,13 @@
 /**
  * Generates the date conditions for the WHERE statement.
  *
- * @param bool $forSphinx
+ * @param bool $forManticore
  *   If TRUE, the return is compatible with Sphinx. Default is FALSE.
  *
  * @return string
  *   EventDate conditions to add to the WHERE statement of the query.
  */
-  function getDateQuery($forSphinx = FALSE) {
+  function getDateQuery($forManticore = FALSE) {
     global $conn;
     $sql = "";
     $monSet = true;
@@ -939,12 +939,12 @@
 
     switch($dateTp) {
       case 1: // Between
-        $sql = $forSphinx ?
+        $sql = $forManticore ?
             "eventdate BETWEEN $startStr AND $endStr" :
             "Events.EventDate BETWEEN $startStr AND $endStr";
         break;
       case 2: // Before
-        $sql = $forSphinx ?
+        $sql = $forManticore ?
             "eventdate <= $startStr" :
             "Events.EventDate <= $startStr";
         break;
@@ -953,7 +953,7 @@
         if ($daySet === false) {
           // If zero month (e.g. 17160000), run LIKE '1716%'
           if ($monSet === false) {
-            $sql = $forSphinx ?
+            $sql = $forManticore ?
                 "eventdate BETWEEN " . $startYr . "0000 AND " . $startYr . "1231" :
                 "Events.EventDate LIKE '" . $startYr . "%'";
           } else {
@@ -964,18 +964,18 @@
               $monthEnd = 1;
             }
             $strEnd = $yearEnd . substr('0' . $monthEnd, -2) . '00';
-            $sql = $forSphinx ?
+            $sql = $forManticore ?
                 "eventdate BETWEEN " . $startStr . " AND " . $startYr . $startMon ."31" :
                 "Events.EventDate LIKE '" . $startYr . substr('0' . $startMon, -2) . "%'";
           }
         } else { // Else exact match
-          $sql = $forSphinx ?
+          $sql = $forManticore ?
               "eventdate = $startStr" :
               "Events.EventDate = $startStr";
         }
         break;
       case 4: // After
-        $sql = $forSphinx ?
+        $sql = $forManticore ?
             "eventdate >= $startStr" :
             "Events.EventDate >= $startStr";
         break;
@@ -1003,7 +1003,7 @@
    *     if the author is not found, there are no related works, or an error is
    *     encountered.
    */
-  function getSphinxAuthorQuery($author) {
+  function getManticoreAuthorQuery($author) {
     if ($author === '') return FALSE;
     global $manticore_conn;
     $author = mysqli_real_escape_string($manticore_conn, $author);
@@ -1086,7 +1086,7 @@
    * @return array
    *   EventId list for the WHERE statement.
    */
-  function getSphinxCastQuery($castType, $casts = array(), $operator = 'AND') {
+  function getManticoreCastQuery($castType, $casts = array(), $operator = 'AND') {
     global $conn;
 
     if (empty($casts)) return [];
@@ -1423,7 +1423,7 @@
  *  create links that take the user to a keyword search for that person.
  *
  * @param string $text Text block that may contains named entities ($name=)
- * @param bool $sphinx_results When set to true, will like to sphinx results.
+ * @param bool $manticore_results When set to true, will like to sphinx results.
  *
  * @return string HTML Text block with named entities linked out to keyword searches
  */
@@ -1433,7 +1433,7 @@
 
     $re = '/(\$)([\s\S]+)(=)([^\"]*)/U'; // Matches $name=
 
-    return preg_replace($re, '<a href="/sphinx-results.php?keyword=$2">$2$4</a>', $text);
+    return preg_replace($re, '<a href="/manticore-results.php?keyword=$2">$2$4</a>', $text);
   }
 
 
@@ -1445,7 +1445,7 @@
  *
  * @param string $key The key for which we will create a search link.
  * @param string $value The value for which to be searched.
- * @param bool $sphinx_results When set to true, will like to sphinx results.
+ * @param bool $manticore_results When set to true, will like to sphinx results.
  *
  * @return string HTML Text block with values linked out to relevant searches.
  */
@@ -1462,7 +1462,7 @@
     }
 
     $re = '/' . implode('|', $m[0]) . '/i';
-    return preg_replace($re, '<a href="sphinx-results.php?'.$key.'=$0">$0</a>', $value);
+    return preg_replace($re, '<a href="manticore-results.php?'.$key.'=$0">$0</a>', $value);
   }
 
 
@@ -1470,7 +1470,7 @@
   * Generates href for performance title link
   *
   * @param string $value The title to be linked.
-  * @param bool $sphinx_results When set to true, will like to sphinx results.
+  * @param bool $manticore_results When set to true, will like to sphinx results.
   *
   * @return string href value.
   */
@@ -1479,7 +1479,7 @@
     if ($value === '') return '';
 
     $value = strip_tags(htmlentities($value));
-    return '/sphinx-results.php?performance=' . $value;
+    return '/manticore-results.php?performance=' . $value;
   }
 
 
@@ -1742,7 +1742,7 @@ function utf8_for_xml($string) {
       $event['Performances'] = array();
       $perfs = getPerformances($event['EventId']);
       foreach ($perfs as $perf) {
-        $perf['RelatedWorks'] = getSphinxRelatedWorks($perf['PerfTitleClean'],
+        $perf['RelatedWorks'] = getManticoreRelatedWorks($perf['PerfTitleClean'],
             array_key_exists('WorkId', $perf) ? $perf['WorkId'] : null);
         $event['Performances'][] = $perf;
       }
