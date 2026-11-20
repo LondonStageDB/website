@@ -207,7 +207,7 @@
                   if (in_array($perf['PType'], ['d', 's', 'm', 't'])){
                       $works = array();
                   } else{
-                      $works = getManticoreRelatedWorks($perf['PerfTitleClean'], $perf['WorkId']);
+                      $works = getRelatedWorks($perf['PerfTitleClean'], $perf['WorkId']);
                   }?>
                 <?php if(!empty($works) && count($works) > 0) : ?>
                     <div class="small-12 medium-6 large-5 related-works">

@@ -6,8 +6,8 @@
  *
  * @return string the SQL query used for the search, minus pagination parameters
  */
-  function buildManticoreQuery() {
-    global $manticore_conn;
+  function buildQuery() {
+    global $search_conn;
 
     $getters = array(); // Contains all search parameters
     $queries = array(); // Contains all 'WHERE' parameters
@@ -85,14 +85,14 @@
         switch ($key) {
           case 'theatre':
             if ($theatre === 'all') break;
-            $theatres = getManticoreTheatreNamesQuery($theatre);
+            $theatres = getTheatreNamesQuery($theatre);
             if (is_array($theatres) && count($theatres) > 0) {
               $theatres = implode(', ', $theatres);
               array_push($queries, "theatrename IN ($theatres)");
             }
             break;
           case 'volume':
-            $volume = mysqli_real_escape_string($manticore_conn, $volume);
+            $volume = mysqli_real_escape_string($search_conn, $volume);
             if ($volume !== 'all' && in_array($volume, [1, 2, 3, 4, 5])) {
               array_push($queries, 'volume=' . $volume);
             }
@@ -102,8 +102,8 @@
             $actor = array_filter($actor, 'strlen');
             if (count($actor) < 1) break;
             $actQry = (count($actor) > 1 && $actSwtch === "AND") ?
-              getManticoreCastQuery('actor', $actor) :
-              getManticoreCastQuery('actor', $actor, 'OR');
+              getCastQuery('actor', $actor) :
+              getCastQuery('actor', $actor, 'OR');
             array_push($eventIdQueries, $actQry);
             break;
           case 'role':
@@ -111,12 +111,12 @@
             $role = array_filter($role, 'strlen');
             if (count($role) < 1) break;
             $roleQry = (count($role) > 1 && $roleSwtch === "AND") ?
-              getManticoreCastQuery('role', $role) :
-              getManticoreCastQuery('role', $role, 'OR');
+              getCastQuery('role', $role) :
+              getCastQuery('role', $role, 'OR');
             array_push($eventIdQueries, $roleQry);
             break;
           case 'performance':
-            $performance = mysqli_real_escape_string($manticore_conn, $performance);
+            $performance = mysqli_real_escape_string($search_conn, $performance);
             if (!empty($performance) && $performance !== '') {
               array_push($perfTitleMatches, '"' . $performance . '"/1');
             }
@@ -132,7 +132,7 @@
             //   then adds the full list of titles and related works titles to
             //   the MATCH statement with an OR operator between each title.
             $author =  trim(cleanQuotes($author));
-            $authorMatch = getManticoreAuthorQuery($author);
+            $authorMatch = getAuthorQuery($author);
             // If no authors are found, $authorMatch is False
             if (!$authorMatch) {
               // When the author query returns nothing useful, there should be
@@ -145,7 +145,7 @@
             }
             break;
           case 'keyword':
-            $keyword = mysqli_real_escape_string($manticore_conn, $keyword);
+            $keyword = mysqli_real_escape_string($search_conn, $keyword);
             // The role and performer should not use the quorum number ('/1')
             // on the entered keyword to better match the way that keyword
             // search worked in the legacy search. Use it for the other fields.
@@ -222,9 +222,9 @@
    * @return array
    *   Array of match counts by column.
    */
-  function getManticoreResultsByColumn($keyword) {
-    global $manticore_conn;
-    $keywrd   = mysqli_real_escape_string($manticore_conn, $keyword);
+  function getResultsByColumn($keyword) {
+    global $search_conn;
+    $keywrd   = mysqli_real_escape_string($search_conn, $keyword);
     $psql     = "SELECT performanceid FROM london_stages WHERE MATCH('@perftitleclean \"$keywrd\"/1') GROUP BY performanceid";
     $asql     = "SELECT eventid FROM london_stages WHERE MATCH('@authnameclean \"$keywrd\"/1') GROUP BY eventid";
     $pcsql    = "SELECT performanceid FROM london_stages WHERE MATCH('@commentpclean \"$keywrd\"/1') GROUP BY performanceid";
@@ -232,16 +232,16 @@
     $csql     = "SELECT castid FROM london_stages WHERE MATCH('@(roleclean,performerclean) \"$keywrd\"') GROUP BY castid";
     $metasql  = "SHOW meta";
 
-    $result['p']  = $manticore_conn->query($psql);
-    $result['p_meta']  = $manticore_conn->query($metasql);
-    $result['a']  = $manticore_conn->query($asql);
-    $result['a_meta']  = $manticore_conn->query($metasql);
-    $result['pc'] = $manticore_conn->query($pcsql);
-    $result['pc_meta'] = $manticore_conn->query($metasql);
-    $result['ec'] = $manticore_conn->query($ecsql);
-    $result['ec_meta'] = $manticore_conn->query($metasql);
-    $result['c']  = $manticore_conn->query($csql);
-    $result['c_meta']  = $manticore_conn->query($metasql);
+    $result['p']  = $search_conn->query($psql);
+    $result['p_meta']  = $search_conn->query($metasql);
+    $result['a']  = $search_conn->query($asql);
+    $result['a_meta']  = $search_conn->query($metasql);
+    $result['pc'] = $search_conn->query($pcsql);
+    $result['pc_meta'] = $search_conn->query($metasql);
+    $result['ec'] = $search_conn->query($ecsql);
+    $result['ec_meta'] = $search_conn->query($metasql);
+    $result['c']  = $search_conn->query($csql);
+    $result['c_meta']  = $search_conn->query($metasql);
     $all_counts   = [];
 
     if (!is_bool($result['p']) && !is_bool($result['p_meta']))
@@ -456,7 +456,7 @@
    * @return array
    *   Array of Theatre Names with single quotes added for the query.
    */
-  function getManticoreTheatreNamesQuery($theatreName = '') {
+  function getTheatreNamesQuery($theatreName = '') {
     global $conn;
     if ($theatreName === '') return [];
     $theatres = []; // Storage for return value.
@@ -569,18 +569,18 @@
  * Takes a given performance title [PerfTitle], splits it by semicolon,
  *  and performs wildcard searches for similar titles in Performances, Works,
  *  and WorksVariant tables
- * @param array $manticore_results raw sphinxql query results
+ * @param array $results raw sphinxql query results
  * @return array Related Works array keyed by WorkId
  */
-  function relatedWorksFromArray(array $manticore_results) {
+  function relatedWorksFromArray(array $results) {
     // First, build the outermost array, keyed by workid
     $works = array_map(
         fn($x) => array_intersect_key($x, array_flip(['workid','title', 'pubdate',
             'source1', 'source2', 'sourceresearched'])),
-        array_column($manticore_results, null, 'workid'));
+        array_column($results, null, 'workid'));
 
     // Populate author and variant subarrays
-    foreach($manticore_results as $row) {
+    foreach($results as $row) {
       // Add authors, if any
       if(array_key_exists('authname', $row)){
         $workid = $row['workid'];
@@ -609,9 +609,9 @@
      * @param string $perfTitle Performance title from [PerfTitle] column
      * @return array related works array keyed by WorkId
      */
-    function getManticoreRelatedWorks(string $perfTitle = '', int $workId = null)
+    function getRelatedWorks(string $perfTitle = '', int $workId = null)
     {
-        global $manticore_conn;
+        global $search_conn;
         $works = array(); // Nested works array, keyed by workid
         $sources = array(); // Sources to be searched
         $titles = array(); // Titles to be searched
@@ -620,7 +620,7 @@
 
         // Get the work identified in the performance by WorkId, if any
         if (!is_null($workId)) {
-            $work_query = $manticore_conn->query("SELECT *  FROM related_work WHERE workid="
+            $work_query = $search_conn->query("SELECT *  FROM related_work WHERE workid="
                 . $workId . " GROUP BY workid, authid, variantname");
             $results = $work_query->fetch_all(MYSQLI_ASSOC);
             $works = relatedWorksFromArray($results);
@@ -644,7 +644,7 @@
                     array_map('trim', preg_split('/\s+or(?:,|\s)+|[,:;]\s*with|[:;]/i', $title)));
                 foreach ($subtitles as $s) {
                     if (strlen($s) > 3) { // Skip over meaninglessly short strings
-                        $values[] = '"' . mysqli_real_escape_string($manticore_conn, $s) . '"';
+                        $values[] = '"' . mysqli_real_escape_string($search_conn, $s) . '"';
                     }
                 }
             }
@@ -652,18 +652,18 @@
 
             // Generate SphinxQL query
             if (!empty($values)) {
-                $manticore_titles = implode('|', $values);  // Concat "Title1 | Title2 ..."
+                $titleMatch = implode('|', $values);  // Concat "Title1 | Title2 ..."
                 $sql = "SELECT *\nFROM related_work";
-                $sql .= "\nWHERE MATCH('@title " . $manticore_titles .
-                    " | @performancetitle " . $manticore_titles .
-                    " | @perftitleclean " . $manticore_titles .
-                    " | @variantname " . $manticore_titles .
-                    " | @source1 " . $manticore_titles .
-                    " | @source2 " . $manticore_titles .
-                    " | @sourceresearched " . $manticore_titles . "')";
+                $sql .= "\nWHERE MATCH('@title " . $titleMatch .
+                    " | @performancetitle " . $titleMatch .
+                    " | @perftitleclean " . $titleMatch .
+                    " | @variantname " . $titleMatch .
+                    " | @source1 " . $titleMatch .
+                    " | @source2 " . $titleMatch .
+                    " | @sourceresearched " . $titleMatch . "')";
                 $sql .= " GROUP BY workid, authid"; // One row per work
                 // Get results from Sphinx
-                $tr = $manticore_conn->query($sql);
+                $tr = $search_conn->query($sql);
                 $ts = relatedWorksFromArray($tr->fetch_all(MYSQLI_ASSOC));
 
                 // Sort works in order of ascending date
@@ -678,7 +678,7 @@
           if (($perc > 70) or ($work['workid'] == $workId)) {
             foreach ($work as $k => $v) {
                 if (str_starts_with($k, 'source')) $sources[] = mysqli_real_escape_string(
-                    $manticore_conn, ucwords($v));
+                    $search_conn, ucwords($v));
             }
           }
         }
@@ -697,7 +697,7 @@
           $sql .= ' GROUP BY workid, authid';
 
           // Get results from Sphinx, add works to works array
-          $result = $manticore_conn->query($sql);
+          $result = $search_conn->query($sql);
           $source_results = relatedWorksFromArray($result->fetch_all(MYSQLI_ASSOC));
           $works = $works + array_column($source_results, null, 'workid');
         }
@@ -733,12 +733,12 @@
   * @return array Array of author info
   */
   function getAuthorInfo($workId = '') {
-    global $manticore_conn;
+    global $search_conn;
 
     if ($workId !== '') {
       $sql = "SELECT AuthId, AuthName, StartDate, StartType, EndDate, EndType, AuthType \nFROM related_work \nWHERE WorkId = " . $workId . " GROUP BY AuthId";
 
-      $result = $manticore_conn->query($sql);
+      $result = $search_conn->query($sql);
       $auths = [];
       while ($row = mysqli_fetch_assoc($result)) {
         $auths[] = $row;
@@ -896,13 +896,13 @@
 /**
  * Generates the date conditions for the WHERE statement.
  *
- * @param bool $forManticore
- *   If TRUE, the return is compatible with Sphinx. Default is FALSE.
+ * @param bool $forSearchEngine
+ *   If TRUE, the return is compatible with the search engine. Default is FALSE.
  *
  * @return string
  *   EventDate conditions to add to the WHERE statement of the query.
  */
-  function getDateQuery($forManticore = FALSE) {
+  function getDateQuery($forSearchEngine = FALSE) {
     global $conn;
     $sql = "";
     $monSet = true;
@@ -939,12 +939,12 @@
 
     switch($dateTp) {
       case 1: // Between
-        $sql = $forManticore ?
+        $sql = $forSearchEngine ?
             "eventdate BETWEEN $startStr AND $endStr" :
             "Events.EventDate BETWEEN $startStr AND $endStr";
         break;
       case 2: // Before
-        $sql = $forManticore ?
+        $sql = $forSearchEngine ?
             "eventdate <= $startStr" :
             "Events.EventDate <= $startStr";
         break;
@@ -953,7 +953,7 @@
         if ($daySet === false) {
           // If zero month (e.g. 17160000), run LIKE '1716%'
           if ($monSet === false) {
-            $sql = $forManticore ?
+            $sql = $forSearchEngine ?
                 "eventdate BETWEEN " . $startYr . "0000 AND " . $startYr . "1231" :
                 "Events.EventDate LIKE '" . $startYr . "%'";
           } else {
@@ -964,18 +964,18 @@
               $monthEnd = 1;
             }
             $strEnd = $yearEnd . substr('0' . $monthEnd, -2) . '00';
-            $sql = $forManticore ?
+            $sql = $forSearchEngine ?
                 "eventdate BETWEEN " . $startStr . " AND " . $startYr . $startMon ."31" :
                 "Events.EventDate LIKE '" . $startYr . substr('0' . $startMon, -2) . "%'";
           }
         } else { // Else exact match
-          $sql = $forManticore ?
+          $sql = $forSearchEngine ?
               "eventdate = $startStr" :
               "Events.EventDate = $startStr";
         }
         break;
       case 4: // After
-        $sql = $forManticore ?
+        $sql = $forSearchEngine ?
             "eventdate >= $startStr" :
             "Events.EventDate >= $startStr";
         break;
@@ -1003,17 +1003,17 @@
    *     if the author is not found, there are no related works, or an error is
    *     encountered.
    */
-  function getManticoreAuthorQuery($author) {
+  function getAuthorQuery($author) {
     if ($author === '') return FALSE;
-    global $manticore_conn;
-    $author = mysqli_real_escape_string($manticore_conn, $author);
+    global $search_conn;
+    $author = mysqli_real_escape_string($search_conn, $author);
     // Find the author's works in the Related Works index.
 
     // Get candidate author ids
     $authIdQuery = "SELECT authid 
         FROM author WHERE MATCH('@(authname,authnameclean) $author') 
         GROUP BY authid LIMIT 10";
-    $result = $manticore_conn->query($authIdQuery);
+    $result = $search_conn->query($authIdQuery);
     if (!$result) return FALSE;
 
     $id_rows = $result->fetch_all(MYSQLI_ASSOC);
@@ -1029,7 +1029,7 @@
          GROUP BY workid
          LIMIT 1000";
     // Run the query.
-    $workResult = $manticore_conn->query($authorWorksSql);
+    $workResult = $search_conn->query($authorWorksSql);
     // TRUE if there was an error returned by the query.
     if (is_bool($workResult)) return FALSE;
     // Process through the results, gather all works and similarly named works.
@@ -1058,7 +1058,7 @@
           $titl = substr($titl, strlen($prefix)); //remove quotes from titles
         }
         // Add each title within double quotes, with special characters escaped.
-        $processedTitles[] = '"' . mysqli_real_escape_string($manticore_conn, $titl) . '"';
+        $processedTitles[] = '"' . mysqli_real_escape_string($search_conn, $titl) . '"';
       }
     }
     $processedTitles = array_unique($processedTitles);
@@ -1086,7 +1086,7 @@
    * @return array
    *   EventId list for the WHERE statement.
    */
-  function getManticoreCastQuery($castType, $casts = array(), $operator = 'AND') {
+  function getCastQuery($castType, $casts = array(), $operator = 'AND') {
     global $conn;
 
     if (empty($casts)) return [];
@@ -1423,7 +1423,6 @@
  *  create links that take the user to a keyword search for that person.
  *
  * @param string $text Text block that may contains named entities ($name=)
- * @param bool $manticore_results When set to true, will like to sphinx results.
  *
  * @return string HTML Text block with named entities linked out to keyword searches
  */
@@ -1433,7 +1432,7 @@
 
     $re = '/(\$)([\s\S]+)(=)([^\"]*)/U'; // Matches $name=
 
-    return preg_replace($re, '<a href="/manticore-results.php?keyword=$2">$2$4</a>', $text);
+    return preg_replace($re, '<a href="/results.php?keyword=$2">$2$4</a>', $text);
   }
 
 
@@ -1445,7 +1444,6 @@
  *
  * @param string $key The key for which we will create a search link.
  * @param string $value The value for which to be searched.
- * @param bool $manticore_results When set to true, will like to sphinx results.
  *
  * @return string HTML Text block with values linked out to relevant searches.
  */
@@ -1462,7 +1460,7 @@
     }
 
     $re = '/' . implode('|', $m[0]) . '/i';
-    return preg_replace($re, '<a href="manticore-results.php?'.$key.'=$0">$0</a>', $value);
+    return preg_replace($re, '<a href="results.php?'.$key.'=$0">$0</a>', $value);
   }
 
 
@@ -1470,7 +1468,6 @@
   * Generates href for performance title link
   *
   * @param string $value The title to be linked.
-  * @param bool $manticore_results When set to true, will like to sphinx results.
   *
   * @return string href value.
   */
@@ -1479,7 +1476,7 @@
     if ($value === '') return '';
 
     $value = strip_tags(htmlentities($value));
-    return '/manticore-results.php?performance=' . $value;
+    return '/results.php?performance=' . $value;
   }
 
 
@@ -1742,7 +1739,7 @@ function utf8_for_xml($string) {
       $event['Performances'] = array();
       $perfs = getPerformances($event['EventId']);
       foreach ($perfs as $perf) {
-        $perf['RelatedWorks'] = getManticoreRelatedWorks($perf['PerfTitleClean'],
+        $perf['RelatedWorks'] = getRelatedWorks($perf['PerfTitleClean'],
             array_key_exists('WorkId', $perf) ? $perf['WorkId'] : null);
         $event['Performances'][] = $perf;
       }
